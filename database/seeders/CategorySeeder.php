@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 
 
 
-class CategorieSeeder extends Seeder
+class CategorySeeder extends Seeder
 {
     /**
      * Run the database seeds.
