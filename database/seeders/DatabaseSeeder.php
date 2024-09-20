@@ -24,7 +24,6 @@ class DatabaseSeeder extends Seeder
         SizeSeeder::class,
         ColorSeeder::class,
         VoucherSeeder::class,
-        ImageSeeder::class,
         ProductSeeder::class,
         ProductVariantSeeder::class,
         CartSeeder::class,
@@ -32,6 +31,7 @@ class DatabaseSeeder extends Seeder
         OrderSeeder::class,
         OrderDetailSeeder::class,
         CommentSeeder::class,
+        ImageSeeder::class
        ]);
     }
 }

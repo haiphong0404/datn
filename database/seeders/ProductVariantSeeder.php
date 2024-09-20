@@ -25,7 +25,6 @@ class ProductVariantSeeder extends Seeder
                 'product_id' => Product::inRandomOrder()->first()->id, // Lấy product_id ngẫu nhiên từ bảng products
                 'size_id' => Size::inRandomOrder()->first()->id,       // Lấy size_id ngẫu nhiên từ bảng sizes
                 'color_id' => Color::inRandomOrder()->first()->id,     // Lấy color_id ngẫu nhiên từ bảng colors
-                'image_id' => Image::inRandomOrder()->first()->id,     // Lấy image_id ngẫu nhiên từ bảng images
                 'price' => $faker->numberBetween(1000, 50000),   // Giá sản phẩm variant
                 'quantity' => $faker->numberBetween(1, 100),     // Số lượng sản phẩm variant
                 'created_at' => Carbon::now(),
