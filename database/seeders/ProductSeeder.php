@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Brand;
-use App\Models\Categorie;
+use App\Models\Category;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Faker\Factory as Faker;
@@ -23,7 +23,7 @@ class ProductSeeder extends Seeder
             DB::table('products')->insert([
                 'name' => $faker->word(), // Tạo tên sản phẩm ngẫu nhiên
                 'description' => $faker->paragraph(), // Mô tả sản phẩm ngẫu nhiên
-                'category_id' => Categorie::inRandomOrder()->first()->id, // Lấy category_id ngẫu nhiên từ bảng categories
+                'category_id' => Category::inRandomOrder()->first()->id, // Lấy category_id ngẫu nhiên từ bảng categories
                 'brand_id' => Brand::inRandomOrder()->first()->id, // Lấy brand_id ngẫu nhiên từ bảng brands
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
