@@ -17,7 +17,7 @@ class AuthenticatedSessionController extends Controller
      */
     public function create(): View
     {
-        return view('auth.login');
+        return view('client.login');
     }
 
     /**
@@ -29,8 +29,45 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(RouteServiceProvider::HOME);
+        return redirect()->route('/');
     }
+
+
+    public function postlogin(Request $req)
+    {
+
+      $validate = $req->validate([
+        'email' => 'required|email',
+        'password' => 'required|min:6',
+        ],
+        [
+          'email.required' => 'Vui lòng nhập email',
+          'email.email' => 'Email không đúng định đạng dạng',
+          'password.required' => 'Vui lòng nhập mật khẩu',
+        ]);
+      $dataUserLogin=[
+        'email'=> $req->email,
+        'password'=> $req->password,
+      ];
+      $remember = $req->has('remember');
+      if(Auth::attempt($dataUserLogin,$remember)){
+        if(Auth::user()->role=='admin'){
+            // return redirect()->route('admin.admin');
+            return redirect()->route('/');
+        }else  if(Auth::user()->role=='2'){
+          // return redirect()->route('nhanvien.nhanvien');
+          return redirect()->route('/');
+      }else{
+          return redirect()->route('/');
+        }
+
+      }else{
+        return redirect()->back()->with([
+           'message'=>'Email hoặc Mật khẩu không đúng vui lòng nhập lại !!' 
+        ]);
+      }
+    }
+
 
     /**
      * Destroy an authenticated session.

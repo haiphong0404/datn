@@ -19,7 +19,7 @@ class NewPasswordController extends Controller
      */
     public function create(Request $request): View
     {
-        return view('auth.reset-password', ['request' => $request]);
+        return view('client.reset-password', ['request' => $request]);
     }
 
     /**
@@ -29,10 +29,16 @@ class NewPasswordController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        $request->validate([
-            'token' => ['required'],
+        $validate = $request->validate([
             'email' => ['required', 'email'],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'password' => ['required', 'confirmed',Rules\Password::defaults()],
+            'password_confirmation' => ['required'] // chỉ cần kiểm tra xem nó có giá trị không
+        ], [
+            'email.required' => 'Email là bắt buộc.',
+            'email.email' => 'Email không hợp lệ.',
+            'password.required' => 'Mật khẩu là bắt buộc.',
+            'password.confirmed' => 'Xác nhận mật khẩu không khớp.',
+            'password_confirmation.required' => 'Vui lòng nhập lại mật khẩu để xác nhận.', // sửa thông báo cho rõ ràng hơn
         ]);
 
         // Here we will attempt to reset the user's password. If it is successful we

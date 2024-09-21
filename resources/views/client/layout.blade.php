@@ -73,9 +73,31 @@
                                 <a href="#"><i class="fa fa-pinterest"></i></a>
                             </div>
                             <ul class="user-info-block">
-                                <li><a href="my-account.html"><i class="fa fa-user-circle"></i> My Account</a></li>
-                                <li><a href="checkout.html"><i class="fa fa-credit-card"></i> Checkout</a></li>
-                                <li><a href="login-register.html"><i class="fa fa-sign-in"></i> Sign In</a></li>
+                                @if (Auth::check())
+                                    <!-- Nếu người dùng đã đăng nhập -->
+                                    <li><a href="my-account.html"><i class="fa fa-user-circle"></i>Cái Địt {{Auth::User()->username}}</a>
+                                        @if (Auth::user()->role == 'admin')
+                                          <a href="">Admin</a>
+                                          @elseif (Auth::user()->role == 'staff')
+                                          <a href="">Nhân viên</a>
+                                          @else
+                                          <a href="{{ route('dashboard') }}">Prolife</a>
+                                             @endif
+                                    
+                                    </li>
+                                    <li>
+                                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: inline;">
+                                            @csrf
+                                            <button type="submit" style="background: none; border: none; padding: 0; color: inherit; cursor: pointer;">
+                                                <i class="fa fa-sign-in"></i> Đăng Xuất
+                                            </button>
+                                        </form>
+                                    </li>
+                                @else
+                                    <!-- Nếu người dùng chưa đăng nhập -->  
+                                    <li><a href="{{ route('register') }}"><i class="fa fa-sign-in"></i> Đăng Kí</a></li>
+                                    <li><a href="{{ route('login') }}"><i class="fa fa-sign-in"></i> Đăng Nhập</a></li>
+                                @endif
                             </ul>
                         </div>
                     </div>
@@ -799,6 +821,7 @@
     <script src="{{ asset('assets')}}/client/assets/js/plugins/google-map.js"></script>
     <!-- Main JS -->
     <script src="{{ asset('assets')}}/client/assets/js/main.js"></script>
+   
 </body>
 
 

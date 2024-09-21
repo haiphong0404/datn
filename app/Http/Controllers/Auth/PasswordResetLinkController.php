@@ -15,7 +15,7 @@ class PasswordResetLinkController extends Controller
      */
     public function create(): View
     {
-        return view('auth.forgot-password');
+        return view('client.forgot-password');
     }
 
     /**
@@ -23,11 +23,16 @@ class PasswordResetLinkController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request)
     {
-        $request->validate([
+       $validate= $request->validate([
             'email' => ['required', 'email'],
-        ]);
+       ], [
+            'email.required' => 'Vui lòng nhập email',
+            'email.email' => 'Email không đúng định đạng dạng',
+           
+          ]);
+   
 
         // We will send the password reset link to this user. Once we have attempted
         // to send the link, we will examine the response then see the message we

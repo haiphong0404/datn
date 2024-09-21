@@ -20,7 +20,7 @@ class RegisteredUserController extends Controller
      */
     public function create(): View
     {
-        return view('auth.register');
+        return view('client.register');
     }
 
     /**
@@ -34,7 +34,20 @@ class RegisteredUserController extends Controller
             'username' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'phone' => ['required', 'string', 'max:15'],
+            'password_confirmation' => ['required'], // chỉ cần kiểm tra required, khớp với 'password' do 'confirmed'
+            'phone' => ['required', 'string', 'regex:/^(0|\+84)[0-9]{9,10}$/'], // regex để kiểm tra số điện thoại bắt đầu bằng 84 hoặc +84
+        ], [
+            'username.required' => 'Tên đăng nhập là bắt buộc.',
+            'username.max' => 'Tên đăng nhập không được vượt quá 255 ký tự.',
+            'email.required' => 'Email là bắt buộc.',
+            'email.lowercase' => 'Email phải được viết bằng chữ thường.',
+            'email.email' => 'Email không đúng định dạng.',
+            'email.unique' => 'Email này đã được sử dụng.',
+            'password.required' => 'Mật khẩu là bắt buộc.',
+            'password.confirmed' => 'Xác nhận mật khẩu không khớp.',
+            'password_confirmation.required' => 'Vui lòng nhập lại mật khẩu để xác nhận.',
+            'phone.required' => 'Số điện thoại là bắt buộc.',
+            'phone.regex' => 'Số điện thoại phải bắt đầu bằng +84 mã quốc gia.',
         ]);
 
         $user = User::create([
@@ -49,6 +62,6 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        return redirect(RouteServiceProvider::HOME);
+        return  redirect()->route('/');
     }
 }

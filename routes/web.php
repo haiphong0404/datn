@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AdminTestController;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Auth\RegisteredUserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,7 +17,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [adminTestController::class, 'indexx'])->name('/');
+Route::get('/', [AdminTestController::class, 'indexx'])->name('/');
+Route::get('/dashboard', function () {
+  return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
 
 
 
@@ -26,7 +31,7 @@ Route::get('/', [adminTestController::class, 'indexx'])->name('/');
 
 require __DIR__.'/auth.php';
 
-
+Route::post('post-login', [AuthenticatedSessionController::class, 'postlogin'])->name('postlogin');
 route::group(
     [
       'prefix' => 'admin',
@@ -56,4 +61,3 @@ route::group(
   
   );
 
-Route::get('admin', [adminTestController::class, 'index'])->name('admin');
