@@ -11,11 +11,9 @@
         <div class="col-sm-12">
             <section class="card">
                 <header class="card-header">
-                    Danh Sách Người Dùng
+                    Danh Sách Bình Luận
                     <span class="tools pull-right">
-                        <a href="{{ route('user.create') }}" class=" btn btn-success btn-sm">CRAETE</a>
                         <a href="javascript:;" class="fa fa-chevron-down"></a>
-
                     </span>
                 </header>
                 <div class="card-body">
@@ -35,7 +33,7 @@
                                 </div>
                                 <div class="span6">
                                     <div class="dataTables_filter" id="hidden-table-info_filter">
-                                        <form action="{{ route('user.index') }}" method="GET">
+                                        <form action="{{ route('comments.index') }}" method="GET">
                                             <input type="text" name="search" class="form-control" placeholder="Tìm kiếm bình luận"
                                                    value="{{ request()->input('search') }}">
                                             <button type="submit" class="btn btn-primary">Tìm kiếm</button>
@@ -48,62 +46,66 @@
                                 <thead>
                                     <tr role="row">
                                         <th>Id</th>
-                                        <th>Avatar</th>
-                                        <th>Name</th>
-                                        <th>Phone</th>
-                                        <th>Email</th>
-                                        <th>Address</th>
-                                        <th>Role</th>
-                                        <th>Active</th>
+                                        <th>User</th>
+                                        <th>Product</th>
+                                        <th>Comment</th>
+                                        <th>File</th>
+                                        <th>Rating</th>
+                                        <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody role="alert" aria-live="polite" aria-relevant="all">
-                                    @foreach ($users as $item)
+                                    @foreach ($comments as $item)
                                         <tr>
                                             <td>{{ $item->id }}</td>
-                                            <td> <img src="{{ Storage::url($item->avatar_img) }}" width="100"
-                                                    height="100" alt=""></td>
-                                            <td>{{ $item->username }}</td>
-                                            <td>{{ $item->phone }}</td>
-                                            <td>{{ $item->email }}</td>
-                                            <td>{{ $item->address }}</td>
-                                            <td>{{ $item->role }}</td>
+                                            <td>{{ $item->user->username }}</td> <!-- Hiển thị tên người dùng -->
+                                            <td>{{ $item->product->name }}</td> <!-- Hiển thị tên sản phẩm -->
+                                            <td>{{ $item->comment }}</td>
                                             <td>
-                                                <a href="{{ route('user.show', $item->id) }}"
-                                                    class="btn btn-primary btn-sm"><i class="fa fa-eye"></i></a>
-                                                <form action="{{ route('user.destroy', $item->id) }}" method="post">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button onclick="return confirm('Ban co muon xoa khong')"
-                                                        class="btn btn-danger btn-sm" type="submit"> <i
+                                                @if ($item->file)
+                                                    <a href="{{ Storage::url($item->file) }}" target="_blank">Tải file</a>
+                                                @else
+                                                    Không có file
+                                                @endif
+                                            </td>
+                                            <td>{{ $item->star_rating }} / 5</td>
+                                            <td>
+                                                <a href="{{ route('comments.show', $item->id) }}"
+                                                    class="btn btn-primary btn-sm">
+                                                    <i class="fa fa-eye"></i>
+                                                </a>
+
+                                                @if ($item->deleted_at)
+                                                    <form action="{{ route('comments.restore', $item->id) }}"
+                                                        method="POST" style="display:inline;">
+                                                        @csrf
+                                                        <button type="submit" class="btn btn-warning"><i class="bi bi-arrow-repeat"></i></button>
+                                                    </form>
+                                                @else
+                                                    <form action="{{ route('comments.destroy', $item->id) }}"
+                                                        method="POST" style="display:inline;">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="btn btn-danger"><i
                                                             class="fa fa-trash-o"></i></button>
-                                                </form>
+                                                    </form>
+                                                @endif
 
                                             </td>
-
                                         </tr>
                                     @endforeach
                                 </tbody>
                             </table>
-                            <div class="row-fluid">
+                            {{-- <div class="row-fluid">
                                 <div class="span6">
-                                    <div class="dataTables_info" id="hidden-table-info_info">Showing 11 to 20 of 57
-                                        entries</div>
+                                    <div class="dataTables_info" id="hidden-table-info_info">Showing {{ $comments->firstItem() }} to {{ $comments->lastItem() }} of {{ $comments->total() }} entries</div>
                                 </div>
                                 <div class="span6">
                                     <div class="dataTables_paginate paging_bootstrap pagination">
-                                        <ul>
-                                            <li class="prev"><a href="#">← Previous</a></li>
-                                            <li><a href="#">1</a></li>
-                                            <li class="active"><a href="#">2</a></li>
-                                            <li><a href="#">3</a></li>
-                                            <li><a href="#">4</a></li>
-                                            <li><a href="#">5</a></li>
-                                            <li class="next"><a href="#">Next → </a></li>
-                                        </ul>
-                                    </div>
+                                        {{ $comments->links() }}
+                                    </div>  
                                 </div>
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
                 </div>

@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Admins\CommentController;
+use App\Http\Controllers\Admins\UserController;
 use App\Http\Controllers\AdminTestController;
 use Illuminate\Support\Facades\Route;
 
@@ -18,3 +20,7 @@ use Illuminate\Support\Facades\Route;
 //     return view('welcome');
 // });
 Route::get('/', [AdminTestController::class, 'index'])->name('/');
+Route::resource('user',UserController::class);
+Route::resource('comments', CommentController::class);
+// Route để khôi phục bình luận đã xóa mềm
+Route::post('comments/{id}/restore', [CommentController::class, 'restore'])->name('comments.restore');
