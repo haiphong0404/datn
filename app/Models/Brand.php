@@ -15,5 +15,9 @@ class Brand extends Model
         'image'
     ];
     protected $datas = ['deleted_at'];
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
 
 }
