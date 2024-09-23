@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admins\BrandController;
 use App\Http\Controllers\AdminTestController;
 use Illuminate\Support\Facades\Route;
 
@@ -18,3 +19,5 @@ use Illuminate\Support\Facades\Route;
 //     return view('welcome');
 // });
 Route::get('/', [AdminTestController::class, 'index'])->name('/');
+
+Route::resource('admin/brands', BrandController::class);
