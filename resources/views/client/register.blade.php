@@ -74,6 +74,8 @@
                                     <small class="text-danger">{{ $errors->first('password_confirmation') }}</small>
                                     @endif
                                     
+                                    
+                                    
                                 </div>
                                 <div class="single-input-item">
                                     <div class="login-reg-form-meta">
@@ -82,7 +84,13 @@
                                         </div>
                                     </div>
                                 </div>
+
+                               
+                                        <input type="checkbox" id="togglePassword" onclick="togglePasswordVisibility()"> Hiển thị mật khẩu
+                                   
                                 <div class="single-input-item">
+                                    <div class="row">
+                                    
                                  
                                     <button type="submit" class="btn btn-sqr">
                                         Đăng Ký
@@ -99,4 +107,20 @@
 
     <!-- login register wrapper end -->
 </main>
+<script>
+    function togglePasswordVisibility() {
+        const password = document.getElementById('password');
+        const passwordConfirmation = document.getElementById('password_confirmation');
+        const togglePassword = document.getElementById('togglePassword');
+        
+        // Check if checkbox is checked
+        if (togglePassword.checked) {
+            password.type = 'text';
+            passwordConfirmation.type = 'text';
+        } else {
+            password.type = 'password';
+            passwordConfirmation.type = 'password';
+        }
+    }
+</script>
 @endsection

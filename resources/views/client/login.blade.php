@@ -38,43 +38,43 @@
                     <div class="col-lg-6 align-items-center">
                         <div class="login-reg-form-wrap">
                             <h4>Đăng Nhập</h4>
-                            <form method="POST" action="{{ route('postlogin') }}">
-                                @csrf
-                                <div class="single-input-item">
-                                    <input id="email" class="form-control" placeholder="Nhập Email" type="email" name="email" value="{{ old('email') }}" autofocus autocomplete="username">
-                                </div>
-
-
-                                @if ($errors->has('email'))
-                                <small class="text-danger">{{ $errors->first('email') }}</small>
-                                @endif
-                                <div class="single-input-item">
-                                    <input id="password" class="form-control" placeholder="Nhập Mật Khẩu" type="password" name="password"  autocomplete="current-password">
-                                </div>
-                                @if ($errors->has('password'))
-                                <small class="text-danger">{{ $errors->first('password') }}</small>
-                               @endif
-                                <div class="single-input-item">
-                                    <div
-                                        class="login-reg-form-meta d-flex align-items-center justify-content-between">
-                                        <div class="remember-meta">
-                                            <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input" id="remember" name="remember">
-                                                <label class="custom-control-label" for="remember">Nhớ Tài khoản</label>
-                                            </div>
-                                            
-                                        </div>
-                                      <div>
-                                        <a href="{{ route('register') }}" class="forget-pwd">Đăng Ký</a> ?
-                                        <a href="{{ route('password.request') }}" class="forget-pwd">Quên Mật Khẩu</a>
-                                      </div>
+                                <form method="POST" action="{{ route('postlogin') }}">
+                                    @csrf
+                                    <div class="single-input-item">
+                                        <input id="email" class="form-control" placeholder="Nhập Email" type="email" name="email" value="{{ old('email') }}" autofocus autocomplete="username">
                                     </div>
-                                </div>
-                                <div  class="single-input-item">
-                                    <button type="submit" class="btn btn-sqr"> {{ __('Log in') }}</button>
-                                </div>
-                               
-                            </form>
+
+
+                                    @if ($errors->has('email'))
+                                    <small class="text-danger">{{ $errors->first('email') }}</small>
+                                    @endif
+                                    <div class="single-input-item">
+                                        <input id="password" class="form-control" placeholder="Nhập Mật Khẩu" type="password" name="password"  autocomplete="current-password">
+                                    </div>
+                                    @if ($errors->has('password'))
+                                    <small class="text-danger">{{ $errors->first('password') }}</small>
+                                @endif
+                                    <div class="single-input-item">
+                                        <div
+                                            class="login-reg-form-meta d-flex align-items-center justify-content-between">
+                                            <div class="remember-meta">
+                                                <div class="custom-control custom-checkbox">
+                                                    <input type="checkbox" class="custom-control-input" id="remember" name="remember">
+                                                    <label class="custom-control-label" for="remember">Nhớ Tài khoản</label>
+                                                </div>
+                                                
+                                            </div>
+                                        <div>
+                                            <a href="{{ route('register') }}" class="forget-pwd">Đăng Ký</a> ?
+                                            <a href="{{ route('password.request') }}" class="forget-pwd">Quên Mật Khẩu</a>
+                                        </div>
+                                        </div>
+                                    </div>
+                                    <div  class="single-input-item">
+                                        <button type="submit" class="btn btn-sqr"> {{ __('Log in') }}</button>
+                                    </div>
+                                
+                                </form>
                         </div>
                     </div>
                     <!-- Login Content End -->

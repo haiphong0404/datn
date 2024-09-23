@@ -33,7 +33,7 @@ class RegisteredUserController extends Controller
         $request->validate([
             'username' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'password' => ['required','min:6', 'confirmed', Rules\Password::defaults()],
             'password_confirmation' => ['required'], // chỉ cần kiểm tra required, khớp với 'password' do 'confirmed'
             'phone' => ['required', 'string', 'regex:/^(0|\+84)[0-9]{9,10}$/'], // regex để kiểm tra số điện thoại bắt đầu bằng 84 hoặc +84
         ], [
@@ -45,9 +45,11 @@ class RegisteredUserController extends Controller
             'email.unique' => 'Email này đã được sử dụng.',
             'password.required' => 'Mật khẩu là bắt buộc.',
             'password.confirmed' => 'Xác nhận mật khẩu không khớp.',
+            'password.min' => 'Mật khẩu phải có ít nhất 6 ký tự',
             'password_confirmation.required' => 'Vui lòng nhập lại mật khẩu để xác nhận.',
             'phone.required' => 'Số điện thoại là bắt buộc.',
             'phone.regex' => 'Số điện thoại phải bắt đầu bằng +84 mã quốc gia.',
+          
         ]);
 
         $user = User::create([
@@ -58,10 +60,11 @@ class RegisteredUserController extends Controller
             
         ]);
 
-        event(new Registered($user));
+        // event(new Registered($user));
 
-        Auth::login($user);
+        // Auth::login($user);
 
-        return  redirect()->route('/');
+        return  redirect()->route('login')->with([
+           'message'=>'Đăng Nhập thành !!' ]);
     }
 }

@@ -39,12 +39,13 @@ class AuthenticatedSessionController extends Controller
       $validate = $req->validate([
         'email' => 'required|email',
         'password' => 'required|min:6',
-        ],
-        [
-          'email.required' => 'Vui lòng nhập email',
-          'email.email' => 'Email không đúng định đạng dạng',
-          'password.required' => 'Vui lòng nhập mật khẩu',
-        ]);
+    ],
+    [
+        'email.required' => 'Vui lòng nhập email',
+        'email.email' => 'Email không đúng định dạng',
+        'password.required' => 'Vui lòng nhập mật khẩu',
+        'password.min' => 'Mật khẩu phải có ít nhất 6 ký tự',
+    ]);
       $dataUserLogin=[
         'email'=> $req->email,
         'password'=> $req->password,
@@ -52,8 +53,8 @@ class AuthenticatedSessionController extends Controller
       $remember = $req->has('remember');
       if(Auth::attempt($dataUserLogin,$remember)){
         if(Auth::user()->role=='admin'){
-            // return redirect()->route('admin.admin');
-            return redirect()->route('/');
+            return redirect()->route('admin.admin');
+            // return redirect()->route('/');
         }else  if(Auth::user()->role=='2'){
           // return redirect()->route('nhanvien.nhanvien');
           return redirect()->route('/');
@@ -67,6 +68,7 @@ class AuthenticatedSessionController extends Controller
         ]);
       }
     }
+    
 
 
     /**
