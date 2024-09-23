@@ -34,10 +34,11 @@
                                 <div class="span6">
                                     <div class="dataTables_filter" id="hidden-table-info_filter">
                                         <form action="{{ route('comments.index') }}" method="GET">
-                                            <input type="text" name="search" class="form-control" placeholder="Tìm kiếm bình luận"
-                                                   value="{{ request()->input('search') }}">
+                                            <input type="text" name="search" class="form-control"
+                                                placeholder="Tìm kiếm bình luận" value="{{ request()->input('search') }}">
                                             <button type="submit" class="btn btn-primary">Tìm kiếm</button>
-                                        </form>                                    </div>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
 
@@ -79,7 +80,8 @@
                                                     <form action="{{ route('comments.restore', $item->id) }}"
                                                         method="POST" style="display:inline;">
                                                         @csrf
-                                                        <button type="submit" class="btn btn-warning"><i class="bi bi-arrow-repeat"></i></button>
+                                                        <button type="submit" class="btn btn-warning"><i
+                                                                class="bi bi-arrow-repeat"></i></button>
                                                     </form>
                                                 @else
                                                     <form action="{{ route('comments.destroy', $item->id) }}"
@@ -87,7 +89,7 @@
                                                         @csrf
                                                         @method('DELETE')
                                                         <button type="submit" class="btn btn-danger"><i
-                                                            class="fa fa-trash-o"></i></button>
+                                                                class="fa fa-trash-o"></i></button>
                                                     </form>
                                                 @endif
 
@@ -96,16 +98,25 @@
                                     @endforeach
                                 </tbody>
                             </table>
-                            {{-- <div class="row-fluid">
+                            <div class="row-fluid">
                                 <div class="span6">
-                                    <div class="dataTables_info" id="hidden-table-info_info">Showing {{ $comments->firstItem() }} to {{ $comments->lastItem() }} of {{ $comments->total() }} entries</div>
+                                    <div class="dataTables_info" id="hidden-table-info_info">Showing 11 to 20 of 57
+                                        entries</div>
                                 </div>
                                 <div class="span6">
                                     <div class="dataTables_paginate paging_bootstrap pagination">
-                                        {{ $comments->links() }}
-                                    </div>  
+                                        <ul>
+                                            <li class="prev"><a href="#">← Previous</a></li>
+                                            <li><a href="#">1</a></li>
+                                            <li class="active"><a href="#">2</a></li>
+                                            <li><a href="#">3</a></li>
+                                            <li><a href="#">4</a></li>
+                                            <li><a href="#">5</a></li>
+                                            <li class="next"><a href="#">Next → </a></li>
+                                        </ul>
+                                    </div>
                                 </div>
-                            </div> --}}
+                            </div>
                         </div>
                     </div>
                 </div>
