@@ -18,7 +18,7 @@
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-person"></i></span>
                                 <input type="text" class="form-control" id="username" name="username"
-                                    value="{{ old('username', $user->username) }}" required>
+                                    value="{{ old('username', $user->username) }}">
                             </div>
                             @error('username')
                                 <span class="text-danger">{{ $message }}</span>
@@ -30,7 +30,7 @@
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-envelope"></i></span>
                                 <input type="email" class="form-control" id="email" name="email"
-                                    value="{{ old('email', $user->email) }}" required>
+                                    value="{{ old('email', $user->email) }}">
                             </div>
                             @error('email')
                                 <span class="text-danger">{{ $message }}</span>
@@ -61,7 +61,7 @@
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-telephone"></i></span>
                                 <input type="text" class="form-control" id="phone" name="phone"
-                                    value="{{ old('phone', $user->phone) }}" required>
+                                    value="{{ old('phone', $user->phone) }}">
                             </div>
                             @error('phone')
                                 <span class="text-danger">{{ $message }}</span>
@@ -78,7 +78,7 @@
 
                         <div class="form-group mb-4">
                             <label for="role" class="form-label">Quyền</label>
-                            <select class="form-select" id="role" name="role" required>
+                            <select class="form-select" id="role" name="role">
                                 <option value="user" {{ old('role', $user->role) == 'user' ? 'selected' : '' }}>User</option>
                                 <option value="staff" {{ old('role', $user->role) == 'staff' ? 'selected' : '' }}>Staff</option>
                                 <option value="admin" {{ old('role', $user->role) == 'admin' ? 'selected' : '' }}>Admin</option>

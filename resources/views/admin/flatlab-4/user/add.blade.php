@@ -16,8 +16,8 @@
                             <label for="username" class="form-label">Tên người dùng</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-person"></i></span>
-                                <input type="text" class="form-control" id="username" name="username"
-                                    value="{{ old('username') }}" required>
+                                <input type="text" class="form-control" id="username" max="100" name="username"
+                                    value="{{ old('username') }}" >
                             </div>
                             @error('username')
                                 <span class="text-danger">{{ $message }}</span>
@@ -29,7 +29,7 @@
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-envelope"></i></span>
                                 <input type="email" class="form-control" id="email" name="email"
-                                    value="{{ old('email') }}" required>
+                                    value="{{ old('email') }}" >
                             </div>
                             @error('email')
                                 <span class="text-danger">{{ $message }}</span>
@@ -41,7 +41,7 @@
                             <label for="password" class="form-label">Mật khẩu</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-lock"></i></span>
-                                <input type="password" class="form-control" id="password" name="password" required>
+                                <input type="password" class="form-control" id="password" name="password" >
                             </div>
                             @error('password')
                                 <span class="text-danger">{{ $message }}</span>
@@ -64,7 +64,7 @@
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-telephone"></i></span>
                                 <input type="text" class="form-control" id="phone" name="phone"
-                                    value="{{ old('phone') }}" required>
+                                    value="{{ old('phone') }}" >
                             </div>
                             @error('phone')
                                 <span class="text-danger">{{ $message }}</span>
@@ -83,7 +83,7 @@
 
                         <div class="form-group mb-4">
                             <label for="role" class="form-label">Quyền</label>
-                            <select class="form-select" id="role" name="role" required>
+                            <select class="form-select" id="role" name="role" >
                                 <option value="user" {{ old('role') == 'user' ? 'selected' : '' }}>User</option>
                                 <option value="staff" {{ old('role') == 'staff' ? 'selected' : '' }}>Staff</option>
                                 <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Admin</option>
@@ -92,7 +92,7 @@
                         <div class="mb-3 d-flex">
                             <a href="{{ route('user.index') }}" class="btn btn-secondary btn-lg flex-fill me-1">Quay lại</a>
                             <button type="reset" class="btn btn-warning btn-lg flex-fill me-1">Reset</button>
-                            <button type="submit" class="btn btn-primary btn-lg flex-fill">Add User</button>
+                            <button type="submit" class="btn btn-primary btn-lg flex-fill">Thêm Mới</button>
                         </div>
                     </form>
                 </div>

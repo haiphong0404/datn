@@ -25,7 +25,8 @@ class UserRequest extends FormRequest
             'username' => ['required', 'string', 'max:255', 'unique:users,username,' . ($this->user ? $this->user->id : '')],
             'email' => ['required', 'email', 'unique:users,email,' . ($this->user ? $this->user->id : '')],
             'password' => ['required', 'string', 'min:6'],
-            'avatar_img' => 'image|nullable|mimes:jpg,jpeg,png,gif|max:2048', // Chỉ cho phép các định dạng ảnh            'phone' => ['nullable', 'string', 'max:15','unique:users,phone,' . ($this->user ? $this->user->id : '')],
+            'avatar_img' => 'image|nullable|mimes:jpg,jpeg,png,gif|max:2048', // Chỉ cho phép các định dạng ảnh  
+          'phone' => ['nullable', 'string', 'max:15','unique:users,phone,' . ($this->user ? $this->user->id : '')],
             'address' => ['nullable', 'string', 'max:255'],
             'role' => ['nullable', 'string', 'max:50'],
         ];
@@ -53,6 +54,7 @@ class UserRequest extends FormRequest
             'avatar_img.mimes' => 'Chỉ cho phép các định dạng: jpg, jpeg, png, gif.',
             'avatar_img.max' => 'Kích thước ảnh không được vượt quá 2MB.',
 
+            'phone.required' => 'Vui lòng nhập số điện thoại.',
             'phone.unique' => 'Số điện thoại đã được sử dụng.',
             'phone.max' => 'Số điện thoại không được vượt quá 15 ký tự.',
 

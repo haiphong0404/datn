@@ -40,8 +40,7 @@
                         </div>
         
                         <div class="d-flex">
-                            <a href="{{ route('comments.index') }}" class="btn btn-secondary flex-fill me-1">Quay lại</a>
-                            <a href="{{ route('comments.edit', $comments->id) }}" class="btn btn-warning flex-fill me-1">Chỉnh sửa</a>
+                            <a href="{{ route('comments.index') }}" class="btn btn-secondary flex-fill ">Quay lại</a>
                         </div>
                     </form>
                 </div>
