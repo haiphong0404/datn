@@ -73,15 +73,9 @@ const Header = () => {
                       <ul>
                         <li className="active">
                           <Link to="/">
-                            Home <i className="fa fa-angle-down" />
+                            Home 
                           </Link>
-                          <ul className="dropdown">
-                            <li>
-                              <Link to="/">
-                                Home version 01
-                              </Link>
-                            </li>
-                          </ul>
+                          
                         </li>
                         <li className="position-static">
                           <a href="#">
