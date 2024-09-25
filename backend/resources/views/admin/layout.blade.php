@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-  
+
 <!-- Mirrored from thevectorlab.net/flatlab-4/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 26 Aug 2024 14:10:45 GMT -->
 <head>
     <meta charset="utf-8">
@@ -476,16 +476,16 @@
       <!--main content start-->
       <section id="main-content">
         <section class="wrapper">
-        
+
          <div class="container">
             @yield('content')
          </div>
 
         </section>
     </section>
-        
-          
-      </section> 
+
+
+      </section>
       <!--main content end-->
 
       <!-- Right Slidebar start -->
@@ -634,14 +634,14 @@
       <!-- Right Slidebar end -->
 
       <!--footer start-->
-      <footer class="site-footer">
-          <div class="text-center">
-              2018 &copy; FlatLab by VectorLab.
-              <a href="#" class="go-top">
-                  <i class="fa fa-angle-up"></i>
-              </a>
-          </div>
-      </footer>
+{{--      <footer class="site-footer">--}}
+{{--          <div class="text-center">--}}
+{{--              2018 &copy; FlatLab by VectorLab.--}}
+{{--              <a href="#" class="go-top">--}}
+{{--                  <i class="fa fa-angle-up"></i>--}}
+{{--              </a>--}}
+{{--          </div>--}}
+{{--      </footer>--}}
       <!--footer end-->
   </section>
 

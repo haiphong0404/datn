@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Admins\BrandController;
+use App\Http\Controllers\Admins\CategoryController;
+use App\Http\Controllers\Admins\ProductController;
 use App\Http\Controllers\AdminTestController;
 use Illuminate\Support\Facades\Route;
 
@@ -21,3 +23,16 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [AdminTestController::class, 'index'])->name('/');
 
 Route::resource('admin/brands', BrandController::class);
+Route::post('categories/{id}/restore', [CategoryController::class, 'restore'])->name('categories.restore');
+Route::post('products/{id}/restore', [ProductController::class, 'restore'])->name('products.restore');
+
+
+
+$cruds = [
+    'categories' => CategoryController::class,
+    'products'=> ProductController::class,
+];
+
+foreach ($cruds as $obj => $controller) {
+    Route::resource($obj, $controller);
+}
