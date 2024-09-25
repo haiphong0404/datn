@@ -1,0 +1,10 @@
+.justify-between > .hidden {
+    text-align: center;
+}
+.justify-between > .hidden .text-gray-700 {
+    margin-top: 15px;
+}
+.inline-flex > .w-5 {
+    width: 10px;
+    height: 10px;
+}
