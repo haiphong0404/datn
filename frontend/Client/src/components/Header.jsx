@@ -59,7 +59,7 @@ const Header = () => {
               <div className="col-auto">
                 <div className="logo">
                   <Link to="/">
-                    <img src="assets/img/logo/logo.png" alt="Brand Logo" />
+                    <img src="/assets/img/logo/logo.png" alt="Brand Logo" />
                   </Link>
                 </div>
               </div>
