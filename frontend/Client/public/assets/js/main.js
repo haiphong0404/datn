@@ -390,14 +390,16 @@
 
 
 	// product details slider active
+	$(document).ready(function() {
     $('.product-large-slider').slick({
         fade: true,
         arrows: false,
         asNavFor: '.pro-nav'
     });
-
+	});
 
     // product details slider nav active
+	$(document).ready(function() {
     $('.pro-nav').slick({
         slidesToShow: 4,
         asNavFor: '.product-large-slider',
@@ -412,14 +414,16 @@
 			}
 		}]
 	});
+});
 
 	//nice select active start
 	$('select').niceSelect();
 
 
 	// Image zoom effect
+	$(document).ready(function() {
 	$('.img-zoom').zoom();
-
+	})
 
 	// offcanvas mini-cart button js
 	$(".minicart-btn").on('click', function(){

@@ -15,6 +15,8 @@ import Contact_us from "./pages/Contact_us"; // Kiểm tra tệp Contact_us.jsx
 import Product_details from "./pages/Product_details"; // Kiểm tra tệp Product_details.jsx
 import Cart from "./pages/cart/Cart"; // Đảm bảo tệp Cart.jsx tồn tại
 import LayoutClient from "./layout/LayoutClient"; // Đảm bảo tệp LayoutClient.jsx tồn tại
+import Blog_detail from "./pages/Blog_detail";
+import Checkout from "./pages/Checkout";
 
 const queryClient = new QueryClient();
 
@@ -26,8 +28,10 @@ const routeConfig = [
       { path: "", element: <Main /> },
       { path: "shop", element: <Shop /> },
       { path: "blog", element: <Blog /> },
+      { path: "checkout", element: <Checkout /> },
+      { path: "blog_detail", element: <Blog_detail /> },
       { path: "my_account", element: <My_account /> },
-      { path: "contact", element: <Contact_us /> },
+      { path: "contact_us", element: <Contact_us /> },
       { path: "product_details", element: <Product_details /> },
       { path: "cart", element: <Cart /> },
     ]

@@ -1,10 +1,9 @@
-// src/components/Header.js
-
 import React from "react";
+import { Link } from 'react-router-dom';
 
 const Header = () => {
   return (
-   
+
     <header className="header-area">
       {/* main header start */}
       <div className="main-header d-none d-lg-block">
@@ -32,14 +31,14 @@ const Header = () => {
                 </div>
                 <ul className="user-info-block">
                   <li>
-                    <a href="my-account.html">
+                    <Link to="/my_account">
                       <i className="fa fa-user-circle" /> My Account
-                    </a>
+                    </Link>
                   </li>
                   <li>
-                    <a href="checkout.html">
+                    <Link to="/checkout">
                       <i className="fa fa-credit-card" /> Checkout
-                    </a>
+                    </Link>
                   </li>
                   <li>
                     <a href="login-register.html">
@@ -59,9 +58,9 @@ const Header = () => {
               {/* start logo area */}
               <div className="col-auto">
                 <div className="logo">
-                  <a href="index.html">
+                  <Link to="/">
                     <img src="assets/img/logo/logo.png" alt="Brand Logo" />
-                  </a>
+                  </Link>
                 </div>
               </div>
               {/* start logo area */}
@@ -73,12 +72,14 @@ const Header = () => {
                     <nav className="desktop-menu">
                       <ul>
                         <li className="active">
-                          <a href="index.html">
+                          <Link to="/">
                             Home <i className="fa fa-angle-down" />
-                          </a>
+                          </Link>
                           <ul className="dropdown">
                             <li>
-                              <a href="index.html">Home version 01</a>
+                              <Link to="/">
+                                Home version 01
+                              </Link>
                             </li>
                           </ul>
                         </li>
@@ -91,7 +92,9 @@ const Header = () => {
                               <span>column 01</span>
                               <ul>
                                 <li>
-                                  <a href="shop.html">shop grid left sidebar</a>
+                                  <Link to="/shop">
+                                    shop grid left sidebar
+                                  </Link>
                                 </li>
                               </ul>
                             </li>
@@ -99,9 +102,9 @@ const Header = () => {
                               <span>column 02</span>
                               <ul>
                                 <li>
-                                  <a href="product-details.html">
+                                  <Link to="/product_details">
                                     product details
-                                  </a>
+                                  </Link>
                                 </li>
                               </ul>
                             </li>
@@ -109,24 +112,29 @@ const Header = () => {
                               <span>column 03</span>
                               <ul>
                                 <li>
-                                  <a href="cart.html">cart</a>
+                                  <Link to="/cart">
+                                    cart
+                                  </Link>
                                 </li>
                                 <li>
-                                  <a href="checkout.html">checkout</a>
+
+                                  <Link to="/checkout">
+                                    checkout
+                                  </Link>
+
                                 </li>
-                                <li>
-                                  <a href="compare.html">compare</a>
-                                </li>
-                                <li>
-                                  <a href="wishlist.html">wishlist</a>
-                                </li>
+
                               </ul>
                             </li>
                             <li className="mega-title">
                               <span>column 04</span>
                               <ul>
                                 <li>
-                                  <a href="my-account.html">my-account</a>
+
+                                  <Link to="/my_account">
+                                    my-account
+                                  </Link>
+
                                 </li>
                                 <li>
                                   <a href="login-register.html">
@@ -134,60 +142,59 @@ const Header = () => {
                                   </a>
                                 </li>
                                 <li>
-                                  <a href="about-us.html">about us</a>
+
+                                  <Link to="/about_us">
+                                    about us
+                                  </Link>
                                 </li>
                                 <li>
-                                  <a href="contact-us.html">contact us</a>
+                                  <Link to="/contact_us">
+                                    contact us
+                                  </Link>
                                 </li>
                               </ul>
                             </li>
                           </ul>
                         </li>
                         <li>
-                          <a href="shop.html">
+                          <Link to="/shop">
                             shop <i className="fa fa-angle-down" />
-                          </a>
+                          </Link>
                           <ul className="dropdown">
                             <li>
-                              <a href="#">
-                                shop grid layout{" "}
+                              <Link to="#" className="shop-link">
+                                Shop{" "}
                                 <i className="fa fa-angle-right" />
-                              </a>
+                              </Link>
                               <ul className="dropdown">
                                 <li>
-                                  <a href="shop.html">shop grid left sidebar</a>
+                                  <Link to="/shop" className="shop-grid-left-sidebar">
+                                    shop
+                                  </Link>
                                 </li>
                               </ul>
                             </li>
                             <li>
-                              <a href="#">
-                                products details{" "}
-                                <i className="fa fa-angle-right" />
-                              </a>
+                              <Link to="/product-details" className="products-details">
+                                products details <i className="fa fa-angle-right" />
+                              </Link>
                               <ul className="dropdown">
                                 <li>
-                                  <a href="product-details.html">
+                                  <Link to="/product_details">
                                     product details
-                                  </a>
+                                  </Link>
                                 </li>
                               </ul>
                             </li>
                           </ul>
                         </li>
                         <li>
-                          <a href="blog-left-sidebar.html">
-                            Blog <i className="fa fa-angle-down" />
-                          </a>
-                          <ul className="dropdown">
-                            <li>
-                              <a href="blog-left-sidebar.html">
-                                blog left sidebar
-                              </a>
-                            </li>
-                          </ul>
+                          <Link to="/blog">
+                            blog</Link>
                         </li>
                         <li>
-                          <a href="contact-us.html">Contact us</a>
+                          <Link to="/contact_us">
+                            Contact us</Link>
                         </li>
                       </ul>
                     </nav>
@@ -206,11 +213,12 @@ const Header = () => {
                           <i className="fa fa-search" />
                         </a>
                       </li>
+                      {/* minicart của header */}
                       <li className="mini-cart-wrap">
-                        <a href="#" className="minicart-btn">
+                        <Link to="cart" className="minicart-btn">
                           <i className="fa fa-shopping-cart" />
                           <span className="notification">2</span>
-                        </a>
+                        </Link>
                         <div className="cart-list-wrapper">
                           <ul className="cart-list">
                             <li>
@@ -285,12 +293,12 @@ const Header = () => {
                             </li>
                           </ul>
                           <div className="minicart-button">
-                            <a href="cart.html">
+                            <Link to="/cart">
                               <i className="fa fa-shopping-cart" /> View Cart
-                            </a>
-                            <a href="cart.html">
+                            </Link>
+                            <Link to="/checkout">
                               <i className="fa fa-share" /> Checkout
-                            </a>
+                            </Link>
                           </div>
                         </div>
                       </li>
@@ -314,16 +322,16 @@ const Header = () => {
             <div className="col-12">
               <div className="mobile-main-header">
                 <div className="mobile-logo">
-                  <a href="index.html">
+                  <Link to="/">
                     <img src="assets/img/logo/logo.png" alt="Brand Logo" />
-                  </a>
+                  </Link>
                 </div>
                 <div className="mobile-menu-toggler">
                   <div className="mini-cart-wrap">
-                    <a href="cart.html">
+                    <Link to="/cart">
                       <i className="fa fa-shopping-cart" />
                       <div className="notification">0</div>
-                    </a>
+                    </Link>
                   </div>
                   <button className="mobile-menu-btn">
                     <span />
@@ -364,10 +372,14 @@ const Header = () => {
               <nav>
                 <ul className="mobile-menu">
                   <li className="menu-item-has-children">
-                    <a href="index.html">Home</a>
+                    <Link to="/">
+                      Home
+                    </Link>
                     <ul className="dropdown">
                       <li>
-                        <a href="index.html">Home version 01</a>
+                        <Link to="/">
+                          Home
+                        </Link>
                       </li>
                     </ul>
                   </li>
@@ -378,7 +390,9 @@ const Header = () => {
                         <a href="#">column 01</a>
                         <ul className="dropdown">
                           <li>
-                            <a href="shop.html">shop grid left sidebar</a>
+                            <Link to="/shop">
+                              shop
+                            </Link>
                           </li>
                         </ul>
                       </li>
@@ -386,7 +400,11 @@ const Header = () => {
                         <a href="#">column 02</a>
                         <ul className="dropdown">
                           <li>
-                            <a href="product-details.html">product details</a>
+
+                            <Link to="/product_details">
+                              product details
+                            </Link>
+
                           </li>
                         </ul>
                       </li>
@@ -394,10 +412,18 @@ const Header = () => {
                         <a href="#">column 03</a>
                         <ul className="dropdown">
                           <li>
-                            <a href="cart.html">cart</a>
+
+                            <Link to="/cart">
+                              cart
+                            </Link>
+
                           </li>
                           <li>
-                            <a href="checkout.html">checkout</a>
+
+                            <Link to="/checkout">
+                              checkout
+                            </Link>
+
                           </li>
                           <li>
                             <a href="compare.html">compare</a>
@@ -411,16 +437,24 @@ const Header = () => {
                         <a href="#">column 04</a>
                         <ul className="dropdown">
                           <li>
-                            <a href="my-account.html">my-account</a>
+
+                            <Link to="/my-account">
+                              my-account
+                            </Link>
+
                           </li>
                           <li>
                             <a href="login-register.html">login-register</a>
                           </li>
                           <li>
-                            <a href="about-us.html">about us</a>
+
+                            <Link to="/about_us">
+                              about us
+                            </Link>
                           </li>
                           <li>
-                            <a href="contact-us.html">contact us</a>
+                            <Link to="/contact_us">
+                              Contact us</Link>
                           </li>
                         </ul>
                       </li>
@@ -429,119 +463,27 @@ const Header = () => {
                   <li className="menu-item-has-children ">
                     <a href="#">shop</a>
                     <ul className="dropdown">
-                      <li className="menu-item-has-children">
-                        <a href="#">shop grid layout</a>
-                        <ul className="dropdown">
-                          <li>
-                            <a href="shop.html">shop grid left sidebar</a>
-                          </li>
-                          <li>
-                            <a href="shop-grid-right-sidebar.html">
-                              shop grid right sidebar
-                            </a>
-                          </li>
-                          <li>
-                            <a href="shop-grid-full-3-col.html">
-                              shop grid full 3 col
-                            </a>
-                          </li>
-                          <li>
-                            <a href="shop-grid-full-4-col.html">
-                              shop grid full 4 col
-                            </a>
-                          </li>
-                        </ul>
-                      </li>
-                      <li className="menu-item-has-children">
-                        <a href="#">shop list layout</a>
-                        <ul className="dropdown">
-                          <li>
-                            <a href="shop-list-left-sidebar.html">
-                              shop list left sidebar
-                            </a>
-                          </li>
-                          <li>
-                            <a href="shop-list-right-sidebar.html">
-                              shop list right sidebar
-                            </a>
-                          </li>
-                          <li>
-                            <a href="shop-list-full-width.html">
-                              shop list full width
-                            </a>
-                          </li>
-                        </ul>
-                      </li>
+
                       <li className="menu-item-has-children">
                         <a href="#">products details</a>
                         <ul className="dropdown">
                           <li>
-                            <a href="product-details.html">product details</a>
-                          </li>
-                          <li>
-                            <a href="product-details-affiliate.html">
-                              product details affiliate
-                            </a>
-                          </li>
-                          <li>
-                            <a href="product-details-variable.html">
-                              product details variable
-                            </a>
-                          </li>
-                          <li>
-                            <a href="product-details-group.html">
-                              product details group
-                            </a>
+                            <Link to="/product-details">
+                              product details
+                            </Link>
                           </li>
                         </ul>
                       </li>
                     </ul>
                   </li>
                   <li className="menu-item-has-children ">
-                    <a href="#">Blog</a>
-                    <ul className="dropdown">
-                      <li>
-                        <a href="blog-left-sidebar.html">blog left sidebar</a>
-                      </li>
-                      <li>
-                        <a href="blog-list-left-sidebar.html">
-                          blog list left sidebar
-                        </a>
-                      </li>
-                      <li>
-                        <a href="blog-right-sidebar.html">blog right sidebar</a>
-                      </li>
-                      <li>
-                        <a href="blog-list-right-sidebar.html">
-                          blog list right sidebar
-                        </a>
-                      </li>
-                      <li>
-                        <a href="blog-grid-full-width.html">
-                          blog grid full width
-                        </a>
-                      </li>
-                      <li>
-                        <a href="blog-details.html">blog details</a>
-                      </li>
-                      <li>
-                        <a href="blog-details-left-sidebar.html">
-                          blog details left sidebar
-                        </a>
-                      </li>
-                      <li>
-                        <a href="blog-details-audio.html">blog details audio</a>
-                      </li>
-                      <li>
-                        <a href="blog-details-video.html">blog details video</a>
-                      </li>
-                      <li>
-                        <a href="blog-details-image.html">blog details image</a>
-                      </li>
-                    </ul>
+                    <Link to="/blog">
+                      Blog
+                    </Link>
                   </li>
                   <li>
-                    <a href="contact-us.html">Contact us</a>
+                    <Link to="/contact_us">
+                      Contact us</Link>
                   </li>
                 </ul>
               </nav>
@@ -551,27 +493,7 @@ const Header = () => {
             <div className="mobile-settings">
               <ul className="nav">
                 <li>
-                  <div className="dropdown mobile-top-dropdown">
-                    <a
-                      href="#"
-                      className="dropdown-toggle"
-                      id="currency"
-                      data-bs-toggle="dropdown"
-                      aria-haspopup="true"
-                      aria-expanded="false"
-                    >
-                      Currency
-                      <i className="fa fa-angle-down" />
-                    </a>
-                    <div className="dropdown-menu" aria-labelledby="currency">
-                      <a className="dropdown-item" href="#">
-                        $ USD
-                      </a>
-                      <a className="dropdown-item" href="#">
-                        $ EURO
-                      </a>
-                    </div>
-                  </div>
+                 
                 </li>
                 <li>
                   <div className="dropdown mobile-top-dropdown">
@@ -587,9 +509,11 @@ const Header = () => {
                       <i className="fa fa-angle-down" />
                     </a>
                     <div className="dropdown-menu" aria-labelledby="myaccount">
-                      <a className="dropdown-item" href="my-account.html">
+
+
+                      <Link className="dropdown-item" to="/my-account">
                         my account
-                      </a>
+                      </Link>
                       <a className="dropdown-item" href="login-register.html">
                         {" "}
                         login
@@ -641,7 +565,7 @@ const Header = () => {
       {/* off-canvas menu end */}
       {/* offcanvas mobile menu end */}
     </header>
-    
+
   );
 };
 export default Header;
