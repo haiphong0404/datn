@@ -13,22 +13,29 @@
     <title>FlatLab - Flat & Responsive Bootstrap Admin Template</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link href="{{ asset('assets')}}/admin/css/bootstrap.min.css" rel="stylesheet">
-    <link href="{{ asset('assets')}}/admin/css/bootstrap-reset.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="{{ asset('assets') }}/admin/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ asset('assets') }}/admin/css/bootstrap-reset.css" rel="stylesheet">
     <!--external css-->
-    <link href="{{ asset('assets')}}/admin/assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
-    <link href="{{ asset('assets')}}/admin/assets/jquery-easy-pie-chart/jquery.easy-pie-chart.css" rel="stylesheet" type="text/css" media="screen"/>
-    <link rel="stylesheet" href="{{ asset('assets')}}/admin/css/owl.carousel.css" type="text/css">
+    <link href="{{ asset('assets') }}/admin/assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <link href="{{ asset('assets') }}/admin/assets/jquery-easy-pie-chart/jquery.easy-pie-chart.css" rel="stylesheet"
+        type="text/css" media="screen" />
+    <link rel="stylesheet" href="{{ asset('assets') }}/admin/css/owl.carousel.css" type="text/css">
 
     <!--right slidebar-->
-    <link href="{{ asset('assets')}}/admin/css/slidebars.css" rel="stylesheet">
+    <link href="{{ asset('assets') }}/admin/css/slidebars.css" rel="stylesheet">
+    <!--dynamic table-->
+    <link href="{{ asset('assets') }}/admin/assets/advanced-datatable/media/css/demo_page.css" rel="stylesheet" />
+    <link href="{{ asset('assets') }}/admin/assets/advanced-datatable/media/css/demo_table.css" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ asset('assets') }}/admin/assets/data-tables/DT_bootstrap.css" />
 
     <!-- Custom styles for this template -->
 
-    <link href="{{ asset('assets')}}/admin/css/style.css" rel="stylesheet">
-    <link href="{{ asset('assets')}}/admin/css/style-responsive.css" rel="stylesheet" />
-    <!-- Section for additional CSS -->
+    <link href="{{ asset('assets') }}/admin/css/style.css" rel="stylesheet">
+    <link href="{{ asset('assets') }}/admin/css/style-responsive.css" rel="stylesheet" />
     @yield('css')
   </head>
 
@@ -290,6 +297,18 @@
                           <span>Dashboard</span>
                       </a>
                   </li>
+                  <li>
+                    <a href="{{ route('user.index') }}">
+                        <i class="fa fa-user"></i>
+                        <span>User</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('comments.index') }}">
+                        <i class="bi bi-chat-square-dots-fill"></i>
+                        <span>Comment</span>
+                    </a>
+                </li>
 
                   <li class="sub-menu">
                       <a href="javascript:;" >
@@ -483,9 +502,14 @@
 
         </section>
     </section>
+<<<<<<< HEAD
 
 
       </section>
+=======
+        
+          
+>>>>>>> b99007719a0471530802d257112f5f982d347c20
       <!--main content end-->
 
       <!-- Right Slidebar start -->
