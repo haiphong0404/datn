@@ -13,9 +13,6 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "@types/jest": "^29.5.0",
-    "@types/node": "^18.0.0",
-    "@types/react": "^18.0.28",
-    "@types/react-dom": "^18.0.11",
     "@types/react-toastify": "^4.1.0",
     "@types/yup": "^0.32.0",
     "axios": "^1.7.2",
@@ -30,28 +27,56 @@
     "react-scripts": "5.0.1",
     "react-toastify": "^10.0.5",
     "swiper": "^11.1.8",
-    "typescript": "^4.5.4",
     "web-vitals": "^2.1.4",
     "yup": "^1.4.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.25.2",
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "@babel/preset-env": "^7.25.4",
+    "@babel/preset-react": "^7.24.7",
     "@vitejs/plugin-react": "^4.3.1",
+    "babel-eslint": "^10.1.0",
+    "babel-loader": "^9.2.1",
     "concurrently": "^8.2.2",
+    "eslint": "^8.57.1",
+    "eslint-plugin-react": "^7.36.1",
     "postcss": "^8.4.40",
     "tailwindcss": "^3.4.7",
     "vite": "^4.2.0"
   },
   "scripts": {
     "server": "json-server --watch db.json -m ./node_modules/json-server-auth --port 5001",
-    "start": "concurrently \"npm run dev\" \"npm run server\"",
-    "dev": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "vite",
+    "build": "vite build",
+    "serve": "vite preview",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
-    "root": true
+    "root": true,
+    "env": {
+      "browser": true,
+      "es2021": true
+    },
+    "extends": [
+      "eslint:recommended",
+      "plugin:react/recommended"
+    ],
+    "parser": "babel-eslint",
+    "parserOptions": {
+      "ecmaVersion": 12,
+      "sourceType": "module",
+      "ecmaFeatures": {
+        "jsx": true
+      }
+    },
+    "plugins": [
+      "react"
+    ],
+    "rules": {
+      "react/react-in-jsx-scope": "off"
+    }
   },
   "browserslist": {
     "production": [
@@ -63,6 +88,12 @@
       "last 1 chrome version",
       "last 1 firefox version",
       "last 1 safari version"
+    ]
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-env",
+      "@babel/preset-react"
     ]
   }
 }
