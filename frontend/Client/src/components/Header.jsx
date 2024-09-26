@@ -73,7 +73,7 @@ const Header = () => {
                       <ul>
                         <li className="active">
                           <Link to="/">
-                            Home <i className="fa fa-angle-down" />
+                            Trang chủ <i className="fa fa-angle-down" />
                           </Link>
                           <ul className="dropdown">
                             <li>
@@ -85,7 +85,7 @@ const Header = () => {
                         </li>
                         <li className="position-static">
                           <a href="#">
-                            pages <i className="fa fa-angle-down" />
+                            Chọn Trang <i className="fa fa-angle-down" />
                           </a>
                           <ul className="megamenu dropdown">
                             <li className="mega-title">
@@ -158,7 +158,7 @@ const Header = () => {
                         </li>
                         <li>
                           <Link to="/shop">
-                            shop <i className="fa fa-angle-down" />
+                            Cửa hàng <i className="fa fa-angle-down" />
                           </Link>
                           <ul className="dropdown">
                             <li>
@@ -190,11 +190,11 @@ const Header = () => {
                         </li>
                         <li>
                           <Link to="/blog">
-                            blog</Link>
+                            Tin tức</Link>
                         </li>
                         <li>
                           <Link to="/contact_us">
-                            Contact us</Link>
+                            Liên hệ</Link>
                         </li>
                       </ul>
                     </nav>
@@ -493,7 +493,7 @@ const Header = () => {
             <div className="mobile-settings">
               <ul className="nav">
                 <li>
-                 
+
                 </li>
                 <li>
                   <div className="dropdown mobile-top-dropdown">
