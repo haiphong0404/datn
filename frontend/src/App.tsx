@@ -2,7 +2,7 @@ import React, { Children } from "react";
 import { useRoutes } from "react-router-dom";
 import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ToastContainer } from 'react-toastify'; 
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 
@@ -16,6 +16,7 @@ import Contact_us from "./pages/Contact_us";
 import Product_details from "./pages/Product_details";
 import Cart from "./pages/cart/Cart";
 import LayoutClient from "./layout/LayoutClient";
+import AboutUs from "./pages/About_us";
 
 
 
@@ -24,8 +25,9 @@ const queryClient = new QueryClient();
 
 
 const routeConfig = [
-  { path: "/", element: <LayoutClient />,
-    children:[
+  {
+    path: "/", element: <LayoutClient />,
+    children: [
       { path: "", element: <Main /> },
       { path: "shop", element: <Shop /> },
       { path: "blog", element: <Blog /> },
@@ -33,6 +35,7 @@ const routeConfig = [
       { path: "contact", element: <Contact_us /> },
       { path: "product_details", element: <Product_details /> },
       { path: "cart", element: <Cart /> },
+      { path: "about_us", element: <AboutUs /> }
     ]
   },
 
