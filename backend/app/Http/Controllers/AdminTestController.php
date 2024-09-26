@@ -16,6 +16,11 @@ class AdminTestController extends Controller
         return view('admin.index');
     }
 
+    public function indexx()
+    {
+        return view('client.index');
+    }
+
     /**
      * Show the form for creating a new resource.
      */
@@ -35,32 +40,5 @@ class AdminTestController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(AdminTest $adminTest)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(AdminTest $adminTest)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateAdminTestRequest $request, AdminTest $adminTest)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(AdminTest $adminTest)
-    {
-        //
-    }
+ 
 }

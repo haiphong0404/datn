@@ -28,8 +28,7 @@
 
     <link href="{{ asset('assets')}}/admin/css/style.css" rel="stylesheet">
     <link href="{{ asset('assets')}}/admin/css/style-responsive.css" rel="stylesheet" />
-    <!-- Section for additional CSS -->
-    @yield('css')
+
   </head>
 
   <body class="light-sidebar-nav">
@@ -644,9 +643,6 @@
       </footer>
       <!--footer end-->
   </section>
-
-    <!-- Section for additional JS -->
-    @yield('js')
 
     <!-- js placed at the end of the document so the pages load faster -->
     <script src="{{ asset('assets')}}/admin/js/jquery.js"></script>

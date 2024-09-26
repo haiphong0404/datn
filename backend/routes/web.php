@@ -1,7 +1,9 @@
 <?php
 
-use App\Http\Controllers\Admins\BrandController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AdminTestController;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Auth\RegisteredUserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,9 +17,48 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
-Route::get('/', [AdminTestController::class, 'index'])->name('/');
+Route::get('/', [AdminTestController::class, 'indexx'])->name('/');
+Route::get('/dashboard', function () {
+  return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::resource('admin/brands', BrandController::class);
+
+
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+
+require __DIR__.'/auth.php';
+
+Route::post('post-login', [AuthenticatedSessionController::class, 'postlogin'])->name('postlogin');
+
+route::group(
+    [
+      'prefix' => 'admin',
+      'as' => 'admin.',
+      'middleware' =>'Admin'
+    ],
+    function () {
+        Route::get('admin', [adminTestController::class, 'index'])->name('admin');
+        
+     
+    }
+    
+  
+  );
+  
+route::group(
+    [
+      'prefix' => 'staff',
+      'as' => 'staff.',
+      'middleware' =>'staff'
+    ],
+    function () {
+        Route::get('Admin', [AdminTestController::class, 'index'])->name('Admin');
+     
+    }
+    
+  
+  );
+
