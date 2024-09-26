@@ -18,7 +18,7 @@ class ProductRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255|unique:products,name',
-            'description' => 'nullable|string',
+            'description' => 'nullable|string|max:255',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif', // Giới hạn kích thước tối đa 2MB
             'category_id' => 'required|exists:categories,id',
             'brand_id' => 'required|exists:brands,id',

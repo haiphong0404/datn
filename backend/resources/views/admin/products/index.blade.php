@@ -60,8 +60,18 @@
                                     <td class="center">{{ $index + 1 }}</td>
                                     <td>{{ $product->name }}</td>
                                     <td>{{ $product->description }}</td>
-                                    <td>{{ $product->category->name ?? 'Không có' }}</td>
-                                    <td>{{ $product->brand->name ?? 'Không có' }}</td>
+                                    <td>
+                                        {{ $product->category->name ?? 'Không có' }}
+                                        @if ($product->category && $product->category->trashed())
+                                            <span class="badge badge-danger">Đã xóa</span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        {{ $product->brand->name ?? 'Không có' }}
+                                        @if ($product->brand && $product->brand->trashed())
+                                            <span class="badge badge-danger">Đã xóa</span>
+                                        @endif
+                                    </td>
                                     <td>
                                         <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" width="100">
                                     </td>
@@ -97,6 +107,7 @@
                                 </tr>
                             @endforeach
                             </tbody>
+
                         </table>
                     </div>
                 </div>

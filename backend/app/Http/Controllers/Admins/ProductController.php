@@ -22,7 +22,11 @@ class ProductController extends Controller
         $search = $request->input('search');
 
         $products = Product::withTrashed() // Lấy cả sản phẩm đã xóa mềm
-        ->with(['category', 'brand'])
+        ->with(['category' => function($query) {
+            $query->withTrashed(); // Lấy cả category đã bị xóa mềm
+        }, 'brand' => function($query) {
+            $query->withTrashed(); // Lấy cả brand đã bị xóa mềm
+        }])
             ->when($search, function ($query, $search) {
                 $query->where(function ($q) use ($search) {
                     $q->where('name', 'LIKE', "%{$search}%")
@@ -39,6 +43,7 @@ class ProductController extends Controller
 
         return view('admin.products.index', compact('products'));
     }
+
 
 
     /**

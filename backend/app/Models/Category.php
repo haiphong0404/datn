@@ -15,6 +15,13 @@ class Category extends Model
         'description',
     ];
     protected $datas = ['deleted_at'];
+    protected static function booted()
+    {
+        static::deleting(function ($category) {
+            // Chỉ xóa mềm các sản phẩm liên quan khi category bị xóa mềm
+            $category->products()->delete();
+        });
+    }
     public function products()
     {
         return $this->hasMany(Product::class);
