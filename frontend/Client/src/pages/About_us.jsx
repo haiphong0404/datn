@@ -7,7 +7,7 @@ const AboutUs = () => {
             {/* Navbar */}
             <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
                 <div className="container-fluid">
-                    <a className="navbar-brand" href="#">ShoeStore</a>
+
                     <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                         <span className="navbar-toggler-icon"></span>
                     </button>
@@ -35,7 +35,7 @@ const AboutUs = () => {
                         <p className="lead">Welcome to <strong>ShoeStore</strong>! We are your go-to destination for the latest trends in footwear, offering a wide range of shoes from sneakers to formal shoes, ensuring style and comfort for everyone.</p>
                     </div>
                     <div className="col-md-6 text-center">
-                        <img src="shoes-store.jpg" alt="Shoe Store Image" className="img-fluid rounded mb-4" />
+                        <img width={100} src="https://kingshoes.vn/data/upload/media/giay-sneaker-chinh-hang-tphcm-tai-king-shoes-album-bo-suu-tap-16.jpg" alt="Shoe Store Image" className="img-fluid rounded mb-4" />
                     </div>
                     <div className="col-md-8">
                         <h2 className="mb-3">Our Mission</h2>
@@ -47,12 +47,7 @@ const AboutUs = () => {
                 </div>
             </div>
 
-            {/* Footer */}
-            <footer className="bg-dark text-white text-center py-3">
-                <div className="container">
-                    <p className="mb-0">© 2024 ShoeStore. All Rights Reserved.</p>
-                </div>
-            </footer>
+
         </div>
     );
 };
