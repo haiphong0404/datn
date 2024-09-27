@@ -99,7 +99,7 @@ const Header = () => {
                               <ul>
                                 <li>
                                   <Link to="/shop">
-                                    shop grid left sidebar
+                                    shop
                                   </Link>
                                 </li>
                               </ul>
