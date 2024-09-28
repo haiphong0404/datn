@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { useRoutes, useLocation } from "react-router-dom";
+import React from "react";
+import { useRoutes } from "react-router-dom";
 import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ToastContainer } from 'react-toastify';
