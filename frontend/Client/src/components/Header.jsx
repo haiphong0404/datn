@@ -1,7 +1,19 @@
-import React from "react";
-import { Link } from 'react-router-dom';
+import { useEffect, useRef  } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 
 const Header = () => {
+  // code reload fix lỗi plugin không tải
+  const location = useLocation();
+  const prevLocation = useRef(location.pathname);
+
+  useEffect(() => {
+ 
+    if (prevLocation.current !== location.pathname) {
+      prevLocation.current = location.pathname;
+      window.location.reload();
+    }
+  }, [location]);
+  // code reload fix lỗi plugin không tải
   return (
 
     <header className="header-area">
@@ -73,15 +85,9 @@ const Header = () => {
                       <ul>
                         <li className="active">
                           <Link to="/">
-                            Home <i className="fa fa-angle-down" />
+                            Home 
                           </Link>
-                          <ul className="dropdown">
-                            <li>
-                              <Link to="/">
-                                Home version 01
-                              </Link>
-                            </li>
-                          </ul>
+                          
                         </li>
                         <li className="position-static">
                           <a href="#">
@@ -93,7 +99,7 @@ const Header = () => {
                               <ul>
                                 <li>
                                   <Link to="/shop">
-                                    shop grid left sidebar
+                                    shop
                                   </Link>
                                 </li>
                               </ul>
