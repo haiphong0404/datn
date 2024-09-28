@@ -7,18 +7,32 @@
     "eslint:recommended",
     "plugin:react/recommended"
   ],
+<<<<<<< HEAD
   "parser": "babel-eslint",
+=======
+  "parser": "@babel/eslint-parser",
+>>>>>>> main
   "parserOptions": {
     "ecmaVersion": 12,
     "sourceType": "module",
     "ecmaFeatures": {
       "jsx": true
+<<<<<<< HEAD
     }
+=======
+    },
+    "requireConfigFile": false
+>>>>>>> main
   },
   "plugins": [
     "react"
   ],
   "rules": {
+<<<<<<< HEAD
     "react/react-in-jsx-scope": "off"
+=======
+    "react/react-in-jsx-scope": "off",
+    "react/no-unescaped-entities": "off"  // Tắt quy tắc này
+>>>>>>> main
   }
 }

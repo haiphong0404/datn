@@ -1,7 +1,26 @@
+<<<<<<< HEAD
 import React from "react";
 import { Link } from 'react-router-dom';
 
 const Header = () => {
+=======
+import { useEffect, useRef  } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+
+const Header = () => {
+  // code reload fix lỗi plugin không tải
+  const location = useLocation();
+  const prevLocation = useRef(location.pathname);
+
+  useEffect(() => {
+ 
+    if (prevLocation.current !== location.pathname) {
+      prevLocation.current = location.pathname;
+      window.location.reload();
+    }
+  }, [location]);
+  // code reload fix lỗi plugin không tải
+>>>>>>> main
   return (
 
     <header className="header-area">
@@ -87,7 +106,11 @@ const Header = () => {
                               <ul>
                                 <li>
                                   <Link to="/shop">
+<<<<<<< HEAD
                                     shop grid left sidebar
+=======
+                                    shop
+>>>>>>> main
                                   </Link>
                                 </li>
                               </ul>
