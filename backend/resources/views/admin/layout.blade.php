@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-  
+
 <!-- Mirrored from thevectorlab.net/flatlab-4/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 26 Aug 2024 14:10:45 GMT -->
 <head>
     <meta charset="utf-8">
@@ -10,7 +10,7 @@
     <meta name="keyword" content="FlatLab, Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
     <link rel="shortcut icon" href="{{ asset('assets')}}/admin/img/favicon.html">
 
-    <title>FlatLab - Flat & Responsive Bootstrap Admin Template</title>
+    <title>Thor-Admin Dashboard</title>
 
     <!-- Bootstrap core CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
@@ -495,15 +495,21 @@
       <!--main content start-->
       <section id="main-content">
         <section class="wrapper">
-        
+
          <div class="container">
             @yield('content')
          </div>
 
         </section>
     </section>
-        
-          
+<<<<<<< HEAD
+
+
+      </section>
+=======
+
+
+>>>>>>> b99007719a0471530802d257112f5f982d347c20
       <!--main content end-->
 
       <!-- Right Slidebar start -->
@@ -652,14 +658,14 @@
       <!-- Right Slidebar end -->
 
       <!--footer start-->
-      <footer class="site-footer">
-          <div class="text-center">
-              2018 &copy; FlatLab by VectorLab.
-              <a href="#" class="go-top">
-                  <i class="fa fa-angle-up"></i>
-              </a>
-          </div>
-      </footer>
+{{--      <footer class="site-footer">--}}
+{{--          <div class="text-center">--}}
+{{--              2018 &copy; FlatLab by VectorLab.--}}
+{{--              <a href="#" class="go-top">--}}
+{{--                  <i class="fa fa-angle-up"></i>--}}
+{{--              </a>--}}
+{{--          </div>--}}
+{{--      </footer>--}}
       <!--footer end-->
   </section>
 
