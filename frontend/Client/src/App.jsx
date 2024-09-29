@@ -23,6 +23,8 @@ import Register from './pages/Register';
 import NotFoundPage from "./pages/404";
 import Order_detail_cancel from "./pages/Order_detail_cancel";
 import FAQs from "./pages/FAQs";
+import Bill from "./pages/Bill";
+
 
 
 
@@ -48,6 +50,7 @@ const routeConfig = [
       { path: "*", element: <NotFoundPage /> },
       { path: "faqs", element: <FAQs /> },
       { path: "Order_detail_cancel", element: <Order_detail_cancel /> },
+      { path: "checkout/bill", element: <Bill /> },
 
     ],
     

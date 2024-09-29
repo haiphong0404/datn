@@ -1,5 +1,5 @@
 import React from 'react';
-
+import { Link } from 'react-router-dom';
 const Checkout = () => {
   return (
 <div>
@@ -673,8 +673,10 @@ const Checkout = () => {
                       <a href="index.html">terms and conditions.</a>
                     </label>
                   </div>
-                  <button type="submit" className="btn btn-sqr">
-                    Place Order
+                  <button id="mc-submit" className="btn btn-sqr">
+                    <Link to="bill">
+                    Đặt hàng
+                    </Link>
                   </button>
                 </div>
               </div>
