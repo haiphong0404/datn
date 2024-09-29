@@ -53,7 +53,7 @@ const Header = () => {
                     </Link>
                   </li>
                   <li>
-                    <a href="login-register.html">
+                    <a href="/register">
                       <i className="fa fa-sign-in" /> Sign In
                     </a>
                   </li>
