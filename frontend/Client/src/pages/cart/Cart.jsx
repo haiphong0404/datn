@@ -231,12 +231,6 @@ const Cart = () => {
                   </div>
                 </div>
               </div>
-<<<<<<< HEAD
-              <a href="/checkout" className="btn btn-sqr d-block">
-                Proceed Checkout
-              </a>
-=======
->>>>>>> dungdvt15
             </div>
           </div>
         </div>
