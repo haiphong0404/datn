@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useRoutes, useLocation } from "react-router-dom";
-import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
+import { CssBaseline, ThemeProvider, createTheme, patch } from "@mui/material";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -19,12 +19,14 @@ import Blog_detail from "./pages/Blog_detail";
 import Checkout from "./pages/Checkout";
 import AboutUs from "./pages/About_us";
 import NotFoundPage from "./pages/404";
-import Login from "./pages/login";
-import Register from "./pages/register";
-import Order from "./pages/order";
+// import Login from "./pages/login";
+// import Register from "./pages/register";
+// import Order from "./pages/order";
 import Order_detail from "./pages/Order_detail";
 import Order_detail_cancel from "./pages/Order_detail_cancel";
 import Dashboard_account from "./pages/Dashboard_account";
+import Bill from "./pages/Bill";
+import FAQs from "./pages/FAQs";
 
 const queryClient = new QueryClient();
 
@@ -38,23 +40,30 @@ const routeConfig = [
       { path: "blog", element: <Blog /> },
       { path: "checkout", element: <Checkout /> },
       { path: "blog/blog_detail", element: <Blog_detail /> },
-      { path: "my_account", element: <My_account /> },
+      // { path: "my_account", element: <My_account /> },
       { path: "contact_us", element: <Contact_us /> },
       { path: "product_details", element: <Product_details /> },
       { path: "cart", element: <Cart /> },
       { path: "about_us", element: <AboutUs /> },
-      { path: "404", element: <NotFoundPage /> }
+      { path: "404", element: <NotFoundPage /> },
+      { path: "bill", element: <Bill /> },
+      { path: "faqs", element: <FAQs /> },
+      // { path: "login", element: <Login /> },
+      // { path: "register", element: <Register /> },
     ],
-    element: < My_account />,
+    element: <My_account />,
     children: [
-      { path: "login", element: <Login /> },
-      { path: "register", element: <Register /> },
+      // { path: "order", element: <Order /> },
       { path: "dashboard_account", element: <Dashboard_account /> },
-      { path: "order", element: <Order /> },
       { path: "order_detail", element: <Order_detail /> },
       { path: "order_detail_cancel", element: <Order_detail_cancel /> },
     ]
+
   },
+  // {
+  //   path: "my_account",
+
+  // }
 ];
 
 function AppRoutes() {
