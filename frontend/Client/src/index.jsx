@@ -4,11 +4,6 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
 import "./global.css";
-
-<<<<<<< HEAD
-=======
-
->>>>>>> main
 const container = document.getElementById("root");
 if (container) {
   const root = createRoot(container);

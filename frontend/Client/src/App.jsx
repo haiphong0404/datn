@@ -1,10 +1,5 @@
-<<<<<<< HEAD
-import React, { useEffect, useState } from "react";
-import { useRoutes, useLocation } from "react-router-dom";
-=======
 import React from "react";
 import { useRoutes } from "react-router-dom";
->>>>>>> main
 import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ToastContainer } from 'react-toastify';
@@ -20,38 +15,16 @@ import Contact_us from "./pages/Contact_us";
 import Product_details from "./pages/Product_details";
 import Cart from "./pages/cart/Cart";
 import LayoutClient from "./layout/LayoutClient";
-<<<<<<< HEAD
 import Blog_detail from "./pages/Blog_detail";
 import Checkout from "./pages/Checkout";
 import AboutUs from "./pages/About_us";
-=======
-<<<<<<<< HEAD:frontend/src/App.tsx
-import AboutUs from "./pages/About_us";
-
-
-
-========
-import Blog_detail from "./pages/Blog_detail";
-import Checkout from "./pages/Checkout";
-import AboutUs from "./pages/About_us";
->>>>>>>> main:frontend/Client/src/App.jsx
->>>>>>> main
 
 const queryClient = new QueryClient();
 
 const routeConfig = [
   {
-<<<<<<< HEAD
     path: "/",
     element: <LayoutClient />,
-=======
-<<<<<<<< HEAD:frontend/src/App.tsx
-    path: "/", element: <LayoutClient />,
-========
-    path: "/",
-    element: <LayoutClient />,
->>>>>>>> main:frontend/Client/src/App.jsx
->>>>>>> main
     children: [
       { path: "", element: <Main /> },
       { path: "shop", element: <Shop /> },
