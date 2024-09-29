@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const My_account = () => {
   return (
@@ -16,7 +17,7 @@ const My_account = () => {
               <div className="col-12">
                 <div className="breadcrumb-wrap">
                   <nav aria-label="breadcrumb">
-                    <h3 className="breadcrumb-title">MY ACCOUNT</h3>
+                    <h3 className="breadcrumb-title">TÀI KHOẢN CỦA TÔI</h3>
                     <ul className="breadcrumb justify-content-center">
                       <li className="breadcrumb-item">
                         <a href="index.html">
@@ -24,7 +25,7 @@ const My_account = () => {
                         </a>
                       </li>
                       <li className="breadcrumb-item active" aria-current="page">
-                        My Account
+                        Tài khoản của tôi
                       </li>
                     </ul>
                   </nav>
@@ -48,31 +49,32 @@ const My_account = () => {
                         <div className="myaccount-tab-menu nav" role="tablist">
                           <a href="#dashboad" className="active" data-bs-toggle="tab">
                             <i className="fa fa-dashboard" />
-                            Dashboard
+                            Bảng Điều Khiển
                           </a>
                           <a href="#orders" data-bs-toggle="tab">
                             <i className="fa fa-cart-arrow-down" />
-                            Orders
+                            Đơn Hàng
                           </a>
                           <a href="#download" data-bs-toggle="tab">
                             <i className="fa fa-cloud-download" />
-                            Download
+                            Tải Xuống
                           </a>
                           <a href="#payment-method" data-bs-toggle="tab">
                             <i className="fa fa-credit-card" />
-                            Payment Method
+                            Phương Thức Thanh Toán
                           </a>
                           <a href="#address-edit" data-bs-toggle="tab">
                             <i className="fa fa-map-marker" />
-                            Address
+                            Địa Chỉ
                           </a>
                           <a href="#account-info" data-bs-toggle="tab">
-                            <i className="fa fa-user" /> Account Details
+                            <i className="fa fa-user" /> Chi Tiết Tài Khoản
                           </a>
                           <a href="login-register.html">
-                            <i className="fa fa-sign-out" /> Logout
+                            <i className="fa fa-sign-out" /> Đăng Xuất
                           </a>
                         </div>
+
                       </div>
                       {/* My Account Tab Menu End */}
                       {/* My Account Tab Content Start */}
@@ -85,74 +87,74 @@ const My_account = () => {
                             role="tabpanel"
                           >
                             <div className="myaccount-content">
-                              <h5>Xác Nhận Email</h5>
+                              <h5>Bảng Điều Khiển</h5>
                               <div className="welcome">
                                 <p>
-                                  Xin chào, <strong>Erik Jhonson</strong>!
+                                  Xin chào, <strong>Erik Jhonson</strong> (Nếu không phải là{" "}
+                                  <strong>Jhonson !</strong>
+                                  <a href="login-register.html" className="logout">
+                                    {" "}
+                                    Đăng Xuất
+                                  </a>
+                                  )
                                 </p>
                               </div>
                               <p className="mb-0">
-                                Cảm ơn bạn đã đăng ký! Vui lòng kiểm tra email của bạn và nhấp vào liên kết xác nhận để kích hoạt tài khoản của bạn.
+                                Từ bảng điều khiển tài khoản của bạn, bạn có thể dễ dàng kiểm tra
+                                &amp; xem các đơn hàng gần đây của mình, quản lý địa chỉ giao hàng và
+                                thanh toán, cũng như chỉnh sửa mật khẩu và thông tin tài khoản.
                               </p>
-                              <p>
-                                Nếu bạn không nhận được email xác nhận, hãy kiểm tra thư mục spam hoặc nhấp vào nút bên dưới để gửi lại email xác nhận.
-                              </p>
-                              <button className="news-btn" id="mc-submit">
-                                Gửi lại xác nhận
-                              </button>
-                              <p id="status-message" className="mt-2"></p>
                             </div>
-
 
                           </div>
                           {/* Single Tab Content End */}
                           {/* Single Tab Content Start */}
                           <div className="tab-pane fade" id="orders" role="tabpanel">
                             <div className="myaccount-content">
-                              <h5>Orders</h5>
+                              <h5>Đơn Hàng</h5>
                               <div className="myaccount-table table-responsive text-center">
                                 <table className="table table-bordered">
                                   <thead className="thead-light">
                                     <tr>
-                                      <th>Order</th>
-                                      <th>Date</th>
-                                      <th>Status</th>
-                                      <th>Total</th>
-                                      <th>Action</th>
+                                      <th>Đơn Hàng</th>
+                                      <th>Ngày</th>
+                                      <th>Trạng Thái</th>
+                                      <th>Tổng Cộng</th>
+                                      <th>Hành Động</th>
                                     </tr>
                                   </thead>
                                   <tbody>
                                     <tr>
                                       <td>1</td>
-                                      <td>Aug 22, 2018</td>
-                                      <td>Pending</td>
+                                      <td>22 Tháng 8, 2018</td>
+                                      <td>Đang Xử Lý</td>
                                       <td>$3000</td>
                                       <td>
-                                        <a href="cart.html" className="btn btn-sqr">
-                                          View
-                                        </a>
+                                      <Link to="/Order_detail_cancel" className="btn btn-sqr">
+                                          Xem
+                                        </Link>
                                       </td>
                                     </tr>
                                     <tr>
                                       <td>2</td>
-                                      <td>July 22, 2018</td>
-                                      <td>Approved</td>
+                                      <td>22 Tháng 7, 2018</td>
+                                      <td>Đã Phê Duyệt</td>
                                       <td>$200</td>
                                       <td>
-                                        <a href="cart.html" className="btn btn-sqr">
-                                          View
-                                        </a>
+                                        <Link to="/Order_detail_cancel" className="btn btn-sqr">
+                                          Xem
+                                        </Link>
                                       </td>
                                     </tr>
                                     <tr>
                                       <td>3</td>
-                                      <td>June 12, 2017</td>
-                                      <td>On Hold</td>
+                                      <td>12 Tháng 6, 2017</td>
+                                      <td>Đang Chờ</td>
                                       <td>$990</td>
                                       <td>
-                                        <a href="cart.html" className="btn btn-sqr">
-                                          View
-                                        </a>
+                                      <Link to="/Order_detail_cancel" className="btn btn-sqr">
+                                          Xem
+                                        </Link>
                                       </td>
                                     </tr>
                                   </tbody>
@@ -168,37 +170,37 @@ const My_account = () => {
                             role="tabpanel"
                           >
                             <div className="myaccount-content">
-                              <h5>Downloads</h5>
+                              <h5>Tải Xuống</h5>
                               <div className="myaccount-table table-responsive text-center">
                                 <table className="table table-bordered">
                                   <thead className="thead-light">
                                     <tr>
-                                      <th>Product</th>
-                                      <th>Date</th>
-                                      <th>Expire</th>
-                                      <th>Download</th>
+                                      <th>Sản Phẩm</th>
+                                      <th>Ngày</th>
+                                      <th>Hết Hạn</th>
+                                      <th>Tải Xuống</th>
                                     </tr>
                                   </thead>
                                   <tbody>
                                     <tr>
-                                      <td>PRIMITIVE MENS SHOES</td>
-                                      <td>Aug 22, 2018</td>
-                                      <td>Yes</td>
+                                      <td>GIÀY NAM PRIMITIVE</td>
+                                      <td>22 Tháng 8, 2018</td>
+                                      <td>Có</td>
                                       <td>
                                         <a href="#" className="btn btn-sqr">
                                           <i className="fa fa-cloud-download" />
-                                          Download File
+                                          Tải Tệp
                                         </a>
                                       </td>
                                     </tr>
                                     <tr>
-                                      <td>REXPO WOMENS SHOES</td>
-                                      <td>Sep 12, 2018</td>
-                                      <td>Never</td>
+                                      <td>GIÀY NỮ REXPO</td>
+                                      <td>12 Tháng 9, 2018</td>
+                                      <td>Không Bao Giờ</td>
                                       <td>
                                         <a href="#" className="btn btn-sqr">
                                           <i className="fa fa-cloud-download" />
-                                          Download File
+                                          Tải Tệp
                                         </a>
                                       </td>
                                     </tr>
@@ -215,9 +217,9 @@ const My_account = () => {
                             role="tabpanel"
                           >
                             <div className="myaccount-content">
-                              <h5>Payment Method</h5>
+                              <h5>Phương Thức Thanh Toán</h5>
                               <p className="saved-message">
-                                You Can't Saved Your Payment Method yet.
+                                Bạn chưa lưu phương thức thanh toán.
                               </p>
                             </div>
                           </div>
@@ -229,18 +231,19 @@ const My_account = () => {
                             role="tabpanel"
                           >
                             <div className="myaccount-content">
-                              <h5>Billing Address</h5>
+                              <h5>Địa Chỉ Thanh Toán</h5>
                               <address>
                                 <p>
                                   <strong>Erik Jhonson</strong>
                                 </p>
-                                <p>Your address goes here</p>
+                                <p>Địa chỉ của bạn</p>
                               </address>
                               <a href="#" className="btn btn-sqr">
                                 <i className="fa fa-edit" />
-                                Edit Address
+                                Chỉnh Sửa Địa Chỉ
                               </a>
                             </div>
+
                           </div>
                           {/* Single Tab Content End */}
                           {/* Single Tab Content Start */}
@@ -250,107 +253,89 @@ const My_account = () => {
                             role="tabpanel"
                           >
                             <div className="myaccount-content">
-                              <h5>Account Details</h5>
+                              <h5>Chi Tiết Tài Khoản</h5>
                               <div className="account-details-form">
                                 <form action="#">
                                   <div className="row">
                                     <div className="col-lg-6">
                                       <div className="single-input-item">
-                                        <label
-                                          htmlFor="first-name"
-                                          className="required"
-                                        >
-                                          First Name
+                                        <label htmlFor="first-name" className="required">
+                                          Tên
                                         </label>
                                         <input
                                           type="text"
                                           id="first-name"
-                                          placeholder="First Name"
+                                          placeholder="Tên"
                                         />
                                       </div>
                                     </div>
                                     <div className="col-lg-6">
                                       <div className="single-input-item">
-                                        <label
-                                          htmlFor="last-name"
-                                          className="required"
-                                        >
-                                          Last Name
+                                        <label htmlFor="last-name" className="required">
+                                          Họ
                                         </label>
                                         <input
                                           type="text"
                                           id="last-name"
-                                          placeholder="Last Name"
+                                          placeholder="Họ"
                                         />
                                       </div>
                                     </div>
                                   </div>
                                   <div className="single-input-item">
-                                    <label
-                                      htmlFor="display-name"
-                                      className="required"
-                                    >
-                                      Display Name
+                                    <label htmlFor="display-name" className="required">
+                                      Tên Hiển Thị
                                     </label>
                                     <input
                                       type="text"
                                       id="display-name"
-                                      placeholder="Display Name"
+                                      placeholder="Tên Hiển Thị"
                                     />
                                   </div>
                                   <div className="single-input-item">
                                     <label htmlFor="email" className="required">
-                                      Email Addres
+                                      Địa Chỉ Email
                                     </label>
                                     <input
                                       type="email"
                                       id="email"
-                                      placeholder="Email Address"
+                                      placeholder="Địa Chỉ Email"
                                     />
                                   </div>
                                   <fieldset>
-                                    <legend>Password Change</legend>
+                                    <legend>Thay Đổi Mật Khẩu</legend>
                                     <div className="single-input-item">
-                                      <label
-                                        htmlFor="current-pwd"
-                                        className="required"
-                                      >
-                                        Current Password
+                                      <label htmlFor="current-pwd" className="required">
+                                        Mật Khẩu Hiện Tại
                                       </label>
                                       <input
                                         type="password"
                                         id="current-pwd"
-                                        placeholder="Current Password"
+                                        placeholder="Mật Khẩu Hiện Tại"
                                       />
                                     </div>
                                     <div className="row">
                                       <div className="col-lg-6">
                                         <div className="single-input-item">
-                                          <label
-                                            htmlFor="new-pwd"
-                                            className="required"
-                                          >
-                                            New Password
+                                          <label htmlFor="new-pwd" className="required">
+                                            Mật Khẩu Mới
                                           </label>
                                           <input
                                             type="password"
                                             id="new-pwd"
-                                            placeholder="New Password"
+                                            placeholder="Mật Khẩu Mới"
                                           />
                                         </div>
                                       </div>
                                       <div className="col-lg-6">
                                         <div className="single-input-item">
-                                          <label
-                                            htmlFor="confirm-pwd"
-                                            className="required"
-                                          >
-                                            Confirm Password
+                                          <label htmlFor="confirm-pwd" className="required">
+                                            Xác Nhận Mật Khẩu
                                           </label>
                                           <input
                                             type="password"
                                             id="confirm-pwd"
-                                            placeholder="Confirm Password"
+                                            placeholder="Xác Nhận Mật Khẩu"
                                           />
                                         </div>
                                       </div>
@@ -358,7 +343,7 @@ const My_account = () => {
                                   </fieldset>
                                   <div className="single-input-item">
                                     <button className="btn btn-sqr">
-                                      Save Changes
+                                      Lưu Thay Đổi
                                     </button>
                                   </div>
                                 </form>

@@ -20,7 +20,11 @@ import Checkout from "./pages/Checkout";
 import AboutUs from "./pages/About_us";
 import Login from "./pages/Login";
 import Register from './pages/Register';
-import NotFoundPage from "./pages/NotFoundPage";
+
+import NotFoundPage from "./pages/404";
+import Order_detail_cancel from "./pages/Order_detail_cancel";
+
+import FAQs from "./pages/FAQs";
 
 
 
@@ -44,8 +48,16 @@ const routeConfig = [
       { path: "login", element: <Login /> },
       { path: "register", element: <Register /> },
       { path: "*", element: <NotFoundPage /> },
-    ]
+      { path: "faqs", element: <FAQs /> },
+
+      { path: "Order_detail_cancel", element: <Order_detail_cancel /> },
+
+    ],
+    
+
+
   },
+
 ];
 
 function AppRoutes() {

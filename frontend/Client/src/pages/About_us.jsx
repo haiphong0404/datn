@@ -335,6 +335,7 @@ const AboutUs = () => {
   {/* team area end */}
 </main>
 
+
         </div>
     );
 };
