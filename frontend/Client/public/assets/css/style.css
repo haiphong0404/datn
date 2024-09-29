@@ -6804,5 +6804,11 @@ blockquote {
   color: #87b106;
 }
 
+
+.news-btn:hover {
+  background-color: #218838;  /* Màu nền khi hover */
+}
+
+
 /*----- footer area end -----*/
 /*# sourceMappingURL=style.css.map */
