@@ -225,7 +225,7 @@ const Cart = () => {
                   </table>
                 </div>
               </div>
-              <a href="checkout.html" className="btn btn-sqr d-block">
+              <a href="/checkout" className="btn btn-sqr d-block">
                 Proceed Checkout
               </a>
             </div>

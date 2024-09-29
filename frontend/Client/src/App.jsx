@@ -18,6 +18,11 @@ import LayoutClient from "./layout/LayoutClient";
 import Blog_detail from "./pages/Blog_detail";
 import Checkout from "./pages/Checkout";
 import AboutUs from "./pages/About_us";
+import Login from "./pages/Login";
+import Register from './pages/Register';
+import NotFoundPage from "./pages/NotFoundPage";
+
+
 
 const queryClient = new QueryClient();
 
@@ -35,7 +40,10 @@ const routeConfig = [
       { path: "contact_us", element: <Contact_us /> },
       { path: "product_details", element: <Product_details /> },
       { path: "cart", element: <Cart /> },
-      { path: "about_us", element: <AboutUs /> }
+      { path: "about_us", element: <AboutUs /> },
+      { path: "login", element: <Login /> },
+      { path: "register", element: <Register /> },
+      { path: "*", element: <NotFoundPage /> },
     ]
   },
 ];
