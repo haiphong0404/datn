@@ -6803,6 +6803,28 @@ blockquote {
 .copyright a {
   color: #87b106;
 }
+.FAQ {
+ width: 70%;
+ margin: 0 auto;
+}
+.FAQ {
+  padding-top: 5%;
+  width: 50%;
+  margin: 0 auto;
+}
 
+.section {
+  padding-top: 5%;
+  margin-bottom: 30px; /* Adjusts space between sections */
+}
+
+.question {
+  margin: 15px 0; /* Adds space above and below the question */
+  
+}
+
+.answer {
+  margin: 5px 0; /* Adds space above and below the answer */
+}
 /*----- footer area end -----*/
 /*# sourceMappingURL=style.css.map */

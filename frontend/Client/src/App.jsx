@@ -18,6 +18,12 @@ import LayoutClient from "./layout/LayoutClient";
 import Blog_detail from "./pages/Blog_detail";
 import Checkout from "./pages/Checkout";
 import AboutUs from "./pages/About_us";
+import NotFoundPage from "./pages/404";
+import Order_detail_cancel from "./pages/Order_detail_cancel";
+
+import FAQs from "./pages/FAQs";
+
+
 
 const queryClient = new QueryClient();
 
@@ -35,9 +41,19 @@ const routeConfig = [
       { path: "contact_us", element: <Contact_us /> },
       { path: "product_details", element: <Product_details /> },
       { path: "cart", element: <Cart /> },
-      { path: "about_us", element: <AboutUs /> }
-    ]
+      { path: "about_us", element: <AboutUs /> },
+  
+      { path: "faqs", element: <FAQs /> },
+      { path: "*", element: <NotFoundPage /> },
+      { path: "Order_detail_cancel", element: <Order_detail_cancel /> },
+
+
+    ],
+    
+
+
   },
+
 ];
 
 function AppRoutes() {
