@@ -45,11 +45,11 @@ const routeConfig = [
       { path: "product_details", element: <Product_details /> },
       { path: "cart", element: <Cart /> },
       { path: "about_us", element: <AboutUs /> },
-      { path: "404", element: <NotFoundPage /> },
       { path: "bill", element: <Bill /> },
       { path: "faqs", element: <FAQs /> },
       // { path: "login", element: <Login /> },
       // { path: "register", element: <Register /> },
+      { path: "*", element: <NotFoundPage /> },
     ],
     element: <My_account />,
     children: [
@@ -57,7 +57,8 @@ const routeConfig = [
       { path: "dashboard_account", element: <Dashboard_account /> },
       { path: "order_detail", element: <Order_detail /> },
       { path: "order_detail_cancel", element: <Order_detail_cancel /> },
-    ]
+    ],
+
 
   },
   // {
