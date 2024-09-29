@@ -87,24 +87,31 @@ const My_account = () => {
                             role="tabpanel"
                           >
                             <div className="myaccount-content">
-                              <h5>Bảng Điều Khiển</h5>
+                              <h5>Xác Nhận Email</h5>
                               <div className="welcome">
                                 <p>
-                                  Xin chào, <strong>Erik Jhonson</strong> (Nếu không phải là{" "}
-                                  <strong>Jhonson !</strong>
-                                  <a href="login-register.html" className="logout">
-                                    {" "}
-                                    Đăng Xuất
-                                  </a>
-                                  )
+                                  Xin chào, <strong>Erik Jhonson</strong>!
                                 </p>
                               </div>
                               <p className="mb-0">
-                                Từ bảng điều khiển tài khoản của bạn, bạn có thể dễ dàng kiểm tra
-                                &amp; xem các đơn hàng gần đây của mình, quản lý địa chỉ giao hàng và
-                                thanh toán, cũng như chỉnh sửa mật khẩu và thông tin tài khoản.
+                                Cảm ơn bạn đã đăng ký! Vui lòng kiểm tra email của bạn và nhấp vào liên kết xác nhận để kích hoạt tài khoản của bạn.
                               </p>
+                              <p>
+                                Nếu bạn không nhận được email xác nhận, hãy kiểm tra thư mục spam hoặc nhấp vào nút bên dưới để gửi lại email xác nhận.
+                              </p>
+
+                              {/* Nút xác nhận */}
+                              <div className="button-container">
+                                <div className="button_mail">
+                                <button className="news-btn" id="mc-submit">
+                                  Gửi lại xác nhận
+                                </button>
+                                </div>
+                              </div>
+
+                              <p id="status-message" className="mt-2"></p>
                             </div>
+
 
                           </div>
                           {/* Single Tab Content End */}
@@ -130,7 +137,7 @@ const My_account = () => {
                                       <td>Đang Xử Lý</td>
                                       <td>$3000</td>
                                       <td>
-                                      <Link to="/Order_detail_cancel" className="btn btn-sqr">
+                                        <Link to="/Order_detail_cancel" className="btn btn-sqr">
                                           Xem
                                         </Link>
                                       </td>
@@ -152,7 +159,7 @@ const My_account = () => {
                                       <td>Đang Chờ</td>
                                       <td>$990</td>
                                       <td>
-                                      <Link to="/Order_detail_cancel" className="btn btn-sqr">
+                                        <Link to="/Order_detail_cancel" className="btn btn-sqr">
                                           Xem
                                         </Link>
                                       </td>
