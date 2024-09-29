@@ -18,6 +18,13 @@ import LayoutClient from "./layout/LayoutClient";
 import Blog_detail from "./pages/Blog_detail";
 import Checkout from "./pages/Checkout";
 import AboutUs from "./pages/About_us";
+import NotFoundPage from "./pages/404";
+import Login from "./pages/login";
+import Register from "./pages/register";
+import Order from "./pages/order";
+import Order_detail from "./pages/Order_detail";
+import Order_detail_cancel from "./pages/Order_detail_cancel";
+import Dashboard_account from "./pages/Dashboard_account";
 
 const queryClient = new QueryClient();
 
@@ -35,7 +42,17 @@ const routeConfig = [
       { path: "contact_us", element: <Contact_us /> },
       { path: "product_details", element: <Product_details /> },
       { path: "cart", element: <Cart /> },
-      { path: "about_us", element: <AboutUs /> }
+      { path: "about_us", element: <AboutUs /> },
+      { path: "404", element: <NotFoundPage /> }
+    ],
+    element: < My_account />,
+    children: [
+      { path: "login", element: <Login /> },
+      { path: "register", element: <Register /> },
+      { path: "dashboard_account", element: <Dashboard_account /> },
+      { path: "order", element: <Order /> },
+      { path: "order_detail", element: <Order_detail /> },
+      { path: "order_detail_cancel", element: <Order_detail_cancel /> },
     ]
   },
 ];
