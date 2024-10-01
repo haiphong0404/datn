@@ -20,12 +20,12 @@ const Main = () => {
                   <div className="row">
                     <div className="col-md-12">
                       <div className="hero-slider-content slide-1">
-                        <h1 className="slide-title">New</h1>
+                        <h1 className="slide-title">mới nhất</h1>
                         <h2 className="slide-subtitle">
-                          Running Sneakers <span>Men's like plex</span>
+                        Giày thể thao chạy bộ <span>Đàn ông thích</span>
                         </h2>
                         <a href="#" className="btn btn-large btn-bg">
-                          Shop Now
+                          Mua Ngay
                         </a>
                       </div>
                     </div>
@@ -46,12 +46,12 @@ const Main = () => {
                   <div className="row">
                     <div className="col-md-12">
                       <div className="hero-slider-content slide-2">
-                        <h1 className="slide-title">Sale</h1>
+                        <h1 className="slide-title">Giảm giá</h1>
                         <h2 className="slide-subtitle">
-                          Running Sneakers <span>Men's like plex</span>
+                        Giày thể thao chạy bộ  <span>Đàn ông thích</span>
                         </h2>
                         <a href="#" className="btn btn-large btn-bg">
-                          Shop Now
+                          Mua Ngay
                         </a>
                       </div>
                     </div>
@@ -74,9 +74,10 @@ const Main = () => {
                     <i className="fa fa-heart-o" />
                   </div>
                   <div className="policy-text">
-                    <h4 className="policy-title">Great Value</h4>
+                    <h4 className="policy-title">
+                    Giá trị lớn</h4>
                     <p className="policy-desc">
-                      Nunc id ante quis tellus faucibus dictum in eget metus.
+                     Bây giờ, hãy đặt bản thân trước các quy tắc về chăm sóc sức khỏe khi còn có thể
                     </p>
                   </div>
                 </div>
@@ -87,9 +88,10 @@ const Main = () => {
                     <i className="fa fa-truck" />
                   </div>
                   <div className="policy-text">
-                    <h4 className="policy-title">Worlwide Delivery</h4>
+                    <h4 className="policy-title">
+                    Giao hàng toàn cầu</h4>
                     <p className="policy-desc">
-                      Nunc id ante quis tellus faucibus dictum in eget metus.
+                     Bây giờ, hãy đặt bản thân trước các quy tắc về chăm sóc sức khỏe khi còn có thể
                     </p>
                   </div>
                 </div>
@@ -100,9 +102,10 @@ const Main = () => {
                     <i className="fa fa-credit-card" />
                   </div>
                   <div className="policy-text">
-                    <h4 className="policy-title">Safe Payment</h4>
+                    <h4 className="policy-title">
+                    Thanh toán an toàn</h4>
                     <p className="policy-desc">
-                      Nunc id ante quis tellus faucibus dictum in eget metus.
+                     Bây giờ, hãy đặt bản thân trước các quy tắc về chăm sóc sức khỏe khi còn có thể
                     </p>
                   </div>
                 </div>
@@ -113,9 +116,9 @@ const Main = () => {
                     <i className="fa fa-headphones" />
                   </div>
                   <div className="policy-text">
-                    <h4 className="policy-title">24/7 Help Center</h4>
+                    <h4 className="policy-title">Trung tâm trợ giúp 24/7</h4>
                     <p className="policy-desc">
-                      Nunc id ante quis tellus faucibus dictum in eget metus.
+                     Bây giờ, hãy đặt bản thân trước các quy tắc về chăm sóc sức khỏe khi còn có thể
                     </p>
                   </div>
                 </div>
@@ -145,19 +148,17 @@ const Main = () => {
               </div>
               <div className="col-lg-6">
                 <div className="about-content">
-                  <h2 className="about-title">PULLMAN SNEAKER ABOUT US.</h2>
+                  <h2 className="about-title">Giới thiệu về giày thể thao THOR</h2>
                   <h3 className="about-subtitle">
-                    Investigationes demonstraverunt lectores legere me.
+                  Nghiên cứu đã chỉ ra rằng độc giả đọc tôi.
                   </h3>
                   <p>
-                    Quisque consequat venenatis rutrum. Quisque posuere enim
-                    augue, in rhoncus diam dictum non.Nunc id ante quis tellus
-                    faucibus
+                  Phần kết thúc mang tính động mạch. Vị trí của bạn khá thoải mái, nhưng không có câu trả lời rõ ràng. Giờ đây, tôi ở phía trước, muốn có sự hỗ trợ từ bạn
                   </p>
                   <ul className="about-info">
                     <li className="add">
                       <i className="fa fa-home" />
-                      Manchester Road 123-78B, Silictown 7854MD, Great Country
+                      1 trinh van bo
                     </li>
                     <li className="phone">
                       <i className="fa fa-phone" />
@@ -165,7 +166,7 @@ const Main = () => {
                     </li>
                     <li className="mail">
                       <i className="fa fa-envelope" />
-                      Email: hello@sitename.com
+                      Email: thor@gamil.com
                     </li>
                   </ul>
                 </div>
@@ -180,11 +181,9 @@ const Main = () => {
             <div className="row">
               <div className="col-12">
                 <div className="section-title text-center">
-                  <h3 className="title">NEW ARRIVALS PRODUCTS</h3>
+                  <h3 className="title">Sản Phẩm Mới Về</h3>
                   <h4 className="sub-title">
-                    Investigationes demonstraverunt lectores legere me lius quod
-                    ii legunt saepius claritas est etiam processus dynamicus,
-                    qui sequitur mutationem.
+                  Các cuộc điều tra đã chứng minh rằng người đọc dễ dàng đọc tôi hơn vì họ đọc thường xuyên hơn; sự rõ ràng cũng là một quá trình động, tiếp tục sự thay đổi.
                   </h4>
                 </div>
               </div>
@@ -622,7 +621,7 @@ const Main = () => {
                           <div className="deals-content-item">
                             <h2 className="deals-title">
                               <a href="product-details.html">
-                                Top Mens slippers
+                                Giày nam hàng đầu
                               </a>
                             </h2>
                             <div className="ratings">
@@ -643,8 +642,8 @@ const Main = () => {
                               </span>
                             </div>
                             <p className="deals-desc">
-                              Canon's first 4K UHD Camcorder, the GX10 has a
-                              compact and portable design that delivers ...
+                            Máy quay 4K UHD đầu tiên của Canon, GX10 có
+                            thiết kế nhỏ gọn và di động mang lại ...
                             </p>
                             <div className="price-box">
                               <span className="price-old">
@@ -653,7 +652,7 @@ const Main = () => {
                               <span className="price-regular">$26.10</span>
                             </div>
                             <a className="shop-btn" href="shop.html">
-                              Add To Cart
+                              Thêm vào Giỏ hàng
                             </a>
                             <div
                               className="product-countdown"
@@ -667,7 +666,7 @@ const Main = () => {
                           <div className="deals-content-item">
                             <h2 className="deals-title">
                               <a href="product-details.html">
-                                Top Mens slippers
+                                Giày nam hàng đầu
                               </a>
                             </h2>
                             <div className="ratings">
@@ -688,8 +687,8 @@ const Main = () => {
                               </span>
                             </div>
                             <p className="deals-desc">
-                              Canon's first 4K UHD Camcorder, the GX10 has a
-                              compact and portable design that delivers ...
+                              Máy quay 4K UHD đầu tiên của Canon, GX10 có
+                            thiết kế nhỏ gọn và di động mang lại ...
                             </p>
                             <div className="price-box">
                               <span className="price-old">
@@ -698,7 +697,8 @@ const Main = () => {
                               <span className="price-regular">$26.10</span>
                             </div>
                             <a className="shop-btn" href="shop.html">
-                              Add To Cart
+                                                            Thêm vào Giỏ hàng
+
                             </a>
                             <div
                               className="product-countdown"
@@ -712,7 +712,7 @@ const Main = () => {
                           <div className="deals-content-item">
                             <h2 className="deals-title">
                               <a href="product-details.html">
-                                Top Mens slippers
+                                Giày nam hàng đầu
                               </a>
                             </h2>
                             <div className="ratings">
@@ -733,8 +733,8 @@ const Main = () => {
                               </span>
                             </div>
                             <p className="deals-desc">
-                              Canon's first 4K UHD Camcorder, the GX10 has a
-                              compact and portable design that delivers ...
+                              Máy quay 4K UHD đầu tiên của Canon, GX10 có
+                            thiết kế nhỏ gọn và di động mang lại ...
                             </p>
                             <div className="price-box">
                               <span className="price-old">
@@ -743,7 +743,8 @@ const Main = () => {
                               <span className="price-regular">$26.10</span>
                             </div>
                             <a className="shop-btn" href="shop.html">
-                              Add To Cart
+                                                            Thêm vào Giỏ hàng
+
                             </a>
                             <div
                               className="product-countdown"
@@ -757,7 +758,7 @@ const Main = () => {
                           <div className="deals-content-item">
                             <h2 className="deals-title">
                               <a href="product-details.html">
-                                Top Mens slippers
+                                Giày nam hàng đầu
                               </a>
                             </h2>
                             <div className="ratings">
@@ -778,8 +779,8 @@ const Main = () => {
                               </span>
                             </div>
                             <p className="deals-desc">
-                              Canon's first 4K UHD Camcorder, the GX10 has a
-                              compact and portable design that delivers ...
+                              Máy quay 4K UHD đầu tiên của Canon, GX10 có
+                            thiết kế nhỏ gọn và di động mang lại ...
                             </p>
                             <div className="price-box">
                               <span className="price-old">
@@ -788,7 +789,8 @@ const Main = () => {
                               <span className="price-regular">$26.10</span>
                             </div>
                             <a className="shop-btn" href="shop.html">
-                              Add To Cart
+                                                            Thêm vào Giỏ hàng
+
                             </a>
                             <div
                               className="product-countdown"
@@ -802,7 +804,7 @@ const Main = () => {
                           <div className="deals-content-item">
                             <h2 className="deals-title">
                               <a href="product-details.html">
-                                Top Mens slippers
+                                Giày nam hàng đầu
                               </a>
                             </h2>
                             <div className="ratings">
@@ -823,8 +825,8 @@ const Main = () => {
                               </span>
                             </div>
                             <p className="deals-desc">
-                              Canon's first 4K UHD Camcorder, the GX10 has a
-                              compact and portable design that delivers ...
+                              Máy quay 4K UHD đầu tiên của Canon, GX10 có
+                            thiết kế nhỏ gọn và di động mang lại ...
                             </p>
                             <div className="price-box">
                               <span className="price-old">
@@ -833,7 +835,8 @@ const Main = () => {
                               <span className="price-regular">$26.10</span>
                             </div>
                             <a className="shop-btn" href="shop.html">
-                              Add To Cart
+                                                            Thêm vào Giỏ hàng
+
                             </a>
                             <div
                               className="product-countdown"
@@ -863,12 +866,10 @@ const Main = () => {
               <div className="col-12">
                 <div className="section-title text-center">
                   <h3 className="title text-white">
-                    SHOP BY CATEGORIES PULLMAN
+                  MUA SẮM THEO DANH MỤC THOR
                   </h3>
                   <h4 className="sub-title text-white">
-                    Investigationes demonstraverunt lectores legere me lius quod
-                    ii legunt saepius claritas est etiam processus dynamicus,
-                    qui sequitur mutationem.
+                  Các cuộc điều tra đã chứng minh rằng người đọc dễ dàng đọc tôi hơn vì họ đọc thường xuyên hơn; sự rõ ràng cũng là một quá trình động, theo sau sự thay đổi.
                   </h4>
                 </div>
               </div>
@@ -878,7 +879,7 @@ const Main = () => {
                 <div className="catagory-carousel-active slick-row-15">
                   <div className="single-category-item">
                     <div className="category-title">
-                      <a href="shop.html">MEN</a>
+                      <a href="shop.html">NAM</a>
                     </div>
                     <div className="category-thumb">
                       <a href="shop.html">
@@ -890,13 +891,13 @@ const Main = () => {
                     </div>
                     <div className="shop-collection text-center">
                       <a className="shop-btn" href="shop.html">
-                        Shop Collections
+                        Bộ sưu tập cửa hàng
                       </a>
                     </div>
                   </div>
                   <div className="single-category-item">
                     <div className="category-title">
-                      <a href="shop.html">WOMEN</a>
+                      <a href="shop.html">NỮ</a>
                     </div>
                     <div className="category-thumb">
                       <a href="shop.html">
@@ -908,13 +909,14 @@ const Main = () => {
                     </div>
                     <div className="shop-collection text-center">
                       <a className="shop-btn" href="shop.html">
-                        Shop Collections
+                        Bộ sưu tập cửa hàng
                       </a>
                     </div>
                   </div>
                   <div className="single-category-item">
                     <div className="category-title">
-                      <a href="shop.html">QUICKIIN</a>
+                      <a href="shop.html">NHANH CHÓNG
+                      </a>
                     </div>
                     <div className="category-thumb">
                       <a href="shop.html">
@@ -926,7 +928,7 @@ const Main = () => {
                     </div>
                     <div className="shop-collection text-center">
                       <a className="shop-btn" href="shop.html">
-                        Shop Collections
+                        Bộ sưu tập cửa hàng
                       </a>
                     </div>
                   </div>
@@ -944,7 +946,7 @@ const Main = () => {
                     </div>
                     <div className="shop-collection text-center">
                       <a className="shop-btn" href="shop.html">
-                        Shop Collections
+                        Bộ sưu tập cửa hàng
                       </a>
                     </div>
                   </div>
@@ -960,11 +962,9 @@ const Main = () => {
             <div className="row">
               <div className="col-12">
                 <div className="section-title text-center">
-                  <h3 className="title">OUR IN STORE</h3>
+                  <h3 className="title">CỬA HÀNG CỦA CHÚNG TÔI</h3>
                   <h4 className="sub-title">
-                    Investigationes demonstraverunt lectores legere me lius quod
-                    ii legunt saepius claritas est etiam processus dynamicus,
-                    qui sequitur mutationem.
+                  Các cuộc điều tra đã chứng minh rằng người đọc dễ dàng đọc tôi hơn vì họ đọc thường xuyên hơn; sự rõ ràng cũng là một quá trình động, theo sau sự thay đổi.
                   </h4>
                 </div>
               </div>
@@ -977,17 +977,17 @@ const Main = () => {
                     <ul className="nav justify-content-center">
                       <li>
                         <a href="#tab1" className="active" data-bs-toggle="tab">
-                          New Arrival
+                        Hàng Mới Về
                         </a>
                       </li>
                       <li>
                         <a href="#tab2" data-bs-toggle="tab">
-                          Best Seller
+                        Sản Phẩm Bán Chạy Nhất.
                         </a>
                       </li>
                       <li>
                         <a href="#tab3" data-bs-toggle="tab">
-                          Featured Products
+                        Sản Phẩm Nổi Bật
                         </a>
                       </li>
                     </ul>
@@ -3202,9 +3202,7 @@ const Main = () => {
                     <div className="testimonial-slide-item">
                       <div className="testimonial-item text-center">
                         <p className="testimonial-desc">
-                          "When potential customers are researching you online,
-                          they're getting to know you by way of the content of
-                          your website."
+                        "Khi khách hàng tiềm năng đang nghiên cứu về bạn trực tuyến, họ đang tìm hiểu về bạn qua nội dung của trang web của bạn."
                         </p>
                         <div className="testimonial-author">
                           <img
@@ -3212,7 +3210,7 @@ const Main = () => {
                             alt="testimonial author"
                           />
                         </div>
-                        <h6 className="author-designation">jhone doe</h6>
+                        <h6 className="author-designation">MINH HIẾU</h6>
                       </div>
                     </div>
                     {/* slide item end */}
@@ -3220,9 +3218,7 @@ const Main = () => {
                     <div className="testimonial-slide-item">
                       <div className="testimonial-item text-center">
                         <p className="testimonial-desc">
-                          " When potential customers are researching you online,
-                          they're getting to know you by way of the content of
-                          your website. "
+                        "Khi khách hàng tiềm năng đang nghiên cứu về bạn trực tuyến, họ đang tìm hiểu về bạn qua nội dung của trang web của bạn."
                         </p>
                         <div className="testimonial-author">
                           <img
@@ -3230,7 +3226,7 @@ const Main = () => {
                             alt="testimonial author"
                           />
                         </div>
-                        <h6 className="author-designation">jhone doe</h6>
+                        <h6 className="author-designation">Trung Dũng</h6>
                       </div>
                     </div>
                     {/* slide item end */}
@@ -3238,9 +3234,7 @@ const Main = () => {
                     <div className="testimonial-slide-item">
                       <div className="testimonial-item text-center">
                         <p className="testimonial-desc">
-                          " When potential customers are researching you online,
-                          they're getting to know you by way of the content of
-                          your website. "
+                        "Khi khách hàng tiềm năng đang nghiên cứu về bạn trực tuyến, họ đang tìm hiểu về bạn qua nội dung của trang web của bạn."
                         </p>
                         <div className="testimonial-author">
                           <img
@@ -3248,7 +3242,7 @@ const Main = () => {
                             alt="testimonial author"
                           />
                         </div>
-                        <h6 className="author-designation">jhone doe</h6>
+                        <h6 className="author-designation">ĐỨC</h6>
                       </div>
                     </div>
                     {/* slide item end */}
@@ -3311,11 +3305,9 @@ const Main = () => {
             <div className="row">
               <div className="col-12">
                 <div className="section-title text-center">
-                  <h3 className="title">FROM OUR BLOG</h3>
+                  <h3 className="title">TỪ BLOG CỦA CHÚNG TÔI</h3>
                   <h4 className="sub-title">
-                    Investigationes demonstraverunt lectores legere me lius quod
-                    ii legunt saepius claritas est etiam processus dynamicus,
-                    qui sequitur mutationem.
+                  "Các cuộc điều tra đã chứng minh rằng người đọc dễ dàng đọc tôi hơn vì họ đọc thường xuyên hơn; sự rõ ràng cũng là một quá trình động, theo sau sự thay đổi."
                   </h4>
                 </div>
               </div>
@@ -3337,13 +3329,13 @@ const Main = () => {
                       <div className="blog-content">
                         <h6 className="blog-title">
                           <a href="blog-details.html">
-                            This is First Post XipBlog
+                          Đây là bài viết đầu tiên XipBlog
                           </a>
                         </h6>
                         <div className="blog-meta">
                           <span>
                             <i className="fa fa-calendar" />
-                            Aug 05, 2021
+                            Ngày 05 tháng 8 năm 2021
                           </span>
                           <span>
                             <i className="fa fa-user" />
@@ -3375,7 +3367,7 @@ const Main = () => {
                       <div className="blog-content">
                         <h6 className="blog-title">
                           <a href="blog-details.html">
-                            This is Secound Post XipBlog
+                          Đây là bài viết đầu tiên XipBlog
                           </a>
                         </h6>
                         <div className="blog-meta">
@@ -3495,7 +3487,7 @@ const Main = () => {
                         <div className="blog-meta">
                           <span>
                             <i className="fa fa-calendar" />
-                            Aug 05, 2021
+                            Ngày 05 tháng 8 năm 2021
                           </span>
                           <span>
                             <i className="fa fa-user" />
@@ -3533,7 +3525,7 @@ const Main = () => {
                         <div className="blog-meta">
                           <span>
                             <i className="fa fa-calendar" />
-                            Aug 05, 2021
+                            Ngày 05 tháng 8 năm 2021
                           </span>
                           <span>
                             <i className="fa fa-user" />

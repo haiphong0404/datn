@@ -14,21 +14,21 @@ const Footer = () => {
             <div className="row">
               <div className="col-12">
                 <div className="newsletter-wrapper text-center">
-                  <h3 className="title text-white">JOIN OUR NEWSLETTER</h3>
+                  <h3 className="title text-white">THAM GIA BẢN TIN CỦA CHÚNG TÔI</h3>
                   <form className="newsletter-inner" id="mc-form">
                     <input
                       type="email"
                       className="news-field"
                       id="mc-email"
                       autoComplete="off"
-                      placeholder="Enter your email address"
+                      placeholder="Nhập địa chỉ email của bạn"
                     />
-                    <button className="news-btn" id="mc-submit">
-                      Subscribe
+                    <button className="news-btn text-nowrap" id="mc-submit">
+                      Đặt mua
                     </button>
                   </form>
                   <h6 className="newsletter-subtitle">
-                    To get the latest news from us please subscribe your email.
+                    Để nhận được tin tức mới nhất từ chúng tôi, vui lòng đăng kí email của bạn.
                   </h6>
                   {/* mailchimp-alerts Start */}
                   <div className="mailchimp-alerts">
@@ -51,100 +51,100 @@ const Footer = () => {
             <div className="row mtn-30">
               <div className="col-lg-3 col-sm-6">
                 <div className="footer-widget-item mt-30">
-                  <h6 className="widget-title">CUSTOM LINKS</h6>
+                  <h6 className="widget-title">LIÊN KẾT TÙY CHỈNH</h6>
                   <ul className="usefull-links">
                     <li>
-                      <a href="#">Privacy Policy</a>
+                      <a href="#">Chính sách bảo mật</a>
                     </li>
                     <li>
-                      <a href="#">Order Status</a>
+                      <a href="#">Trạng thái đơn hàng</a>
                     </li>
                     <li>
-                      <a href="#">Returns &amp; Exchanges</a>
+                      <a href="#">Trả lại &amp; Trao đổi</a>
                     </li>
                     <li>
-                      <a href="#">Size Guide</a>
+                      <a href="#">Hướng dẫn kích thước</a>
                     </li>
                     <li>
-                      <a href="#">Cart</a>
+                      <a href="#">giỏ hàng</a>
                     </li>
                     <li>
-                      <a href="#">FAQ</a>
+                      <a href="#">Câu hỏi thường gặp</a>
                     </li>
                   </ul>
                 </div>
               </div>
               <div className="col-lg-3 col-sm-6">
                 <div className="footer-widget-item mt-30">
-                  <h6 className="widget-title">PRODUCTS</h6>
+                  <h6 className="widget-title">CÁC SẢN PHẨM</h6>
                   <ul className="usefull-links">
                     <li>
-                      <a href="#">Prices drop</a>
+                      <a href="#">Giá giảm</a>
                     </li>
                     <li>
-                      <a href="#">New products</a>
+                      <a href="#">Sản phẩm mới</a>
                     </li>
                     <li>
-                      <a href="#">Best sales</a>
+                      <a href="#">Bán chạy nhất</a>
                     </li>
                     <li>
-                      <a href="#">Contact us</a>
+                      <a href="#">Liên hệ với chúng tôi</a>
                     </li>
                     <li>
-                      <a href="#">Sitemap</a>
+                      <a href="#">Sơ đồ trang web</a>
                     </li>
                     <li>
-                      <a href="#">Stores</a>
+                      <a href="#">Cửa hàng</a>
                     </li>
                   </ul>
                 </div>
               </div>
               <div className="col-lg-3 col-sm-6">
                 <div className="footer-widget-item mt-30">
-                  <h6 className="widget-title">OUR COMPANY</h6>
+                  <h6 className="widget-title">CÔNG TY CỦA CHÚNG TÔI</h6>
                   <ul className="usefull-links">
                     <li>
-                      <a href="#">Delivery</a>
+                      <a href="#">Vận chuyển</a>
                     </li>
                     <li>
-                      <a href="#">Legal Notice</a>
+                      <a href="#">Thông báo pháp lí</a>
                     </li>
                     <li>
-                      <a href="#">About us</a>
+                      <a href="#">Về chúng tôi</a>
                     </li>
                     <li>
-                      <a href="#">Secure payment</a>
+                      <a href="#">Thanh toán an toàn</a>
                     </li>
                     <li>
-                      <a href="#">Contact us</a>
+                      <a href="#">Liên hệ với chúng tôi</a>
                     </li>
                     <li>
-                      <a href="#">Sitemap</a>
+                      <a href="#">Sơ đồ trang web</a>
                     </li>
                   </ul>
                 </div>
               </div>
               <div className="col-lg-3 col-sm-6">
                 <div className="footer-widget-item mt-30">
-                  <h6 className="widget-title">YOUR ACCOUNT</h6>
+                  <h6 className="widget-title">TÀI KHOẢN CỦA BẠN</h6>
                   <ul className="usefull-links">
                     <li>
-                      <a href="#">Personal info</a>
+                      <a href="#">Thông tin cá nhân</a>
                     </li>
                     <li>
-                      <a href="#">Orders</a>
+                      <a href="#">Đơn hàng</a>
                     </li>
                     <li>
-                      <a href="#">Credit slips</a>
+                      <a href="#">PHiếu tín dụng</a>
                     </li>
                     <li>
-                      <a href="#">Addresses</a>
+                      <a href="#">Địa chỉ</a>
                     </li>
                     <li>
-                      <a href="#">Stores</a>
+                      <a href="#">Cửa hàng</a>
                     </li>
                     <li>
-                      <a href="#">FAQ</a>
+                      <a href="#">Câu hỏi thường gặp</a>
                     </li>
                   </ul>
                 </div>
@@ -165,7 +165,7 @@ const Footer = () => {
                   <address className="address-info d-flex align-items-center">
                     <i className="fa fa-map-marker" />
                     <p>
-                      <span>ADDRESS : </span> Your address goes here
+                      <span>ĐỊA CHỈ : </span> Your address goes here
                     </p>
                   </address>
                 </div>
@@ -175,7 +175,7 @@ const Footer = () => {
                   <i className="fa fa-envelope" />
                   <p>
                     <span>EMAIL : </span>
-                    <a href="emailto:demo@examplecom">demo@examplecom</a>
+                    <a href="emailto:demo@examplecom">shoesthor@example.com</a>
                   </p>
                 </address>
               </div>
@@ -184,7 +184,7 @@ const Footer = () => {
                   <i className="fa fa-phone" />
                   <p>
                     <span>PHONE : </span>
-                    <a href="tel:0123456789">0123456789</a>
+                    <a href="tel:0123456789">0969798999</a>
                   </p>
                 </address>
               </div>
@@ -206,7 +206,11 @@ const Footer = () => {
                   <a href="#">CONTACT US</a>
                 </div>
                 <p className="copyright"></p>
-                
+                <p>
+                  © 2024 <b className="text-white">Shoes Thor</b> Made with{" "}
+                  <i className="fa fa-heart text-danger" /> by{" "}
+                  <a href="https://hasthemes.com/">HasThemes</a>
+                </p>
                 <p />
               </div>
             </div>

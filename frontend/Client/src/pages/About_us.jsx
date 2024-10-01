@@ -1,8 +1,12 @@
+
+
 import React from 'react';
 
 const AboutUs = () => {
     return (
         <div>
+
+            
             <main>
   {/* breadcrumb area start */}
   <div
@@ -330,6 +334,7 @@ const AboutUs = () => {
   </div>
   {/* team area end */}
 </main>
+
 
         </div>
     );
