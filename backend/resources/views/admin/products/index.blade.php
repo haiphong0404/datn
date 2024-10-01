@@ -29,14 +29,14 @@
                 </header>
                 <div class="card-body">
                     <div class="form-group mb-3">
-                        <form action="{{ route('products.index') }}" method="GET">
+                        <form action="{{ route('admin.products.index') }}" method="GET">
                             <input type="text" name="search" class="form-control" placeholder="Tìm kiếm sản phẩm..."
                                    value="{{ request()->input('search') }}">
                         </form>
                     </div>
 
                     <div class="mb-3">
-                        <a href="{{ route('products.create') }}" class="btn btn-primary"><i class="fa fa-plus"></i> Thêm mới</a>
+                        <a href="{{ route('admin.products.create') }}" class="btn btn-primary"><i class="fa fa-plus"></i> Thêm mới</a>
                     </div>
 
                     <div class="adv-table">
@@ -85,17 +85,17 @@
                                     </td>
                                     <td class="center hidden-phone">
                                         @if ($product->trashed())
-                                            <form action="{{ route('products.restore', $product->id) }}" method="POST" style="display:inline;">
+                                            <form action="{{ route('admin.products.restore', $product->id) }}" method="POST" style="display:inline;">
                                                 @csrf
                                                 <button type="submit" class="btn btn-info btn-sm" title="Khôi phục">
                                                     <i class="fa fa-undo"></i> Phục hồi
                                                 </button>
                                             </form>
                                         @else
-                                            <a href="{{ route('products.edit', $product->id) }}" class="btn btn-warning btn-sm" title="Chỉnh sửa">
+                                            <a href="{{ route('admin.products.edit', $product->id) }}" class="btn btn-warning btn-sm" title="Chỉnh sửa">
                                                 <i class="fa fa-edit"></i> Sửa
                                             </a>
-                                            <form action="{{ route('products.destroy', $product->id) }}" method="POST" style="display:inline;">
+                                            <form action="{{ route('admin.products.destroy', $product->id) }}" method="POST" style="display:inline;">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-danger btn-sm" title="Xóa" onclick="return confirm('Bạn có chắc chắn muốn xóa không?');">

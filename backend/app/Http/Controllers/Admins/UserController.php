@@ -56,7 +56,7 @@ class UserController extends Controller
             'role' => $request->role,
         ]);
 
-        return redirect()->route('user.index')->with('success', 'Người dùng đã được thêm thành công.');
+        return redirect()->route('admin.user.index')->with('success', 'Người dùng đã được thêm thành công.');
     }
 
     /**
@@ -110,6 +110,6 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
         $user->delete();
-        return redirect()->route('user.index')->with('success', 'Xoa thanh cong.');
+        return redirect()->route('admin.user.index')->with('success', 'Xoa thanh cong.');
     }
 }
