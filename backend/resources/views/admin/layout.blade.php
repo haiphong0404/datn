@@ -502,14 +502,8 @@
 
         </section>
     </section>
-<<<<<<< HEAD
 
 
-      </section>
-=======
-
-
->>>>>>> b99007719a0471530802d257112f5f982d347c20
       <!--main content end-->
 
       <!-- Right Slidebar start -->
