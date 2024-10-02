@@ -9,7 +9,7 @@
 
                 <div class="card-body">
 
-                    <form action="{{ route('user.show', $user->id) }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('admin.user.show', $user->id) }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         @if ($user->avatar_img)
                             <div class="mb-3 text-center"> 
@@ -50,8 +50,8 @@
 
 
                         <div class="d-flex">
-                            <a href="{{ route('user.index') }}" class="btn btn-secondary flex-fill me-1">Quay lại</a>
-                            <a href="{{ route('user.edit', $user->id) }}" class="btn btn-warning flex-fill me-1">Chỉnh
+                            <a href="{{ route('admin.user.index') }}" class="btn btn-secondary flex-fill me-1">Quay lại</a>
+                            <a href="{{ route('admin.user.edit', $user->id) }}" class="btn btn-warning flex-fill me-1">Chỉnh
                                 sửa</a>
                         </div>
                     </form>

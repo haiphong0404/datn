@@ -9,7 +9,7 @@
 
                 <div class="card-body">
 
-                    <form action="{{ route('comments.show', $comments->id) }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('admin.comments.show', $comments->id) }}" method="POST" enctype="multipart/form-data">
                         @csrf
 
                         <div class="mb-3">
@@ -40,7 +40,7 @@
                         </div>
         
                         <div class="d-flex">
-                            <a href="{{ route('comments.index') }}" class="btn btn-secondary flex-fill ">Quay lại</a>
+                            <a href="{{ route('admin.comments.index') }}" class="btn btn-secondary flex-fill ">Quay lại</a>
                         </div>
                     </form>
                 </div>
