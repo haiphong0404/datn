@@ -17,7 +17,7 @@ class ProductController extends Controller
         $products = Product::with(['category', 'brand'])->get();
         if ($products->isEmpty()) {
             return response()->json([
-                'message' => 'Không có thể loại nào được tìm thấy!'
+                'message' => 'Không có sản phẩm nào được tìm thấy!'
             ], 404);
         }
         return response()->json($products->map(function ($products) {
@@ -43,7 +43,7 @@ class ProductController extends Controller
     $product = Product::with(['category', 'brand'])->findOrFail($id);
     if ($product->isEmpty()) {
         return response()->json([
-            'message' => 'Không có thể loại nào được tìm thấy!'
+            'message' => 'Không có sản phẩm nào được tìm thấy!'
         ], 404);
     }
     return response()->json([
@@ -53,7 +53,7 @@ class ProductController extends Controller
             'category' => $product->category ? $product->category->name : null,
             'brand' => $product->brand ? $product->brand->name : null,
             'image' => $product->image,
-                
+
         ],200);
 }
 
