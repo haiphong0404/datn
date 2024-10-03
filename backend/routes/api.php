@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\Auth\RegisteredUserController;
 use App\Http\Controllers\Api\Auth\ConfirmablePasswordController;
 use App\Http\Controllers\Api\Auth\VerifyEmailController;
 use App\Http\Controllers\Api\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Api\UserController;
 
 
 use App\Http\Controllers\Api\Auth\PasswordResetLinkController;
@@ -19,16 +20,8 @@ Route::get('/password/reset-link', [PasswordResetLinkController::class, 'store']
 // Route để xử lý yêu cầu gửi liên kết đặt lại mật khẩu
 Route::post('/password/reset-link', [PasswordResetLinkController::class, 'store'])
     ->name('api.password.email');
-
-
 // Route để xác minh email
 Route::get('/email/verify', VerifyEmailController::class)->name('verification.verify');
-
-
-
-
-
-
 Route::middleware('auth:sanctum')->group(function () {
     // Route to show the confirm password message
     Route::get('/confirm-password', [ConfirmablePasswordController::class, 'show']);
@@ -55,5 +48,7 @@ Route::apiResource('Apibrands', BrandController::class);
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::apiResource('users', UserController::class);
 Route::apiResource('ApiCategory',CategoryController::class);
 Route::apiResource('ApiProduct',ProductController::class);
