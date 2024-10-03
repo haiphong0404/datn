@@ -48,7 +48,7 @@ Route::apiResource('Apibrands', BrandController::class);
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-
-Route::apiResource('users', UserController::class);
-Route::apiResource('ApiCategory',CategoryController::class);
-Route::apiResource('ApiProduct',ProductController::class);
+Route::middleware('api')->group(function () {
+    Route::apiResource('categories', CategoryController::class);
+    Route::apiResource('products', ProductController::class);
+});
