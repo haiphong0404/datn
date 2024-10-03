@@ -10,7 +10,7 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Shop from "./pages/Shop/Shop";
 import Blog from "./pages/Blog";
-import My_account from "./pages/My_account";
+import My_account from "./pages/My_account/My_account";
 import Contact_us from "./pages/Contact_us";
 import Product_details from "./pages/Product_details";
 import Cart from "./pages/cart/Cart";

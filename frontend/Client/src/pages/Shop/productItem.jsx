@@ -7,7 +7,7 @@ const ProductItem = ({ product }) => { // Nhận product qua props
             <div className="product-item">
                 <div className="product-thumb">
                     <Link to={`/product-details/${product.id}`}>
-                        <img src={product.image} alt={product.name} />
+                        <img src={product.image || '/path/to/placeholder.jpg'} alt={product.name} />
                     </Link>
                     <div className="button-group">
                         <Link to="/wishlist" data-bs-toggle="tooltip" title="Add to Wishlist">
