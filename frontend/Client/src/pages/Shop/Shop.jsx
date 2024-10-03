@@ -1,40 +1,39 @@
-import React, { useState } from 'react';
-import Pagination from '../../components/Pagination'; // Kiểm tra tên đúng
-import { fetchProducts } from '../../hooks/product';
+import React, { useState } from 'react'; // Thêm useState ở đây
 import { useQuery } from '@tanstack/react-query';
-import { Grid } from '@mui/material';
+import { fetchProducts } from '../../hooks/product';
+import { Grid, Pagination } from '@mui/material';
+
+
 import ProductItem from './productItem';
+import ProductList from './productList';
 
 const Shop = () => {
+  const [viewMode, setViewMode] = useState('grid-view'); // Đặt chế độ xem mặc định
+
+  const handleViewModeChange = (mode) => {
+    setViewMode(mode);
+  };
   const { data: products = [], isLoading, isError } = useQuery({
     queryKey: ['Products'],
     queryFn: fetchProducts,
   });
 
-  const [currentPage, setCurrentPage] = useState(1); // Trang hiện tại
-  const productsPerPage = 8; // Số sản phẩm mỗi trang
+  const itemsPerPage = 9; // Số sản phẩm trên mỗi trang
+  const [page, setPage] = React.useState(1);
 
-  const handleChangePage = (page) => {
-    setCurrentPage(page); // Cập nhật trang hiện tại
+  const handleChange = (event, value) => {
+    setPage(value); // Cập nhật trang hiện tại
   };
 
-  // Phân trang
-  const indexOfLastProduct = currentPage * productsPerPage;
-  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-  const currentProducts = products.slice(indexOfFirstProduct, indexOfLastProduct); // Lấy sản phẩm hiện tại
-
-  const totalPages = Math.ceil(products.length / productsPerPage); // Tổng số trang
+  const totalPages = Math.ceil(products.length / itemsPerPage); // Tính số trang
 
   if (isLoading) {
-    return <div>Đang tải...</div>; // Hiển thị trạng thái đang tải
+    return <div>Đang tải...</div>;
   }
 
   if (isError) {
-    return <div>Lỗi khi tải sản phẩm.</div>; // Hiển thị thông báo lỗi
+    return <div>Lỗi khi tải sản phẩm.</div>;
   }
-
-  // Kiểm tra dữ liệu sản phẩm
-  console.log(products); // Kiểm tra nội dung mảng sản phẩm
 
   return (
     <div>
@@ -493,7 +492,7 @@ const Shop = () => {
                     <div className="row align-items-center">
                       <div className="col-lg-7 col-md-6 order-2 order-md-1">
                         <div className="top-bar-left">
-                          <div className="product-view-mode">
+                        <div className="product-view-mode">
                             <a
                               className="active"
                               href="#"
@@ -512,6 +511,8 @@ const Shop = () => {
                               <i className="fa fa-list" />
                             </a>
                           </div>
+
+
                           <div className="product-amount">
                             <p>Showing 1–16 of 21 results</p>
                           </div>
@@ -541,31 +542,41 @@ const Shop = () => {
                   {/* product item list wrapper start */}
                   <div className="shop-product-wrap grid-view row mbn-30">
                     {/* product single item start */}
-                    <div className="col-md-4 col-sm-6">
-                     
-                        {currentProducts.map((product) => (
-                          <Grid item xs={12} sm={6} md={4} lg={3} key={product.id}>
-                            <ProductItem product={product} /> {/* Hiển thị ProductCard cho mỗi sản phẩm */}
-                          </Grid>
+
+                      {products
+                        .slice((page - 1) * itemsPerPage, page * itemsPerPage) // Cắt danh sách sản phẩm theo trang
+                        .map((product) => (
+                          <div  className="col-md-4 col-sm-6" key={product.id}>
+                           
+                              <ProductItem product={product} />
+                          
+                              <ProductList product={product} />
+                          
+                          </div>
                         ))}
-                    
-                    </div>
-                    <div >
-                      <Pagination
-                        currentPage={currentPage}
-                        totalPages={totalPages}
-                        onChangePage={handleChangePage}
-                      />
-                    </div>
+
+                    <Pagination
+                      count={totalPages}
+                      page={page}
+                      onChange={handleChange}
+                      className="pagination" // Thêm class cho pagination
+                      sx={{
+                        display: 'flex',
+                        justifyContent: 'center', // Căn giữa pagination
+                        mt: 4,
+                      }}
+                    />
+
+
 
                   </div>
                 </div>
+                {/* shop main wrapper end */}
               </div>
-              {/* shop main wrapper end */}
             </div>
           </div>
+          {/* page main wrapper end */}
         </div>
-        {/* page main wrapper end */}
       </main>
     </div>
   );
