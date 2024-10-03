@@ -6837,4 +6837,64 @@ blockquote {
   margin: 5px 0; /* Adds space above and below the answer */
 }
 /*----- footer area end -----*/
-/*# sourceMappingURL=style.css.map */
+
+
+/* css product */
+
+/* Sử dụng CSS Grid cho danh sách sản phẩm */
+.product-list {
+  display: flex;
+  justify-content: space-between;
+  align-content: center;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* Chia thành 4 cột, mỗi cột chiếm 1 phần bằng nhau */
+  gap: 20px; /* Khoảng cách giữa các sản phẩm */
+}
+
+.product-item {
+  background: #f9f9f9;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+/* Đảm bảo hình ảnh sản phẩm co giãn theo kích thước khung */
+.product-thumb img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+/* Responsive cho màn hình nhỏ */
+@media (max-width: 1024px) {
+  .product-list {
+    grid-template-columns: repeat(2, 1fr); /* Chia thành 2 cột cho màn hình nhỏ hơn */
+  }
+}
+
+@media (max-width: 768px) {
+  .product-list {
+    grid-template-columns: 1fr; /* Mỗi sản phẩm chiếm toàn bộ chiều rộng trên màn hình nhỏ */
+  }
+}
+
+/* css brands */
+
+.brand-section {
+  display: flex;                 /* Sử dụng Flexbox để sắp xếp các mục thành hàng ngang */
+  justify-content: space-between; /* Chia đều khoảng cách giữa các mục */
+  align-items: center;            /* Căn giữa theo chiều dọc */
+  flex-wrap: wrap;                /* Nếu không vừa, sẽ xuống hàng */
+  padding: 20px 0;                /* Khoảng cách trên và dưới */
+}
+
+.brand-item {
+  flex-basis: calc(20% - 10px);   /* Mỗi mục chiếm 20% chiều rộng và trừ đi khoảng cách */
+  margin: 5px;                    /* Khoảng cách giữa các mục */
+}
+
+.brand-item img {
+  max-width: 100%;                /* Hình ảnh vừa với khung chứa */
+  height: auto;                   /* Giữ tỷ lệ hình ảnh */
+}
