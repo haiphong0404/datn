@@ -6806,3 +6806,39 @@ blockquote {
 
 /*----- footer area end -----*/
 /*# sourceMappingURL=style.css.map */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 4 products per row */
+  gap: 20px; /* Adjust spacing between products */
+}
+
+.product-item {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.product-thumb img {
+  width: 100%;
+  height: auto;
+  max-width: 150px;
+  margin: 0 auto;
+}
+
+.product-content {
+  margin-top: 15px;
+}
+
+.price-box {
+  margin: 10px 0;
+}
+
+.ratings span {
+  color: #f5a623;
+}
+
+.button-group a {
+  margin-right: 5px;
+}
