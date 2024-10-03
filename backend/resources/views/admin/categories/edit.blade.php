@@ -24,7 +24,7 @@
                     Chỉnh sửa thể loại
                 </header>
                 <div class="card-body">
-                    <form action="{{ route('categories.update', $category->id) }}" method="POST">
+                    <form action="{{ route('admin.categories.update', $category->id) }}" method="POST">
                         @csrf
                         @method('PUT')
                         <div class="form-group">
@@ -40,7 +40,7 @@
                         </div>
                         <div class="form-group">
                             <button type="submit" class="btn btn-primary">Cập nhật</button>
-                            <a href="{{ route('categories.index') }}" class="btn btn-secondary">Quay lại</a>
+                            <a href="{{ route('admin.categories.index') }}" class="btn btn-secondary">Quay lại</a>
                         </div>
                     </form>
                 </div>

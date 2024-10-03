@@ -4,14 +4,17 @@ import axios from 'axios';
 
 
 const Main = () => {
+  
   const [products, setProducts] = useState([]);
-
+  const [brands, setBrands] = useState([]);
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch('http://127.0.0.1:8000/api/ApiProduct');
+        const response = await fetch('http://127.0.0.1:8000/api/categories');
         const data = await response.json();
         setProducts(data.data);
+       
+        
  // Giả sử API trả về dữ liệu trong một object có key là 'data'
       } catch (error) {
         console.error('Error fetching products:', error);
@@ -19,6 +22,24 @@ const Main = () => {
     };
 
     fetchProducts();
+  }, []);
+
+
+console.log(products);
+
+  useEffect(() => {
+    const fetchBrands = async () => {
+      try {
+        const response = await fetch('http://127.0.0.1:8000/api/Apibrands');
+        const data = await response.json();
+        setBrands(data.data);
+ // Giả sử API trả về dữ liệu trong một object có key là 'data'
+      } catch (error) {
+        console.error('Error fetching brands:', error);
+      }
+    };
+
+    fetchBrands();
   }, []);
   return (
     <div>
@@ -208,8 +229,8 @@ const Main = () => {
               </div>
             </div>
             
-                    <div className="product-grid">
-                      {products.slice(0,4).map((product) => (
+           <div className="product-grid">
+           {Array.isArray(products) && products.map((product) => (
                         <div key={product.id} className="product-item">
                           <div className="product-thumb">
                             <img src={product.image} alt="product thumb" />
@@ -244,7 +265,7 @@ const Main = () => {
                           </div>
                         </div>
                       ))}
-                    </div>
+             </div>
                    
            </div>
 
@@ -288,7 +309,7 @@ const Main = () => {
         <div className="deals-tab-wrapper">
           <div className="deals-tab-area">
             <div className="deals-nav-carousel">
-              {products.splice(0,4).map(product => (
+            {Array.isArray(products) && products.slice(0, 4).map((product) => (
                 <div key={product.id} className="deals-nav-item">
                   <img src={product.image} alt="deals thumb" />
                 </div>
@@ -297,7 +318,7 @@ const Main = () => {
           </div>
           <div className="deals-content-wrapper">
             <div className="deals-content-carousel">
-              {products.splice(0,1).map(product => (
+            {Array.isArray(products) && products.slice(0, 1).map((product) => (
                 <div key={product.id} className="deals-slide-item">
                   <div className="deals-content-item">
                     <h2 className="deals-title">
@@ -422,43 +443,19 @@ const Main = () => {
         {/* product gallery area start */}
         <section className="product-gallery section-padding mt-100">
           <div className="container">
-            <div className="row">
-              <div className="col-12">
-                <div className="section-title text-center">
-                  <h3 className="title">CỬA HÀNG CỦA CHÚNG TÔI</h3>
-                  <h4 className="sub-title">
-                  Các cuộc điều tra đã chứng minh rằng người đọc dễ dàng đọc tôi hơn vì họ đọc thường xuyên hơn; sự rõ ràng cũng là một quá trình động, theo sau sự thay đổi.
-                  </h4>
+              <div className="row">
+                <div className="col-12">
+                  <div className="section-title text-center">
+                    <h3 className="title">CỬA HÀNG CỦA CHÚNG TÔI</h3>
+                    <h4 className="sub-title">
+                    Các cuộc điều tra đã chứng minh rằng người đọc dễ dàng đọc tôi hơn vì họ đọc thường xuyên hơn; sự rõ ràng cũng là một quá trình động, theo sau sự thay đổi.
+                    </h4>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="row">
-              <div className="col-12">
-                <div className="product-container">
-                  {/* product tab menu start */}
-                  <div className="product-tab-menu">
-                    <ul className="nav justify-content-center">
-                      <li>
-                        <a href="#tab1" className="active" data-bs-toggle="tab">
-                        Hàng Mới Về
-                        </a>
-                      </li>
-                      <li>
-                        <a href="#tab2" data-bs-toggle="tab">
-                        Sản Phẩm Bán Chạy Nhất.
-                        </a>
-                      </li>
-                      <li>
-                        <a href="#tab3" data-bs-toggle="tab">
-                        Sản Phẩm Nổi Bậtxx
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
-                  {/* product tab menu end */}
-                  {/* product tab content start */}
-                  <div className="product-grid">
-                      {products.slice(0,8).map((product) => (
+              
+              <div className="product-grid">
+              {Array.isArray(products) && products.slice(0, 8).map((product) => (
                         <div key={product.id} className="product-item">
                           <div className="product-thumb">
                             <img src={product.image} alt="product thumb" />
@@ -493,11 +490,8 @@ const Main = () => {
                           </div>
                         </div>
                       ))}
-                    </div>
-                </div>
-              </div>
-            </div>
-          </div>
+             </div>
+           </div>
         </section>
         {/* product gallery area end */}
         {/* testimonial area start */}
@@ -527,87 +521,21 @@ const Main = () => {
                         <h6 className="author-designation">MINH HIẾU</h6>
                       </div>
                     </div>
-                    {/* slide item end */}
-                    {/* slide item start */}
-                    <div className="testimonial-slide-item">
-                      <div className="testimonial-item text-center">
-                        <p className="testimonial-desc">
-                        "Khi khách hàng tiềm năng đang nghiên cứu về bạn trực tuyến, họ đang tìm hiểu về bạn qua nội dung của trang web của bạn."
-                        </p>
-                        <div className="testimonial-author">
-                          <img
-                            src="assets/img/testimonial/testimonial-1.png"
-                            alt="testimonial author"
-                          />
-                        </div>
-                        <h6 className="author-designation">Trung Dũng</h6>
-                      </div>
-                    </div>
-                    {/* slide item end */}
-                    {/* slide item start */}
-                    <div className="testimonial-slide-item">
-                      <div className="testimonial-item text-center">
-                        <p className="testimonial-desc">
-                        "Khi khách hàng tiềm năng đang nghiên cứu về bạn trực tuyến, họ đang tìm hiểu về bạn qua nội dung của trang web của bạn."
-                        </p>
-                        <div className="testimonial-author">
-                          <img
-                            src="assets/img/testimonial/testimonial-1.png"
-                            alt="testimonial author"
-                          />
-                        </div>
-                        <h6 className="author-designation">ĐỨC</h6>
-                      </div>
-                    </div>
-                    {/* slide item end */}
                   </div>
                 </div>
-                <div className="brand-logo-wrapper">
-                  <div className="brand-logo-carousel slick-row-10 slick-arrow-style">
-                    {/* single brand start */}
-                    <div className="brand-item">
-                      <a href="#">
-                        <img src="assets/img/brand/1.png" alt="" />
-                      </a>
+                {/* <div className="brand-logo-wrapper">
+                  <div className="brand-logo-carousel slick-row-10 slick-arrow-style"> */}
+                    <div className="brand-section">
+                      {brands.map(brand => (
+                        <div key={brand.id} className="brand-item">
+                          <a href={brand.link}>
+                            <img src={brand.image} alt={`Brand ${brand.id}`} />
+                          </a>
+                        </div>
+                      ))}
                     </div>
-                    {/* single brand end */}
-                    {/* single brand start */}
-                    <div className="brand-item">
-                      <a href="#">
-                        <img src="assets/img/brand/2.png" alt="" />
-                      </a>
-                    </div>
-                    {/* single brand end */}
-                    {/* single brand start */}
-                    <div className="brand-item">
-                      <a href="#">
-                        <img src="assets/img/brand/3.png" alt="" />
-                      </a>
-                    </div>
-                    {/* single brand end */}
-                    {/* single brand start */}
-                    <div className="brand-item">
-                      <a href="#">
-                        <img src="assets/img/brand/4.png" alt="" />
-                      </a>
-                    </div>
-                    {/* single brand end */}
-                    {/* single brand start */}
-                    <div className="brand-item">
-                      <a href="#">
-                        <img src="assets/img/brand/5.png" alt="" />
-                      </a>
-                    </div>
-                    {/* single brand end */}
-                    {/* single brand start */}
-                    <div className="brand-item">
-                      <a href="#">
-                        <img src="assets/img/brand/6.png" alt="" />
-                      </a>
-                    </div>
-                    {/* single brand end */}
-                  </div>
-                </div>
+                  {/* </div>
+                </div> */}
               </div>
             </div>
           </div>

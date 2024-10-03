@@ -33,7 +33,7 @@
                                 </div>
                                 <div class="span6">
                                     <div class="dataTables_filter" id="hidden-table-info_filter">
-                                        <form action="{{ route('comments.index') }}" method="GET">
+                                        <form action="{{ route('admin.comments.index') }}" method="GET">
                                             <input type="text" name="search" class="form-control"
                                                 placeholder="Tìm kiếm bình luận" value="{{ request()->input('search') }}">
                                             <button type="submit" class="btn btn-primary">Tìm kiếm</button>
@@ -76,17 +76,17 @@
                                                 </td>
                                                 <td>{{ $item->star_rating }} / 5</td>
                                                 <td>
-                                                    <a href="{{ route('comments.show', $item->id) }}" class="btn btn-primary btn-sm">
+                                                    <a href="{{ route('admin.comments.show', $item->id) }}" class="btn btn-primary btn-sm">
                                                         <i class="fa fa-eye"></i>
                                                     </a>
 
                                                     @if ($item->deleted_at)
-                                                        <form action="{{ route('comments.restore', $item->id) }}" method="POST" style="display:inline;">
+                                                        <form action="{{ route('admin.comments.restore', $item->id) }}" method="POST" style="display:inline;">
                                                             @csrf
                                                             <button type="submit" class="btn btn-warning"><i class="bi bi-arrow-repeat"></i></button>
                                                         </form>
                                                     @else
-                                                        <form action="{{ route('comments.destroy', $item->id) }}" method="POST" style="display:inline;">
+                                                        <form action="{{ route('admin.comments.destroy', $item->id) }}" method="POST" style="display:inline;">
                                                             @csrf
                                                             @method('DELETE')
                                                             <button type="submit" class="btn btn-danger"><i class="fa fa-trash-o"></i></button>

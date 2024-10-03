@@ -24,7 +24,7 @@
                     Chỉnh sửa sản phẩm
                 </header>
                 <div class="card-body">
-                    <form action="{{ route('products.update', $product->id) }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('admin.products.update', $product->id) }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
                         <div class="form-group">
@@ -72,7 +72,7 @@
                         </div>
                         <div class="form-group">
                             <button type="submit" class="btn btn-primary">Cập nhật</button>
-                            <a href="{{ route('products.index') }}" class="btn btn-secondary">Quay lại</a>
+                            <a href="{{ route('admin.products.index') }}" class="btn btn-secondary">Quay lại</a>
                         </div>
                     </form>
                 </div>

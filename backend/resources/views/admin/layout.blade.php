@@ -298,13 +298,13 @@
                       </a>
                   </li>
                   <li>
-                    <a href="{{ route('user.index') }}">
+                    <a href="{{ route('admin.user.index') }}">
                         <i class="fa fa-user"></i>
                         <span>User</span>
                     </a>
                 </li>
                 <li>
-                    <a href="{{ route('comments.index') }}">
+                    <a href="{{ route('admin.comments.index') }}">
                         <i class="bi bi-chat-square-dots-fill"></i>
                         <span>Comment</span>
                     </a>

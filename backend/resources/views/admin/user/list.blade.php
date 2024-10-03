@@ -13,7 +13,7 @@
                 <header class="card-header">
                     Danh Sách Người Dùng
                     <span class="tools pull-right">
-                        <a href="{{ route('user.create') }}" class=" btn btn-success btn-sm">CRAETE</a>
+                        <a href="{{ route('admin.user.create') }}" class=" btn btn-success btn-sm">CRAETE</a>
                         <a href="javascript:;" class="fa fa-chevron-down"></a>
 
                     </span>
@@ -35,7 +35,7 @@
                                 </div>
                                 <div class="span6">
                                     <div class="dataTables_filter" id="hidden-table-info_filter">
-                                        <form action="{{ route('user.index') }}" method="GET">
+                                        <form action="{{ route('admin.user.index') }}" method="GET">
                                             <input type="text" name="search" class="form-control"
                                                 placeholder="Tìm kiếm bình luận" value="{{ request()->input('search') }}">
                                             <button type="submit" class="btn btn-primary">Tìm kiếm</button>
@@ -75,9 +75,9 @@
                                                 <td>{{ $item->address }}</td>
                                                 <td>{{ $item->role }}</td>
                                                 <td>
-                                                    <a href="{{ route('user.show', $item->id) }}"
+                                                    <a href="{{ route('admin.user.show', $item->id) }}"
                                                         class="btn btn-primary btn-sm"><i class="fa fa-eye"></i></a>
-                                                    <form action="{{ route('user.destroy', $item->id) }}" method="post">
+                                                    <form action="{{ route('admin.user.destroy', $item->id) }}" method="post">
                                                         @csrf
                                                         @method('DELETE')
                                                         <button onclick="return confirm('Ban co muon xoa khong')"

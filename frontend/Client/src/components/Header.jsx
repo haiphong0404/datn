@@ -44,17 +44,20 @@ const Header = () => {
                 <ul className="user-info-block">
                   <li>
                     <Link to="/my_account">
-                      <i className="fa fa-user-circle" /> My Account
+                      <i className="fa fa-user-circle" /> 
+                      Tài khoản
                     </Link>
                   </li>
                   <li>
                     <Link to="/checkout">
-                      <i className="fa fa-credit-card" /> Checkout
+                      <i className="fa fa-credit-card" /> 
+                      Thanh toán
                     </Link>
                   </li>
                   <li>
                     <a href="/register">
-                      <i className="fa fa-sign-in" /> Sign In
+                      <i className="fa fa-sign-in" /> 
+                      Đăng nhập
                     </a>
                   </li>
                 </ul>
@@ -85,17 +88,17 @@ const Header = () => {
                       <ul>
                         <li className="active">
                           <Link to="/">
-                            Home 
+                            Trang chủ 
                           </Link>
                           
                         </li>
                         <li className="position-static">
                           <a href="#">
-                            pages <i className="fa fa-angle-down" />
+                            Chọn Trang <i className="fa fa-angle-down" />
                           </a>
                           <ul className="megamenu dropdown">
                             <li className="mega-title">
-                              <span>column 01</span>
+                              <span>cột 01</span>
                               <ul>
                                 <li>
                                   <Link to="/shop">
@@ -105,7 +108,7 @@ const Header = () => {
                               </ul>
                             </li>
                             <li className="mega-title">
-                              <span>column 02</span>
+                              <span>cột 02</span>
                               <ul>
                                 <li>
                                   <Link to="/product_details">
@@ -115,7 +118,7 @@ const Header = () => {
                               </ul>
                             </li>
                             <li className="mega-title">
-                              <span>column 03</span>
+                              <span>cột 03</span>
                               <ul>
                                 <li>
                                   <Link to="/cart">
@@ -133,7 +136,7 @@ const Header = () => {
                               </ul>
                             </li>
                             <li className="mega-title">
-                              <span>column 04</span>
+                              <span>cột 04</span>
                               <ul>
                                 <li>
 
@@ -158,13 +161,18 @@ const Header = () => {
                                     contact us
                                   </Link>
                                 </li>
+                                <li>
+                                  <Link to="/faqs">
+                                    FAQ
+                                  </Link>
+                                </li>
                               </ul>
                             </li>
                           </ul>
                         </li>
                         <li>
                           <Link to="/shop">
-                            shop <i className="fa fa-angle-down" />
+                            Cửa hàng <i className="fa fa-angle-down" />
                           </Link>
                           <ul className="dropdown">
                             <li>
@@ -196,11 +204,11 @@ const Header = () => {
                         </li>
                         <li>
                           <Link to="/blog">
-                            blog</Link>
+                            Tin tức</Link>
                         </li>
                         <li>
                           <Link to="/contact_us">
-                            Contact us</Link>
+                            Liên hệ</Link>
                         </li>
                       </ul>
                     </nav>
@@ -499,7 +507,7 @@ const Header = () => {
             <div className="mobile-settings">
               <ul className="nav">
                 <li>
-                 
+
                 </li>
                 <li>
                   <div className="dropdown mobile-top-dropdown">
