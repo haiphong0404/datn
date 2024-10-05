@@ -79,7 +79,7 @@ class ProductController extends Controller
             'image' => $file,
         ]);
 
-        return redirect()->route('products.index')->with('success', 'Sản phẩm đã được thêm mới thành công!');
+        return redirect()->route('admin.products.index')->with('success', 'Sản phẩm đã được thêm mới thành công!');
     }
 
 
@@ -124,7 +124,7 @@ class ProductController extends Controller
         $product->brand_id = $request->brand_id;
         $product->save();
 
-        return redirect()->route('products.index')->with('success', 'Sản phẩm đã được cập nhật thành công!');
+        return redirect()->route('admin.products.index')->with('success', 'Sản phẩm đã được cập nhật thành công!');
     }
 
     /**
@@ -143,14 +143,14 @@ class ProductController extends Controller
         // Xóa mềm sản phẩm
         $product->delete();
 
-        return redirect()->route('products.index')->with('success', 'Sản phẩm đã được xóa thành công!');
+        return redirect()->route('admin.products.index')->with('success', 'Sản phẩm đã được xóa thành công!');
     }
     public function restore($id)
     {
         $product = Product::withTrashed()->findOrFail($id);
         $product->restore();
 
-        return redirect()->route('products.index')->with('success', 'Sản phẩm đã được khôi phục thành công!');
+        return redirect()->route('admin.products.index')->with('success', 'Sản phẩm đã được khôi phục thành công!');
     }
 
 
