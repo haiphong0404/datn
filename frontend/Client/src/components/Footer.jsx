@@ -207,9 +207,7 @@ const Footer = () => {
                 </div>
                 <p className="copyright"></p>
                 <p>
-                  © 2024 <b className="text-white">Shoes Thor</b> Made with{" "}
-                  <i className="fa fa-heart text-danger" /> by{" "}
-                  <a href="https://hasthemes.com/">HasThemes</a>
+                 <b className="text-white">  © 2024 Shoes Thor</b>
                 </p>
                 <p />
               </div>

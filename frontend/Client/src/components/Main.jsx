@@ -237,12 +237,7 @@ const Main = () => {
                         </span>
                       </a>
                     </div>
-                    <div className="product-label">
-                      <span>new</span>
-                    </div>
-                    <div className="discount-label">
-                      <span>{product.discount} Off</span> {/* Đổ giảm giá */}
-                    </div>
+                    
                   </div>
                   <div className="product-content">
                     <div className="product-caption">
@@ -504,15 +499,11 @@ const Main = () => {
                       <a href="#" data-bs-toggle="modal" data-bs-target="#quick_view">
                         <span data-bs-toggle="tooltip" title="Quick View">
                           <i className="fa fa-eye" />
+
                         </span>
                       </a>
                     </div>
-                    <div className="product-label">
-                      <span>new</span>
-                    </div>
-                    <div className="discount-label">
-                      <span>{product.discount} Off</span> {/* Đổ giảm giá */}
-                    </div>
+                    
                   </div>
                   <div className="product-content">
                     <div className="product-caption">
@@ -567,7 +558,10 @@ const Main = () => {
                       {brands.map(brand => (
                         <div key={brand.id} className="brand-item">
                           <a href={brand.link}>
-                            <img src={brand.image} alt={`Brand ${brand.id}`} />
+                              <img
+                            src={brand.image} // Đổ hình ảnh từ API
+                            alt={brand.name}
+                          />
                           </a>
                         </div>
                       ))}

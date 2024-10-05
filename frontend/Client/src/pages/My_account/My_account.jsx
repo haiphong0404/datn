@@ -70,7 +70,7 @@ const My_account = () => {
                           <a href="#account-info" data-bs-toggle="tab">
                             <i className="fa fa-user" /> Chi Tiết Tài Khoản
                           </a>
-                          <a href="login-register.html">
+                          <a href="/">  
                             <i className="fa fa-sign-out" /> Đăng Xuất
                           </a>
                         </div>

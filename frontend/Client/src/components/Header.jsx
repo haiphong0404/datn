@@ -44,17 +44,17 @@ const Header = () => {
                 <ul className="user-info-block">
                   <li>
                     <Link to="/my_account">
-                      <i className="fa fa-user-circle" /> My Account
+                      <i className="fa fa-user-circle" /> Tài khoản
                     </Link>
                   </li>
                   <li>
                     <Link to="/checkout">
-                      <i className="fa fa-credit-card" /> Checkout
+                      <i className="fa fa-credit-card" /> Thanh Toán
                     </Link>
                   </li>
                   <li>
                     <a href="/register">
-                      <i className="fa fa-sign-in" /> Sign In
+                      <i className="fa fa-sign-in" /> Đăng nhập
                     </a>
                   </li>
                 </ul>
@@ -516,21 +516,21 @@ const Header = () => {
                       aria-haspopup="true"
                       aria-expanded="false"
                     >
-                      My Account
+                      Tài Khoản
                       <i className="fa fa-angle-down" />
                     </a>
                     <div className="dropdown-menu" aria-labelledby="myaccount">
 
 
                       <Link className="dropdown-item" to="/my-account">
-                        my account
+                      Tài Khoản
                       </Link>
-                      <a className="dropdown-item" href="login-register.html">
+                      <a className="dropdown-item" href="login">
                         {" "}
-                        login
+                        Đăng Nhập
                       </a>
-                      <a className="dropdown-item" href="login-register.html">
-                        register
+                      <a className="dropdown-item" href="register">
+                        Đăng kí
                       </a>
                     </div>
                   </div>
