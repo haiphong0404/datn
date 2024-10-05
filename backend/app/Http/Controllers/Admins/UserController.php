@@ -99,7 +99,7 @@ class UserController extends Controller
 
         $user->save();
 
-        return redirect()->route('user.index')->with('success', 'Cập nhật người dùng thành công.');
+        return redirect()->route('admin.user.index')->with('success', 'Cập nhật người dùng thành công.');
     }
 
 
