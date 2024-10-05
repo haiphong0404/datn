@@ -43,7 +43,7 @@
                         <table class="table table-striped table-bordered">
                             <thead>
                             <tr>
-                                <th class="center">STT</th>
+                                <th class="center">ID</th>
                                 <th>Tên sản phẩm</th>
                                 <th>Mô tả</th>
                                 <th>Thể loại</th>
@@ -95,6 +95,10 @@
                                             <a href="{{ route('admin.products.edit', $product->id) }}" class="btn btn-warning btn-sm" title="Chỉnh sửa">
                                                 <i class="fa fa-edit"></i> Sửa
                                             </a>
+                                            <a href="{{ route('admin.products.variants.index', $product->id) }}" class="btn btn-secondary btn-sm" title="Xem biến thể">
+                                                <i class="fa fa-list"></i> Biến thể
+                                            </a>
+
                                             <form action="{{ route('admin.products.destroy', $product->id) }}" method="POST" style="display:inline;">
                                                 @csrf
                                                 @method('DELETE')

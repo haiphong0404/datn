@@ -86,10 +86,14 @@ class ProductController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
-    {
-        //
-    }
+//    public function show($id)
+//    {
+//        // Lấy sản phẩm cùng với các biến thể
+//        $product = Product::with('variants')->findOrFail($id);
+//
+//        return view('admin.products.show', compact('product'));
+//    }
+
 
     /**
      * Show the form for editing the specified resource.

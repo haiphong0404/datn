@@ -11,5 +11,9 @@ class Color extends Model
     protected $fillable = [
         'name',
     ];
+    public function variants()
+    {
+        return $this->hasMany(ProductVariant::class);
+    }
 
 }

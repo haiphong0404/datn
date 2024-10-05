@@ -35,9 +35,9 @@ Route::get('register', [RegisteredUserController::class, 'store'])->name('regist
 //post dang ky
 Route::post('register', [RegisteredUserController::class, 'store'])->name('register');
 
-// getlogin 
+// getlogin
 Route::get('login', [AuthenticatedSessionController::class, 'store'])->name('login');
-// post login 
+// post login
 Route::post('login', [AuthenticatedSessionController::class, 'store'])->name('login');
 // get logout
 Route::get('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');

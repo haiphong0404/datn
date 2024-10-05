@@ -16,5 +16,26 @@ class ProductVariant extends Model
         'quantity'
     ];
     protected $datas = ['deleted_at'];
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
+
+    // Quan hệ với Size
+    public function size()
+    {
+        return $this->belongsTo(Size::class);
+    }
+
+    // Quan hệ với Color
+    public function color()
+    {
+        return $this->belongsTo(Color::class);
+    }
+    public function images()
+    {
+        return $this->hasMany(Image::class);
+    }
+
 
 }
