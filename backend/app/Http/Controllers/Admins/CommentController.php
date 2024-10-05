@@ -85,13 +85,13 @@ class CommentController extends Controller
     {
         $comment = Comment::findOrFail($id);
         $comment->delete();
-        return redirect()->route('comments.index')->with('success', 'Bình luận đã được xóa thành công (xóa mềm)!');
+        return redirect()->route('admin.comments.index')->with('success', 'Bình luận đã được xóa thành công (xóa mềm)!');
     }
     public function restore($id)
 {
     $comment = Comment::withTrashed()->findOrFail($id);
     $comment->restore();
-    return redirect()->route('comments.index')->with('success', 'Bình luận đã được khôi phục thành công!');
+    return redirect()->route('admin.comments.index')->with('success', 'Bình luận đã được khôi phục thành công!');
 }
 
     

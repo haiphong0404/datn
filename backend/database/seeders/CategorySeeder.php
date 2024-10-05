@@ -21,7 +21,7 @@ class CategorySeeder extends Seeder
         for ($i = 0; $i < 5; $i++) {
             DB::table('categories')->insert([
                 'name' => $faker->sentence(), // Tạo tên ngẫu nhiên
-                'description' => $faker->paragraph(), // Tạo mô tả ngẫu nhiên
+                'description' => $faker->text(), // Tạo mô tả ngẫu nhiên
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ]);

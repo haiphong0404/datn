@@ -24,7 +24,7 @@
                     Thêm mới thể loại
                 </header>
                 <div class="card-body">
-                    <form action="{{ route(admin.'categories.store') }}" method="POST">
+                    <form action="{{ route('admin.categories.store') }}" method="POST">
                         @csrf
                         <div class="form-group">
                             <label for="name">Tên thể loại</label>
@@ -41,7 +41,7 @@
                         </div>
                         <div class="form-group">
                             <button type="submit" class="btn btn-primary">Lưu</button>
-                            <a href="{{ route(admin.'categories.index') }}" class="btn btn-secondary">Quay lại</a>
+                            <a href="{{ route('admin.categories.index') }}" class="btn btn-secondary">Quay lại</a>
                         </div>
                     </form>
                 </div>
