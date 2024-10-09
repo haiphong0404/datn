@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\UserController;
 
 use App\Http\Controllers\Api\Auth\PasswordResetLinkController;
 
+Route::apiResource('user', UserController::class);
 //Route GET để lấy thông tin hướng dẫn về việc gửi yêu cầu đặt lại mật khẩu
 Route::get('/password/reset-link', [PasswordResetLinkController::class, 'store'])
     ->name('api.password.email');

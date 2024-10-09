@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios"
+import { getStore } from "../api/apiStore";
 const Main = () => {
   const [products, setProducts] = useState([]);
   const [brands, setBrands] = useState([]);
@@ -20,7 +21,7 @@ const Main = () => {
         const response = await fetch('http://127.0.0.1:8000/api/Apibrands');
         const data = await response.json();
         setBrands(data.data);
- // Giả sử API trả về dữ liệu trong một object có key là 'data'
+        // Giả sử API trả về dữ liệu trong một object có key là 'data'
       } catch (error) {
         console.error('Error fetching brands:', error);
       }
@@ -28,6 +29,17 @@ const Main = () => {
 
     fetchBrands();
   }, []);
+  useEffect(() => {
+    const runCode = async () => {
+      try {
+        const response = await fetch("http://127.0.0.1:8000/api/user");
+      } catch (error) {
+        console.log(error);
+
+      }
+    }
+    runCode()
+  }, [])
   return (
     <div>
 
@@ -564,14 +576,14 @@ const Main = () => {
                   </div>
                 </div>
                 <div className="brand-section">
-                      {brands.map(brand => (
-                        <div key={brand.id} className="brand-item">
-                          <a href={brand.link}>
-                            <img src={brand.image} alt={`Brand ${brand.id}`} />
-                          </a>
-                        </div>
-                      ))}
+                  {brands.map(brand => (
+                    <div key={brand.id} className="brand-item">
+                      <a href={brand.link}>
+                        <img src={brand.image} alt={`Brand ${brand.id}`} />
+                      </a>
                     </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
