@@ -4039,7 +4039,7 @@ ul.minicart-pricing-box li:last-child {
 }
 @media only screen and (max-width: 767.98px) {
   .product-list-item {
-    display: block !important;
+    display: block ;
   }
 }
 .product-list-item .product-thumb {
@@ -5282,43 +5282,40 @@ blockquote {
 
 /*----- shop main wrapper end -----*/
 /*----- product change view start -----*/
-.shop-product-wrap.list-view .product-item {
-  display: none;
+/* Đảm bảo rằng sản phẩm trong list-view hiển thị theo chiều dọc */
+
+
+.product-thumb {
+  flex: 0 0 100px; /* Kích thước hình ảnh */
+  margin-right: 20px; /* Khoảng cách giữa hình ảnh và nội dung sản phẩm */
 }
 
-.shop-product-wrap.grid-view .product-item {
-  display: block;
-  -webkit-animation-name: zoomIn;
-          animation-name: zoomIn;
-  -webkit-animation-duration: 1s;
-          animation-duration: 1s;
-  padding: 0;
+.product-content-list {
+  flex: 1; /* Nội dung sản phẩm chiếm phần còn lại */
 }
 
+/* Ẩn các sản phẩm trong chế độ không tương ứng */
 .shop-product-wrap.grid-view .product-list-item {
-  display: none !important;
+  display: none; /* Ẩn các sản phẩm trong grid view */
 }
 
 .shop-product-wrap.list-view .product-list-item {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-animation-name: fadeInRight;
-          animation-name: fadeInRight;
-  -webkit-animation-duration: 1s;
-          animation-duration: 1s;
+  display: flex; /* Hiển thị sản phẩm trong list view */
 }
+
+/* Cấu trúc cho sản phẩm list view, một sản phẩm trên một hàng */
+
 
 .shop-product-wrap.row.list-view .col-md-4 {
-  -webkit-box-flex: 0;
-      -ms-flex: 0 0 100%;
-          flex: 0 0 100%;
-  max-width: 100%;
+  flex: 0 0 100%; /* Mỗi sản phẩm sẽ chiếm 100% chiều rộng */
+  max-width: 100%; /* Đảm bảo không vượt quá 100% */
 }
 
+/* Đảm bảo các sản phẩm có khoảng cách giữa chúng */
 .shop-product-wrap [class*=col-] {
-  margin-bottom: 30px;
+  margin-bottom: 30px; 
 }
+
 
 /*----- product change view end -----*/
 /*------ shop page style start ------*/

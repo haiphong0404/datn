@@ -1,7 +1,7 @@
 import React, { useState } from 'react'; // Thêm useState ở đây
 import { useQuery } from '@tanstack/react-query';
 import { fetchProducts } from '../../hooks/product';
-import { Grid, Pagination } from '@mui/material';
+import {  Pagination } from '@mui/material';
 
 
 import ProductItem from './productItem';
@@ -9,7 +9,6 @@ import ProductList from './productList';
 
 const Shop = () => {
   const [viewMode, setViewMode] = useState('grid-view'); // Đặt chế độ xem mặc định
-
   const handleViewModeChange = (mode) => {
     setViewMode(mode);
   };
@@ -492,19 +491,26 @@ const Shop = () => {
                     <div className="row align-items-center">
                       <div className="col-lg-7 col-md-6 order-2 order-md-1">
                         <div className="top-bar-left">
-                        <div className="product-view-mode">
+                          <div className="product-view-mode">
                             <a
-                              className="active"
+                              className={viewMode === 'grid-view' ? 'active' : ''}
                               href="#"
-                              data-target="grid-view"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                handleViewModeChange('grid-view');
+                              }}
                               data-bs-toggle="tooltip"
                               title="Grid View"
                             >
                               <i className="fa fa-th" />
                             </a>
                             <a
+                              className={viewMode === 'list-view' ? 'active' : ''}
                               href="#"
-                              data-target="list-view"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                handleViewModeChange('list-view');
+                              }}
                               data-bs-toggle="tooltip"
                               title="List View"
                             >
@@ -540,29 +546,32 @@ const Shop = () => {
                   </div>
                   {/* shop product top wrap start */}
                   {/* product item list wrapper start */}
-                  <div className="shop-product-wrap grid-view row mbn-30">
-                    {/* product single item start */}
-
+                  <div className={`shop-product-wrap ${viewMode}`}>
+                    <div className="row">
                       {products
                         .slice((page - 1) * itemsPerPage, page * itemsPerPage) // Cắt danh sách sản phẩm theo trang
                         .map((product) => (
-                          <div  className="col-md-4 col-sm-6" key={product.id}>
-                           
-                              <ProductItem product={product} />
-                          
-                              <ProductList product={product} />
-                          
-                          </div>
+                          <div
+                          className={viewMode === 'grid-view' ? 'col-md-4 col-sm-6' : 'col-md-12'}
+                          key={product.id}
+                        >
+                          {viewMode === 'grid-view' ? (
+                            <ProductItem product={product} />
+                          ) : (
+                            <ProductList product={product} />
+                          )}
+                        </div>
                         ))}
+                    </div>
 
                     <Pagination
                       count={totalPages}
                       page={page}
                       onChange={handleChange}
-                      className="pagination" // Thêm class cho pagination
+                      className="pagination" 
                       sx={{
                         display: 'flex',
-                        justifyContent: 'center', // Căn giữa pagination
+                        justifyContent: 'center', 
                         mt: 4,
                       }}
                     />
