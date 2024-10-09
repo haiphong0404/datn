@@ -15,18 +15,13 @@ const Main = () => {
       });
   }, []);
   useEffect(() => {
-    const fetchBrands = async () => {
-      try {
-        const response = await fetch('http://127.0.0.1:8000/api/Apibrands');
-        const data = await response.json();
-        setBrands(data.data);
- // Giả sử API trả về dữ liệu trong một object có key là 'data'
-      } catch (error) {
+    axios.get('http://127.0.0.1:8000/api/Apibrands') // Đường dẫn tới API Laravel
+      .then(response => {
+        setBrands(response.data); // Đặt dữ liệu vào state
+      })
+      .catch(error => {
         console.error('Error fetching brands:', error);
-      }
-    };
-
-    fetchBrands();
+      });
   }, []);
   return (
     <div>
@@ -51,7 +46,7 @@ const Main = () => {
                         <h2 className="slide-subtitle">
                           Giày thể thao chạy bộ <span>Đàn ông thích</span>
                         </h2>
-                        <a href="#" className="btn btn-large btn-bg">
+                        <a href="/shop" className="btn btn-large btn-bg">
                           Mua Ngay
                         </a>
                       </div>
@@ -77,7 +72,7 @@ const Main = () => {
                         <h2 className="slide-subtitle">
                           Giày thể thao chạy bộ  <span>Đàn ông thích</span>
                         </h2>
-                        <a href="#" className="btn btn-large btn-bg">
+                        <a href="shop" className="btn btn-large btn-bg">
                           Mua Ngay
                         </a>
                       </div>
@@ -555,16 +550,20 @@ const Main = () => {
                   </div>
                 </div>
                 <div className="brand-section">
-                      {brands.map(brand => (
+                {Array.isArray(brands) && brands.length > 0 ? (
+                      brands.map((brand) => (
                         <div key={brand.id} className="brand-item">
                           <a href={brand.link}>
-                              <img
-                            src={brand.image} // Đổ hình ảnh từ API
-                            alt={brand.name}
-                          />
+                            <img
+                              src={brand.image} // Đổ hình ảnh base64 từ API
+                              alt={brand.name}
+                            />
                           </a>
                         </div>
-                      ))}
+                      ))
+                    ) : (
+                      <p>No brands available</p> // Hiển thị nếu không có thương hiệu nào
+                    )}
                     </div>
               </div>
             </div>
