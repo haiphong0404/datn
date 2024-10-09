@@ -15,7 +15,7 @@
             <nav class="flex-shrink-0 my-2 my-sm-0 ms-sm-3" aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item">
-                        <a href="{{ route('brands.index') }}" style="color: inherit;">Brands</a>
+                        <a href="{{ route('admin.brands.index') }}" style="color: inherit;">Brands</a>
                     </li>
                     <li class="breadcrumb-item active" aria-current="page">Danh sách thương hiệu</li>
                 </ol>
@@ -29,7 +29,7 @@
         <div class="block-header block-header-default">
             <div class="block-options">
                 <div class="block-options-item">
-                    <a href="{{ route('brands.create') }}" class="btn btn-sm btn-alt-primary" data-bs-toggle="tooltip" title="Thêm thương hiệu"><i class="fa fa-plus"></i></a>
+                    <a href="{{ route('admin.brands.create') }}" class="btn btn-sm btn-alt-primary" data-bs-toggle="tooltip" title="Thêm thương hiệu"><i class="fa fa-plus"></i></a>
                 </div>
             </div>
         </div>
@@ -64,12 +64,12 @@
                             <td class="text-center">
                                 <div class="btn-group">
                                     {{-- EDIT --}}
-                                    <a href="{{route('brands.edit',$item)}}" type="button" class="btn btn-sm btn-alt-warning mx-2" data-bs-toggle="tooltip" title="Chỉnh sửa">
+                                    <a href="{{route('admin.brands.edit',$item)}}" type="button" class="btn btn-sm btn-alt-warning mx-2" data-bs-toggle="tooltip" title="Chỉnh sửa">
                                         <i class="fa fa-pencil-alt"></i>
                                     </a>
 
                                     {{-- DELETE  --}}
-                                    <form action="{{route('brands.destroy',$item)}}" method="POST" class="form-delete">
+                                    <form action="{{route('admin.brands.destroy',$item)}}" method="POST" class="form-delete">
                                       @csrf
                                       @method('DELETE')
                                       <button type="submit" class="btn btn-sm btn-alt-danger" data-bs-toggle="tooltip" title="Xóa" >
