@@ -48,8 +48,7 @@
     "vite": "^4.2.0"
   },
   "scripts": {
-    "server": "json-server --watch db.json -m ./node_modules/json-server-auth --port 5001",
-    "start": "concurrently \"npm run dev\" \"npm run server\"",
+    "start": "concurrently \"npm run dev\" ",
     "dev": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
@@ -70,4 +69,5 @@
       "last 1 safari version"
     ]
   }
+
 }

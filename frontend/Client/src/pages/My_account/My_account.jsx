@@ -55,7 +55,7 @@ const My_account = () => {
                             <i className="fa fa-cart-arrow-down" />
                             Đơn Hàng
                           </a>
-                          <a href="#download" data-bs-toggle="tab">
+                          <a href="#c" data-bs-toggle="tab">
                             <i className="fa fa-cloud-download" />
                             Tải Xuống
                           </a>
