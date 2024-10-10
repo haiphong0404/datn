@@ -17,7 +17,7 @@ const Shop = () => {
     queryFn: fetchProducts,
   });
 
-  const itemsPerPage = 9; // Số sản phẩm trên mỗi trang
+  const itemsPerPage = 6; // Số sản phẩm trên mỗi trang
   const [page, setPage] = React.useState(1);
 
   const handleChange = (event, value) => {
@@ -548,8 +548,7 @@ const Shop = () => {
                   {/* product item list wrapper start */}
                   <div className={`shop-product-wrap ${viewMode}`}>
                     <div className="row">
-                      {products
-                        .slice((page - 1) * itemsPerPage, page * itemsPerPage) // Cắt danh sách sản phẩm theo trang
+                      {products.slice((page - 1) * itemsPerPage, page * itemsPerPage) // Cắt danh sách sản phẩm theo trang
                         .map((product) => (
                           <div
                           className={viewMode === 'grid-view' ? 'col-md-4 col-sm-6' : 'col-md-12'}
