@@ -33,6 +33,13 @@ class UserController extends Controller
             ], 404);
         }
 
+        // Chuyển đổi hình ảnh avatar của từng user sang base64 nếu có
+        foreach ($users as $user) {
+            if ($user->avatar_img) {
+                $user->avatar_img = $this->getImageAsBase64($user->avatar_img);
+            }
+        }
+
         return response()->json([
             'message' => 'Lấy danh sách người dùng thành công.',
             'data' => $users
@@ -88,6 +95,11 @@ class UserController extends Controller
             return response()->json([
                 'message' => 'Không tìm thấy người dùng.'
             ], 404);
+        }
+
+        // Chuyển đổi hình ảnh avatar thành base64 nếu có
+        if ($user->avatar_img) {
+            $user->avatar_img = $this->getImageAsBase64($user->avatar_img);
         }
 
         return response()->json([
@@ -175,5 +187,23 @@ class UserController extends Controller
                 'error' => $e->getMessage()
             ], 500);
         }
+    }
+
+    /**
+     * Hàm chuyển đổi hình ảnh thành base64.
+     */
+    private function getImageAsBase64($imagePath)
+    {
+        // Kiểm tra nếu hình ảnh tồn tại
+        if ($imagePath && Storage::disk('public')->exists($imagePath)) {
+            // Lấy nội dung hình ảnh
+            $imageData = Storage::disk('public')->get($imagePath);
+            // Lấy loại mime type của file
+            $mimeType = mime_content_type(storage_path('app/public/' . $imagePath));
+            // Mã hóa hình ảnh thành Base64
+            return 'data:' . $mimeType . ';base64,' . base64_encode($imageData);
+        }
+
+        return null; // Nếu không có hình ảnh, trả về null
     }
 }
