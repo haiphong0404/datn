@@ -19,7 +19,7 @@ class ProductRequest extends FormRequest
         return [
             'name' => 'required|string|max:255|unique:products,name',
             'description' => 'nullable|string|max:255',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif', // Giới hạn kích thước tối đa 2MB
+            'image' => 'required|image', // Giới hạn kích thước tối đa 2MB
             'category_id' => 'required|exists:categories,id',
             'brand_id' => 'required|exists:brands,id',
         ];
@@ -34,7 +34,7 @@ class ProductRequest extends FormRequest
             'image.required' => 'Ảnh sản phẩm là bắt buộc.',
             'brand_id.required' => 'Thương hiệu là bắt buộc.',
             'image.image' => 'File tải lên phải là hình ảnh.',
-            'image.mimes' => 'Hình ảnh phải có định dạng: jpeg, png, jpg, gif.',
+            
         ];
     }
 
