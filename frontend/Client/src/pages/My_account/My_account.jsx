@@ -1,7 +1,30 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { fetchUsers } from '../../hooks/user';
 
 const My_account = () => {
+  const [account, setAccount] = useState({});
+
+  const handleGetAccount = async () => {
+    const res = await fetchUsers();
+    const { data, message } = res?.data;
+
+    try {
+      if (res?.status === 200) {
+        setAccount(data)
+      } else {
+        console.log(message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    handleGetAccount();
+
+  }, []);
+
   return (
     <div>
       <main>
@@ -103,9 +126,9 @@ const My_account = () => {
                               {/* Nút xác nhận */}
                               <div className="button-container">
                                 <div className="button_mail">
-                                <button className="news-btn" id="mc-submit">
-                                  Gửi lại xác nhận
-                                </button>
+                                  <button className="news-btn" id="mc-submit">
+                                    Gửi lại xác nhận
+                                  </button>
                                 </div>
                               </div>
 
@@ -263,32 +286,36 @@ const My_account = () => {
                               <h5>Chi Tiết Tài Khoản</h5>
                               <div className="account-details-form">
                                 <form action="#">
-                                  <div className="row">
-                                    <div className="col-lg-6">
-                                      <div className="single-input-item">
-                                        <label htmlFor="first-name" className="required">
-                                          Tên
-                                        </label>
-                                        <input
-                                          type="text"
-                                          id="first-name"
-                                          placeholder="Tên"
-                                        />
+                                  {!account && (
+                                    <div className="row">
+                                      <div className="col-lg-6">
+
+
+                                        <div className="single-input-item">
+                                          <label htmlFor="first-name" className="required">
+                                            Tên
+                                          </label>
+                                          <input
+                                            type="text"
+                                            id="first-name"
+                                            placeholder="Tên"
+                                          />
+                                        </div>
+                                      </div>
+                                      <div className="col-lg-6">
+                                        <div className="single-input-item">
+                                          <label htmlFor="last-name" className="required">
+                                            Họ
+                                          </label>
+                                          <input
+                                            type="text"
+                                            id="last-name"
+                                            placeholder="Họ"
+                                          />
+                                        </div>
                                       </div>
                                     </div>
-                                    <div className="col-lg-6">
-                                      <div className="single-input-item">
-                                        <label htmlFor="last-name" className="required">
-                                          Họ
-                                        </label>
-                                        <input
-                                          type="text"
-                                          id="last-name"
-                                          placeholder="Họ"
-                                        />
-                                      </div>
-                                    </div>
-                                  </div>
+                                  )}
                                   <div className="single-input-item">
                                     <label htmlFor="display-name" className="required">
                                       Tên Hiển Thị
@@ -297,6 +324,7 @@ const My_account = () => {
                                       type="text"
                                       id="display-name"
                                       placeholder="Tên Hiển Thị"
+                                      value={account?.username}
                                     />
                                   </div>
                                   <div className="single-input-item">
@@ -307,9 +335,44 @@ const My_account = () => {
                                       type="email"
                                       id="email"
                                       placeholder="Địa Chỉ Email"
+                                      value={account?.email}
                                     />
                                   </div>
-                                  <fieldset>
+                                  <div className="single-input-item">
+                                    <label htmlFor="email_verified_at" className="required">
+                                      Email được xác minh:
+                                    </label>
+                                    <input
+                                      type="text"
+                                      // id="email"
+                                      placeholder="Email xác minh tại:"
+                                      value={account?.email_verified_at}
+                                    />
+                                  </div>
+                                  <div className="single-input-item">
+                                    <label htmlFor="phone" className="required">
+                                      Số điện thoại
+                                    </label>
+                                    <input
+                                      type="text"
+                                      // id="email"
+                                      placeholder="Số điện thoại"
+                                      value={account?.phone}
+                                    />
+                                  </div>
+                                  <div className="single-input-item">
+                                    <label htmlFor="address" className="required">
+                                      Địa Chỉ
+                                    </label>
+                                    <input
+                                      type="text"
+                                      // id="email"
+                                      placeholder="Địa Chỉ "
+                                      value={account?.address}
+                                    />
+                                  </div>
+
+                                  {/* <fieldset>
                                     <legend>Thay Đổi Mật Khẩu</legend>
                                     <div className="single-input-item">
                                       <label htmlFor="current-pwd" className="required">
@@ -347,12 +410,12 @@ const My_account = () => {
                                         </div>
                                       </div>
                                     </div>
-                                  </fieldset>
-                                  <div className="single-input-item">
+                                  </fieldset> */}
+                                  {/* <div className="single-input-item">
                                     <button className="btn btn-sqr">
                                       Lưu Thay Đổi
                                     </button>
-                                  </div>
+                                  </div> */}
                                 </form>
                               </div>
                             </div>
