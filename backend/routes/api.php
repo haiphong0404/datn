@@ -49,7 +49,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 Route::middleware('api')->group(function () {
-    
+
     Route::apiResource('categories', CategoryController::class);
     Route::apiResource('products', ProductController::class);
 });
