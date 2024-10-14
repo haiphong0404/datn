@@ -6880,21 +6880,35 @@ blockquote {
 }
 
 /* css brands */
+.brand-logo-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.brand-logo-carousel {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between; /* Điều chỉnh khoảng cách giữa các logo */
+  max-width: 1200px; /* Giới hạn chiều rộng carousel */
+  padding: 10px;
+}
 
 .brand-section {
-  display: flex;                 /* Sử dụng Flexbox để sắp xếp các mục thành hàng ngang */
-  justify-content: space-between; /* Chia đều khoảng cách giữa các mục */
-  align-items: center;            /* Căn giữa theo chiều dọc */
-  flex-wrap: wrap;                /* Nếu không vừa, sẽ xuống hàng */
-  padding: 20px 0;                /* Khoảng cách trên và dưới */
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  width: 100%;
 }
 
 .brand-item {
-  flex-basis: calc(20% - 10px);   /* Mỗi mục chiếm 20% chiều rộng và trừ đi khoảng cách */
-  margin: 5px;                    /* Khoảng cách giữa các mục */
+  flex-basis: calc(20% - 10px); /* Chiếm 20% trừ đi khoảng cách margin giữa các items */
+  margin: 5px;
+  text-align: center;
 }
 
 .brand-item img {
-  max-width: 100%;                /* Hình ảnh vừa với khung chứa */
-  height: auto;                   /* Giữ tỷ lệ hình ảnh */
+  max-width: 100%;
+  height: auto;
+  display: block;
 }

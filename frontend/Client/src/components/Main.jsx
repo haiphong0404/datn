@@ -218,7 +218,7 @@ const Main = () => {
                   <div className="product-thumb">
                     <a href="product-details.html">
                       <img
-                        src={product.image} // Đổ hình ảnh từ API
+                        src={product.image || '/path/to/placeholder.jpg'} // Đổ hình ảnh từ API
                         alt={product.name}
                       />
                     </a>
@@ -299,7 +299,7 @@ const Main = () => {
                             <div className="product-thumb">
                               <a href="product-details.html">
                                 <img
-                                  src={product.image} // Đổ hình ảnh từ API
+                                  src={product.image || '/path/to/placeholder.jpg'} // Đổ hình ảnh từ API
                                   alt={product.name}
                                 />
                               </a>
@@ -483,7 +483,7 @@ const Main = () => {
                   <div className="product-thumb">
                     <a href="product-details.html">
                       <img
-                        src={product.image} // Đổ hình ảnh từ API
+                        src={product.image || '/path/to/placeholder.jpg'} // Đổ hình ảnh từ API
                         alt={product.name}
                       />
                     </a>
@@ -550,21 +550,22 @@ const Main = () => {
                   </div>
                 </div>
                 <div className="brand-section">
-                {Array.isArray(brands) && brands.length > 0 ? (
-                      brands.map((brand) => (
-                        <div key={brand.id} className="brand-item">
-                          <a href={brand.link}>
+                  {Array.isArray(brands) && brands.length > 0 ? (
+                        brands.map((brand) => (
+                          <div key={brand.id} className="brand-item">
+                            <a href={brand.link}>
                             <img
-                              src={brand.image} // Đổ hình ảnh base64 từ API
-                              alt={brand.name}
-                            />
-                          </a>
-                        </div>
-                      ))
-                    ) : (
-                      <p>No brands available</p> // Hiển thị nếu không có thương hiệu nào
-                    )}
-                    </div>
+                                    src={brand.image || '/path/to/placeholder.jpg'} // Đổ hình ảnh base64 từ API
+                                    alt={brand.name}
+                                    style={{ width: '100px', height: '100px' }} // Kích thước hình ảnh
+                                />
+                            </a>
+                          </div>
+                        ))
+                      ) : (
+                        <p>No brands available</p> // Hiển thị nếu không có thương hiệu nào
+                      )}
+                </div>
               </div>
             </div>
           </div>
