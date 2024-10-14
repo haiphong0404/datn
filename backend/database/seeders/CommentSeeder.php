@@ -23,7 +23,9 @@ class CommentSeeder extends Seeder
             DB::table('comments')->insert([
                 'user_id' => User::inRandomOrder()->first()->id, // Lấy user_id ngẫu nhiên từ bảng users
                 'product_id' => Product::inRandomOrder()->first()->id, // Lấy product_id ngẫu nhiên từ bảng products
-                'comment' => $faker->text(), // Nội dung bình luận giả                
+                'comment' => $faker->text(), // Nội dung bình luận giả          
+                'file' => $faker->optional()->imageUrl(), // Đường dẫn file ảnh giả, có thể null
+                'star_rating' => $faker->numberBetween(1, 5), // Đánh giá sao ngẫu nhiên từ 1 đến 5      
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ]);
