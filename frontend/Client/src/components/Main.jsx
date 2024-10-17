@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useQuery } from '@tanstack/react-query';
-import { fetchProducts } from '../hooks/product';
-import { fetchBrands } from '../hooks/brand';
+import { fetchProducts } from '../api/product';
+import { fetchBrands } from '../api/brand';
 import ProductItem from '../pages/Shop/productItem';
 const Main = () => {
 
@@ -207,14 +207,17 @@ const Main = () => {
             </div>
 
             {/* product single item start */}
-            <div class="product-carousel-4_2 slick-row-5 slick-arrow-style">
-            <div className="product-list">
-              {products.map((product) => (
-                <ProductItem product={product} />
-              ))}
+            <div className="product-carousel-4_2 slick-row-5 slick-arrow-style">
+              <div className="product-list">
+                {products.slice(0,4).map((product) => (
+                  <ProductItem 
+                  key={product.id} // Đảm bảo id là duy nhất
+                  product={product} 
+              />
+                ))}
+              </div>
+              {/* product single item end */}
             </div>
-            {/* product single item end */}
-          </div>
           </div>
         </section>
         {/* product gallery area end */}

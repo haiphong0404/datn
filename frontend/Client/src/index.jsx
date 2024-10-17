@@ -5,7 +5,7 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
 import "./global.css";
-import { configAxios } from "./hooks/axios.js";
+import { configAxios } from "./api/axios.js";
 
 
 
