@@ -83,7 +83,7 @@ const Header = () => {
                     {/* main menu navbar start */}
                     <nav className="desktop-menu">
                       <ul>
-                        <li className="active">
+                        <li className="position-static">
                           <Link to="/">
                             Trang chủ 
                           </Link>
