@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const My_account = () => {
+const MyAccount = () => {
   return (
     <div>
       <main>
@@ -376,4 +376,4 @@ const My_account = () => {
 
   );
 };
-export default My_account;
+export default MyAccount;

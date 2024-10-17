@@ -10,7 +10,7 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Shop from "./pages/Shop/Shop";
 import Blog from "./pages/Blog";
-import My_account from "./pages/My_account/My_account";
+import MyAccount from "./pages/My_account/Myacc";
 import Contact_us from "./pages/Contact_us";
 import Product_details from "./pages/Product_details";
 import Cart from "./pages/cart/Cart";
@@ -40,7 +40,7 @@ const routeConfig = [
       { path: "blog", element: <Blog /> },
       { path: "checkout", element: <Checkout /> },
       { path: "blog/blog_detail", element: <Blog_detail /> },
-      { path: "my_account", element: <My_account /> },
+      { path: "my_account", element: <MyAccount /> },
       { path: "contact_us", element: <Contact_us /> },
       { path: "product_details", element: <Product_details /> },
       { path: "cart", element: <Cart /> },
