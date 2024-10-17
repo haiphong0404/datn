@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { loginUser } from "../../hooks/login";
+import { useNavigate } from "react-router-dom";
 
 
 const Login = () => {
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         email: '',
         password: '',
@@ -30,7 +32,7 @@ const Login = () => {
             if (res?.status === 200) {
                 setSuccess("Đăng nhập thành công!");
                 setError(null);
-                // Thực hiện điều hướng hoặc lưu thông tin người dùng tại đây
+                navigate('/shop')
             } else {
                 setError(res?.data?.message || "Đăng nhập thất bại");
             }

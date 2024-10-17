@@ -1,7 +1,11 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { registerUser } from "../../hooks/register";
+import { toast } from 'react-toastify';
 
 const Register = () => {
+    const navigate = useNavigate();
+
     // State để lưu trữ thông tin form
     const [formData, setFormData] = useState({
         username: '',
@@ -32,7 +36,7 @@ const Register = () => {
 
         // Kiểm tra xem mật khẩu và xác nhận mật khẩu có trùng khớp không
         if (formData.password !== formData.password_confirmation) {
-            setError("Passwords do not match");
+            setError("Mật khẩu không khớp.");
             return;
         }
 
@@ -41,8 +45,10 @@ const Register = () => {
             console.log(res);
 
             if (res?.status === 201) {
-                setSuccess("Đăng ký thành công!");
+                navigate('/login')
                 setError(null);
+                // setSuccess("Đăng ký thành công!");
+                toast.success("Đăng ký thành công!")
             } else {
                 setError(res?.data?.message || "Đăng ký thất bại");
             }
@@ -56,7 +62,7 @@ const Register = () => {
             <div className="container mt-5 mb-5">
                 <div className="col-lg-12">
                     <div className="login-reg-form-wrap sign-up-form justify-content">
-                        <h4>Register</h4>
+                        <h4>Đăng ký</h4>
                         <form onSubmit={handleRegister}>
                             <div className="single-input-item">
                                 <input
@@ -136,7 +142,7 @@ const Register = () => {
                             </div>
                         </div> */}
                             <div className="single-input-item">
-                                <button type="submit" className="btn btn-sqr">Dăng ký</button>
+                                <button type="submit" className="btn btn-sqr">Đăng ký</button>
                             </div>
                         </form>
                         {error && <p style={{ color: 'red' }}>{error}</p>}
