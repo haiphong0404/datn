@@ -12,7 +12,7 @@
           <nav class="flex-shrink-0 my-2 my-sm-0 ms-sm-3" aria-label="breadcrumb">
               <ol class="breadcrumb">
                   <li class="breadcrumb-item">
-                      <a href="{{ route('brands.index') }}" style="color: inherit;">Brands</a>
+                      <a href="{{ route('admin.brands.index') }}" style="color: inherit;">Brands</a>
                   </li>
                   <li class="breadcrumb-item active" aria-current="page">Thêm mới thương hiệu</li>
               </ol>
@@ -24,7 +24,7 @@
 <div class="content">
   <div class="block block-rounded">
       <div class="block-content">
-          <form action="{{ route('brands.store') }}" method="POST" enctype="multipart/form-data">
+          <form action="{{ route('admin.brands.store') }}" method="POST" enctype="multipart/form-data">
               @csrf
               <div class="row">
                   <div class="col-lg-12 col-xl-8 offset-xl-2">

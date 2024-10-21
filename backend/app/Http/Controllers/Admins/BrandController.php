@@ -48,7 +48,7 @@ class BrandController extends Controller
         // Gọi phương thức createbrand từ brandService để xử lý lưu trữ brand mới.
         $this->brandService->createBrand($request->except('image'), $request->file('image'));
 
-        return redirect()->route('brands.index')->with('success', 'Thêm mới thương hiệu thành công');
+        return redirect()->route('admin.brands.index')->with('success', 'Thêm mới thương hiệu thành công');
     }
 
     /**
@@ -67,7 +67,7 @@ class BrandController extends Controller
         // Gọi phương thức updateBrand từ BrandService để xử lý cập nhật thông tin brand.
         $this->brandService->updateBrand($brand, $request->except('image'), $request->file('image'));
 
-        return redirect()->route('brands.index')->with('success', 'Cập nhật thương hiệu thành công');
+        return redirect()->route('admin.brands.index')->with('success', 'Cập nhật thương hiệu thành công');
     }
 
     /**

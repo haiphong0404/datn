@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-  
+
 <!-- Mirrored from thevectorlab.net/flatlab-4/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 26 Aug 2024 14:10:45 GMT -->
 <head>
     <meta charset="utf-8">
@@ -10,25 +10,32 @@
     <meta name="keyword" content="FlatLab, Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
     <link rel="shortcut icon" href="{{ asset('assets')}}/admin/img/favicon.html">
 
-    <title>FlatLab - Flat & Responsive Bootstrap Admin Template</title>
+    <title>Thor-Admin Dashboard</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link href="{{ asset('assets')}}/admin/css/bootstrap.min.css" rel="stylesheet">
-    <link href="{{ asset('assets')}}/admin/css/bootstrap-reset.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="{{ asset('assets') }}/admin/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ asset('assets') }}/admin/css/bootstrap-reset.css" rel="stylesheet">
     <!--external css-->
-    <link href="{{ asset('assets')}}/admin/assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
-    <link href="{{ asset('assets')}}/admin/assets/jquery-easy-pie-chart/jquery.easy-pie-chart.css" rel="stylesheet" type="text/css" media="screen"/>
-    <link rel="stylesheet" href="{{ asset('assets')}}/admin/css/owl.carousel.css" type="text/css">
+    <link href="{{ asset('assets') }}/admin/assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <link href="{{ asset('assets') }}/admin/assets/jquery-easy-pie-chart/jquery.easy-pie-chart.css" rel="stylesheet"
+        type="text/css" media="screen" />
+    <link rel="stylesheet" href="{{ asset('assets') }}/admin/css/owl.carousel.css" type="text/css">
 
     <!--right slidebar-->
-    <link href="{{ asset('assets')}}/admin/css/slidebars.css" rel="stylesheet">
+    <link href="{{ asset('assets') }}/admin/css/slidebars.css" rel="stylesheet">
+    <!--dynamic table-->
+    <link href="{{ asset('assets') }}/admin/assets/advanced-datatable/media/css/demo_page.css" rel="stylesheet" />
+    <link href="{{ asset('assets') }}/admin/assets/advanced-datatable/media/css/demo_table.css" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ asset('assets') }}/admin/assets/data-tables/DT_bootstrap.css" />
 
     <!-- Custom styles for this template -->
 
-    <link href="{{ asset('assets')}}/admin/css/style.css" rel="stylesheet">
-    <link href="{{ asset('assets')}}/admin/css/style-responsive.css" rel="stylesheet" />
-    <!-- Section for additional CSS -->
+    <link href="{{ asset('assets') }}/admin/css/style.css" rel="stylesheet">
+    <link href="{{ asset('assets') }}/admin/css/style-responsive.css" rel="stylesheet" />
     @yield('css')
   </head>
 
@@ -290,6 +297,18 @@
                           <span>Dashboard</span>
                       </a>
                   </li>
+                  <li>
+                    <a href="{{ route('admin.user.index') }}">
+                        <i class="fa fa-user"></i>
+                        <span>User</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('admin.comments.index') }}">
+                        <i class="bi bi-chat-square-dots-fill"></i>
+                        <span>Comment</span>
+                    </a>
+                </li>
 
                   <li class="sub-menu">
                       <a href="javascript:;" >
@@ -476,16 +495,15 @@
       <!--main content start-->
       <section id="main-content">
         <section class="wrapper">
-        
+
          <div class="container">
             @yield('content')
          </div>
 
         </section>
     </section>
-        
-          
-      </section> 
+
+
       <!--main content end-->
 
       <!-- Right Slidebar start -->
@@ -634,14 +652,14 @@
       <!-- Right Slidebar end -->
 
       <!--footer start-->
-      <footer class="site-footer">
-          <div class="text-center">
-              2018 &copy; FlatLab by VectorLab.
-              <a href="#" class="go-top">
-                  <i class="fa fa-angle-up"></i>
-              </a>
-          </div>
-      </footer>
+{{--      <footer class="site-footer">--}}
+{{--          <div class="text-center">--}}
+{{--              2018 &copy; FlatLab by VectorLab.--}}
+{{--              <a href="#" class="go-top">--}}
+{{--                  <i class="fa fa-angle-up"></i>--}}
+{{--              </a>--}}
+{{--          </div>--}}
+{{--      </footer>--}}
       <!--footer end-->
   </section>
 
