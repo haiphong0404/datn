@@ -5,13 +5,13 @@ import { fetchBrands } from '../api/brand';
 import ProductItem from '../pages/Shop/productItem';
 const Main = () => {
 
-  // Gọi useQuery cho sản phẩm
+
   const { data: products = [], error: productsError } = useQuery({
     queryKey: ['Products'],
     queryFn: fetchProducts,
   });
 
-  // Gọi useQuery cho thương hiệu
+ 
   const { data: brands = [], error: brandsError } = useQuery({
     queryKey: ['Brands'],
     queryFn: fetchBrands,

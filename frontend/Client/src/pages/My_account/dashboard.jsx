@@ -1,14 +1,12 @@
 
 
 import React from 'react';
-
+import { Link } from 'react-router-dom';
 const Dashboard = () => {
     return (
         <div>
             <div
-                className="tab-pane fade show active"
-                id="dashboad"
-                role="tabpanel"
+                
             >
                 <div className="myaccount-content">
                     <h5>Xác Nhận Email</h5>

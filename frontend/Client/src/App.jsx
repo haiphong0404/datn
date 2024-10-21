@@ -24,7 +24,12 @@ import NotFoundPage from "./pages/404";
 import Order_detail_cancel from "./pages/Order_detail_cancel";
 import FAQs from "./pages/FAQs";
 import Bill from "./pages/Bill";  
-
+import Dashboard from "./pages/My_account/dashboard";
+import Orders from "./pages/My_account/orders";
+import Download from "./pages/My_account/download";
+import Payment_method from "./pages/My_account/payment_method";
+import Address_edit from "./pages/My_account/address_edit";
+import Account_info from "./pages/My_account/account_info";
 
 
 
@@ -40,7 +45,6 @@ const routeConfig = [
       { path: "blog", element: <Blog /> },
       { path: "checkout", element: <Checkout /> },
       { path: "blog/blog_detail", element: <Blog_detail /> },
-      { path: "my_account", element: <MyAccount /> },
       { path: "contact_us", element: <Contact_us /> },
       { path: "product_details", element: <Product_details /> },
       { path: "cart", element: <Cart /> },
@@ -51,11 +55,19 @@ const routeConfig = [
       { path: "faqs", element: <FAQs /> },
       { path: "Order_detail_cancel", element: <Order_detail_cancel /> },
       { path: "checkout/bill", element: <Bill /> },
-
     ],
-    
-
-
+  },
+  {
+    path: "/my_account",
+    element: <MyAccount />,
+    children: [
+      { path: "", element: <Dashboard /> },
+      { path: "orders", element: <Orders /> },
+      { path: "downloads", element: <Download /> },
+      { path: "payment_method", element: <Payment_method /> },
+      { path: "address_edit", element: <Address_edit /> },
+      { path: "account_info", element: <Account_info /> },
+    ],
   },
 
 ];
