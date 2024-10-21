@@ -2,16 +2,24 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-const Account_info = () => {
+
+const Account_info = ({ userInfo }) => {
+
+    if (!userInfo) {
+        return <div>Đang tải thông tin...</div>;
+    }
+
+
     return (
         <div>
             <div
-               
+
             >
                 <div className="myaccount-content">
                     <h5>Chi Tiết Tài Khoản</h5>
                     <div className="account-details-form">
                         <form action="#">
+
                             <div className="row">
                                 <div className="col-lg-6">
                                     <div className="single-input-item">
@@ -38,6 +46,7 @@ const Account_info = () => {
                                     </div>
                                 </div>
                             </div>
+
                             <div className="single-input-item">
                                 <label htmlFor="display-name" className="required">
                                     Tên Hiển Thị
@@ -46,6 +55,7 @@ const Account_info = () => {
                                     type="text"
                                     id="display-name"
                                     placeholder="Tên Hiển Thị"
+                                    value={userInfo.username}
                                 />
                             </div>
                             <div className="single-input-item">
@@ -56,6 +66,7 @@ const Account_info = () => {
                                     type="email"
                                     id="email"
                                     placeholder="Địa Chỉ Email"
+                                    value={userInfo.email}
                                 />
                             </div>
                             <fieldset>
@@ -68,6 +79,7 @@ const Account_info = () => {
                                         type="password"
                                         id="current-pwd"
                                         placeholder="Mật Khẩu Hiện Tại"
+
                                     />
                                 </div>
                                 <div className="row">

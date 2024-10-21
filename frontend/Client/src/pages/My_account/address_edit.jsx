@@ -3,16 +3,17 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 const Address_edit = () => {
+
     return (
         <div>
             <div
-                
+
             >
                 <div className="myaccount-content">
                     <h5>Địa Chỉ Thanh Toán</h5>
                     <address>
                         <p>
-                            <strong>Erik Jhonson</strong>
+                            <strong></strong>
                         </p>
                         <p>Địa chỉ của bạn</p>
                     </address>

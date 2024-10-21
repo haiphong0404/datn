@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 
 const MyAccount = () => {
-  
+
   return (
     <div>
       <main>
