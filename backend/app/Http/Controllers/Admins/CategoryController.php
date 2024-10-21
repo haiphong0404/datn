@@ -48,7 +48,7 @@ class CategoryController extends Controller
             Category::create($request->validated());
 
             // Thông báo thành công
-            return redirect()->route('categories.index')->with('success', 'Thêm mới thể loại thành công!');
+            return redirect()->route('admin.categories.index')->with('success', 'Thêm mới thể loại thành công!');
         } catch (\Exception $e) {
             // Thông báo lỗi nếu có vấn đề
             return redirect()->back()->with('error', 'Có lỗi xảy ra, vui lòng thử lại!');
@@ -100,9 +100,9 @@ class CategoryController extends Controller
             $category = Category::findOrFail($id);
             $category->delete();
 
-            return redirect()->route('categories.index')->with('success', 'Xóa thể loại thành công!');
+            return redirect()->route('admin.categories.index')->with('success', 'Xóa thể loại thành công!');
         } catch (\Exception $e) {
-            return redirect()->route('categories.index')->with('error', 'Có lỗi xảy ra, vui lòng thử lại!');
+            return redirect()->route('admin.categories.index')->with('error', 'Có lỗi xảy ra, vui lòng thử lại!');
         }
     }
     public function restore($id)
@@ -111,9 +111,9 @@ class CategoryController extends Controller
             $category = Category::withTrashed()->findOrFail($id);
             $category->restore();
 
-            return redirect()->route('categories.index')->with('success', 'Phục hồi thể loại thành công!');
+            return redirect()->route('admin.categories.index')->with('success', 'Phục hồi thể loại thành công!');
         } catch (\Exception $e) {
-            return redirect()->route('categories.index')->with('error', 'Có lỗi xảy ra, vui lòng thử lại!');
+            return redirect()->route('admin.categories.index')->with('error', 'Có lỗi xảy ra, vui lòng thử lại!');
         }
     }
 

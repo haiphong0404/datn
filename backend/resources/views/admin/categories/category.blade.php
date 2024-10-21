@@ -29,14 +29,14 @@
                 </header>
                 <div class="card-body">
                     <div class="form-group mb-3">
-                        <form action="{{ route(admin.'categories.index') }}" method="GET">
+                        <form action="{{ route('admin.categories.index') }}" method="GET">
                             <input type="text" name="search" class="form-control" placeholder="Tìm kiếm thể loại..."
                                    value="{{ request()->input('search') }}">
                         </form>
                     </div>
 
                     <div class="mb-3">
-                        <a href="{{ route(admin.'categories.create') }}" class="btn btn-primary"><i class="fa fa-plus"></i> Thêm mới</a>
+                        <a href="{{ route('admin.categories.create') }}" class="btn btn-primary"><i class="fa fa-plus"></i> Thêm mới</a>
                     </div>
 
                     <div class="adv-table">
@@ -66,18 +66,18 @@
                                         @endif
                                     </td>
                                     <td class="center hidden-phone">
-                                        <a href="{{ route(admin.'categories.edit', $category->id) }}" class="btn btn-warning btn-sm" title="Chỉnh sửa">
+                                        <a href="{{ route('admin.categories.edit', $category->id) }}" class="btn btn-warning btn-sm" title="Chỉnh sửa">
                                             <i class="fa fa-edit"></i> Sửa
                                         </a>
                                         @if ($category->trashed())
-                                            <form action="{{ route(admin.'categories.restore', $category->id) }}" method="POST" style="display:inline;">
+                                            <form action="{{ route('admin.categories.restore', $category->id) }}" method="POST" style="display:inline;">
                                                 @csrf
                                                 <button type="submit" class="btn btn-info btn-sm" title="Phục hồi">
                                                     <i class="fa fa-undo"></i> Phục hồi
                                                 </button>
                                             </form>
                                         @else
-                                            <form action="{{ route(admin.'categories.destroy', $category->id) }}" method="POST" style="display:inline;">
+                                            <form action="{{ route('admin.categories.destroy', $category->id) }}" method="POST" style="display:inline;">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-danger btn-sm" title="Xóa" onclick="return confirm('Bạn có chắc chắn muốn xóa không?');">
