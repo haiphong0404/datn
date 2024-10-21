@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -21,43 +21,51 @@ export const useLoginForm = () => {
     const [userInfo, setUserInfo] = useState(null);
     const navigate = useNavigate();
 
+    // Lấy thông tin người dùng từ localStorage nếu có
+    useEffect(() => {
+        const storedUserInfo = localStorage.getItem('userInfo');
+        if (storedUserInfo) {
+            setUserInfo(JSON.parse(storedUserInfo));
+        }
+    }, []);
+
     const handleLogin = async (data) => {
         try {
             const res = await login(data);
             console.log("Phản hồi từ đăng nhập:", res);
 
             // Lấy thông tin người dùng từ phản hồi
-            const currentUser = res.user; // Lấy đối tượng người dùng từ phản hồi
+            const currentUser = res.user;
 
-            // Kiểm tra xem ID và vai trò có tồn tại không
+            // Kiểm tra nếu người dùng không tồn tại hoặc thiếu thông tin cần thiết
             if (!currentUser || !currentUser.id || !currentUser.role) {
                 throw new Error("Không tìm thấy thông tin người dùng.");
             }
 
-            const userId = currentUser.id; // Lấy ID người dùng
+            const userId = currentUser.id;
             console.log("ID người dùng:", userId);
 
-            // Gọi hàm getUserByid để lấy thông tin người dùng
-            const userData = await getUserByid(userId); // Truyền userId vào hàm getUserByid
+            // Gọi hàm getUserByid để lấy thông tin chi tiết người dùng
+            const userData = await getUserByid(userId);
             console.log("Thông tin người dùng:", userData.data);
 
-
-
-            // Kiểm tra vai trò người dùng
+            // Kiểm tra và lưu vai trò của người dùng
             if (userData && userData.data && userData.data.role) {
-                const role = userData.data.role; // Lấy vai trò từ dữ liệu người dùng
+                const role = userData.data.role;
                 console.log("Vai trò người dùng:", role);
 
-                setUserInfo(userData.data); // Lưu thông tin người dùng vào state
+                // Lưu thông tin người dùng vào state và localStorage
+                setUserInfo(userData.data);
+                localStorage.setItem('userInfo', JSON.stringify(userData.data));
 
-                if (role == 'admin') {
+                // Chuyển hướng dựa trên vai trò
+                if (role === 'admin') {
                     window.location.href = 'http://127.0.0.1:8000/';
                 } else {
-                    navigate('/my_account/account_info'); // Chuyển hướng đến trang thông tin tài khoản
+                    navigate('/my_account/account_info');
                 }
             } else {
-                console.error("Không tìm thấy thông tin vai trò người dùng.");
-                setError("Không tìm thấy thông tin vai trò người dùng.");
+                throw new Error("Không tìm thấy thông tin vai trò người dùng.");
             }
         } catch (err) {
             console.error("Lỗi:", err);
@@ -66,6 +74,12 @@ export const useLoginForm = () => {
         }
     };
 
+    // Hàm đăng xuất để xóa thông tin người dùng khỏi state và localStorage
+    const handleLogout = () => {
+        setUserInfo(null);
+        localStorage.removeItem('userInfo');
+        navigate('/login'); // Chuyển hướng đến trang đăng nhập
+    };
 
     return {
         register,
@@ -75,5 +89,6 @@ export const useLoginForm = () => {
         success,
         handleLogin,
         userInfo,
+        handleLogout, // Trả về thêm hàm đăng xuất
     };
 };

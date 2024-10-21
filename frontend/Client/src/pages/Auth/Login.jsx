@@ -8,7 +8,8 @@ const Login = () => {
         errors, 
         error, 
         success, 
-        handleLogin
+        handleLogin,
+        userInfo,
       
     } = useLoginForm();
 
@@ -60,6 +61,7 @@ const Login = () => {
                         </div>
                     </form>
                 </div>
+                
             </div>
         </div>
     );
