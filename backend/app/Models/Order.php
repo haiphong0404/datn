@@ -19,4 +19,9 @@ class Order extends Model
         'infor'
     ];
     protected $datas = ['deleted_at'];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

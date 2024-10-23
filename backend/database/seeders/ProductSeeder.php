@@ -21,7 +21,7 @@ class ProductSeeder extends Seeder
         $faker = Faker::create();
         for ($i = 0; $i < 10; $i++) {
             DB::table('products')->insert([
-                'name' => $faker->word(), // Tạo tên sản phẩm ngẫu nhiên
+                'name' => $faker->text(), // Tạo tên sản phẩm ngẫu nhiên
                 'description' => $faker->text(255), // Mô tả sản phẩm ngẫu nhiên
                 'image' => $faker->imageUrl(),
                 'category_id' => Category::inRandomOrder()->first()->id, // Lấy category_id ngẫu nhiên từ bảng categories

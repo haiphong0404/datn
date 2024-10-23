@@ -13,6 +13,8 @@ use App\Http\Controllers\Api\UserController;
 
 
 use App\Http\Controllers\Api\Auth\PasswordResetLinkController;
+use App\Http\Controllers\Api\OrderController;
+use App\Models\Order;
 
 //Route GET để lấy thông tin hướng dẫn về việc gửi yêu cầu đặt lại mật khẩu
 Route::get('/password/reset-link', [PasswordResetLinkController::class, 'store'])
@@ -45,6 +47,7 @@ Route::get('logout', [AuthenticatedSessionController::class, 'destroy'])->name('
 Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
 Route::apiResource('Apibrands', BrandController::class);
+
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
@@ -54,3 +57,7 @@ Route::middleware('api')->group(function () {
     Route::apiResource('products', ProductController::class);
 });
 Route::apiResource('user', UserController::class);
+
+//route api order
+Route::apiResource('order', OrderController::class );
+Route::get('/users/{user_id}/orders', [OrderController::class, 'index']);
