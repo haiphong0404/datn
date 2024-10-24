@@ -10,19 +10,19 @@ use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index($user_id)
+   
+    public function acb($user_id)
     {
-         $user = User::with('orders')->find($user_id);
-
-        if (!$user) {
-            return response()->json(['message' => 'User not found'], 404);
-        }
-
-        return response()->json($user->orders);
-       
+        $orders = DB::table('orders')
+            ->join('users', 'users.id', '=', 'orders.user_id')
+            ->join('carts', 'carts.user_id', '=', 'users.id')
+            ->join('cart_items', 'cart_items.cart_id', '=', 'carts.id')
+            ->join('product_variants', 'product_variants.id', '=', 'cart_items.product_variant_id')
+            ->where('orders.user_id', $user_id)
+            ->select('orders.*', 'users.*', 'carts.*', 'cart_items.*', 'product_variants.*')
+            ->get();
+    
+        return response()->json($orders);  
     }
 
     /**
