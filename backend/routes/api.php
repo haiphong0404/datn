@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\UserController;
 
 
 use App\Http\Controllers\Api\Auth\PasswordResetLinkController;
+use App\Http\Controllers\Api\OrderDetailController;
 
 //Route GET để lấy thông tin hướng dẫn về việc gửi yêu cầu đặt lại mật khẩu
 Route::get('/password/reset-link', [PasswordResetLinkController::class, 'store'])
@@ -54,3 +55,7 @@ Route::middleware('api')->group(function () {
     Route::apiResource('products', ProductController::class);
 });
 Route::apiResource('user', UserController::class);
+
+
+Route::get('/order-details/{order_id}', [OrderDetailController::class, 'getOrderDetailsByUser']);
+Route::apiResource('order-details', OrderDetailController::class);
