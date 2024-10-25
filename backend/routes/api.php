@@ -60,4 +60,4 @@ Route::apiResource('user', UserController::class);
 
 //route api order
 Route::apiResource('order', OrderController::class );
-Route::get('/orders/{user_id}', [OrderController::class, 'acb']);
+Route::get('orders', [OrderController::class, 'abc']);
