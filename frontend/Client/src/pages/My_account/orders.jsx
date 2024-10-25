@@ -1,11 +1,20 @@
-
-
 import React from 'react';
 import { Link } from 'react-router-dom';
+import useOrders from '../../hooks/useOrder'; // Đảm bảo đúng đường dẫn tới hook
+
 const Orders = () => {
+    const { orders, error } = useOrders(); // Lấy danh sách đơn hàng từ hook
+
+    if (error) {
+        console.error('Lỗi khi tải đơn hàng:', error); // Hiển thị thông báo lỗi nếu có
+        return <div>Error: {error}</div>;
+    }
+
+    console.log('Danh sách đơn hàng trong component:', orders); // Kiểm tra danh sách đơn hàng
+
     return (
         <div>
-            <div >
+            <div>
                 <div className="myaccount-content">
                     <h5>Đơn Hàng</h5>
                     <div className="myaccount-table table-responsive text-center">
@@ -20,39 +29,25 @@ const Orders = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>22 Tháng 8, 2018</td>
-                                    <td>Đang Xử Lý</td>
-                                    <td>$3000</td>
-                                    <td>
-                                        <Link to="/Order_detail_cancel" className="btn btn-sqr">
-                                            Xem
-                                        </Link>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>22 Tháng 7, 2018</td>
-                                    <td>Đã Phê Duyệt</td>
-                                    <td>$200</td>
-                                    <td>
-                                        <Link to="/Order_detail_cancel" className="btn btn-sqr">
-                                            Xem
-                                        </Link>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>3</td>
-                                    <td>12 Tháng 6, 2017</td>
-                                    <td>Đang Chờ</td>
-                                    <td>$990</td>
-                                    <td>
-                                        <Link to="/Order_detail_cancel" className="btn btn-sqr">
-                                            Xem
-                                        </Link>
-                                    </td>
-                                </tr>
+                                {orders.length > 0 ? (
+                                    orders.map(order => (
+                                        <tr key={order.id}>
+                                            <td>{order.id}</td>
+                                            <td>{new Date(order.order_date).toLocaleDateString('vi-VN')}</td>
+                                            <td>{order.status}</td>
+                                            <td>${order.total_amount}</td>
+                                            <td>
+                                                <Link to={`/Order_detail_cancel/${order.id}`} className="btn btn-sqr">
+                                                    Xem
+                                                </Link>
+                                            </td>
+                                        </tr>
+                                    ))
+                                ) : (
+                                    <tr>
+                                        <td colSpan="5">Không có đơn hàng nào.</td>
+                                    </tr>
+                                )}
                             </tbody>
                         </table>
                     </div>
