@@ -467,16 +467,16 @@
 
 
 	// product view mode change js
-	$(document).ready(function() {
-    $('.product-view-mode a').on('click', function (e) {
-        e.preventDefault();
-        var shopProductWrap = $('.shop-product-wrap');
-        var viewMode = $(this).data('target');
-        $('.product-view-mode a').removeClass('active');
-        $(this).addClass('active');
-        shopProductWrap.removeClass('grid-view list-view').addClass(viewMode);
-	})
-});
+// 	$(document).ready(function() {
+//     $('.product-view-mode a').on('click', function (e) {
+//         e.preventDefault();
+//         var shopProductWrap = $('.shop-product-wrap');
+//         var viewMode = $(this).data('target');
+//         $('.product-view-mode a').removeClass('active');
+//         $(this).addClass('active');
+//         shopProductWrap.removeClass('grid-view list-view').addClass(viewMode);
+// 	})
+// });
 	
 	
 	// pricing filter

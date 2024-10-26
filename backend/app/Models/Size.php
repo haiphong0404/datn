@@ -17,4 +17,9 @@ class Size extends Model
     }
 
 
+    // Định nghĩa quan hệ ngược với bảng product_variants
+    public function variants()
+    {
+        return $this->hasMany(ProductVariant::class);
+    }
 }

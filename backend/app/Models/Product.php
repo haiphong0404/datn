@@ -13,14 +13,19 @@ class Product extends Model
     protected $fillable = [
         'name',
         'description',
+        'category_id',  
+        'brand_id',
         'image',
+<<<<<<< HEAD
         'category_id',
         'brand_id',
         'total_quantity_in_stock',
         'price',
+=======
+>>>>>>> 455a2d0144f66650e7dbd3e3fcc2c0d875d4dce1
     ];
 
-    protected $datas = ['deleted_at'];
+    protected $dates = ['deleted_at'];
 
     public function category()
     {
@@ -39,4 +44,8 @@ class Product extends Model
 
 
 
+    public function variants()
+    {
+        return $this->hasMany(ProductVariant::class);
+    }
 }
