@@ -242,7 +242,7 @@ const Main = () => {
                       <div className="price-box">
                         <span className="price-regular">${product.price}</span> {/* Đổ giá hiện tại */}
                       </div>
-                      <a className="add-to-cart" href="cart.html">
+                      <a className="add-to-cart" href="/cart">
                         <i className="fa fa-shopping-cart" />
                       </a>
                     </div>
@@ -508,7 +508,7 @@ const Main = () => {
                       <div className="price-box">
                         <span className="price-regular">${product.price}</span> {/* Đổ giá hiện tại */}
                       </div>
-                      <a className="add-to-cart" href="cart.html">
+                      <a className="add-to-cart" href="/cart">
                         <i className="fa fa-shopping-cart" />
                       </a>
                     </div>
