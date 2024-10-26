@@ -13,36 +13,30 @@ class OrderDetailController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function getOrderDetailsByUser($order_id)
+    public function getOrderDetails($order_id)
     {
-        $orderDetails = OrderDetail::select(
-                'order_details.id',
-                'order_details.product_variant_id',
-                'order_details.quantity',
-                'order_details.quantity',
-                'product_variants.price AS product_price',
-                'products.image',
-                'products.id',
-                'order_details.created_at',
-                'order_details.updated_at'
-            )
+        $orderDetails = DB::table('order_details')
             ->join('orders', 'orders.id', '=', 'order_details.order_id')
-            ->join('users', 'users.id', '=', 'orders.user_id')
-            ->join('carts', 'carts.user_id', '=', 'users.id')
-            ->join('cart_items', 'cart_items.cart_id', '=', 'carts.id')
-            ->join('product_variants', 'product_variants.id', '=', 'cart_items.product_variant_id')
+            ->join('product_variants', 'product_variants.id', '=', 'order_details.id')
             ->join('products', 'products.id', '=', 'product_variants.product_id')
             ->where('order_details.order_id', $order_id)
-            ->get();
+            ->select('order_details.*', 'orders.*', 'product_variants.*'
+            , 'products.name'
+            , 'products.description'
+            , 'products.image'
+            , 'products.category_id'
+            , 'products.brand_id'
 
-            $orderDetails->transform(function ($orderDetails) {
-              
-                $orderDetails->image = $this->getImageAsBase64($orderDetails->image);
-                return $orderDetails;
+            )
+            ->get();
+            $orderDetails = $orderDetails->map(function ($detail) {
+                $detail->image = $this->getImageAsBase64($detail->image);
+                return $detail;
             });
 
         return response()->json($orderDetails);
     }
+
     private function getImageAsBase64($imagePath)
     {
         // Kiểm tra nếu hình ảnh tồn tại
