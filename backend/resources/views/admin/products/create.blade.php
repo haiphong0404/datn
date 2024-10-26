@@ -36,9 +36,14 @@
 
                         <div class="form-group">
                             <label for="description">Mô tả</label>
-                            <textarea name="description" class="form-control" placeholder="Nhập mô tả" rows="3"></textarea>
+                            <textarea name="description" class="form-control" placeholder="Nhập mô tả"
+                                      rows="3"></textarea>
                         </div>
-
+                        <div class="form-group">
+                            <label for="price">Giá sản phẩm</label>
+                            <input type="number" step="0.01" class="form-control" id="price" name="price"
+                                   placeholder="Nhập giá sản phẩm">
+                        </div>
                         <div class="form-group">
                             <label for="category_id">Thể loại</label>
                             <select name="category_id" class="form-control">
@@ -47,9 +52,6 @@
                                     <option value="{{ $category->id }}">{{ $category->name }}</option>
                                 @endforeach
                             </select>
-                            @error('category_id')
-                            <div class="text-danger">{{ $message }}</div>
-                            @enderror
                         </div>
 
                         <div class="form-group">
@@ -60,17 +62,55 @@
                                     <option value="{{ $brand->id }}">{{ $brand->name }}</option>
                                 @endforeach
                             </select>
-                            @error('brand_id')
-                            <div class="text-danger">{{ $message }}</div>
-                            @enderror
                         </div>
 
                         <div class="form-group">
-                            <label for="image">Hình ảnh</label>
+                            <label for="image">Hình ảnh sản phẩm</label>
                             <input type="file" name="image" class="form-control" accept="image/*">
-                            @error('image')
-                            <div class="text-danger">{{ $message }}</div>
-                            @enderror
+                        </div>
+
+                        <div class="form-group">
+                            <h4>Biến thể sản phẩm</h4>
+                            <div class="variants">
+                                <div class="variant mb-3">
+                                    <label for="size_id">Kích thước</label>
+                                    <select name="sizes[]" class="form-control mb-2 size-select">
+                                        <option value="">Chọn kích thước</option>
+                                        @foreach($sizes as $size)
+                                            <option value="{{ $size->id }}">{{ $size->name }}</option>
+                                        @endforeach
+                                        <option value="new">Nhập kích thước mới</option>
+                                    </select>
+                                    <input type="text" name="new_sizes[]" class="form-control mb-2"
+                                           placeholder="Nhập kích thước mới" style="display:none;">
+
+                                    <label for="color_id">Màu sắc</label>
+                                    <select name="colors[]" class="form-control mb-2 color-select">
+                                        <option value="">Chọn màu sắc</option>
+                                        @foreach($colors as $color)
+                                            <option value="{{ $color->id }}">{{ $color->name }}</option>
+                                        @endforeach
+                                        <option value="new">Nhập màu sắc mới</option>
+                                    </select>
+                                    <input type="text" name="new_colors[]" class="form-control mb-2"
+                                           placeholder="Nhập màu sắc mới" style="display:none;">
+                                    <label for="variant_price">Giá biến thể</label>
+                                    <input type="number" name="variant_prices[]" class="form-control mb-2"
+                                           placeholder="Nhập giá biến thể" step="0.01">
+                                    <div class="form-group">
+                                        <label for="quantity">Số lượng</label>
+                                        <input type="number" name="variant_quantities[]" class="form-control"
+                                               placeholder="Nhập số lượng" min="0">
+                                    </div>
+                                    <label for="variant_images">Hình ảnh biến thể</label>
+                                    <input type="file" name="variant_images[]" class="form-control mb-2"
+                                           accept="image/*" multiple>
+
+
+                                    <button type="button" class="btn btn-danger remove-variant">Xóa</button>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-primary add-variant">Thêm biến thể</button>
                         </div>
 
                         <div class="form-group">
@@ -82,4 +122,67 @@
             </section>
         </div>
     </div>
+
+    <script>
+        // Hiện thị trường nhập kích thước mới hoặc màu sắc mới khi chọn
+        document.addEventListener('change', function (e) {
+            if (e.target.classList.contains('size-select')) {
+                const inputField = e.target.nextElementSibling;
+                inputField.style.display = e.target.value === 'new' ? 'block' : 'none';
+                if (e.target.value !== 'new') inputField.value = '';
+            }
+
+            if (e.target.classList.contains('color-select')) {
+                const inputField = e.target.nextElementSibling;
+                inputField.style.display = e.target.value === 'new' ? 'block' : 'none';
+                if (e.target.value !== 'new') inputField.value = '';
+            }
+        });
+
+        document.querySelector('.add-variant').addEventListener('click', function () {
+            const variantDiv = document.createElement('div');
+            variantDiv.classList.add('variant', 'mb-3');
+            variantDiv.innerHTML = `
+                <label for="size_id">Kích thước</label>
+                <select name="sizes[]" class="form-control mb-2 size-select">
+                    <option value="">Chọn kích thước</option>
+                    @foreach($sizes as $size)
+            <option value="{{ $size->id }}">{{ $size->name }}</option>
+                    @endforeach
+            <option value="new">Nhập kích thước mới</option>
+        </select>
+        <input type="text" name="new_sizes[]" class="form-control mb-2" placeholder="Nhập kích thước mới" style="display:none;">
+
+        <label for="color_id">Màu sắc</label>
+        <select name="colors[]" class="form-control mb-2 color-select">
+            <option value="">Chọn màu sắc</option>
+            @foreach($colors as $color)
+            <option value="{{ $color->id }}">{{ $color->name }}</option>
+                    @endforeach
+            <option value="new">Nhập màu sắc mới</option>
+        </select>
+        <input type="text" name="new_colors[]" class="form-control mb-2" placeholder="Nhập màu sắc mới" style="display:none;">
+        <label for="variant_price">Giá biến thể</label>
+        <input type="number" name="variant_prices[]" class="form-control mb-2" placeholder="Nhập giá biến thể" step="0.01">
+        <div class="form-group">
+            <label for="quantity">Số lượng</label>
+            <input type="number" name="variant_quantities[]" class="form-control" placeholder="Nhập số lượng" min="0">
+        </div>
+         <label for="variant_images">Hình ảnh biến thể</label>
+            <input type="file" name="variant_images[]" class="form-control mb-2" accept="image/*" multiple>
+
+
+
+        <button type="button" class="btn btn-danger remove-variant">Xóa</button>
+`;
+            document.querySelector('.variants').appendChild(variantDiv);
+        });
+
+        document.querySelector('.variants').addEventListener('click', function (e) {
+            if (e.target.classList.contains('remove-variant')) {
+                e.target.closest('.variant').remove();
+            }
+        });
+    </script>
 @endsection
+

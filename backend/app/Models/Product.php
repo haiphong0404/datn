@@ -15,7 +15,9 @@ class Product extends Model
         'description',
         'image',
         'category_id',
-        'brand_id'
+        'brand_id',
+        'total_quantity_in_stock',
+        'price',
     ];
 
     protected $datas = ['deleted_at'];
@@ -33,6 +35,8 @@ class Product extends Model
     {
         return $this->hasMany(ProductVariant::class);
     }
+
+
 
 
 }

@@ -7,8 +7,13 @@ use App\Http\Requests\ProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Models\Brand;
 use App\Models\Category;
+use App\Models\Color;
+use App\Models\Image;
 use App\Models\Product;
+use App\Models\ProductVariant;
+use App\Models\Size;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
@@ -22,9 +27,9 @@ class ProductController extends Controller
         $search = $request->input('search');
 
         $products = Product::withTrashed() // Lấy cả sản phẩm đã xóa mềm
-        ->with(['category' => function($query) {
+        ->with(['category' => function ($query) {
             $query->withTrashed(); // Lấy cả category đã bị xóa mềm
-        }, 'brand' => function($query) {
+        }, 'brand' => function ($query) {
             $query->withTrashed(); // Lấy cả brand đã bị xóa mềm
         }])
             ->when($search, function ($query, $search) {
@@ -45,7 +50,6 @@ class ProductController extends Controller
     }
 
 
-
     /**
      * Show the form for creating a new resource.
      */
@@ -53,8 +57,11 @@ class ProductController extends Controller
     {
         $categories = Category::all(); // Lấy tất cả thể loại
         $brands = Brand::all(); // Lấy tất cả thương hiệu
+        $sizes = Size::all();
+        $colors = Color::all();
 
-        return view('admin.products.create', compact('categories', 'brands'));
+
+        return view('admin.products.create', compact('categories', 'brands', 'sizes', 'colors'));
     }
 
 
@@ -63,38 +70,79 @@ class ProductController extends Controller
      */
     public function store(ProductRequest $request)
     {
-        // Xử lý hình ảnh
-        if ($request->hasFile('image')) {
-            $file = $request->file('image')->store('uploads/products', 'public');
-        } else {
-            $file = null;
+        // Bắt đầu transaction
+        DB::beginTransaction();
+
+        try {
+            // Xử lý hình ảnh cho sản phẩm chính
+            $file = $request->hasFile('image') ? $request->file('image')->store('uploads/products', 'public') : null;
+
+            // Tạo sản phẩm mới
+            $product = Product::create([
+                'name' => $request->name,
+                'description' => $request->description,
+                'category_id' => $request->category_id,
+                'brand_id' => $request->brand_id,
+                'price' => $request->price,
+                'image' => $file,
+                'total_quantity_in_stock' => array_sum($request->variant_quantities),
+            ]);
+
+            // Xử lý các biến thể
+            foreach ($request->sizes as $index => $sizeId) {
+                // Kiểm tra và lưu kích thước mới
+                if ($sizeId === 'new') {
+                    $size = Size::create(['name' => $request->new_sizes[$index]]);
+                    $sizeId = $size->id; // Cập nhật id của kích thước mới
+                }
+
+                // Kiểm tra và lưu màu mới
+                $colorId = $request->colors[$index];
+                if ($colorId === 'new') {
+                    $color = Color::create(['name' => $request->new_colors[$index]]);
+                    $colorId = $color->id; // Cập nhật id của màu mới
+                }
+
+                // Lưu biến thể sản phẩm
+                $variant = ProductVariant::create([
+                    'product_id' => $product->id,
+                    'size_id' => $sizeId,
+                    'color_id' => $colorId,
+                    'price' => $request->variant_prices[$index],
+                    'quantity' => $request->variant_quantities[$index],
+                ]);
+
+                // Xử lý hình ảnh cho biến thể
+                if ($request->hasFile('variant_images')) {
+                    foreach ($request->file('variant_images') as $image) {
+                        $imagePath = $image->store('variant_images', 'public');
+                        $variant->images()->create(['image' => $imagePath]);
+                    }
+                }
+            }
+
+            // Commit transaction nếu mọi thứ thành công
+            DB::commit();
+
+            return redirect()->route('admin.products.index')->with('success', 'Sản phẩm và biến thể đã được thêm mới thành công!');
+
+        } catch (\Exception $e) {
+            // Rollback transaction nếu có lỗi xảy ra
+            DB::rollback();
+
+            // Ghi lại lỗi
+            \Log::error('Error storing product: ' . $e->getMessage());
+
+            return redirect()->back()->with('error', 'Có lỗi xảy ra. Vui lòng thử lại sau.');
         }
-
-        // Tạo sản phẩm mới
-        Product::create([
-            'name' => $request->name,
-            'description' => $request->description,
-            'category_id' => $request->category_id,
-            'brand_id' => $request->brand_id,
-            'image' => $file,
-        ]);
-
-        return redirect()->route('admin.products.index')->with('success', 'Sản phẩm đã được thêm mới thành công!');
     }
+
+
 
 
     /**
      * Display the specified resource.
      */
-//    public function show($id)
-//    {
-//        // Lấy sản phẩm cùng với các biến thể
-//        $product = Product::with('variants')->findOrFail($id);
-//
-//        return view('admin.products.show', compact('product'));
-//    }
-
-
     /**
      * Show the form for editing the specified resource.
      */
@@ -126,6 +174,7 @@ class ProductController extends Controller
         $product->description = $request->description;
         $product->category_id = $request->category_id;
         $product->brand_id = $request->brand_id;
+        $product->price = $request->price;
         $product->save();
 
         return redirect()->route('admin.products.index')->with('success', 'Sản phẩm đã được cập nhật thành công!');
@@ -149,6 +198,7 @@ class ProductController extends Controller
 
         return redirect()->route('admin.products.index')->with('success', 'Sản phẩm đã được xóa thành công!');
     }
+
     public function restore($id)
     {
         $product = Product::withTrashed()->findOrFail($id);
