@@ -4,21 +4,18 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
-use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class OrderController extends Controller
 {
-
-
-   public function abc(Request $request)
+    public function abc(Request $request)
     {
         $userId = $request->query('user_id');
 
         if (!$userId) {
-            return response()->json(['error' => 'bạn phải đăng nhập vào'], 400);
+            return response()->json(['error' => 'Bạn phải đăng nhập vào'], 400);
         }
 
         $orders = Order::where('user_id', $userId)->get();
@@ -26,62 +23,82 @@ class OrderController extends Controller
         return response()->json($orders);
     }
 
+    // Hàm hỗ trợ chuyển đổi hình ảnh sang chuỗi Base64
+    private function getImageAsBase64($imagePath)
+    {
+        // Kiểm tra nếu hình ảnh tồn tại
+        if ($imagePath && Storage::disk('public')->exists($imagePath)) {
+            // Lấy nội dung hình ảnh
+            $imageData = Storage::disk('public')->get($imagePath);
+            // Lấy loại mime type của hình ảnh
+            $mimeType = mime_content_type(storage_path('app/public/' . $imagePath));
+            // Mã hóa hình ảnh thành Base64
+            return 'data:' . $mimeType . ';base64,' . base64_encode($imageData);
+        }
 
-// Hàm hỗ trợ chuyển đổi hình ảnh sang chuỗi Base64
-private function getImageAsBase64($imagePath)
-{
-    // Kiểm tra nếu hình ảnh tồn tại
-    if ($imagePath && Storage::disk('public')->exists($imagePath)) {
-        // Lấy nội dung hình ảnh
-        $imageData = Storage::disk('public')->get($imagePath);
-        // Lấy loại mime type của hình ảnh
-        $mimeType = mime_content_type(storage_path('app/public/' . $imagePath));
-        // Mã hóa hình ảnh thành Base64
-        return 'data:' . $mimeType . ';base64,' . base64_encode($imageData);
+        return null; // Nếu không có hình ảnh, trả về null
     }
-
-    return null; // Nếu không có hình ảnh, trả về null
-}
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
-        // Xác thực dữ liệu đầu vào
-        $validatedData = $request->validate([
+        // Validate request
+        $request->validate([
             'order_date' => 'required|date',
             'status' => 'required|string',
             'total_amount' => 'required|numeric',
-            'name' => 'required|string',
-            'phone' => 'required|string',
-            'address' => 'required|string',
+            'name' => 'required|string|max:255',
+            'phone' => 'required|string|max:15',
+            'address' => 'required|string|max:255',
             'infor' => 'nullable|string',
-        ],[
-            'order_date.required' => 'Bạn phải nhập order_date',
-            'order_date.date' => 'order_date phải là ngày',
-            'status.required' => 'Bạn phải nhập status',
-            'status.string' => 'status phải là kiểu chuỗi',
-            'total_amount.required' => 'Bạn phải nhập total_amount',
-            'total_amount.numeric' => 'total_amount phải là kiểu số',
-            'name.required' => 'Bạn phải nhập tên',
-            'name.string' => 'Tên phải là kiểu chuỗi',
-            'phone.required' => 'Bạn phải nhập số điện thoại',
-            'phone.string' => 'Số điện thoại phải là kiểu chuỗi',
-            'address.required' => 'Bạn phải nhập địa chỉ',
-            'address.string' => 'Địa chỉ phải là kiểu chuỗi',
-            'infor.string' => 'Thông tin bổ sung phải là kiểu chuỗi',
+        ], [
+            'order_date.required' => 'Ngày đặt hàng là bắt buộc.',
+            'order_date.date' => 'Ngày đặt hàng không hợp lệ.',
+            'status.required' => 'Trạng thái là bắt buộc.',
+            'status.string' => 'Trạng thái phải là chuỗi.',
+            'total_amount.required' => 'Số tiền tổng là bắt buộc.',
+            'total_amount.numeric' => 'Số tiền tổng phải là một số.',
+            'name.required' => 'Tên là bắt buộc.',
+            'name.string' => 'Tên phải là chuỗi.',
+            'name.max' => 'Tên không được vượt quá 255 ký tự.',
+            'phone.required' => 'Số điện thoại là bắt buộc.',
+            'phone.string' => 'Số điện thoại phải là chuỗi.',
+            'phone.max' => 'Số điện thoại không được vượt quá 15 ký tự.',
+            'address.required' => 'Địa chỉ là bắt buộc.',
+            'address.string' => 'Địa chỉ phải là chuỗi.',
+            'address.max' => 'Địa chỉ không được vượt quá 255 ký tự.',
+            'infor.string' => 'Thông tin bổ sung phải là chuỗi.',
         ]);
-    
-        // Tạo mới bản ghi
-        $order = Order::create($validatedData);
-    
-        // Trả về response
-        return response()->json([
-            'message' => 'Order created successfully',
-            'data' => $order,
-        ], 201);
+        
+        // Create new order
+        $order = Order::create([
+            'user_id' => Auth::id(), // Lấy user_id từ Authentication
+            'order_date' => $request->order_date,
+            'status' => $request->status,
+            'total_amount' => $request->total_amount,
+            'name' => $request->name,
+            'phone' => $request->phone,
+            'address' => $request->address,
+            'infor' => $request->infor,
+        ]);
+
+        // Create new order
+        $order = Order::create([
+            'user_id' => Auth::id(), // Lấy user_id từ Authentication
+            'order_date' => $request->order_date,
+            'status' => $request->status,
+            'total_amount' => $request->total_amount,
+            'name' => $request->name,
+            'phone' => $request->phone,
+            'address' => $request->address,
+            'infor' => $request->infor,
+        ]);
+
+        return response()->json($order, 201); // Trả về đơn hàng vừa tạo với status 201
     }
+
     /**
      * Display the specified resource.
      */
@@ -104,42 +121,48 @@ private function getImageAsBase64($imagePath)
     {
         // Tìm bản ghi cần sửa
         $order = Order::findOrFail($id);
-    
-        // Xác thực dữ liệu đầu vào
-        $validatedData = $request->validate([
+
+        // Validate request
+        $request->validate([
             'order_date' => 'required|date',
             'status' => 'required|string',
             'total_amount' => 'required|numeric',
-            'name' => 'required|string',
-            'phone' => 'required|string',
-            'address' => 'required|string',
+            'name' => 'required|string|max:255',
+            'phone' => 'required|string|max:15',
+            'address' => 'required|string|max:255',
             'infor' => 'nullable|string',
-        ],[
-            'order_date.required' => 'Bạn phải nhập order_date',
-            'order_date.date' => 'order_date phải là ngày',
-            'status.required' => 'Bạn phải nhập status',
-            'status.string' => 'status phải là kiểu chuỗi',
-            'total_amount.required' => 'Bạn phải nhập total_amount',
-            'total_amount.numeric' => 'total_amount phải là kiểu số',
-            'name.required' => 'Bạn phải nhập tên',
-            'name.string' => 'Tên phải là kiểu chuỗi',
-            'phone.required' => 'Bạn phải nhập số điện thoại',
-            'phone.string' => 'Số điện thoại phải là kiểu chuỗi',
-            'address.required' => 'Bạn phải nhập địa chỉ',
-            'address.string' => 'Địa chỉ phải là kiểu chuỗi',
-            'infor.string' => 'Thông tin bổ sung phải là kiểu chuỗi',
+        ], [
+            'order_date.required' => 'Ngày đặt hàng là bắt buộc.',
+            'order_date.date' => 'Ngày đặt hàng không hợp lệ.',
+            'status.required' => 'Trạng thái là bắt buộc.',
+            'status.string' => 'Trạng thái phải là chuỗi.',
+            'total_amount.required' => 'Số tiền tổng là bắt buộc.',
+            'total_amount.numeric' => 'Số tiền tổng phải là một số.',
+            'name.required' => 'Tên là bắt buộc.',
+            'name.string' => 'Tên phải là chuỗi.',
+            'name.max' => 'Tên không được vượt quá 255 ký tự.',
+            'phone.required' => 'Số điện thoại là bắt buộc.',
+            'phone.string' => 'Số điện thoại phải là chuỗi.',
+            'phone.max' => 'Số điện thoại không được vượt quá 15 ký tự.',
+            'address.required' => 'Địa chỉ là bắt buộc.',
+            'address.string' => 'Địa chỉ phải là chuỗi.',
+            'address.max' => 'Địa chỉ không được vượt quá 255 ký tự.',
+            'infor.string' => 'Thông tin bổ sung phải là chuỗi.',
         ]);
-    
-        // Cập nhật bản ghi với dữ liệu mới
-        $order->update($validatedData);
-    
-        // Trả về response
-        return response()->json([
-            'message' => 'Order updated successfully',
-            'data' => $order,
-        ], 200);
-    }
 
+        // Cập nhật thông tin đơn hàng
+        $order->update($request->only([
+            'order_date',
+            'status',
+            'total_amount',
+            'name',
+            'phone',
+            'address',
+            'infor',
+        ]));
+
+        return response()->json($order, 200); // Trả về đơn hàng đã được cập nhật
+    }
 
     /**
      * Remove the specified resource from storage.
@@ -147,14 +170,9 @@ private function getImageAsBase64($imagePath)
     public function destroy($id)
     {
         // Kiểm tra xem đơn hàng có tồn tại không
-        $order = Order::find($id);
-        
-        if (!$order) {
-            return response()->json(['message' => 'Order not found.'], 404); // Nếu không tìm thấy đơn hàng
-        }
-
+        $order = Order::findOrFail($id);
         $order->delete(); // Xóa đơn hàng
 
-        return response()->json(['message' => 'Order deleted successfully.'], 200);
+        return response()->json(['message' => 'Order deleted successfully'], 200); // Trả về thông báo xóa thành công
     }
 }
