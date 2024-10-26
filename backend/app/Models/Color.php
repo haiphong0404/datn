@@ -12,4 +12,9 @@ class Color extends Model
         'name',
     ];
 
+    // Định nghĩa quan hệ ngược với bảng product_variants
+    public function variants()
+    {
+        return $this->hasMany(ProductVariant::class);
+    }
 }

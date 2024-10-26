@@ -8,6 +8,7 @@
     <meta name="description" content="">
     <meta name="author" content="Mosaddek">
     <meta name="keyword" content="FlatLab, Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
+    <!-- <meta name="csrf-token" content="{{ csrf_token() }}"> -->
     <link rel="shortcut icon" href="{{ asset('assets')}}/admin/img/favicon.html">
 
     <title>Thor-Admin Dashboard</title>
@@ -667,10 +668,10 @@
     @yield('js')
 
     <!-- js placed at the end of the document so the pages load faster -->
-    <script src="{{ asset('assets')}}/admin/js/jquery.js"></script>
+    <!-- <script src="{{ asset('assets')}}/admin/js/jquery.js"></script> -->
     <script src="{{ asset('assets')}}/admin/js/bootstrap.bundle.min.js"></script>
     <script class="include" type="text/javascript" src="{{ asset('assets')}}/admin/js/jquery.dcjqaccordion.2.7.js"></script>
-    <script src="{{ asset('assets')}}/admin/js/jquery.scrollTo.min.js"></script>
+    <!-- <script src="{{ asset('assets')}}/admin/js/jquery.scrollTo.min.js"></script> -->
     <script src="{{ asset('assets')}}/admin/js/jquery.nicescroll.js" type="text/javascript"></script>
     <script src="{{ asset('assets')}}/admin/js/jquery.sparkline.js" type="text/javascript"></script>
     <script src="{{ asset('assets')}}/admin/assets/js/jquery-easy-pie-chart/jquery.easy-pie-chart.js"></script>
@@ -719,5 +720,5 @@
 
   </body>
 
-<!-- Mirrored from thevectorlab.net/flatlab-4/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 26 Aug 2024 14:11:19 GMT -->
+
 </html>

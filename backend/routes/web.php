@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admins\BrandController;
 use App\Http\Controllers\Admins\CategoryController;
 use App\Http\Controllers\Admins\CommentController;
+use App\Http\Controllers\Admins\OrderController;
 use App\Http\Controllers\Admins\ProductController;
 use App\Http\Controllers\Admins\UserController;
 use App\Http\Controllers\AdminTestController;
@@ -33,7 +34,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
 
 
 
@@ -43,9 +44,9 @@ Route::get('/', [AdminTestController::class, 'index'])->name('/');
 
 Route::group(
     [
-      'prefix' => 'admin',
-      'as' => 'admin.',
-    //   'middleware' =>'Admin'
+        'prefix' => 'admin',
+        'as' => 'admin.',
+        //   'middleware' =>'Admin'
     ],
     function () {
         Route::get('admin', [adminTestController::class, 'index'])->name('admin');
@@ -55,34 +56,46 @@ Route::group(
         Route::post('comments/{id}/restore', [CommentController::class, 'restore'])->name('comments.restore');
 
 
-$cruds = [
-    'categories' => CategoryController::class,
-    'products'=> ProductController::class,
-];
+        $cruds = [
+            'categories' => CategoryController::class,
+            'products' => ProductController::class,
+        ];
 
-foreach ($cruds as $obj => $controller) {
-    Route::resource($obj, $controller);
-}
-Route::resource('user',UserController::class);
-Route::resource('comments', CommentController::class);
-Route::resource('admin/brands', BrandController::class);
-        
-     
+        foreach ($cruds as $obj => $controller) {
+            Route::resource($obj, $controller);
+        }
+        Route::resource('user', UserController::class);
+        Route::resource('comments', CommentController::class);
+
+        // Route chức năng order và order detail. VIẾT ROUTE KHÁC LÊN TRÊN HOẶC XUỐNG HẲN SAU DÒNG END PHẦN ROUTE
+        Route::get('/orders/create', [OrderController::class, 'create'])->name('orders.create'); // Hiển thị form tạo order
+        Route::post('/orders', [OrderController::class, 'store'])->name('orders.store'); // Lưu thông tin order
+        Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+        Route::put('/orders/{order}/updateStatus', [OrderController::class, 'updateStatus'])->name('orders.updateStatus');
+        Route::get('/orders/{order}/details', [OrderController::class, 'show'])->name('orders.show');
+
+        // Route để tìm kiếm sản phẩm với Select2
+        // Route::get('/products/search', [OrderController::class, 'searchProducts'])->name('products.search');
+
+        // Route để lấy danh sách biến thể của sản phẩm
+        Route::get('/get-variants/{productId}', [OrderController::class, 'getVariants'])->name('products.variants');
+        // End phần Route chức năng order và order detail
+
+        Route::get('/search-products', [OrderController::class, 'search'])->name('products.search');
     }
-    
-  
-  );
-  
+
+
+);
+
 route::group(
     [
-      'prefix' => 'staff',
-      'as' => 'staff.',
-      'middleware' =>'staff'
+        'prefix' => 'staff',
+        'as' => 'staff.',
+        'middleware' => 'staff'
     ],
     function () {
         Route::get('Admin', [AdminTestController::class, 'index'])->name('Admin');
-     
     }
-    
-  
-  );
+
+
+);
