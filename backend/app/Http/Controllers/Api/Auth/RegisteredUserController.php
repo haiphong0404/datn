@@ -40,7 +40,7 @@ class RegisteredUserController extends Controller
             'email.unique' => 'Email này đã được sử dụng.',
             'password.required' => 'Mật khẩu là bắt buộc.',
             'password.confirmed' => 'Xác nhận mật khẩu không khớp.',
-            'password_confirmation.required' => 'Vui lòng nhập lại mật khẩu để xác nhận.',
+            'pa 33ssword_confirmation.required' => 'Vui lòng nhập lại mật khẩu để xác nhận.',
             'phone.required' => 'Số điện thoại là bắt buộc.',
             'phone.regex' => 'Số điện thoại phải bắt đầu bằng +84 mã quốc gia.',
         ]);

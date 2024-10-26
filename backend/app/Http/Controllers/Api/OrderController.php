@@ -48,25 +48,96 @@ private function getImageAsBase64($imagePath)
      */
     public function store(Request $request)
     {
-      
-
-      
+        // Xác thực dữ liệu đầu vào
+        $validatedData = $request->validate([
+            'order_date' => 'required|date',
+            'status' => 'required|string',
+            'total_amount' => 'required|numeric',
+            'name' => 'required|string',
+            'phone' => 'required|string',
+            'address' => 'required|string',
+            'infor' => 'nullable|string',
+        ],[
+            'order_date.required' => 'Bạn phải nhập order_date',
+            'order_date.date' => 'order_date phải là ngày',
+            'status.required' => 'Bạn phải nhập status',
+            'status.string' => 'status phải là kiểu chuỗi',
+            'total_amount.required' => 'Bạn phải nhập total_amount',
+            'total_amount.numeric' => 'total_amount phải là kiểu số',
+            'name.required' => 'Bạn phải nhập tên',
+            'name.string' => 'Tên phải là kiểu chuỗi',
+            'phone.required' => 'Bạn phải nhập số điện thoại',
+            'phone.string' => 'Số điện thoại phải là kiểu chuỗi',
+            'address.required' => 'Bạn phải nhập địa chỉ',
+            'address.string' => 'Địa chỉ phải là kiểu chuỗi',
+            'infor.string' => 'Thông tin bổ sung phải là kiểu chuỗi',
+        ]);
+    
+        // Tạo mới bản ghi
+        $order = Order::create($validatedData);
+    
+        // Trả về response
+        return response()->json([
+            'message' => 'Order created successfully',
+            'data' => $order,
+        ], 201);
     }
-
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show($id)
     {
-        
+        // Tìm bản ghi theo id
+        $order = Order::findOrFail($id);
+    
+        // Trả về response với dữ liệu bản ghi
+        return response()->json([
+            'message' => 'Order details retrieved successfully',
+            'data' => $order,
+        ], 200);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-     
+        // Tìm bản ghi cần sửa
+        $order = Order::findOrFail($id);
+    
+        // Xác thực dữ liệu đầu vào
+        $validatedData = $request->validate([
+            'order_date' => 'required|date',
+            'status' => 'required|string',
+            'total_amount' => 'required|numeric',
+            'name' => 'required|string',
+            'phone' => 'required|string',
+            'address' => 'required|string',
+            'infor' => 'nullable|string',
+        ],[
+            'order_date.required' => 'Bạn phải nhập order_date',
+            'order_date.date' => 'order_date phải là ngày',
+            'status.required' => 'Bạn phải nhập status',
+            'status.string' => 'status phải là kiểu chuỗi',
+            'total_amount.required' => 'Bạn phải nhập total_amount',
+            'total_amount.numeric' => 'total_amount phải là kiểu số',
+            'name.required' => 'Bạn phải nhập tên',
+            'name.string' => 'Tên phải là kiểu chuỗi',
+            'phone.required' => 'Bạn phải nhập số điện thoại',
+            'phone.string' => 'Số điện thoại phải là kiểu chuỗi',
+            'address.required' => 'Bạn phải nhập địa chỉ',
+            'address.string' => 'Địa chỉ phải là kiểu chuỗi',
+            'infor.string' => 'Thông tin bổ sung phải là kiểu chuỗi',
+        ]);
+    
+        // Cập nhật bản ghi với dữ liệu mới
+        $order->update($validatedData);
+    
+        // Trả về response
+        return response()->json([
+            'message' => 'Order updated successfully',
+            'data' => $order,
+        ], 200);
     }
 
 
