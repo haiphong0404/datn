@@ -1,7 +1,10 @@
 <?php
 
 use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\ColorController;
 use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\Api\ProductVariantController;
+use App\Http\Controllers\Api\SizeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\BrandController;
@@ -49,8 +52,14 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 Route::middleware('api')->group(function () {
-    
+
     Route::apiResource('categories', CategoryController::class);
     Route::apiResource('products', ProductController::class);
 });
 Route::apiResource('user', UserController::class);
+Route::get('products/{productId}/variants', [ProductVariantController::class, 'index']);
+Route::get('/variants/{id}', [ProductVariantController::class, 'show']);
+Route::get('/sizes', [SizeController::class, 'index']);
+Route::get('/colors', [ColorController::class, 'index']);
+
+

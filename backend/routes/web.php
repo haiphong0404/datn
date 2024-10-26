@@ -35,14 +35,13 @@ Route::middleware('auth')->group(function () {
 
 // Đảm bảo route '/' không trùng lặp
 require __DIR__ . '/auth.php';
+
 // Route admin
 Route::group(
     [
         'prefix' => 'admin',
         'as' => 'admin.',
-//        'middleware' => 'auth' // Nếu cần middleware xác thực
-        'middleware' => 'web'
-        //   'middleware' =>'Admin'
+        // 'middleware' => ['auth', 'admin'] // Nếu cần middleware xác thực
     ],
     function () {
         Route::get('/', [AdminTestController::class, 'index'])->name('dashboard'); // Route dashboard admin
@@ -55,7 +54,8 @@ Route::group(
         Route::resource('products.variants', ProductVariantController::class); // Route cho biến thể sản phẩm
         Route::resource('user', UserController::class);  // Route cho người dùng
         Route::resource('comments', CommentController::class);  // Route cho bình luận
-        // Route chức năng order và order detail. VIẾT ROUTE KHÁC LÊN TRÊN HOẶC XUỐNG HẲN SAU DÒNG END PHẦN ROUTE
+
+        // Route chức năng order và order detail
         Route::get('/orders/create', [OrderController::class, 'create'])->name('orders.create'); // Hiển thị form tạo order
         Route::post('/orders', [OrderController::class, 'store'])->name('orders.store'); // Lưu thông tin order
         Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
@@ -67,15 +67,13 @@ Route::group(
 
         // Route để lấy danh sách biến thể của sản phẩm
         Route::get('/get-variants/{productId}', [OrderController::class, 'getVariants'])->name('products.variants');
-        // End phần Route chức năng order và order detail
-
+        
+        // Route để tìm kiếm sản phẩm
         Route::get('/search-products', [OrderController::class, 'search'])->name('products.search');
     }
-
-
 );
 
-route::group(
+Route::group(
     [
         'prefix' => 'staff',
         'as' => 'staff.',
@@ -84,6 +82,4 @@ route::group(
     function () {
         Route::get('Admin', [AdminTestController::class, 'index'])->name('Admin');
     }
-
-
 );
