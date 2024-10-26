@@ -1,16 +1,23 @@
 import axios from 'axios';
+
+
+
 export const getOrderByUserId = async (user_id) => {
-    const token = localStorage.getItem('token'); // Lấy token từ localStorage
+    
     try {
-        const response = await axios.get(`/orders/${user_id}`, {
+        const response = await axios.get(`/orders`, {
+            params: { user_id }, // Send user_id as query parameter
             headers: {
-                'Authorization': `Bearer ${token}`, // Gửi token trong header để xác thực
+              
                 'Content-Type': 'application/json',
             },
         });
 
-        return response.data; // Trả về dữ liệu đơn hàng của người dùng
+        return response.data; // Return the user's order data
     } catch (error) {
-        throw new Error('Lỗi khi lấy thông tin đơn hàng: ' + (error.response?.data?.message || error.message));
+        // Handle error response with more detail
+        const errorMessage = error.response?.data?.message || error.message;
+        console.error("Error fetching order data:", errorMessage);
+        throw new Error('Error fetching order data: ' + errorMessage);
     }
 };

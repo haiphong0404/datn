@@ -26,7 +26,7 @@ const useOrders = () => {
         }
     }, []);
 
-    console.log('Danh sách đơn hàng:', orders); // Kiểm tra danh sách đơn hàng
+    
     return { orders, error }; // Trả về orders và error
 };
 

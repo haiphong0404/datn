@@ -2,6 +2,17 @@ import React from 'react';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 
 const MyAccount = () => {
+  const navigate = useNavigate();
+  
+
+  const handleLogout = () => {
+    // Remove user info from localStorage
+    localStorage.removeItem('userInfo');
+    localStorage.removeItem('token'); // Optionally, remove token as well
+
+    // Redirect to login page
+    navigate('/login');
+  };
 
   return (
     <div>
@@ -48,7 +59,7 @@ const MyAccount = () => {
                     <div className="row">
                       <div className="col-lg-3 col-md-4">
                         <div className="myaccount-tab-menu nav" role="tablist">
-                          <Link to="/my_account" >
+                          <Link to="/my_account">
                             <i className="fa fa-dashboard" />
                             Bảng Điều Khiển
                           </Link>
@@ -71,11 +82,11 @@ const MyAccount = () => {
                           <Link to="/my_account/account_info">
                             <i className="fa fa-user" /> Chi Tiết Tài Khoản
                           </Link>
-                          <Link to="/my_account/login-register">
+                          {/* Update Đăng Xuất to trigger handleLogout */}
+                          <button className="logout-button" onClick={handleLogout}>
                             <i className="fa fa-sign-out" /> Đăng Xuất
-                          </Link>
+                          </button>
                         </div>
-
                       </div>
                       {/* My Account Tab Menu End */}
                       {/* My Account Tab Content Start */}
@@ -95,9 +106,8 @@ const MyAccount = () => {
         </div>
         {/* my account wrapper end */}
       </main>
-
     </div>
-
   );
 };
+
 export default MyAccount;

@@ -10,8 +10,6 @@ const Orders = () => {
         return <div>Error: {error}</div>;
     }
 
-    console.log('Danh sách đơn hàng trong component:', orders); // Kiểm tra danh sách đơn hàng
-
     return (
         <div>
             <div>

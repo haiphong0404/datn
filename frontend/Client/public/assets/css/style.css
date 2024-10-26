@@ -6895,3 +6895,27 @@ blockquote {
   max-width: 100%;                /* Hình ảnh vừa với khung chứa */
   height: auto;                   /* Giữ tỷ lệ hình ảnh */
 }
+.logout-button {
+  display: block;
+  width: 100%;
+  padding: 10px 20px;
+  background: none;
+  border: none;
+  text-align: left;
+  font-size: 16px;
+  color: #333;
+  font-weight: bold;
+  cursor: pointer;
+  border: 1px solid #ddd; /* Add border around the button */
+ 
+}
+
+.logout-button i {
+  margin-right: 10px;
+}
+
+.logout-button:hover {
+  background-color: #87b106; /* Add hover effect similar to other links */
+  color: #efefef;
+  
+}
