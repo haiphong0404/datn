@@ -1,17 +1,16 @@
 // src/components/AddToCart.jsx
-import axios from 'axios';
 import React from 'react';
-
+import axios from '../axios'; // Đảm bảo import từ file cấu hình
 
 const AddToCart = ({ product }) => {
   const handleAddToCart = async () => {
     try {
       const response = await axios.post('http://localhost:8000/api/cart/add', {
         product_id: product.id,
-        quantity: 1, // Hoặc bạn có thể thêm một input để chọn số lượng
+        quantity: 1,
       }, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`, // Nếu bạn sử dụng token xác thực
+          Authorization: `Bearer ${localStorage.getItem('token')}`, // Nếu bạn đang sử dụng xác thực
         },
       });
       alert(response.data.message);

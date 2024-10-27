@@ -23,6 +23,12 @@ const Main = () => {
         console.error('Error fetching brands:', error);
       });
   }, []);
+
+  const handleAddToCart = (product) => {
+    // Logic thêm sản phẩm vào giỏ hàng
+    console.log("Adding to cart:", product);
+    // Thực hiện API call hoặc xử lý thêm sản phẩm vào giỏ hàng
+  };
   return (
     <div>
 
@@ -242,9 +248,10 @@ const Main = () => {
                       <div className="price-box">
                         <span className="price-regular">${product.price}</span> {/* Đổ giá hiện tại */}
                       </div>
-                      <a className="add-to-cart" href="/cart">
-                        <i className="fa fa-shopping-cart" />
-                      </a>
+                      {/* <a className="add-to-cart" >
+                        
+                      </a> */}
+                      <button className="add-to-cart" onClick={() => handleAddToCart(product)}><i className="fa fa-shopping-cart" /></button>
                     </div>
 
                   </div>
