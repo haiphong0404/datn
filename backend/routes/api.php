@@ -17,6 +17,7 @@ use App\Http\Controllers\Api\UserController;
 
 use App\Http\Controllers\Api\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Api\CartController;
+use App\Http\Controllers\Api\CartItemController;
 
 //Route GET để lấy thông tin hướng dẫn về việc gửi yêu cầu đặt lại mật khẩu
 Route::get('/password/reset-link', [PasswordResetLinkController::class, 'store'])
