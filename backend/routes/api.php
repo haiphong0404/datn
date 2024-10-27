@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\UserController;
 
 use App\Http\Controllers\Api\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Api\CartController;
+use App\Http\Controllers\Api\CartItemController;
 
 //Route GET để lấy thông tin hướng dẫn về việc gửi yêu cầu đặt lại mật khẩu
 Route::get('/password/reset-link', [PasswordResetLinkController::class, 'store'])
@@ -55,9 +56,7 @@ Route::middleware('api')->group(function () {
     Route::apiResource('products', ProductController::class);
 });
 Route::apiResource('user', UserController::class);
-Route::middleware('auth:api')->group(function () {
-    // Route::get('/cart/user/{userId}', [CartController::class, 'getCart']);
-    Route::post('/cart/add', [CartController::class, 'addToCart']);
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/carts', [CartController::class, 'index']);
+    Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
 });
-Route::middleware('auth:sanctum')->get('/cart', [CartController::class, 'getCart']);
-
