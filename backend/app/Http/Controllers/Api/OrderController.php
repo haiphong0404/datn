@@ -47,7 +47,6 @@ class OrderController extends Controller
         // Validate request
         $request->validate([
             'order_date' => 'required|date',
-            'status' => 'required|string',
             'total_amount' => 'required|numeric',
             'name' => 'required|string|max:255',
             'phone' => 'required|string|max:15',
@@ -56,8 +55,6 @@ class OrderController extends Controller
         ], [
             'order_date.required' => 'Ngày đặt hàng là bắt buộc.',
             'order_date.date' => 'Ngày đặt hàng không hợp lệ.',
-            'status.required' => 'Trạng thái là bắt buộc.',
-            'status.string' => 'Trạng thái phải là chuỗi.',
             'total_amount.required' => 'Số tiền tổng là bắt buộc.',
             'total_amount.numeric' => 'Số tiền tổng phải là một số.',
             'name.required' => 'Tên là bắt buộc.',
