@@ -13,6 +13,11 @@ use App\Http\Controllers\Api\UserController;
 
 
 use App\Http\Controllers\Api\Auth\PasswordResetLinkController;
+use App\Http\Controllers\Api\Auth\NewPasswordController;
+
+// Route cho việc xác nhận mật khẩu mới
+Route::post('/password/reset/store', [NewPasswordController::class, 'store'])
+    ->name('password.update');
 
 //Route GET để lấy thông tin hướng dẫn về việc gửi yêu cầu đặt lại mật khẩu
 Route::get('/password/reset-link', [PasswordResetLinkController::class, 'store'])
