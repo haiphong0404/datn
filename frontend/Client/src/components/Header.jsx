@@ -1,11 +1,13 @@
 import { useEffect, useRef  } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-
+import { useLoginForm } from '../hooks/useLoginForm';
 const Header = () => {
   // code reload fix lỗi plugin không tải
   const location = useLocation();
   const prevLocation = useRef(location.pathname);
-
+  const { userInfo } = useLoginForm();
+  console.log("Thông tin người dùng trong Account_info:", userInfo); 
+ 
   useEffect(() => {
  
     if (prevLocation.current !== location.pathname) {

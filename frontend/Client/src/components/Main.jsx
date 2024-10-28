@@ -1,5 +1,6 @@
+import axios from "axios";
 import React, { useEffect, useState } from "react";
-import axios from "axios"
+
 const Main = () => {
   const [products, setProducts] = useState([]);
   const [brands, setBrands] = useState([]);

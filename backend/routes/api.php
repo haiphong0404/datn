@@ -47,6 +47,7 @@ Route::get('logout', [AuthenticatedSessionController::class, 'destroy'])->name('
 Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
 Route::apiResource('Apibrands', BrandController::class);
+
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
@@ -59,4 +60,4 @@ Route::apiResource('user', UserController::class);
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/carts', [CartController::class, 'index']);
     Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
-}); 
+});
