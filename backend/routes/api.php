@@ -60,7 +60,7 @@ Route::middleware('api')->group(function () {
 });
 Route::apiResource('user', UserController::class);
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/carts', [CartController::class, 'index']);
+    Route::get('/cart', [CartController::class, 'index']);
     Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
 });
 Route::get('products/{productId}/variants', [ProductVariantController::class, 'index']);
