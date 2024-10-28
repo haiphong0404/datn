@@ -18,12 +18,12 @@ class AuthenticatedSessionController extends Controller
         if (Auth::attempt($request->only('email', 'password'), $request->filled('remember'))) {
             $user = Auth::user();
             // Optionally generate a token if you're using token-based authentication
-            // $token = $user->createToken('YourAppName')->plainTextToken;
+            $token = $user->createToken('YourAppName')->plainTextToken;
 
             return response()->json([
                 'message' => 'Logged in successfully.',
                 'user' => $user, // You may want to customize the user data returned
-                // 'token' => $token, // Uncomment if using token-based auth
+                 'token' => $token, // Uncomment if using token-based auth
             ]);
         }
 
