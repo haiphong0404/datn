@@ -37,9 +37,9 @@ Route::get('register', [RegisteredUserController::class, 'store'])->name('regist
 //post dang ky
 Route::post('register', [RegisteredUserController::class, 'store'])->name('register');
 
-// getlogin 
+// getlogin
 Route::get('login', [AuthenticatedSessionController::class, 'store'])->name('login');
-// post login 
+// post login
 Route::post('login', [AuthenticatedSessionController::class, 'store'])->name('login');
 // get logout
 Route::get('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
@@ -59,4 +59,4 @@ Route::apiResource('user', UserController::class);
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/carts', [CartController::class, 'index']);
     Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
-});
+}); 

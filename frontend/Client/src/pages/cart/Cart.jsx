@@ -1,6 +1,16 @@
-import React from 'react';
+import axios from 'axios';
+import React, { useState } from 'react';
+
 
 const Cart = () => {
+  const [cartItems, setCartItems] = useState([]);
+
+  const fetchCartItems = async () => {
+    // Fetch cart items from API
+    const response = await axios.get('http://localhost:8000/api/carts');
+    setCartItems(response.data);
+  };
+fetchCartItems();
   return (
     <div>
       <main>
@@ -48,137 +58,58 @@ const Cart = () => {
                     <table className="table table-bordered">
                       <thead>
                         <tr>
-                          <th className="pro-thumbnail">Thumbnail</th>
-                          <th className="pro-title">Product</th>
+                          <th className="pro-thumbnail">Image</th>
+                          <th className="pro-title">Name</th>
                           <th className="pro-price">Price</th>
                           <th className="pro-quantity">Quantity</th>
-                          <th className="pro-subtotal">Total</th>
+                          <th className="pro-subtotal">Total Price</th>
                           <th className="pro-remove">Remove</th>
                         </tr>
                       </thead>
                       <tbody>
-                        <tr>
-                          <td className="pro-thumbnail">
-                            <a href="#">
-                              <img
-                                className="img-fluid"
-                                src="assets/img/product/product-1.jpg"
-                                alt="Product"
-                              />
-                            </a>
-                          </td>
-                          <td className="pro-title">
-                            <a href="#">PRIMITIVE MENS SHOES</a>
-                          </td>
-                          <td className="pro-price">
-                            <span>$295.00</span>
-                          </td>
-                          <td className="pro-quantity">
-                            <div className="pro-qty">
-                              <input type="text" defaultValue={1} />
-                            </div>
-                          </td>
-                          <td className="pro-subtotal">
-                            <span>$295.00</span>
-                          </td>
-                          <td className="pro-remove">
-                            <a href="#">
-                              <i className="fa fa-trash-o" />
-                            </a>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td className="pro-thumbnail">
-                            <a href="#">
-                              <img
-                                className="img-fluid"
-                                src="assets/img/product/product-2.jpg"
-                                alt="Product"
-                              />
-                            </a>
-                          </td>
-                          <td className="pro-title">
-                            <a href="#">LEATHER MENS SLIPPERS</a>
-                          </td>
-                          <td className="pro-price">
-                            <span>$275.00</span>
-                          </td>
-                          <td className="pro-quantity">
-                            <div className="pro-qty">
-                              <input type="text" defaultValue={2} />
-                            </div>
-                          </td>
-                          <td className="pro-subtotal">
-                            <span>$550.00</span>
-                          </td>
-                          <td className="pro-remove">
-                            <a href="#">
-                              <i className="fa fa-trash-o" />
-                            </a>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td className="pro-thumbnail">
-                            <a href="#">
-                              <img
-                                className="img-fluid"
-                                src="assets/img/product/product-3.jpg"
-                                alt="Product"
-                              />
-                            </a>
-                          </td>
-                          <td className="pro-title">
-                            <a href="#">REXPO WOMENS SHOES</a>
-                          </td>
-                          <td className="pro-price">
-                            <span>$295.00</span>
-                          </td>
-                          <td className="pro-quantity">
-                            <div className="pro-qty">
-                              <input type="text" defaultValue={1} />
-                            </div>
-                          </td>
-                          <td className="pro-subtotal">
-                            <span>$295.00</span>
-                          </td>
-                          <td className="pro-remove">
-                            <a href="#">
-                              <i className="fa fa-trash-o" />
-                            </a>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td className="pro-thumbnail">
-                            <a href="#">
-                              <img
-                                className="img-fluid"
-                                src="assets/img/product/product-4.jpg"
-                                alt="Product"
-                              />
-                            </a>
-                          </td>
-                          <td className="pro-title">
-                            <a href="#">QUICKIIN MENS SHOES</a>
-                          </td>
-                          <td className="pro-price">
-                            <span>$110.00</span>
-                          </td>
-                          <td className="pro-quantity">
-                            <div className="pro-qty">
-                              <input type="text" defaultValue={3} />
-                            </div>
-                          </td>
-                          <td className="pro-subtotal">
-                            <span>$110.00</span>
-                          </td>
-                          <td className="pro-remove">
-                            <a href="#">
-                              <i className="fa fa-trash-o" />
-                            </a>
-                          </td>
-                        </tr>
+                        {cartItems.length === 0 ? (
+                          <tr>
+                            <td colSpan="6" style={{ textAlign: 'center' }}>
+                              Giỏ hàng trống
+                            </td>
+                          </tr>
+                        ) : (
+                          cartItems.map(item => (
+                            <tr key={item.id}>
+                              <td className="pro-thumbnail">
+                                <a href="#">
+                                  <img
+                                    className="img-fluid"
+                                    src={item.image} // Chú ý: bỏ dấu `$` trong src
+                                    alt="Product"
+                                  />
+                                </a>
+                              </td>
+                              <td className="pro-title">
+                                <a href="#">{item.name}</a>
+                              </td>
+                              <td className="pro-price">
+                                <span>{item.price}</span>
+                              </td>
+                              <td className="pro-quantity">
+                                <div className="pro-qty">
+                                  <input type="number" defaultValue={1} />
+                                </div>
+                              </td>
+                              <td className="pro-subtotal">
+                                <span>{item.total_price}</span>
+                              </td>
+                              <td className="pro-remove">
+                                <a href="#">
+                                  <i className="fa fa-trash-o" />
+                                </a>
+                              </td>
+                            </tr>
+                          ))
+                        )}
                       </tbody>
                     </table>
+
                   </div>
                   {/* Cart Update Option */}
                   <div className="cart-update-option d-block d-md-flex justify-content-between">
