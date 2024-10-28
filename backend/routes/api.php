@@ -61,3 +61,6 @@ Route::apiResource('user', UserController::class);
 
 Route::get('order-details/{order_id}', [OrderDetailController::class, 'getOrderDetails']);
 Route::apiResource('order-details', OrderDetailController::class);
+
+Route::apiResource('order', OrderController::class );
+Route::get('orders', [OrderController::class, 'abc']);
