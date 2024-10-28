@@ -39,6 +39,11 @@
                             <textarea name="description" class="form-control" placeholder="Nhập mô tả" rows="3">{{ $product->description }}</textarea>
                         </div>
                         <div class="form-group">
+                            <label for="price">Giá sản phẩm</label>
+                            <input type="number" step="0.01" class="form-control" id="price" name="price" value="{{ $product->price }}" >
+                        </div>
+
+                        <div class="form-group">
                             <label for="category_id">Thể loại</label>
                             <select name="category_id" class="form-control">
                                 <option value="">Chọn thể loại</option>

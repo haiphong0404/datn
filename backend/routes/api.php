@@ -1,7 +1,10 @@
 <?php
 
 use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\ColorController;
 use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\Api\ProductVariantController;
+use App\Http\Controllers\Api\SizeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\BrandController;
@@ -14,7 +17,6 @@ use App\Http\Controllers\Api\UserController;
 
 use App\Http\Controllers\Api\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Api\CartController;
-use App\Http\Controllers\Api\CartItemController;
 
 //Route GET để lấy thông tin hướng dẫn về việc gửi yêu cầu đặt lại mật khẩu
 Route::get('/password/reset-link', [PasswordResetLinkController::class, 'store'])
@@ -37,9 +39,9 @@ Route::get('register', [RegisteredUserController::class, 'store'])->name('regist
 //post dang ky
 Route::post('register', [RegisteredUserController::class, 'store'])->name('register');
 
-// getlogin 
+// getlogin
 Route::get('login', [AuthenticatedSessionController::class, 'store'])->name('login');
-// post login 
+// post login
 Route::post('login', [AuthenticatedSessionController::class, 'store'])->name('login');
 // get logout
 Route::get('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
@@ -60,3 +62,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/carts', [CartController::class, 'index']);
     Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
 });
+Route::get('products/{productId}/variants', [ProductVariantController::class, 'index']);
+Route::get('/variants/{id}', [ProductVariantController::class, 'show']);
+Route::get('/sizes', [SizeController::class, 'index']);
+Route::get('/colors', [ColorController::class, 'index']);
+
+

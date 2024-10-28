@@ -43,12 +43,14 @@
                         <table class="table table-striped table-bordered">
                             <thead>
                             <tr>
-                                <th class="center">STT</th>
+                                <th class="center">ID</th>
                                 <th>Tên sản phẩm</th>
                                 <th>Mô tả</th>
                                 <th>Thể loại</th>
+                                <th>Giá</th>
                                 <th>Thương hiệu</th>
                                 <th>Hình ảnh</th>
+                                <th>Tổng số lượng </th>
                                 <th class="hidden-phone">Ngày tạo</th>
                                 <th class="center hidden-phone">Trạng thái</th>
                                 <th class="center hidden-phone">Hành động</th>
@@ -57,7 +59,7 @@
                             <tbody>
                             @foreach($products as $index => $product)
                                 <tr class="gradeA">
-                                    <td class="center">{{ $index + 1 }}</td>
+                                    <td class="center">{{ $product->id }}</td>
                                     <td>{{ $product->name }}</td>
                                     <td>{{ $product->description }}</td>
                                     <td>
@@ -66,6 +68,7 @@
                                             <span class="badge badge-danger">Đã xóa</span>
                                         @endif
                                     </td>
+                                    <td>{{ number_format($product->price, 0, ',', '.') }} VNĐ</td>
                                     <td>
                                         {{ $product->brand->name ?? 'Không có' }}
                                         @if ($product->brand && $product->brand->trashed())
@@ -75,6 +78,7 @@
                                     <td>
                                         <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" width="100">
                                     </td>
+                                    <td>{{ $product->total_quantity_in_stock }}</td>
                                     <td class="hidden-phone">{{ $product->created_at->format('Y-m-d') }}</td>
                                     <td class="hidden-phone">
                                         @if ($product->trashed())
@@ -95,6 +99,10 @@
                                             <a href="{{ route('admin.products.edit', $product->id) }}" class="btn btn-warning btn-sm" title="Chỉnh sửa">
                                                 <i class="fa fa-edit"></i> Sửa
                                             </a>
+                                            <a href="{{ route('admin.products.variants.index', $product->id) }}" class="btn btn-secondary btn-sm" title="Xem biến thể">
+                                                <i class="fa fa-list"></i> Biến thể
+                                            </a>
+
                                             <form action="{{ route('admin.products.destroy', $product->id) }}" method="POST" style="display:inline;">
                                                 @csrf
                                                 @method('DELETE')
