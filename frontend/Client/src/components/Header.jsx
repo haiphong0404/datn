@@ -1,11 +1,13 @@
 import { useEffect, useRef  } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-
+import { useLoginForm } from '../hooks/useLoginForm';
 const Header = () => {
   // code reload fix lỗi plugin không tải
   const location = useLocation();
   const prevLocation = useRef(location.pathname);
-
+  const { userInfo } = useLoginForm();
+  console.log("Thông tin người dùng trong Account_info:", userInfo); 
+ 
   useEffect(() => {
  
     if (prevLocation.current !== location.pathname) {
@@ -44,7 +46,7 @@ const Header = () => {
                 <ul className="user-info-block">
                   <li>
                     <Link to="/my_account">
-                      <i className="fa fa-user-circle" /> Tài khoản
+                      <i className="fa fa-user-circle" /> {userInfo?.username || 'Tài khoản'}
                     </Link>
                   </li>
                   <li>
@@ -89,115 +91,12 @@ const Header = () => {
                           </Link>
                           
                         </li>
-                        <li className="position-static">
-                          <a href="#">
-                            Chọn Trang <i className="fa fa-angle-down" />
-                          </a>
-                          <ul className="megamenu dropdown">
-                            <li className="mega-title">
-                              <span>column 01</span>
-                              <ul>
-                                <li>
-                                  <Link to="/shop">
-                                    shop
-                                  </Link>
-                                </li>
-                              </ul>
-                            </li>
-                            <li className="mega-title">
-                              <span>column 02</span>
-                              <ul>
-                                <li>
-                                  <Link to="/product_details">
-                                    product details
-                                  </Link>
-                                </li>
-                              </ul>
-                            </li>
-                            <li className="mega-title">
-                              <span>column 03</span>
-                              <ul>
-                                <li>
-                                  <Link to="/cart">
-                                    cart
-                                  </Link>
-                                </li>
-                                <li>
-
-                                  <Link to="/checkout">
-                                    checkout
-                                  </Link>
-
-                                </li>
-
-                              </ul>
-                            </li>
-                            <li className="mega-title">
-                              <span>column 04</span>
-                              <ul>
-                                <li>
-
-                                  <Link to="/my_account">
-                                    my-account
-                                  </Link>
-
-                                </li>
-                                <li>
-                                  <a href="login-register.html">
-                                    login-register
-                                  </a>
-                                </li>
-                                <li>
-
-                                  <Link to="/about_us">
-                                    about us
-                                  </Link>
-                                </li>
-                                <li>
-                                  <Link to="/contact_us">
-                                    contact us
-                                  </Link>
-                                </li>
-                                <li>
-                                  <Link to="/faqs">
-                                    FAQ
-                                  </Link>
-                                </li>
-                              </ul>
-                            </li>
-                          </ul>
-                        </li>
+                        
                         <li>
                           <Link to="/shop">
-                            Cửa hàng <i className="fa fa-angle-down" />
+                            Cửa hàng 
                           </Link>
-                          <ul className="dropdown">
-                            <li>
-                              <Link to="#" className="shop-link">
-                                Shop{" "}
-                                <i className="fa fa-angle-right" />
-                              </Link>
-                              <ul className="dropdown">
-                                <li>
-                                  <Link to="/shop" className="shop-grid-left-sidebar">
-                                    shop
-                                  </Link>
-                                </li>
-                              </ul>
-                            </li>
-                            <li>
-                              <Link to="/product-details" className="products-details">
-                                products details <i className="fa fa-angle-right" />
-                              </Link>
-                              <ul className="dropdown">
-                                <li>
-                                  <Link to="/product_details">
-                                    product details
-                                  </Link>
-                                </li>
-                              </ul>
-                            </li>
-                          </ul>
+                          
                         </li>
                         <li>
                           <Link to="/blog">
@@ -206,6 +105,11 @@ const Header = () => {
                         <li>
                           <Link to="/contact_us">
                             Liên hệ</Link>
+                        </li>
+                        <li>
+                          <Link to="/faqs">
+                          Hỏi đáp
+                            </Link>
                         </li>
                       </ul>
                     </nav>

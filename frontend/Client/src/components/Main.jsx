@@ -1,28 +1,24 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios"
+import { useQuery } from '@tanstack/react-query';
+import { fetchProducts } from '../api/product';
+import { fetchBrands } from '../api/brand';
+import ProductItem from '../pages/Shop/productItem';
 const Main = () => {
-  const [products, setProducts] = useState([]);
-  const [brands, setBrands] = useState([]);
+  // const [products, setProducts] = useState([]);
+  // const [brands, setBrands] = useState([]);
 
-  // Fetch dữ liệu từ API khi component được mount
-  useEffect(() => {
-    axios.get('http://127.0.0.1:8000/api/products') // Đường dẫn tới API Laravel
-      .then(response => {
-        setProducts(response.data); // Đặt dữ liệu vào state
-      })
-      .catch(error => {
-        console.error('Error fetching products:', error);
-      });
-  }, []);
-  useEffect(() => {
-    axios.get('http://127.0.0.1:8000/api/Apibrands') // Đường dẫn tới API Laravel
-      .then(response => {
-        setBrands(response.data); // Đặt dữ liệu vào state
-      })
-      .catch(error => {
-        console.error('Error fetching brands:', error);
-      });
-  }, []);
+
+  const { data: products = [], error: productsError } = useQuery({
+    queryKey: ['Products'],
+    queryFn: fetchProducts,
+  });
+
+ 
+  const { data: brands = [], error: brandsError } = useQuery({
+    queryKey: ['Brands'],
+    queryFn: fetchBrands,
+  });
+
 
   const handleAddToCart = (product) => {
     // Logic thêm sản phẩm vào giỏ hàng

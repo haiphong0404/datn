@@ -29,11 +29,19 @@ class User extends Authenticatable
         'remember_token'
 
     ];
+<<<<<<< HEAD
     public function cartItems()
     {
         return $this->hasMany(Cart::class);
     }
     
+=======
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
+
+>>>>>>> 1216d6d040fff39630869970dc0dc60839be5ffd
     /**
      * The attributes that should be hidden for serialization.
      *
