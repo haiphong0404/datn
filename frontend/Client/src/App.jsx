@@ -21,7 +21,7 @@ import AboutUs from "./pages/About_us";
 import Login from "./pages/Auth/Login";
 import Register from './pages/Auth/Register';
 import NotFoundPage from "./pages/404";
-import Order_detail_cancel from "./pages/Order_detail_cancel";
+import Order_detail from "./pages/My_account/Order_detail";
 import FAQs from "./pages/FAQs";
 import Bill from "./pages/Bill";  
 import Dashboard from "./pages/My_account/dashboard";
@@ -53,7 +53,7 @@ const routeConfig = [
       { path: "register", element: <Register /> },
       { path: "*", element: <NotFoundPage /> },
       { path: "faqs", element: <FAQs /> },
-      { path: "Order_detail_cancel", element: <Order_detail_cancel /> },
+    
       { path: "checkout/bill", element: <Bill /> },
     ],
   },
@@ -62,7 +62,9 @@ const routeConfig = [
     element: <MyAccount />,
     children: [
       { path: "", element: <Dashboard /> },
-      { path: "orders", element: <Orders /> },
+      { path: "orders", element: <Orders /> ,
+      },
+      { path: "Order_detail/:orderId", element: <Order_detail /> },
       { path: "downloads", element: <Download /> },
       { path: "payment_method", element: <Payment_method /> },
       { path: "address_edit", element: <Address_edit /> },

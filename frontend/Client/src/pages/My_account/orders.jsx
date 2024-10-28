@@ -35,7 +35,7 @@ const Orders = () => {
                                             <td>{order.status}</td>
                                             <td>${order.total_amount}</td>
                                             <td>
-                                                <Link to={`/Order_detail_cancel/${order.id}`} className="btn btn-sqr">
+                                                <Link to={`/my_account/Order_detail/${order.id}`} className="btn btn-sqr">
                                                     Xem
                                                 </Link>
                                             </td>

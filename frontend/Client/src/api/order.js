@@ -21,3 +21,18 @@ export const getOrderByUserId = async (user_id) => {
         throw new Error('Error fetching order data: ' + errorMessage);
     }
 };
+export const getOrderDetail = async (order_id) => {
+    try {
+        const response = await axios.get(`/order-details/${order_id}`, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        return response.data; // Trả về dữ liệu chi tiết đơn hàng
+    } catch (error) {
+        const errorMessage = error.response?.data?.message || error.message;
+        console.error("Lỗi khi lấy chi tiết đơn hàng:", errorMessage);
+        throw new Error('Lỗi khi lấy chi tiết đơn hàng: ' + errorMessage);
+    }
+};

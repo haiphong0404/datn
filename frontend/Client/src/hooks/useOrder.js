@@ -1,33 +1,33 @@
 import { useEffect, useState } from 'react';
-import { getOrderByUserId } from '../api/order.js'; // Đảm bảo đúng đường dẫn đến hàm API
+import { getOrderByUserId } from '../api/order.js'; 
 
 const useOrders = () => {
     const [orders, setOrders] = useState([]);
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        // Lấy thông tin người dùng từ localStorage
+        
         const storedUserInfo = localStorage.getItem('userInfo');
         const userInfo = storedUserInfo ? JSON.parse(storedUserInfo) : null;
 
-        const userId = userInfo ? userInfo.id : null; // Lấy userId từ userInfo
-        console.log('User ID:', userId); // Kiểm tra userId
+        const userId = userInfo ? userInfo.id : null;
+        console.log('User ID:', userId); 
 
         if (userId) {
             getOrderByUserId(userId)
                 .then(data => {
-                    console.log('Dữ liệu trả về:', data); // Xem dữ liệu nhận được
-                    setOrders(data); // Thiết lập danh sách đơn hàng
+                    console.log('Dữ liệu trả về:', data); 
+                    setOrders(data); 
                 })
                 .catch(err => {
-                    console.error('Lỗi:', err.message); // Log lỗi nếu có
-                    setError(err.message); // Lưu lỗi nếu có
+                    console.error('Lỗi:', err.message);
+                    setError(err.message); 
                 });
         }
     }, []);
 
     
-    return { orders, error }; // Trả về orders và error
+    return { orders, error }; 
 };
 
 export default useOrders;

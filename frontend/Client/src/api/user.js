@@ -18,18 +18,19 @@ export const registerUser  = async (userData) => {
 export const login = async (credentials) => {
     try {
         const response = await axios.post("/login", credentials);
-        const { token } = response.data;
+        const { token, user } = response.data; // Lấy token và user từ phản hồi
 
         if (token) {
-            
-            localStorage.setItem('token', token);
-            localStorage.setItem('role', user.role);
-            axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+            localStorage.setItem('token', token); // Lưu token vào localStorage
+            if (user && user.role) {
+                localStorage.setItem('role', user.role); // Lưu vai trò người dùng vào localStorage
+            }
+            axios.defaults.headers.common['Authorization'] = `Bearer ${token}`; // Thiết lập header Authorization
         }
 
-        return response.data;
+        return response.data; // Trả về dữ liệu từ phản hồi
     } catch (error) {
-        throw error.response?.data || error.message;
+        throw error.response?.data || error.message; // Bắt lỗi và ném ra
     }
 };
 // user.js
