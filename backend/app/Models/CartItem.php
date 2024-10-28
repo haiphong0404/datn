@@ -14,11 +14,5 @@ class CartItem extends Model
         'quantity',
         'price'
     ];
-  public function cart(){
-    return $this->belongsTo(Cart::class);
-  }
-  public function productVariant(){
-    return $this->belongsTo(ProductVariant::class);
-  }
-  
+
 }
