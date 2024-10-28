@@ -10,7 +10,7 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Shop from "./pages/Shop/Shop";
 import Blog from "./pages/Blog";
-import My_account from "./pages/My_account/My_account";
+import MyAccount from "./pages/My_account/Myacc";
 import Contact_us from "./pages/Contact_us";
 import Product_details from "./pages/Product_details";
 import Cart from "./pages/cart/Cart";
@@ -21,10 +21,15 @@ import AboutUs from "./pages/About_us";
 import Login from "./pages/Auth/Login";
 import Register from './pages/Auth/Register';
 import NotFoundPage from "./pages/404";
-import Order_detail_cancel from "./pages/Order_detail_cancel";
+import Order_detail from "./pages/My_account/Order_detail";
 import FAQs from "./pages/FAQs";
 import Bill from "./pages/Bill";
-
+import Dashboard from "./pages/My_account/dashboard";
+import Orders from "./pages/My_account/orders";
+import Download from "./pages/My_account/download";
+import Payment_method from "./pages/My_account/payment_method";
+import Address_edit from "./pages/My_account/address_edit";
+import Account_info from "./pages/My_account/account_info";
 
 
 
@@ -40,7 +45,6 @@ const routeConfig = [
       { path: "blog", element: <Blog /> },
       { path: "checkout", element: <Checkout /> },
       { path: "blog/blog_detail", element: <Blog_detail /> },
-      { path: "my_account", element: <My_account /> },
       { path: "contact_us", element: <Contact_us /> },
       { path: "product_details", element: <Product_details /> },
       { path: "cart", element: <Cart /> },
@@ -49,13 +53,24 @@ const routeConfig = [
       { path: "register", element: <Register /> },
       { path: "*", element: <NotFoundPage /> },
       { path: "faqs", element: <FAQs /> },
-      { path: "Order_detail_cancel", element: <Order_detail_cancel /> },
+
       { path: "checkout/bill", element: <Bill /> },
-
     ],
-
-
-
+  },
+  {
+    path: "/my_account",
+    element: <MyAccount />,
+    children: [
+      { path: "", element: <Dashboard /> },
+      {
+        path: "orders", element: <Orders />,
+      },
+      { path: "Order_detail/:orderId", element: <Order_detail /> },
+      { path: "downloads", element: <Download /> },
+      { path: "payment_method", element: <Payment_method /> },
+      { path: "address_edit", element: <Address_edit /> },
+      { path: "account_info", element: <Account_info /> },
+    ],
   },
 
 ];

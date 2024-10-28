@@ -1,84 +1,70 @@
-import React, { useState } from "react";
-import { loginUser } from "../../hooks/login";
-import { useNavigate } from "react-router-dom";
-
+import React from "react";
+import { useLoginForm } from '../../hooks/useLoginForm.js';
 
 const Login = () => {
-    const navigate = useNavigate();
-    const [formData, setFormData] = useState({
-        email: '',
-        password: '',
-    });
+    const {
+        register,
+        handleSubmit,
+        errors,
+        error,
+        success,
+        handleLogin,
+        userInfo,
 
-    const [error, setError] = useState(null);
-    const [success, setSuccess] = useState(null);
-
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-
-        setFormData({
-            ...formData,
-            [name]: value,
-        });
-    };
-
-    const handleLogin = async (e) => {
-        e.preventDefault();
-
-        try {
-            const res = await loginUser(formData);
-            console.log(res);
-
-            if (res?.status === 200) {
-                setSuccess("Đăng nhập thành công!");
-                setError(null);
-                navigate('/shop')
-            } else {
-                setError(res?.data?.message || "Đăng nhập thất bại");
-            }
-        } catch (error) {
-            setError("Đã xảy ra lỗi khi đăng nhập. Vui lòng thử lại sau.");
-        }
-    };
+    } = useLoginForm();
 
     return (
-        <>
-            <div className="container mt-5 mb-5">
-                <div className="col-lg-12">
-                    <div className="login-reg-form-wrap sign-up-form justify-content">
-                        <h4>Đăng Nhập</h4>
-                        <form onSubmit={handleLogin}>
-                            <div className="single-input-item">
-                                <input
-                                    type="text"
-                                    name="email"
-                                    value={formData.email}
-                                    onChange={handleInputChange}
-                                    placeholder="Email hoặc Tên đăng nhập"
-                                    required
-                                />
+        <div className="container mt-5 mb-5">
+            <div className="col-lg-12">
+                <div className="login-reg-form-wrap">
+                    <h4>Login</h4>
+                    <form onSubmit={handleSubmit(handleLogin)}>
+                        <div className="single-input-item">
+                            <input
+                                type="email"
+                                placeholder="Email or Username"
+                                {...register('email', { required: 'Email is required' })} // Register email field
+                            />
+                            {errors.email && <span className="text-danger">{errors.email.message}</span>}
+                        </div>
+                        <div className="single-input-item">
+                            <input
+                                type="password"
+                                placeholder="Enter your Password"
+                                {...register('password', { required: 'Password is required' })} // Register password field
+                            />
+                            {errors.password && <span className="text-danger">{errors.password.message}</span>}
+                        </div>
+                        <div className="single-input-item">
+                            <div className="login-reg-form-meta d-flex align-items-center justify-content-between">
+                                <div className="remember-meta">
+                                    <div className="custom-control custom-checkbox">
+                                        <input
+                                            type="checkbox"
+                                            className="custom-control-input"
+                                            id="rememberMe"
+                                        />
+                                        <label className="custom-control-label" htmlFor="rememberMe">
+                                            Remember Me
+                                        </label>
+                                    </div>
+                                </div>
+                                <a href="#" className="forget-pwd">
+                                    Forget Password?
+                                </a>
                             </div>
-                            <div className="single-input-item">
-                                <input
-                                    type="password"
-                                    name="password"
-                                    value={formData.password}
-                                    onChange={handleInputChange}
-                                    placeholder="Mật khẩu"
-                                    required
-                                />
-                            </div>
-                            <div className="single-input-item">
-                                <button type="submit" className="btn btn-sqr">Đăng Nhập</button>
-                            </div>
-                        </form>
-                        {error && <p style={{ color: 'red' }}>{error}</p>}
-                        {success && <p style={{ color: 'green' }}>{success}</p>}
-                    </div>
+                        </div>
+                        {error && <div className="alert alert-danger">{error}</div>} {/* Hiển thị lỗi */}
+                        {success && <div className="alert alert-success">{success}</div>} {/* Hiển thị thành công */}
+                        <div className="single-input-item">
+                            <button type="submit" className="btn btn-sqr">Login</button>
+                        </div>
+                    </form>
                 </div>
+
             </div>
-        </>
+        </div>
     );
-};
+}
 
 export default Login;

@@ -1,11 +1,13 @@
 import { useEffect, useRef  } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-
+import { useLoginForm } from '../hooks/useLoginForm';
 const Header = () => {
   // code reload fix lỗi plugin không tải
   const location = useLocation();
   const prevLocation = useRef(location.pathname);
-
+  const { userInfo } = useLoginForm();
+  console.log("Thông tin người dùng trong Account_info:", userInfo); 
+ 
   useEffect(() => {
  
     if (prevLocation.current !== location.pathname) {
@@ -44,7 +46,7 @@ const Header = () => {
                 <ul className="user-info-block">
                   <li>
                     <Link to="/my_account">
-                      <i className="fa fa-user-circle" /> My Account
+                      <i className="fa fa-user-circle" /> {userInfo?.username || 'My Account'}
                     </Link>
                   </li>
                   <li>
@@ -53,7 +55,7 @@ const Header = () => {
                     </Link>
                   </li>
                   <li>
-                    <a href="/register">
+                    <a href="/login">
                       <i className="fa fa-sign-in" /> Sign In
                     </a>
                   </li>
@@ -83,7 +85,7 @@ const Header = () => {
                     {/* main menu navbar start */}
                     <nav className="desktop-menu">
                       <ul>
-                        <li className="active">
+                        <li className="position-static">
                           <Link to="/">
                             Trang chủ 
                           </Link>

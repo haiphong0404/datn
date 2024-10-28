@@ -1,33 +1,23 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios"
+import { useQuery } from '@tanstack/react-query';
+import { fetchProducts } from '../api/product';
+import { fetchBrands } from '../api/brand';
+import ProductItem from '../pages/Shop/productItem';
 const Main = () => {
-  const [products, setProducts] = useState([]);
-  const [brands, setBrands] = useState([]);
 
-  // Fetch dữ liệu từ API khi component được mount
-  useEffect(() => {
-    axios.get('http://127.0.0.1:8000/api/products') // Đường dẫn tới API Laravel
-      .then(response => {
-        setProducts(response.data); // Đặt dữ liệu vào state
-      })
-      .catch(error => {
-        console.error('Error fetching products:', error);
-      });
-  }, []);
-  useEffect(() => {
-    const fetchBrands = async () => {
-      try {
-        const response = await fetch('http://127.0.0.1:8000/api/Apibrands');
-        const data = await response.json();
-        setBrands(data.data);
- // Giả sử API trả về dữ liệu trong một object có key là 'data'
-      } catch (error) {
-        console.error('Error fetching brands:', error);
-      }
-    };
 
-    fetchBrands();
-  }, []);
+  const { data: products = [], error: productsError } = useQuery({
+    queryKey: ['Products'],
+    queryFn: fetchProducts,
+  });
+
+ 
+  const { data: brands = [], error: brandsError } = useQuery({
+    queryKey: ['Brands'],
+    queryFn: fetchBrands,
+  });
+
+
   return (
     <div>
 
@@ -47,7 +37,7 @@ const Main = () => {
                   <div className="row">
                     <div className="col-md-12">
                       <div className="hero-slider-content slide-1">
-                        <h1 className="slide-title">mới nhất</h1>
+                        <h1 className="slide-title">Mới nhất</h1>
                         <h2 className="slide-subtitle">
                           Giày thể thao chạy bộ <span>Đàn ông thích</span>
                         </h2>
@@ -217,52 +207,17 @@ const Main = () => {
             </div>
 
             {/* product single item start */}
-            <div className="product-list">
-              {products.slice(0, 4).map((product) => (
-                <div key={product.id} className="product-item">
-                  <div className="product-thumb">
-                    <a href="product-details.html">
-                      <img
-                        src={product.image} // Đổ hình ảnh từ API
-                        alt={product.name}
-                      />
-                    </a>
-                    <div className="button-group">
-                      <a href="wishlist.html" data-bs-toggle="tooltip" title="Add to Wishlist">
-                        <i className="fa fa-heart-o" />
-                      </a>
-                      <a href="#" data-bs-toggle="modal" data-bs-target="#quick_view">
-                        <span data-bs-toggle="tooltip" title="Quick View">
-                          <i className="fa fa-eye" />
-                        </span>
-                      </a>
-                    </div>
-                    <div className="product-label">
-                      <span>new</span>
-                    </div>
-                    <div className="discount-label">
-                      <span>{product.discount} Off</span> {/* Đổ giảm giá */}
-                    </div>
-                  </div>
-                  <div className="product-content">
-                    <div className="product-caption">
-                      <h6 className="product-name">
-                        <a href="product-details.html">{product.name}</a> {/* Đổ tên sản phẩm */}
-                      </h6>
-                      <div className="price-box">
-                        <span className="price-regular">${product.price}</span> {/* Đổ giá hiện tại */}
-                      </div>
-                      <a className="add-to-cart" href="cart.html">
-                        <i className="fa fa-shopping-cart" />
-                      </a>
-                    </div>
-
-                  </div>
-                </div>
-              ))}
+            <div className="product-carousel-4_2 slick-row-5 slick-arrow-style">
+              <div className="product-list">
+                {products.slice(0,4).map((product) => (
+                  <ProductItem 
+                  key={product.id} // Đảm bảo id là duy nhất
+                  product={product} 
+              />
+                ))}
+              </div>
+              {/* product single item end */}
             </div>
-            {/* product single item end */}
-
           </div>
         </section>
         {/* product gallery area end */}
@@ -303,24 +258,20 @@ const Main = () => {
                   <div className="deals-tab-wrapper">
                     <div className="deals-tab-area">
                       <div className="deals-nav-carousel">
-
-                        {products.slice(0, 4).map((product) => (
-                          <div key={product.id} className="product-item">
-                            <div className="product-thumb">
-                              <a href="product-details.html">
-                                <img
-                                  src={product.image} // Đổ hình ảnh từ API
-                                  alt={product.name}
-                                />
-                              </a>
-
-
+                        <div className="product-list">
+                          {products.slice(0, 4).map((product) => (
+                            <div key={product.id} className="product-item">
+                              <div className="product-thumb">
+                                <a href="product-details.html">
+                                  <img
+                                    src={product.image} // Đổ hình ảnh từ API
+                                    alt={product.name}
+                                  />
+                                </a>
+                              </div>
                             </div>
-
-                          </div>
-                        ))}
-
-
+                          ))}
+                        </div>
                       </div>
                     </div>
                     <div className="deals-content-wrapper">
@@ -564,14 +515,16 @@ const Main = () => {
                   </div>
                 </div>
                 <div className="brand-section">
-                      {brands.map(brand => (
-                        <div key={brand.id} className="brand-item">
-                          <a href={brand.link}>
-                            <img src={brand.image} alt={`Brand ${brand.id}`} />
-                          </a>
-                        </div>
-                      ))}
+
+                  {brands.map((brand) => (
+                    <div key={brand.id} className="brand-item" >
+                      <img
+                        src={brand.image} // Đổ hình ảnh base64 từ API
+                      />
                     </div>
+                  ))}
+
+                </div>
               </div>
             </div>
           </div>
