@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Order;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -10,41 +12,20 @@ use Illuminate\Support\Facades\Storage;
 class OrderController extends Controller
 {
 
-public function acb($user_id)
-{
-    $orders = DB::table('orders')
-        ->join('users', 'users.id', '=', 'orders.user_id')
-        ->join('carts', 'carts.user_id', '=', 'users.id')
-        ->join('cart_items', 'cart_items.cart_id', '=', 'carts.id')
-        ->join('product_variants', 'product_variants.id', '=', 'cart_items.product_variant_id')
-        ->join('products', 'products.id', '=', 'product_variants.product_id')
-        ->join('vouchers', 'vouchers.user_id', '=', 'users.id')
-        ->where('orders.user_id', $user_id)
-        ->select(
-            'orders.*',
-            'users.username',
-            'users.email',
-            'users.address as useraddress',
-            'users.phone as userphone',
-            'users.avatar_img',
-            'product_variants.size_id',
-            'product_variants.color_id',
-            'products.name',
-            'products.description',
-            'products.image',
-            'vouchers.code'
-        )
-        ->get();
 
-    // Chuyển đổi các ảnh thành chuỗi Base64
-    $orders->transform(function ($order) {
-        $order->avatar_img = $this->getImageAsBase64($order->avatar_img);
-        $order->image = $this->getImageAsBase64($order->image);
-        return $order;
-    });
+   public function abc(Request $request)
+    {
+        $userId = $request->query('user_id');
 
-    return response()->json($orders);
-}
+        if (!$userId) {
+            return response()->json(['error' => 'bạn phải đăng nhập vào'], 400);
+        }
+
+        $orders = Order::where('user_id', $userId)->get();
+
+        return response()->json($orders);
+    }
+
 
 // Hàm hỗ trợ chuyển đổi hình ảnh sang chuỗi Base64
 private function getImageAsBase64($imagePath)
@@ -92,5 +73,17 @@ private function getImageAsBase64($imagePath)
     /**
      * Remove the specified resource from storage.
      */
-   
+    public function destroy($id)
+    {
+        // Kiểm tra xem đơn hàng có tồn tại không
+        $order = Order::find($id);
+        
+        if (!$order) {
+            return response()->json(['message' => 'Order not found.'], 404); // Nếu không tìm thấy đơn hàng
+        }
+
+        $order->delete(); // Xóa đơn hàng
+
+        return response()->json(['message' => 'Order deleted successfully.'], 200);
+    }
 }

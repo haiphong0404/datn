@@ -60,9 +60,10 @@ Route::middleware('api')->group(function () {
 Route::apiResource('user', UserController::class);
 
 //route api order
-Route::apiResource('order', OrderController::class );
-Route::get('/orders/{user_id}', [OrderController::class, 'acb']);
+
 
 Route::get('/order-details/{order_id}', [OrderDetailController::class, 'getOrderDetailsByUser']);
 Route::apiResource('order-details', OrderDetailController::class);
+
+Route::apiResource('order', OrderController::class );
 Route::get('orders', [OrderController::class, 'abc']);
