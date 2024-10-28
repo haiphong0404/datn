@@ -46,17 +46,17 @@ const Header = () => {
                 <ul className="user-info-block">
                   <li>
                     <Link to="/my_account">
-                      <i className="fa fa-user-circle" /> {userInfo?.username || 'My Account'}
+                      <i className="fa fa-user-circle" /> {userInfo?.username || 'Tài khoản'}
                     </Link>
                   </li>
                   <li>
                     <Link to="/checkout">
-                      <i className="fa fa-credit-card" /> Checkout
+                      <i className="fa fa-credit-card" /> Thanh Toán
                     </Link>
                   </li>
                   <li>
-                    <a href="/login">
-                      <i className="fa fa-sign-in" /> Sign In
+                    <a href="/register">
+                      <i className="fa fa-sign-in" /> Đăng nhập
                     </a>
                   </li>
                 </ul>
@@ -91,115 +91,12 @@ const Header = () => {
                           </Link>
                           
                         </li>
-                        <li className="position-static">
-                          <a href="#">
-                            Chọn Trang <i className="fa fa-angle-down" />
-                          </a>
-                          <ul className="megamenu dropdown">
-                            <li className="mega-title">
-                              <span>column 01</span>
-                              <ul>
-                                <li>
-                                  <Link to="/shop">
-                                    shop
-                                  </Link>
-                                </li>
-                              </ul>
-                            </li>
-                            <li className="mega-title">
-                              <span>column 02</span>
-                              <ul>
-                                <li>
-                                  <Link to="/product_details">
-                                    product details
-                                  </Link>
-                                </li>
-                              </ul>
-                            </li>
-                            <li className="mega-title">
-                              <span>column 03</span>
-                              <ul>
-                                <li>
-                                  <Link to="/cart">
-                                    cart
-                                  </Link>
-                                </li>
-                                <li>
-
-                                  <Link to="/checkout">
-                                    checkout
-                                  </Link>
-
-                                </li>
-
-                              </ul>
-                            </li>
-                            <li className="mega-title">
-                              <span>column 04</span>
-                              <ul>
-                                <li>
-
-                                  <Link to="/my_account">
-                                    my-account
-                                  </Link>
-
-                                </li>
-                                <li>
-                                  <a href="login-register.html">
-                                    login-register
-                                  </a>
-                                </li>
-                                <li>
-
-                                  <Link to="/about_us">
-                                    about us
-                                  </Link>
-                                </li>
-                                <li>
-                                  <Link to="/contact_us">
-                                    contact us
-                                  </Link>
-                                </li>
-                                <li>
-                                  <Link to="/faqs">
-                                    FAQ
-                                  </Link>
-                                </li>
-                              </ul>
-                            </li>
-                          </ul>
-                        </li>
+                        
                         <li>
                           <Link to="/shop">
-                            Cửa hàng <i className="fa fa-angle-down" />
+                            Cửa hàng 
                           </Link>
-                          <ul className="dropdown">
-                            <li>
-                              <Link to="#" className="shop-link">
-                                Shop{" "}
-                                <i className="fa fa-angle-right" />
-                              </Link>
-                              <ul className="dropdown">
-                                <li>
-                                  <Link to="/shop" className="shop-grid-left-sidebar">
-                                    shop
-                                  </Link>
-                                </li>
-                              </ul>
-                            </li>
-                            <li>
-                              <Link to="/product-details" className="products-details">
-                                products details <i className="fa fa-angle-right" />
-                              </Link>
-                              <ul className="dropdown">
-                                <li>
-                                  <Link to="/product_details">
-                                    product details
-                                  </Link>
-                                </li>
-                              </ul>
-                            </li>
-                          </ul>
+                          
                         </li>
                         <li>
                           <Link to="/blog">
@@ -208,6 +105,11 @@ const Header = () => {
                         <li>
                           <Link to="/contact_us">
                             Liên hệ</Link>
+                        </li>
+                        <li>
+                          <Link to="/faqs">
+                          Hỏi đáp
+                            </Link>
                         </li>
                       </ul>
                     </nav>
@@ -518,21 +420,21 @@ const Header = () => {
                       aria-haspopup="true"
                       aria-expanded="false"
                     >
-                      My Account
+                      Tài Khoản
                       <i className="fa fa-angle-down" />
                     </a>
                     <div className="dropdown-menu" aria-labelledby="myaccount">
 
 
                       <Link className="dropdown-item" to="/my-account">
-                        my account
+                      Tài Khoản
                       </Link>
-                      <a className="dropdown-item" href="login-register.html">
+                      <a className="dropdown-item" href="login">
                         {" "}
-                        login
+                        Đăng Nhập
                       </a>
-                      <a className="dropdown-item" href="login-register.html">
-                        register
+                      <a className="dropdown-item" href="register">
+                        Đăng kí
                       </a>
                     </div>
                   </div>

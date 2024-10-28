@@ -4,6 +4,8 @@ import { fetchProducts } from '../api/product';
 import { fetchBrands } from '../api/brand';
 import ProductItem from '../pages/Shop/productItem';
 const Main = () => {
+  // const [products, setProducts] = useState([]);
+  // const [brands, setBrands] = useState([]);
 
 
   const { data: products = [], error: productsError } = useQuery({
@@ -18,6 +20,11 @@ const Main = () => {
   });
 
 
+  const handleAddToCart = (product) => {
+    // Logic thêm sản phẩm vào giỏ hàng
+    console.log("Adding to cart:", product);
+    // Thực hiện API call hoặc xử lý thêm sản phẩm vào giỏ hàng
+  };
   return (
     <div>
 
@@ -37,11 +44,11 @@ const Main = () => {
                   <div className="row">
                     <div className="col-md-12">
                       <div className="hero-slider-content slide-1">
-                        <h1 className="slide-title">Mới nhất</h1>
+                        <h1 className="slide-title">mới nhất</h1>
                         <h2 className="slide-subtitle">
                           Giày thể thao chạy bộ <span>Đàn ông thích</span>
                         </h2>
-                        <a href="#" className="btn btn-large btn-bg">
+                        <a href="/shop" className="btn btn-large btn-bg">
                           Mua Ngay
                         </a>
                       </div>
@@ -67,7 +74,7 @@ const Main = () => {
                         <h2 className="slide-subtitle">
                           Giày thể thao chạy bộ  <span>Đàn ông thích</span>
                         </h2>
-                        <a href="#" className="btn btn-large btn-bg">
+                        <a href="shop" className="btn btn-large btn-bg">
                           Mua Ngay
                         </a>
                       </div>
@@ -207,17 +214,46 @@ const Main = () => {
             </div>
 
             {/* product single item start */}
-            <div className="product-carousel-4_2 slick-row-5 slick-arrow-style">
-              <div className="product-list">
-                {products.slice(0,4).map((product) => (
-                  <ProductItem 
-                  key={product.id} // Đảm bảo id là duy nhất
-                  product={product} 
-              />
-                ))}
-              </div>
-              {/* product single item end */}
+            <div className="product-list">
+              {products.slice(0, 4).map((product) => (
+                <div key={product.id} className="product-item">
+                  <div className="product-thumb">
+                    <a href="product-details.html">
+                      <img
+                        src={product.image || '/path/to/placeholder.jpg'} // Đổ hình ảnh từ API
+                        alt={product.name}
+                      />
+                    </a>
+                    <div className="button-group">
+                      
+                      <a href="#" data-bs-toggle="modal" data-bs-target="#quick_view">
+                        <span data-bs-toggle="tooltip" title="Quick View">
+                          <i className="fa fa-eye" />
+                        </span>
+                      </a>
+                    </div>
+                    
+                  </div>
+                  <div className="product-content">
+                    <div className="product-caption">
+                      <h6 className="product-name">
+                        <a href="product-details.html">{product.name}</a> {/* Đổ tên sản phẩm */}
+                      </h6>
+                      <div className="price-box">
+                        <span className="price-regular">${product.price}</span> {/* Đổ giá hiện tại */}
+                      </div>
+                      {/* <a className="add-to-cart" >
+                        
+                      </a> */}
+                      <button className="add-to-cart" onClick={() => handleAddToCart(product)}><i className="fa fa-shopping-cart" /></button>
+                    </div>
+
+                  </div>
+                </div>
+              ))}
             </div>
+            {/* product single item end */}
+
           </div>
         </section>
         {/* product gallery area end */}
@@ -258,20 +294,24 @@ const Main = () => {
                   <div className="deals-tab-wrapper">
                     <div className="deals-tab-area">
                       <div className="deals-nav-carousel">
-                        <div className="product-list">
-                          {products.slice(0, 4).map((product) => (
-                            <div key={product.id} className="product-item">
-                              <div className="product-thumb">
-                                <a href="product-details.html">
-                                  <img
-                                    src={product.image} // Đổ hình ảnh từ API
-                                    alt={product.name}
-                                  />
-                                </a>
-                              </div>
+
+                        {products.slice(0, 4).map((product) => (
+                          <div key={product.id} className="product-item">
+                            <div className="product-thumb">
+                              <a href="product-details.html">
+                                <img
+                                  src={product.image || '/path/to/placeholder.jpg'} // Đổ hình ảnh từ API
+                                  alt={product.name}
+                                />
+                              </a>
+
+
                             </div>
-                          ))}
-                        </div>
+
+                          </div>
+                        ))}
+
+
                       </div>
                     </div>
                     <div className="deals-content-wrapper">
@@ -444,26 +484,20 @@ const Main = () => {
                   <div className="product-thumb">
                     <a href="product-details.html">
                       <img
-                        src={product.image} // Đổ hình ảnh từ API
+                        src={product.image || '/path/to/placeholder.jpg'} // Đổ hình ảnh từ API
                         alt={product.name}
                       />
                     </a>
                     <div className="button-group">
-                      <a href="wishlist.html" data-bs-toggle="tooltip" title="Add to Wishlist">
-                        <i className="fa fa-heart-o" />
-                      </a>
+                      
                       <a href="#" data-bs-toggle="modal" data-bs-target="#quick_view">
                         <span data-bs-toggle="tooltip" title="Quick View">
                           <i className="fa fa-eye" />
+
                         </span>
                       </a>
                     </div>
-                    <div className="product-label">
-                      <span>new</span>
-                    </div>
-                    <div className="discount-label">
-                      <span>{product.discount} Off</span> {/* Đổ giảm giá */}
-                    </div>
+                    
                   </div>
                   <div className="product-content">
                     <div className="product-caption">
@@ -473,9 +507,7 @@ const Main = () => {
                       <div className="price-box">
                         <span className="price-regular">${product.price}</span> {/* Đổ giá hiện tại */}
                       </div>
-                      <a className="add-to-cart" href="cart.html">
-                        <i className="fa fa-shopping-cart" />
-                      </a>
+                      <button className="add-to-cart" onClick={() => handleAddToCart(product)}><i className="fa fa-shopping-cart" /></button>
                     </div>
 
                   </div>
@@ -515,15 +547,21 @@ const Main = () => {
                   </div>
                 </div>
                 <div className="brand-section">
-
-                  {brands.map((brand) => (
-                    <div key={brand.id} className="brand-item" >
-                      <img
-                        src={brand.image} // Đổ hình ảnh base64 từ API
-                      />
-                    </div>
-                  ))}
-
+                  {Array.isArray(brands) && brands.length > 0 ? (
+                        brands.map((brand) => (
+                          <div key={brand.id} className="brand-item">
+                            <a href={brand.link}>
+                            <img
+                                    src={brand.image || '/path/to/placeholder.jpg'} // Đổ hình ảnh base64 từ API
+                                    alt={brand.name}
+                                    style={{ width: '100px', height: '100px' }} // Kích thước hình ảnh
+                                />
+                            </a>
+                          </div>
+                        ))
+                      ) : (
+                        <p>No brands available</p> // Hiển thị nếu không có thương hiệu nào
+                      )}
                 </div>
               </div>
             </div>
