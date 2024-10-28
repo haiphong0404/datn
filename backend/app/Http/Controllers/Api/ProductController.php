@@ -26,6 +26,7 @@ class ProductController extends Controller
                 'id' => $product->id,
                 'name' => $product->name,
                 'description' => $product->description,
+                'price' => $product->price,
                 'category' => $product->category ? $product->category->name : null,
                 'brand' => $product->brand ? $product->brand->name : null,
                 'image' => $this->getImageAsBase64($product->image), // Chuyển đổi hình ảnh sang Base64
@@ -44,6 +45,7 @@ class ProductController extends Controller
             'id' => $product->id,
             'name' => $product->name,
             'description' => $product->description,
+            'price' => $product->price,
             'category' => $product->category ? $product->category->name : null,
             'brand' => $product->brand ? $product->brand->name : null,
             'image' => $this->getImageAsBase64($product->image), // Chuyển đổi hình ảnh sang Base64
