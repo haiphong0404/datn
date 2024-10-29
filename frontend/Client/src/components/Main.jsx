@@ -1,11 +1,31 @@
 import React, { useEffect, useState } from "react";
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { fetchProducts } from '../api/product';
 import { fetchBrands } from '../api/brand';
-import ProductItem from '../pages/Shop/productItem';
+import { useDispatch, useSelector } from "react-redux";
+
 const Main = () => {
-  // const [products, setProducts] = useState([]);
-  // const [brands, setBrands] = useState([]);
+  const mutation = useMutation({
+    mutationFn: async (data) => {
+      // Thực hiện thao tác API của bạn ở đây
+      const response = await fetch('http://127.0.0.1:8000/api/cart/add', {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+      },
+      });
+      return response.json();
+    },
+  });
+
+  const handleSubmit = async () => {
+    try {
+      await mutation.mutateAsync({ /* dữ liệu bạn muốn gửi */ });
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
 
 
   const { data: products = [], error: productsError } = useQuery({
@@ -20,11 +40,6 @@ const Main = () => {
   });
 
 
-  const handleAddToCart = (product) => {
-    // Logic thêm sản phẩm vào giỏ hàng
-    console.log("Adding to cart:", product);
-    // Thực hiện API call hoặc xử lý thêm sản phẩm vào giỏ hàng
-  };
   return (
     <div>
 
@@ -245,7 +260,7 @@ const Main = () => {
                       {/* <a className="add-to-cart" >
                         
                       </a> */}
-                      <button className="add-to-cart" onClick={() => handleAddToCart(product)}><i className="fa fa-shopping-cart" /></button>
+                      <button className="add-to-cart" onClick={handleSubmit}><i className="fa fa-shopping-cart" /></button>
                     </div>
 
                   </div>

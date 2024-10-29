@@ -1,6 +1,8 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 
 const Cart = () => {
+  const cartItems = useSelector(state => state.cart.items);
   return (
     <div>
       <main>
@@ -57,29 +59,29 @@ const Cart = () => {
                         </tr>
                       </thead>
                       <tbody>
-                        <tr>
+                      {cartItems.map(item => (
+                        <tr key={item.id}>
                           <td className="pro-thumbnail">
                             <a href="#">
                               <img
                                 className="img-fluid"
-                                src="assets/img/product/product-1.jpg"
-                                alt="Product"
+                                src={item.image} alt={item.name}
                               />
                             </a>
                           </td>
                           <td className="pro-title">
-                            <a href="#">PRIMITIVE MENS SHOES</a>
+                            <a href="#">{item.name}</a>
                           </td>
                           <td className="pro-price">
-                            <span>$295.00</span>
+                            <span>{item.price}</span>
                           </td>
                           <td className="pro-quantity">
                             <div className="pro-qty">
-                              <input type="text" defaultValue={1} />
+                            {item.quantity}
                             </div>
                           </td>
                           <td className="pro-subtotal">
-                            <span>$295.00</span>
+                            <span>${(item.price * item.quantity).toFixed(2)}</span>
                           </td>
                           <td className="pro-remove">
                             <a href="#">
@@ -87,96 +89,7 @@ const Cart = () => {
                             </a>
                           </td>
                         </tr>
-                        <tr>
-                          <td className="pro-thumbnail">
-                            <a href="#">
-                              <img
-                                className="img-fluid"
-                                src="assets/img/product/product-2.jpg"
-                                alt="Product"
-                              />
-                            </a>
-                          </td>
-                          <td className="pro-title">
-                            <a href="#">LEATHER MENS SLIPPERS</a>
-                          </td>
-                          <td className="pro-price">
-                            <span>$275.00</span>
-                          </td>
-                          <td className="pro-quantity">
-                            <div className="pro-qty">
-                              <input type="text" defaultValue={2} />
-                            </div>
-                          </td>
-                          <td className="pro-subtotal">
-                            <span>$550.00</span>
-                          </td>
-                          <td className="pro-remove">
-                            <a href="#">
-                              <i className="fa fa-trash-o" />
-                            </a>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td className="pro-thumbnail">
-                            <a href="#">
-                              <img
-                                className="img-fluid"
-                                src="assets/img/product/product-3.jpg"
-                                alt="Product"
-                              />
-                            </a>
-                          </td>
-                          <td className="pro-title">
-                            <a href="#">REXPO WOMENS SHOES</a>
-                          </td>
-                          <td className="pro-price">
-                            <span>$295.00</span>
-                          </td>
-                          <td className="pro-quantity">
-                            <div className="pro-qty">
-                              <input type="text" defaultValue={1} />
-                            </div>
-                          </td>
-                          <td className="pro-subtotal">
-                            <span>$295.00</span>
-                          </td>
-                          <td className="pro-remove">
-                            <a href="#">
-                              <i className="fa fa-trash-o" />
-                            </a>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td className="pro-thumbnail">
-                            <a href="#">
-                              <img
-                                className="img-fluid"
-                                src="assets/img/product/product-4.jpg"
-                                alt="Product"
-                              />
-                            </a>
-                          </td>
-                          <td className="pro-title">
-                            <a href="#">QUICKIIN MENS SHOES</a>
-                          </td>
-                          <td className="pro-price">
-                            <span>$110.00</span>
-                          </td>
-                          <td className="pro-quantity">
-                            <div className="pro-qty">
-                              <input type="text" defaultValue={3} />
-                            </div>
-                          </td>
-                          <td className="pro-subtotal">
-                            <span>$110.00</span>
-                          </td>
-                          <td className="pro-remove">
-                            <a href="#">
-                              <i className="fa fa-trash-o" />
-                            </a>
-                          </td>
-                        </tr>
+                        ))}
                       </tbody>
                     </table>
                   </div>

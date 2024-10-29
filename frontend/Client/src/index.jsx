@@ -6,6 +6,11 @@ import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
 import "./global.css";
 import { configAxios } from "./api/axios.js";
+import { Provider } from 'react-redux';
+import store from "./features/store.js";
+
+
+
 
 
 
@@ -16,7 +21,9 @@ if (container) {
     const root = createRoot(container);
     root.render(
         <BrowserRouter>
-            <App />
+            <Provider store={store}>
+                <App />
+            </Provider>,
         </BrowserRouter>
     );
 }

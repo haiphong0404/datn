@@ -1,7 +1,17 @@
 import { useEffect, useRef  } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useLoginForm } from '../hooks/useLoginForm';
+import { useDispatch, useSelector } from 'react-redux';
+import Badge from '@mui/material/Badge'; // Kiểm tra đường dẫn đúng
+
 const Header = () => {
+  // const dispatch = useDispatch()
+  // // const {carts} = useSelector(state=>state.cart.carts)
+
+  // const handleRemoveFromCart = (id) => {
+  //   dispatch(removeFromCart(id)); // Gửi action để xóa item khỏi giỏ hàng
+  // };
+
   // code reload fix lỗi plugin không tải
   const location = useLocation();
   const prevLocation = useRef(location.pathname);
@@ -129,84 +139,42 @@ const Header = () => {
                         </a>
                       </li>
                       {/* minicart của header */}
-                      <li className="mini-cart-wrap">
-                        <Link to="cart" className="minicart-btn">
-                          <i className="fa fa-shopping-cart" />
-                          <span className="notification">2</span>
-                        </Link>
-                        <div className="cart-list-wrapper">
+                       <li className="mini-cart-wrap">
+                        {/* <Link to="" className="minicart-btn">
+                          
+                          <Badge badgeContent={cart.length} color="primary"><i className="fa fa-shopping-cart" /></ Badge>
+                        </Link> */}
+                        {/* <div className="cart-list-wrapper">
                           <ul className="cart-list">
-                            <li>
-                              <div className="cart-img">
-                                <a href="product-details.html">
-                                  <img
-                                    src="assets/img/cart/cart-1.jpg"
-                                    alt=""
-                                  />
-                                </a>
-                              </div>
-                              <div className="cart-info">
-                                <h6 className="product-name">
-                                  <a href="product-details.html">
-                                    7th Generation classic
-                                  </a>
-                                </h6>
-                                <span className="cart-qty">Qty: 1</span>
-                                <span className="item-price">$60.00</span>
-                              </div>
-                              <div className="del-icon">
-                                <i className="fa fa-times" />
-                              </div>
-                            </li>
-                            <li>
-                              <div className="cart-img">
-                                <a href="product-details.html">
-                                  <img
-                                    src="assets/img/cart/cart-2.jpg"
-                                    alt=""
-                                  />
-                                </a>
-                              </div>
-                              <div className="cart-info">
-                                <h6 className="product-name">
-                                  <a href="product-details.html">
-                                    Digital 8th generation
-                                  </a>
-                                </h6>
-                                <span className="cart-qty">Qty: 2</span>
-                                <span className="item-price">$70.00</span>
-                              </div>
-                              <div className="del-icon">
-                                <i className="fa fa-times" />
-                              </div>
-                            </li>
+                            {carts.map((product) => (
+                              <li key={product.id}>
+                                <div className="cart-img">
+                                  <Link to={`/product/${product.id}`}>
+                                    <img src={product.image} alt={product.name} />
+                                  </Link>
+                                </div>
+                                <div className="cart-info">
+                                  <h6 className="product-name">
+                                    <Link to={`/product/${product.id}`}>{product.name}</Link>
+                                  </h6>
+                                  <span className="cart-qty">Qty: {product.quantity}</span>
+                                  <span className="item-price">${product.price}</span>
+                                </div>
+                                <div className="del-icon" onClick={() => handleRemoveFromCart(product.id)}>
+                                  <i className="fa fa-times" />
+                                </div>
+                                <ul className="minicart-pricing-box">
+                                    <li className="total">
+                                      <span>Total</span>
+                                      <span>
+                                        <strong>${(product.price * product.quantity).toFixed(2)}</strong>
+                                      </span>
+                                    </li>
+                                  </ul>
+                              </li>
+                            ))}
                           </ul>
-                          <ul className="minicart-pricing-box">
-                            <li>
-                              <span>Sub-Total</span>
-                              <span>
-                                <strong>$300.00</strong>
-                              </span>
-                            </li>
-                            <li>
-                              <span>Eco Tax (-2.00)</span>
-                              <span>
-                                <strong>$10.00</strong>
-                              </span>
-                            </li>
-                            <li>
-                              <span>VAT (20%)</span>
-                              <span>
-                                <strong>$60.00</strong>
-                              </span>
-                            </li>
-                            <li className="total">
-                              <span>Total</span>
-                              <span>
-                                <strong>$370.00</strong>
-                              </span>
-                            </li>
-                          </ul>
+                          
                           <div className="minicart-button">
                             <Link to="/cart">
                               <i className="fa fa-shopping-cart" /> View Cart
@@ -215,7 +183,7 @@ const Header = () => {
                               <i className="fa fa-share" /> Checkout
                             </Link>
                           </div>
-                        </div>
+                        </div> */}
                       </li>
                     </ul>
                   </div>
