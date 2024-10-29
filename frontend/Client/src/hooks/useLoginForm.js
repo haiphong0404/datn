@@ -40,7 +40,6 @@ export const useLoginForm = () => {
     try {
       const res = await login(data);
       console.log("Phản hồi từ đăng nhập:", res);
-      
 
       const currentUser = res.user;
 
@@ -68,7 +67,7 @@ export const useLoginForm = () => {
         if (role === "admin") {
           window.location.href = "http://127.0.0.1:8000/";
         } else {
-          navigate("/my_account/account_info");
+          navigate("/my_account");
         }
       } else {
         throw new Error("Không tìm thấy thông tin vai trò người dùng.");
@@ -87,6 +86,15 @@ export const useLoginForm = () => {
     navigate("/login"); // Chuyển hướng đến trang đăng nhập
   };
 
+  // Hàm cập nhật thông tin người dùng (chỉ dùng tạm thời)
+  const updateUserInfo = (updatedInfo) => {
+    const newUserInfo = { ...userInfo, ...updatedInfo };
+    setUserInfo(newUserInfo);
+    localStorage.setItem("userInfo", JSON.stringify(newUserInfo));
+    setSuccess("Cập nhật thông tin thành công!");
+    setError("");
+  };
+
   return {
     register,
     handleSubmit,
@@ -96,5 +104,6 @@ export const useLoginForm = () => {
     handleLogin,
     userInfo,
     handleLogout, // Trả về thêm hàm đăng xuất
+    updateUserInfo, // Trả về hàm cập nhật thông tin người dùng
   };
 };

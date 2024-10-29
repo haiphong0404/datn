@@ -1,9 +1,36 @@
-
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLoginForm } from '../../hooks/useLoginForm.js';
+
 const Account_info = () => {
-    const { userInfo } = useLoginForm();
-    console.log("Thông tin người dùng trong Account_info:", userInfo); 
+    const { userInfo, updateUserInfo } = useLoginForm();
+
+    // State để lưu thông tin người dùng và chỉ cập nhật khi có thay đổi từ phía người dùng
+    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
+    const [phone, setPhone] = useState('');
+
+    // Dùng useEffect để cập nhật state khi userInfo thay đổi
+    useEffect(() => {
+        if (userInfo) {
+            setUsername(userInfo.username || '');
+            setEmail(userInfo.email || '');
+            setPhone(userInfo.phone || '');
+        }
+    }, [userInfo]); // Chỉ cập nhật khi userInfo thay đổi
+
+    const handleSaveChanges = (e) => {
+        e.preventDefault();
+
+        const updatedInfo = {
+            username,
+            email,
+            phone
+        };
+        console.log(updatedInfo);
+
+        updateUserInfo(updatedInfo); // Gọi hàm updateUserInfo để cập nhật thông tin
+    };
+
     if (!userInfo) {
         return <p>Không có thông tin người dùng.</p>;
     }
@@ -13,77 +40,43 @@ const Account_info = () => {
             <div className="myaccount-content">
                 <h5>Chi Tiết Tài Khoản</h5>
                 <div className="account-details-form">
-                    <form action="#">
-
-                        <div className="row">
-                            
-                        </div>
-
+                    <form onSubmit={handleSaveChanges}>
                         <div className="single-input-item">
-                            <label htmlFor="display-name" className="required">
-                                Tên Hiển Thị
-                            </label>
+                            <label htmlFor="avatar_img" className="required">Ảnh</label>
+                            <img width={150} src={userInfo.avatar_img} alt="Ảnh" />
+                        </div>
+                        <div className="single-input-item">
+                            <label htmlFor="display-name" className="required">Tên Hiển Thị</label>
                             <input
                                 type="text"
                                 id="display-name"
                                 placeholder="Tên Hiển Thị"
-                                defaultValue={userInfo.username || ''}
+                                value={username}
+                                onChange={(e) => setUsername(e.target.value)}
                             />
                         </div>
                         <div className="single-input-item">
-                            <label htmlFor="email" className="required">
-                                Địa Chỉ Email
-                            </label>
+                            <label htmlFor="email" className="required">Địa Chỉ Email</label>
                             <input
                                 type="email"
                                 id="email"
                                 placeholder="Địa Chỉ Email"
-                                defaultValue={userInfo.email || ''}
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
                             />
                         </div>
-                        <fieldset>
-                            <legend>Thay Đổi Mật Khẩu</legend>
-                            <div className="single-input-item">
-                                <label htmlFor="current-pwd" className="required">
-                                    Mật Khẩu Hiện Tại
-                                </label>
-                                <input
-                                    type="password"
-                                    id="current-pwd"
-                                    
-                                />
-                            </div>
-                            <div className="row">
-                                <div className="col-lg-6">
-                                    <div className="single-input-item">
-                                        <label htmlFor="new-pwd" className="required">
-                                            Mật Khẩu Mới
-                                        </label>
-                                        <input
-                                            type="password"
-                                            id="new-pwd"
-                                            placeholder="Mật Khẩu Mới"
-                                        />
-                                    </div>
-                                </div>
-                                <div className="col-lg-6">
-                                    <div className="single-input-item">
-                                        <label htmlFor="confirm-pwd" className="required">
-                                            Xác Nhận Mật Khẩu
-                                        </label>
-                                        <input
-                                            type="password"
-                                            id="confirm-pwd"
-                                            placeholder="Xác Nhận Mật Khẩu"
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                        </fieldset>
                         <div className="single-input-item">
-                            <button className="btn btn-sqr">
-                                Lưu Thay Đổi
-                            </button>
+                            <label htmlFor="phone" className="required">Số điện thoại</label>
+                            <input
+                                type="text"
+                                id="phone"
+                                placeholder="Số điện thoại"
+                                value={phone}
+                                onChange={(e) => setPhone(e.target.value)}
+                            />
+                        </div>
+                        <div className="single-input-item">
+                            <button type="submit" className="btn btn-sqr">Lưu Thay Đổi</button>
                         </div>
                     </form>
                 </div>

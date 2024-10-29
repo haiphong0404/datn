@@ -1,5 +1,6 @@
 import React from 'react';
 import { useLoginForm } from '../../hooks/useLoginForm.js';
+import { Link } from 'react-router-dom';
 
 const Dashboard = () => {
     const { userInfo } = useLoginForm();
@@ -35,7 +36,14 @@ const Dashboard = () => {
                         <p id="status-message" className="mt-2"></p>
                     </>
                 ) : (
-                    <p>Vui lòng đăng nhập tài khoản</p>
+                    <>
+                        <p>Vui lòng đăng nhập tài khoản</p>
+                        <Link to="/login">
+                            <button className="news-btn" id="mc-submit">
+                                Đăng nhập
+                            </button>
+                        </Link>
+                    </>
                 )}
             </div>
         </div>
