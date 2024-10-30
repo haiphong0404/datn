@@ -83,7 +83,7 @@ class CategoryController extends Controller
             $category = Category::findOrFail($id);
             $category->update($request->validated());
 
-            return redirect()->route('categories.index')->with('success', 'Cập nhật thể loại thành công!');
+            return redirect()->route('admin.categories.index')->with('success', 'Cập nhật thể loại thành công!');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Có lỗi xảy ra, vui lòng thử lại!');
         }
