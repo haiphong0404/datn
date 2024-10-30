@@ -19,18 +19,30 @@ class OrderDetailController extends Controller
             ->join('orders', 'orders.id', '=', 'order_details.order_id')
             ->join('product_variants', 'product_variants.id', '=', 'order_details.id')
             ->join('products', 'products.id', '=', 'product_variants.product_id')
+            ->join('images' ,'images.product_variant_id','=','product_variants.id' )
             ->where('order_details.order_id', $order_id)
-            ->select('order_details.*', 'orders.*', 'product_variants.*'
-            , 'products.name'
+            ->select('order_details.price'
+            ,'orders.phone'
+            ,'orders.infor'
+
+            ,'orders.phone'
+
+            ,'orders.status'
+            ,'orders.name as nameorder'
+            
+            , 'products.name as nameproduct'
             , 'products.description'
             , 'products.image'
             , 'products.category_id'
             , 'products.brand_id'
+            ,'images.image as product_variantsimage'
 
             )
             ->get();
             $orderDetails = $orderDetails->map(function ($detail) {
                 $detail->image = $this->getImageAsBase64($detail->image);
+                $detail->product_variantsimage = $this->getImageAsBase64($detail->product_variantsimage);
+
                 return $detail;
             });
 
