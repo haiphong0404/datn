@@ -1,25 +1,28 @@
-import { useEffect, useRef  } from 'react';
+import { useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useLoginForm } from '../hooks/useLoginForm';
 import { useDispatch, useSelector } from 'react-redux';
 import Badge from '@mui/material/Badge'; // Kiểm tra đường dẫn đúng
+import { removeFromCart } from '../actions/action';
 
 const Header = () => {
-  // const dispatch = useDispatch()
-  // // const {carts} = useSelector(state=>state.cart.carts)
+  const dispatch = useDispatch()
+  const { cart } = useSelector(state => state.updateCart)
 
-  // const handleRemoveFromCart = (id) => {
-  //   dispatch(removeFromCart(id)); // Gửi action để xóa item khỏi giỏ hàng
-  // };
-
+  const handleRemoveFromCart = (id) => {
+    dispatch(removeFromCart(id)); // Gửi action để xóa item khỏi giỏ hàng
+  };
+  const calculateTotal = () => {
+    return cart.reduce((total, item) => total + item.price * item.quantity, 0);
+  };
   // code reload fix lỗi plugin không tải
   const location = useLocation();
   const prevLocation = useRef(location.pathname);
   const { userInfo } = useLoginForm();
-  console.log("Thông tin người dùng trong Account_info:", userInfo); 
- 
+  console.log("Thông tin người dùng trong Account_info:", userInfo);
+
   useEffect(() => {
- 
+
     if (prevLocation.current !== location.pathname) {
       prevLocation.current = location.pathname;
       window.location.reload();
@@ -97,16 +100,16 @@ const Header = () => {
                       <ul>
                         <li className="position-static">
                           <Link to="/">
-                            Trang chủ 
+                            Trang chủ
                           </Link>
-                          
+
                         </li>
-                        
+
                         <li>
                           <Link to="/shop">
-                            Cửa hàng 
+                            Cửa hàng
                           </Link>
-                          
+
                         </li>
                         <li>
                           <Link to="/blog">
@@ -118,8 +121,8 @@ const Header = () => {
                         </li>
                         <li>
                           <Link to="/faqs">
-                          Hỏi đáp
-                            </Link>
+                            Hỏi đáp
+                          </Link>
                         </li>
                       </ul>
                     </nav>
@@ -139,14 +142,16 @@ const Header = () => {
                         </a>
                       </li>
                       {/* minicart của header */}
-                       <li className="mini-cart-wrap">
-                        {/* <Link to="" className="minicart-btn">
-                          
-                          <Badge badgeContent={cart.length} color="primary"><i className="fa fa-shopping-cart" /></ Badge>
-                        </Link> */}
-                        {/* <div className="cart-list-wrapper">
+                      <li className="mini-cart-wrap">
+                        <Link to="/cart" className="minicart-btn">
+
+                          <Badge badgeContent={cart.length} color="success">
+                            <i className="fa fa-shopping-cart" />
+                          </Badge>
+                        </Link>
+                        <div className="cart-list-wrapper">
                           <ul className="cart-list">
-                            {carts.map((product) => (
+                            {cart.map((product) => (
                               <li key={product.id}>
                                 <div className="cart-img">
                                   <Link to={`/product/${product.id}`}>
@@ -158,23 +163,23 @@ const Header = () => {
                                     <Link to={`/product/${product.id}`}>{product.name}</Link>
                                   </h6>
                                   <span className="cart-qty">Qty: {product.quantity}</span>
-                                  <span className="item-price">${product.price}</span>
+                                  <span className="item-price">${(product.price * product.quantity).toFixed(2)}</span>
                                 </div>
                                 <div className="del-icon" onClick={() => handleRemoveFromCart(product.id)}>
                                   <i className="fa fa-times" />
                                 </div>
-                                <ul className="minicart-pricing-box">
-                                    <li className="total">
-                                      <span>Total</span>
-                                      <span>
-                                        <strong>${(product.price * product.quantity).toFixed(2)}</strong>
-                                      </span>
-                                    </li>
-                                  </ul>
+                                
                               </li>
                             ))}
                           </ul>
-                          
+                          <ul className="minicart-pricing-box">
+                                  <li className="total">
+                                    <span>Total</span>
+                                    <span>
+                                      <strong>{calculateTotal().toLocaleString()}</strong>
+                                    </span>
+                                  </li>
+                                </ul>
                           <div className="minicart-button">
                             <Link to="/cart">
                               <i className="fa fa-shopping-cart" /> View Cart
@@ -183,7 +188,7 @@ const Header = () => {
                               <i className="fa fa-share" /> Checkout
                             </Link>
                           </div>
-                        </div> */}
+                        </div>
                       </li>
                     </ul>
                   </div>
@@ -395,7 +400,7 @@ const Header = () => {
 
 
                       <Link className="dropdown-item" to="/my-account">
-                      Tài Khoản
+                        Tài Khoản
                       </Link>
                       <a className="dropdown-item" href="login">
                         {" "}

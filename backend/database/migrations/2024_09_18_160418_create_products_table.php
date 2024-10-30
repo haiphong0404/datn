@@ -18,6 +18,8 @@ return new class extends Migration
             $table->unsignedBigInteger('category_id');
             $table->unsignedBigInteger('brand_id');
             $table->string('image')->nullable(false);
+            $table->integer('total_quantity_in_stock')->default(0);
+            $table->decimal('price', 10, 2); // Cột giá, có thể là null
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
             $table->foreign('brand_id')->references('id')->on('brands')->onDelete('cascade');
             $table->softDeletes();

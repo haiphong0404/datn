@@ -1,32 +1,31 @@
 import React, { useEffect, useState } from "react";
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { fetchProducts } from '../api/product';
 import { fetchBrands } from '../api/brand';
 import { useDispatch, useSelector } from "react-redux";
+// import add from "../actions/action.js";
+import add from "../actions/action"
+import axios from "axios";
+
+
 
 const Main = () => {
-  const mutation = useMutation({
-    mutationFn: async (data) => {
-      // Thực hiện thao tác API của bạn ở đây
-      const response = await fetch('http://127.0.0.1:8000/api/cart/add', {
-        method: 'POST',
-        body: JSON.stringify(data),
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      });
-      return response.json();
-    },
-  });
+const cart = useSelector(state=>state.updateCart)
+console.log(cart);
 
-  const handleSubmit = async () => {
-    try {
-      await mutation.mutateAsync({ /* dữ liệu bạn muốn gửi */ });
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  };
+const dispatch = useDispatch()
+const handleAddToCart = async (product) => {
+  // Thêm sản phẩm vào Redux state
+  dispatch(add(product));
 
+  // Gửi yêu cầu tới backend để lưu sản phẩm vào giỏ hàng
+  try {
+    const response = await axios.post('http://127.0.0.1:8000/api/cart/add', { product });
+    console.log("Product added to cart successfully:", response.data);
+  } catch (error) {
+    console.error("Error adding product to cart:", error);
+  }
+}
 
   const { data: products = [], error: productsError } = useQuery({
     queryKey: ['Products'],
@@ -260,7 +259,7 @@ const Main = () => {
                       {/* <a className="add-to-cart" >
                         
                       </a> */}
-                      <button className="add-to-cart" onClick={handleSubmit}><i className="fa fa-shopping-cart" /></button>
+                      <button className="add-to-cart" onClick={() => handleAddToCart(product)}><i className="fa fa-shopping-cart" /></button>
                     </div>
 
                   </div>
@@ -338,7 +337,7 @@ const Main = () => {
                                 <a href="product-details.html">{product.name}</a>
                               </h2>
                               <p className="deals-desc">{product.description}</p>
-                              <a className="shop-btn" href="shop.html">Thêm vào Giỏ hàng</a>
+                              <button className="shop-btn" onClick={() => handleAddToCart(product)}>Thêm vào Giỏ hàng</button>
                             </div>
                           </div>
                         ))}

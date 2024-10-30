@@ -1,8 +1,43 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { loadCartFromLocalStorage, removeFromCart } from '../../actions/action';
+import axios from 'axios';
 
 const Cart = () => {
-  const cartItems = useSelector(state => state.cart.items);
+  const dispatch = useDispatch()
+//   const { cart } = useSelector(state => state.updateCart)
+// console.log(cart);
+
+const [localCart, setLocalCart] = useState([]);
+
+  useEffect(() => {
+    const savedCart = loadCartFromLocalStorage(); // Lấy giỏ hàng từ localStorage
+    setLocalCart(savedCart); // Lưu vào state
+    console.log(savedCart); // In ra để kiểm tra
+  }, []); // Chỉ chạy một lần khi component được mount
+
+
+  const handleRemoveFromCart = (id) => {
+    // Lọc ra các sản phẩm không phải sản phẩm cần xóa
+    const updatedCart = localCart.filter(product => product.id !== id);
+    setLocalCart(updatedCart); // Cập nhật state
+    localStorage.setItem("cart", JSON.stringify(updatedCart)); // Cập nhật lại localStorage
+  };
+  const calculateTotal = () => {
+    return localCart.reduce((total, item) => total + item.price * item.quantity, 0);
+  };
+  const submitCartToBackend = async () => {
+    try {
+      const response = await axios.post('/cart/add', { cart: localCart });
+      console.log("Cart submitted successfully:", response.data);
+      alert("Cart submitted successfully!");
+    } catch (error) {
+      console.error("Error submitting cart:", error);
+      alert("Failed to submit cart.");
+    }
+  };
+  console.log(localCart);
+  
   return (
     <div>
       <main>
@@ -47,52 +82,60 @@ const Cart = () => {
                 <div className="col-lg-12">
                   {/* Cart Table Area */}
                   <div className="cart-table table-responsive">
-                    <table className="table table-bordered">
-                      <thead>
-                        <tr>
-                          <th className="pro-thumbnail">Thumbnail</th>
-                          <th className="pro-title">Product</th>
-                          <th className="pro-price">Price</th>
-                          <th className="pro-quantity">Quantity</th>
-                          <th className="pro-subtotal">Total</th>
-                          <th className="pro-remove">Remove</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                      {cartItems.map(item => (
-                        <tr key={item.id}>
-                          <td className="pro-thumbnail">
-                            <a href="#">
-                              <img
-                                className="img-fluid"
-                                src={item.image} alt={item.name}
-                              />
-                            </a>
-                          </td>
-                          <td className="pro-title">
-                            <a href="#">{item.name}</a>
-                          </td>
-                          <td className="pro-price">
-                            <span>{item.price}</span>
-                          </td>
-                          <td className="pro-quantity">
-                            <div className="pro-qty">
-                            {item.quantity}
-                            </div>
-                          </td>
-                          <td className="pro-subtotal">
-                            <span>${(item.price * item.quantity).toFixed(2)}</span>
-                          </td>
-                          <td className="pro-remove">
-                            <a href="#">
-                              <i className="fa fa-trash-o" />
-                            </a>
-                          </td>
-                        </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
+                      <table className="table table-bordered">
+                        <thead>
+                          <tr>
+                            <th className="pro-thumbnail">Hình ảnh</th>
+                            <th className="pro-title">Tên</th>
+                            <th className="pro-price">Giá</th>
+                            <th className="pro-quantity">Số lượng</th>
+                            <th className="pro-subtotal">tổng</th>
+                            <th className="pro-remove">xóa</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {localCart.map((product) => (
+                            <tr key={product.id}>
+                              <td className="pro-thumbnail">
+                                <a href="#">
+                                  <img
+                                    className="img-fluid"
+                                    src={product.image}
+                                    alt={product.name}
+                                    width={50}
+                                  />
+                                </a>
+                              </td>
+                              <td className="pro-title">
+                                <a href="#">{product.name}</a>
+                              </td>
+                              <td className="pro-price">
+                                <span>{product.price}</span>
+                              </td>
+                              <td className="pro-quantity">
+                                <div className="pro-qty">
+                                  {product.quantity}
+                                </div>
+                              </td>
+                              <td className="pro-subtotal">
+                                <span>${(product.price * product.quantity).toFixed(2)}</span>
+                              </td>
+                              <td className="pro-remove">
+                                <button  onClick={() => handleRemoveFromCart(product.id)}>
+                                  <i className="fa fa-trash-o" />
+                                </button>
+                              </td>
+                            </tr>
+                          ))}
+                          <tr>
+                            <td colSpan="4" className="text-right"><strong>Total:</strong></td>
+                            <td colSpan="2">
+                              <span>${calculateTotal().toFixed(2)}</span>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
                   {/* Cart Update Option */}
                   <div className="cart-update-option d-block d-md-flex justify-content-between">
                     <div className="apply-coupon-wrapper">
@@ -117,30 +160,35 @@ const Cart = () => {
                 <div className="col-lg-5 ms-auto">
                   {/* Cart Calculation Area */}
                   <div className="cart-calculator-wrapper">
-                    <div className="cart-calculate-items">
-                      <h6>Cart Totals</h6>
-                      <div className="table-responsive">
-                        <table className="table">
-                          <tbody>
-                            <tr>
-                              <td>Sub Total</td>
-                              <td>$230</td>
-                            </tr>
-                            <tr>
-                              <td>Shipping</td>
-                              <td>$70</td>
-                            </tr>
-                            <tr className="total">
-                              <td>Total</td>
-                              <td className="total-amount">$300</td>
-                            </tr>
-                          </tbody>
-                        </table>
+                  <div className="cart-calculate-items">
+                        <h6>Cart Totals</h6>
+                        <div className="table-responsive">
+                          <table className="table">
+                            <tbody>
+                              <tr>
+                                <td>Sub Total</td>
+                                <td>${calculateTotal().toFixed(2)}</td> {/* Tổng phụ tính toán */}
+                              </tr>
+                              <tr>
+                                <td>Shipping</td>
+                                <td>$30</td> {/* Bạn có thể thay đổi giá trị này nếu cần */}
+                              </tr>
+                              <tr className="total">
+                                <td>Total</td>
+                                <td className="total-amount">${(calculateTotal() + 30).toFixed(2)}</td> {/* Tổng tính toán với phí vận chuyển */}
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
                       </div>
-                    </div>
-                    <a href="checkout.html" className="btn btn-sqr d-block">
+
+                      <button
+                      
+                      className="btn btn-sqr d-block"
+                      onClick={submitCartToBackend}
+                    >
                       Proceed Checkout
-                    </a>
+                    </button>
                   </div>
                 </div>
               </div>
