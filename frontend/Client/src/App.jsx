@@ -46,7 +46,7 @@ const routeConfig = [
       { path: "checkout", element: <Checkout /> },
       { path: "blog/blog_detail", element: <Blog_detail /> },
       { path: "contact_us", element: <Contact_us /> },
-      { path: "product_details", element: <Product_details /> },
+      { path: "product_details/:productId", element: <Product_details /> },
       { path: "cart", element: <Cart /> },
       { path: "about_us", element: <AboutUs /> },
       { path: "login", element: <Login /> },

@@ -6,7 +6,7 @@ import ProductItem from '../pages/Shop/productItem';
 const Main = () => {
 
 
-  const { data: products = [], error: productsError } = useQuery({
+  const { data: products = [], productsError } = useQuery({
     queryKey: ['Products'],
     queryFn: fetchProducts,
   });
