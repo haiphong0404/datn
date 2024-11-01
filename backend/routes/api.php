@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\ColorController;
+use App\Http\Controllers\Api\CommentController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\ProductVariantController;
 use App\Http\Controllers\Api\SizeController;
@@ -59,14 +60,17 @@ Route::middleware('api')->group(function () {
 });
 Route::apiResource('user', UserController::class);
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/cart', [CartController::class, 'index']);              
-    Route::post('/cart/add', [CartController::class, 'addToCart']);       
-    Route::put('/cart/update', [CartController::class, 'updateCart']);    
-    Route::delete('/cart/remove', [CartController::class, 'removeFromCart']); 
+    Route::get('/cart', [CartController::class, 'index']);
+    Route::post('/cart/add', [CartController::class, 'addToCart']);
+    Route::put('/cart/update', [CartController::class, 'updateCart']);
+    Route::delete('/cart/remove', [CartController::class, 'removeFromCart']);
 });
 Route::get('products/{productId}/variants', [ProductVariantController::class, 'index']);
 Route::get('/variants/{id}', [ProductVariantController::class, 'show']);
 Route::get('/sizes', [SizeController::class, 'index']);
 Route::get('/colors', [ColorController::class, 'index']);
+Route::get('/comments', [CommentController::class, 'index']);
+Route::delete('/comments/{id}', [CommentController::class, 'softDelete']);
+
 
 
