@@ -37,6 +37,14 @@ const [localCart, setLocalCart] = useState([]);
     }
   };
   console.log(localCart);
+  const handleQuantityChange = (id, newQuantity) => {
+    if (newQuantity <= 0) return;
+    const updatedCart = localCart.map((product) =>
+      product.id === id ? { ...product, quantity: newQuantity } : product
+    );
+    setLocalCart(updatedCart);
+    localStorage.setItem("cart", JSON.stringify(updatedCart));
+  };
   
   return (
     <div>
@@ -114,7 +122,13 @@ const [localCart, setLocalCart] = useState([]);
                               </td>
                               <td className="pro-quantity">
                                 <div className="pro-qty">
+                                  <button onClick={() => handleQuantityChange(product.id, product.quantity - 1)}>
+                                    -
+                                  </button>
                                   {product.quantity}
+                                  <button onClick={() => handleQuantityChange(product.id, product.quantity + 1)}>
+                                    +
+                                  </button>
                                 </div>
                               </td>
                               <td className="pro-subtotal">

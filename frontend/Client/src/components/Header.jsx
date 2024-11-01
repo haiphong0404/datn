@@ -162,8 +162,8 @@ const Header = () => {
                                   <h6 className="product-name">
                                     <Link to={`/product/${product.id}`}>{product.name}</Link>
                                   </h6>
-                                  <span className="cart-qty">Qty: {product.quantity}</span>
-                                  <span className="item-price">${(product.price * product.quantity).toFixed(2)}</span>
+                                  <span className="cart-qty">Số lượng: {product.quantity}</span>
+                                  <span className="item-price">{(product.price * product.quantity).toFixed(2)}Vnd</span>
                                 </div>
                                 <div className="del-icon" onClick={() => handleRemoveFromCart(product.id)}>
                                   <i className="fa fa-times" />
@@ -176,7 +176,7 @@ const Header = () => {
                                   <li className="total">
                                     <span>Total</span>
                                     <span>
-                                      <strong>{calculateTotal().toLocaleString()}</strong>
+                                      <strong>{calculateTotal().toLocaleString()} Vnd</strong>
                                     </span>
                                   </li>
                                 </ul>

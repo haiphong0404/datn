@@ -254,7 +254,7 @@ const handleAddToCart = async (product) => {
                         <a href="product-details.html">{product.name}</a> {/* Đổ tên sản phẩm */}
                       </h6>
                       <div className="price-box">
-                        <span className="price-regular">${product.price}</span> {/* Đổ giá hiện tại */}
+                        <span className="price-regular">{product.price} Vnd</span> {/* Đổ giá hiện tại */}
                       </div>
                       {/* <a className="add-to-cart" >
                         

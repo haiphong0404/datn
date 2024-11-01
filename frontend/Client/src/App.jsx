@@ -1,5 +1,5 @@
 import React from "react";
-import { useRoutes } from "react-router-dom";
+import { Link, Route, Router, Routes, useRoutes } from "react-router-dom";
 import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ToastContainer } from 'react-toastify';
@@ -40,7 +40,7 @@ const routeConfig = [
     path: "/",
     element: <LayoutClient />,
     children: [
-      { path: "", element: <Main /> },
+      { path: "",  element: <Main /> },
       { path: "shop", element: <Shop /> },
       { path: "blog", element: <Blog /> },
       { path: "checkout", element: <Checkout /> },
