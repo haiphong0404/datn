@@ -70,8 +70,10 @@ Route::apiResource('order-details', OrderDetailController::class);
 Route::apiResource('order', OrderController::class );
 Route::get('orders', [OrderController::class, 'abc']);
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/cart', [CartController::class, 'index']);
-    Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
+    Route::get('/cart', [CartController::class, 'index']);              
+    Route::post('/cart/add', [CartController::class, 'addToCart']);       
+    Route::put('/cart/update', [CartController::class, 'updateCart']);    
+    Route::delete('/cart/remove', [CartController::class, 'removeFromCart']); 
 });
 Route::get('products/{productId}/variants', [ProductVariantController::class, 'index']);
 Route::get('/variants/{id}', [ProductVariantController::class, 'show']);
