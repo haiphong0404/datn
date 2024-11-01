@@ -136,10 +136,6 @@ class ProductController extends Controller
             return redirect()->back()->with('error', 'Có lỗi xảy ra. Vui lòng thử lại sau.');
         }
     }
-
-
-
-
     /**
      * Display the specified resource.
      */
