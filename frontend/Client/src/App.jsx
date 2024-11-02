@@ -12,7 +12,6 @@ import Shop from "./pages/Shop/Shop";
 import Blog from "./pages/Blog";
 import MyAccount from "./pages/My_account/Myacc";
 import Contact_us from "./pages/Contact_us";
-import Product_details from "./pages/Product_details";
 import Cart from "./pages/cart/Cart";
 import LayoutClient from "./layout/LayoutClient";
 import Blog_detail from "./pages/Blog_detail";
@@ -30,6 +29,7 @@ import Download from "./pages/My_account/download";
 import Payment_method from "./pages/My_account/payment_method";
 import Address_edit from "./pages/My_account/address_edit";
 import Account_info from "./pages/My_account/account_info";
+import Product_details from "./pages/Shop/Product_details";
 
 
 
@@ -46,7 +46,7 @@ const routeConfig = [
       { path: "checkout", element: <Checkout /> },
       { path: "blog/blog_detail", element: <Blog_detail /> },
       { path: "contact_us", element: <Contact_us /> },
-      { path: "product_details", element: <Product_details /> },
+      { path: "product_details/:productId", element: <Product_details /> },
       { path: "cart", element: <Cart /> },
       { path: "about_us", element: <AboutUs /> },
       { path: "login", element: <Login /> },

@@ -1,7 +1,8 @@
 import React, { useState } from 'react'; // Thêm useState ở đây
 import { useQuery } from '@tanstack/react-query';
-import { fetchProducts } from '../../api/product';
+import { fetchProducts, fetchColor, fetchSizes } from '../../api/product';
 import { Pagination } from '@mui/material';
+import { fetchBrands } from '../../api/brand';
 
 
 import ProductItem from './productItem';
@@ -12,9 +13,21 @@ const Shop = () => {
   const handleViewModeChange = (mode) => {
     setViewMode(mode);
   };
-  const { data: products = [], isLoading, isError } = useQuery({
+  const { data: products = [],  isLoading: isLoadingProducts, isError: isProductsError } = useQuery({
     queryKey: ['Products'],
     queryFn: fetchProducts,
+  });
+  const { data: brands = [], isLoading: isLoadingBrands, isError: isBrandsError  } = useQuery({
+    queryKey: ['Brands'],
+    queryFn: fetchBrands,
+  });
+  const { data: colors = [], isLoading: isLoadingColors, isError: isColorsError } = useQuery({
+    queryKey: ['colors  '],
+    queryFn: fetchColor,
+  });
+  const { data: sizes = [],  isLoading: isLoadingSizes, isError: isSizesError } = useQuery({
+    queryKey: ['sizes'],
+    queryFn: fetchSizes,
   });
 
   const itemsPerPage = 6; // Số sản phẩm trên mỗi trang
@@ -26,12 +39,14 @@ const Shop = () => {
 
   const totalPages = Math.ceil(products.length / itemsPerPage); // Tính số trang
 
-  if (isLoading) {
+   // Kiểm tra trạng thái tải
+   if (isLoadingProducts || isLoadingBrands || isLoadingColors || isLoadingSizes) {
     return <div>Đang tải...</div>;
   }
 
-  if (isError) {
-    return <div>Lỗi khi tải sản phẩm.</div>;
+  // Kiểm tra lỗi
+  if (isProductsError || isBrandsError || isColorsError || isSizesError) {
+    return <div>Lỗi khi tải dữ liệu.</div>;
   }
 
   return (
@@ -151,319 +166,73 @@ const Shop = () => {
                     <h6 className="sidebar-title">Brand</h6>
                     <div className="sidebar-body">
                       <ul className="checkbox-container search-list">
-                        <li>
-                          <div className="custom-control custom-checkbox">
-                            <input
-                              type="checkbox"
-                              className="custom-control-input"
-                              id="customCheck5"
-                            />
-                            <label
-                              className="custom-control-label"
-                              htmlFor="customCheck5"
-                            >
-                              Studio (3)
-                            </label>
-                          </div>
-                        </li>
-                        <li>
-                          <div className="custom-control custom-checkbox">
-                            <input
-                              type="checkbox"
-                              className="custom-control-input"
-                              id="customCheck6"
-                            />
-                            <label
-                              className="custom-control-label"
-                              htmlFor="customCheck6"
-                            >
-                              Hastech (4)
-                            </label>
-                          </div>
-                        </li>
-                        <li>
-                          <div className="custom-control custom-checkbox">
-                            <input
-                              type="checkbox"
-                              className="custom-control-input"
-                              id="customCheck7"
-                            />
-                            <label
-                              className="custom-control-label"
-                              htmlFor="customCheck7"
-                            >
-                              Quickiin (15)
-                            </label>
-                          </div>
-                        </li>
-                        <li>
-                          <div className="custom-control custom-checkbox">
-                            <input
-                              type="checkbox"
-                              className="custom-control-input"
-                              id="customCheck8"
-                            />
-                            <label
-                              className="custom-control-label"
-                              htmlFor="customCheck8"
-                            >
-                              Graphic corner (10)
-                            </label>
-                          </div>
-                        </li>
-                        <li>
-                          <div className="custom-control custom-checkbox">
-                            <input
-                              type="checkbox"
-                              className="custom-control-input"
-                              id="customCheck9"
-                            />
-                            <label
-                              className="custom-control-label"
-                              htmlFor="customCheck9"
-                            >
-                              devItems (12)
-                            </label>
-                          </div>
-                        </li>
+                        {brands.map((brand) => (
+                          <li key={brand.id}>
+                            <div className="custom-control custom-checkbox">
+                              <input
+                                type="checkbox"
+                                className="custom-control-input"
+                                id={`brand-${brand.id}`}
+                              />
+                              <label
+                                className="custom-control-label"
+                                htmlFor={`brand-${brand.id}`}
+                              >
+                                {brand.name} ({brand.productCount || 0})
+                              </label>
+                            </div>
+                          </li>
+                        ))}
                       </ul>
                     </div>
                   </div>
-                  {/* single sidebar end */}
-                  {/* single sidebar start */}
+
                   <div className="sidebar-single">
-                    <h6 className="sidebar-title">Categories</h6>
-                    <div className="sidebar-body">
-                      <ul className="radio-container search-list">
-                        <li>
-                          <div className="custom-control custom-radio">
-                            <input
-                              type="radio"
-                              className="custom-control-input"
-                              id="customCheck50"
-                            />
-                            <label
-                              className="custom-control-label"
-                              htmlFor="customCheck50"
-                            >
-                              $7.00 - $9.00 (2)
-                            </label>
-                          </div>
-                        </li>
-                        <li>
-                          <div className="custom-control custom-radio">
-                            <input
-                              type="radio"
-                              className="custom-control-input"
-                              id="customCheck51"
-                            />
-                            <label
-                              className="custom-control-label"
-                              htmlFor="customCheck51"
-                            >
-                              $10.00 - $12.00 (3)
-                            </label>
-                          </div>
-                        </li>
-                        <li>
-                          <div className="custom-control custom-radio">
-                            <input
-                              type="radio"
-                              className="custom-control-input"
-                              id="customCheck52"
-                            />
-                            <label
-                              className="custom-control-label"
-                              htmlFor="customCheck52"
-                            >
-                              $17.00 - $20.00 (3)
-                            </label>
-                          </div>
-                        </li>
-                        <li>
-                          <div className="custom-control custom-radio">
-                            <input
-                              type="radio"
-                              className="custom-control-input"
-                              id="customCheck53"
-                            />
-                            <label
-                              className="custom-control-label"
-                              htmlFor="customCheck53"
-                            >
-                              {" "}
-                              $21.00 - $22.00 (1)
-                            </label>
-                          </div>
-                        </li>
-                        <li>
-                          <div className="custom-control custom-radio">
-                            <input
-                              type="radio"
-                              className="custom-control-input"
-                              id="customCheck54"
-                            />
-                            <label
-                              className="custom-control-label"
-                              htmlFor="customCheck54"
-                            >
-                              $25.00 - $30.00 (3)
-                            </label>
-                          </div>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                  {/* single sidebar end */}
-                  {/* single sidebar start */}
-                  <div className="sidebar-single">
-                    <h6 className="sidebar-title">color</h6>
+                    <h6 className="sidebar-title">Color</h6>
                     <div className="sidebar-body">
                       <ul className="checkbox-container search-list">
-                        <li>
-                          <div className="custom-control custom-checkbox">
-                            <input
-                              type="checkbox"
-                              className="custom-control-input"
-                              id="customCheck11"
-                            />
-                            <label
-                              className="custom-control-label"
-                              htmlFor="customCheck11"
-                            >
-                              green (5)
-                            </label>
-                          </div>
-                        </li>
-                        <li>
-                          <div className="custom-control custom-checkbox">
-                            <input
-                              type="checkbox"
-                              className="custom-control-input"
-                              id="customCheck12"
-                            />
-                            <label
-                              className="custom-control-label"
-                              htmlFor="customCheck12"
-                            >
-                              black (20)
-                            </label>
-                          </div>
-                        </li>
-                        <li>
-                          <div className="custom-control custom-checkbox">
-                            <input
-                              type="checkbox"
-                              className="custom-control-input"
-                              id="customCheck13"
-                            />
-                            <label
-                              className="custom-control-label"
-                              htmlFor="customCheck13"
-                            >
-                              red (6)
-                            </label>
-                          </div>
-                        </li>
-                        <li>
-                          <div className="custom-control custom-checkbox">
-                            <input
-                              type="checkbox"
-                              className="custom-control-input"
-                              id="customCheck14"
-                            />
-                            <label
-                              className="custom-control-label"
-                              htmlFor="customCheck14"
-                            >
-                              blue (8)
-                            </label>
-                          </div>
-                        </li>
-                        <li>
-                          <div className="custom-control custom-checkbox">
-                            <input
-                              type="checkbox"
-                              className="custom-control-input"
-                              id="customCheck15"
-                            />
-                            <label
-                              className="custom-control-label"
-                              htmlFor="customCheck15"
-                            >
-                              pink (4)
-                            </label>
-                          </div>
-                        </li>
+                        {colors.map((color) => (
+                          <li key={color.id}>
+                            <div className="custom-control custom-checkbox">
+                              <input
+                                type="checkbox"
+                                className="custom-control-input"
+                                id={`color-${color.id}`}
+                              />
+                              <label
+                                className="custom-control-label"
+                                htmlFor={`color-${color.id}`}
+                              >
+                                {color.name} ({color.productCount || 0})
+                              </label>
+                            </div>
+                          </li>
+                        ))}
                       </ul>
                     </div>
                   </div>
-                  {/* single sidebar end */}
-                  {/* single sidebar start */}
+
                   <div className="sidebar-single">
-                    <h6 className="sidebar-title">size</h6>
+                    <h6 className="sidebar-title">Size</h6>
                     <div className="sidebar-body">
                       <ul className="checkbox-container search-list">
-                        <li>
-                          <div className="custom-control custom-checkbox">
-                            <input
-                              type="checkbox"
-                              className="custom-control-input"
-                              id="customCheck111"
-                            />
-                            <label
-                              className="custom-control-label"
-                              htmlFor="customCheck111"
-                            >
-                              S (4)
-                            </label>
-                          </div>
-                        </li>
-                        <li>
-                          <div className="custom-control custom-checkbox">
-                            <input
-                              type="checkbox"
-                              className="custom-control-input"
-                              id="customCheck222"
-                            />
-                            <label
-                              className="custom-control-label"
-                              htmlFor="customCheck222"
-                            >
-                              M (5)
-                            </label>
-                          </div>
-                        </li>
-                        <li>
-                          <div className="custom-control custom-checkbox">
-                            <input
-                              type="checkbox"
-                              className="custom-control-input"
-                              id="customCheck333"
-                            />
-                            <label
-                              className="custom-control-label"
-                              htmlFor="customCheck333"
-                            >
-                              L (7)
-                            </label>
-                          </div>
-                        </li>
-                        <li>
-                          <div className="custom-control custom-checkbox">
-                            <input
-                              type="checkbox"
-                              className="custom-control-input"
-                              id="customCheck444"
-                            />
-                            <label
-                              className="custom-control-label"
-                              htmlFor="customCheck444"
-                            >
-                              XL (3)
-                            </label>
-                          </div>
-                        </li>
+                        {sizes.map((size) => (
+                          <li key={size.id}>
+                            <div className="custom-control custom-checkbox">
+                              <input
+                                type="checkbox"
+                                className="custom-control-input"
+                                id={`size-${size.id}`}
+                              />
+                              <label
+                                className="custom-control-label"
+                                htmlFor={`size-${size.id}`}
+                              >
+                                {size.name} ({size.productCount || 0})
+                              </label>
+                            </div>
+                          </li>
+                        ))}
                       </ul>
                     </div>
                   </div>
@@ -527,17 +296,15 @@ const Shop = () => {
                       <div className="col-lg-5 col-md-6 order-1 order-md-2">
                         <div className="top-bar-right">
                           <div className="product-short">
-                            <p>Sort By : </p>
+                            <p>Lọc theo : </p>
                             <select className="nice-select" name="sortby">
-                              <option value="trending">Relevance</option>
-                              <option value="sales">Name (A - Z)</option>
-                              <option value="sales">Name (Z - A)</option>
+                              <option value="trending">Liên quan</option>
+                              <option value="sales">(A - Z)</option>
+                              <option value="sales">(Z - A)</option>
                               <option value="rating">
                                 Price (Low &gt; High)
                               </option>
-                              <option value="date">Rating (Lowest)</option>
-                              <option value="price-asc">Model (A - Z)</option>
-                              <option value="price-asc">Model (Z - A)</option>
+
                             </select>
                           </div>
                         </div>

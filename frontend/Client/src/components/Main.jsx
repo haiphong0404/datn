@@ -1,106 +1,45 @@
 import React, { useEffect, useState } from "react";
 import { useQuery } from '@tanstack/react-query';
 import { fetchProducts } from '../api/product';
-import { fetchBrands } from '../api/brand';
 import { useDispatch, useSelector } from "react-redux";
-// import add from "../actions/action.js";
-import add from "../actions/action"
+import add, { loadCartFromLocalStorage } from "../actions/action"
 import axios from "axios";
+import HeroSlider from "./homes/HeroSlider";
+import Category from "./homes/Category";
+import Brand from "./homes/Brand";
+import Blog from "./homes/Blog";
+import ProductTab from "./homes/ProductTab";
+import { Link } from "react-router-dom";
 
 
 
 const Main = () => {
-const cart = useSelector(state=>state.updateCart)
-console.log(cart);
+  // const cart = useSelector(state => state.updateCart)
+  // const [localCart, setLocalCart] = useState(cart);
+  // const dispatch = useDispatch()
+  //   const handleAddToCart = (product) => {
+  //     // Thêm sản phẩm vào giỏ hàng
+  //     const updatedCart = [...localCart, product];
+  //     setLocalCart(updatedCart); // Cập nhật local state
+  //     localStorage.setItem("cart", JSON.stringify(updatedCart)); // Lưu vào localStorage
 
-const dispatch = useDispatch()
-const handleAddToCart = async (product) => {
-  // Thêm sản phẩm vào Redux state
-  dispatch(add(product));
-
-  // Gửi yêu cầu tới backend để lưu sản phẩm vào giỏ hàng
-  try {
-    const response = await axios.post('http://127.0.0.1:8000/api/cart/add', { product });
-    console.log("Product added to cart successfully:", response.data);
-  } catch (error) {
-    console.error("Error adding product to cart:", error);
-  }
-}
+  //     // Cập nhật Redux store
+  //     dispatch(add(product)); // Giả sử bạn có một action để thêm sản phẩm vào Redux store
+  // };
+  // useEffect(() => {
+  //   const savedCart = loadCartFromLocalStorage(); // Lấy giỏ hàng từ localStorage
+  //   setLocalCart(savedCart);
+  // }, [cart]);
 
   const { data: products = [], error: productsError } = useQuery({
     queryKey: ['Products'],
     queryFn: fetchProducts,
   });
-
- 
-  const { data: brands = [], error: brandsError } = useQuery({
-    queryKey: ['Brands'],
-    queryFn: fetchBrands,
-  });
-
-
   return (
     <div>
-
       <main>
         {/* slider area start */}
-        <section className="hero-slider">
-          <div className="hero-slider-active slick-arrow-style slick-arrow-style_hero slick-dot-style">
-            {/* single slider item start */}
-            <div className="hero-single-slide hero-overlay">
-              <div
-                className="hero-slider-item hero-1 bg-img"
-                style={{
-                  backgroundImage: "url(/assets/img/slider/home1-slide2.jpg)",
-                }} // Sử dụng style để set ảnh nền
-              >
-                <div className="container">
-                  <div className="row">
-                    <div className="col-md-12">
-                      <div className="hero-slider-content slide-1">
-                        <h1 className="slide-title">mới nhất</h1>
-                        <h2 className="slide-subtitle">
-                          Giày thể thao chạy bộ <span>Đàn ông thích</span>
-                        </h2>
-                        <a href="/shop" className="btn btn-large btn-bg">
-                          Mua Ngay
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            {/* single slider item start */}
-            {/* single slider item start */}
-            <div className="hero-single-slide hero-overlay">
-              <div
-                className="hero-slider-item hero-1 bg-img"
-                style={{
-                  backgroundImage: "url(/assets/img/slider/home2-slide1.jpg)",
-                }} // Sử dụng style để set ảnh nền
-              >
-                <div className="container">
-                  <div className="row">
-                    <div className="col-md-12">
-                      <div className="hero-slider-content slide-2">
-                        <h1 className="slide-title">Giảm giá</h1>
-                        <h2 className="slide-subtitle">
-                          Giày thể thao chạy bộ  <span>Đàn ông thích</span>
-                        </h2>
-                        <a href="shop" className="btn btn-large btn-bg">
-                          Mua Ngay
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* single slider item start */}
-          </div>
-        </section>
+        <HeroSlider />
         {/* slider area end */}
         {/* service policy start */}
         <section className="service-policy bg-gray mtn-100">
@@ -232,34 +171,35 @@ const handleAddToCart = async (product) => {
               {products.slice(0, 4).map((product) => (
                 <div key={product.id} className="product-item">
                   <div className="product-thumb">
-                    <a href="product-details.html">
+                    <Link to={`/product_details/${product.id}`}>
                       <img
                         src={product.image || '/path/to/placeholder.jpg'} // Đổ hình ảnh từ API
                         alt={product.name}
                       />
-                    </a>
+                    </Link>
                     <div className="button-group">
-                      
+
                       <a href="#" data-bs-toggle="modal" data-bs-target="#quick_view">
                         <span data-bs-toggle="tooltip" title="Quick View">
                           <i className="fa fa-eye" />
                         </span>
                       </a>
                     </div>
-                    
+
                   </div>
                   <div className="product-content">
                     <div className="product-caption">
                       <h6 className="product-name">
-                        <a href="product-details.html">{product.name}</a> {/* Đổ tên sản phẩm */}
+                        <Link to={`/product_details/${product.id}`}>{product.name}</Link> {/* Đổ tên sản phẩm */}
                       </h6>
                       <div className="price-box">
-                        <span className="price-regular">{product.price} Vnd</span> {/* Đổ giá hiện tại */}
+                        <span className="price-regular">{product.price ? `${product.price} Vnd` : "Liên hệ"}</span>
+
                       </div>
                       {/* <a className="add-to-cart" >
                         
                       </a> */}
-                      <button className="add-to-cart" onClick={() => handleAddToCart(product)}><i className="fa fa-shopping-cart" /></button>
+                      <Link className="add-to-cart" to={`/product_details/${product.id}`} ><i className="fa fa-shopping-cart" /></Link>
                     </div>
 
                   </div>
@@ -300,158 +240,10 @@ const handleAddToCart = async (product) => {
         </div>
         {/* banner statistics area end */}
         {/* product tab area start */}
-        <section className="product-tab-area section-padding">
-          <div className="container">
-            <div className="pos-special-products">
-              <div className="row">
-                <div className="col-lg-6 col-right">
-                  <div className="deals-tab-wrapper">
-                    <div className="deals-tab-area">
-                      <div className="deals-nav-carousel">
-
-                        {products.slice(0, 4).map((product) => (
-                          <div key={product.id} className="product-item">
-                            <div className="product-thumb">
-                              <a href="product-details.html">
-                                <img
-                                  src={product.image || '/path/to/placeholder.jpg'} // Đổ hình ảnh từ API
-                                  alt={product.name}
-                                />
-                              </a>
-
-
-                            </div>
-
-                          </div>
-                        ))}
-
-
-                      </div>
-                    </div>
-                    <div className="deals-content-wrapper">
-                      <div className="deals-content-carousel">
-                        {Array.isArray(products) && products.slice(0, 1).map((product) => (
-                          <div key={product.id} className="deals-slide-item">
-                            <div className="deals-content-item">
-                              <h2 className="deals-title">
-                                <a href="product-details.html">{product.name}</a>
-                              </h2>
-                              <p className="deals-desc">{product.description}</p>
-                              <button className="shop-btn" onClick={() => handleAddToCart(product)}>Thêm vào Giỏ hàng</button>
-                            </div>
-                          </div>
-                        ))}
-
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+        <ProductTab />
         {/* product tab area end */}
         {/* category area start */}
-        <section
-          className="category-area bg-set bg-img section-padding pb-0"
-          style={{
-            backgroundImage: "url(/assets/img/bg/bg-listcate.jpg)",
-          }}
-        >
-          <div className="container">
-            <div className="row">
-              <div className="col-12">
-                <div className="section-title text-center">
-                  <h3 className="title text-white">
-                    MUA SẮM THEO DANH MỤC THOR
-                  </h3>
-                  <h4 className="sub-title text-white">
-                    Các cuộc điều tra đã chứng minh rằng người đọc dễ dàng đọc tôi hơn vì họ đọc thường xuyên hơn; sự rõ ràng cũng là một quá trình động, theo sau sự thay đổi.
-                  </h4>
-                </div>
-              </div>
-            </div>
-            <div className="row category-wrapper">
-              <div className="col-12">
-                <div className="catagory-carousel-active slick-row-15">
-                  <div className="single-category-item">
-                    <div className="category-title">
-                      <a href="shop.html">NAM</a>
-                    </div>
-                    <div className="category-thumb">
-                      <a href="shop.html">
-                        <img
-                          src="assets/img/category/category-1.png"
-                          alt="category thumb"
-                        />
-                      </a>
-                    </div>
-                    <div className="shop-collection text-center">
-                      <a className="shop-btn" href="shop.html">
-                        Bộ sưu tập cửa hàng
-                      </a>
-                    </div>
-                  </div>
-                  <div className="single-category-item">
-                    <div className="category-title">
-                      <a href="shop.html">NỮ</a>
-                    </div>
-                    <div className="category-thumb">
-                      <a href="shop.html">
-                        <img
-                          src="assets/img/category/category-2.png"
-                          alt="category thumb"
-                        />
-                      </a>
-                    </div>
-                    <div className="shop-collection text-center">
-                      <a className="shop-btn" href="shop.html">
-                        Bộ sưu tập cửa hàng
-                      </a>
-                    </div>
-                  </div>
-                  <div className="single-category-item">
-                    <div className="category-title">
-                      <a href="shop.html">NHANH CHÓNG
-                      </a>
-                    </div>
-                    <div className="category-thumb">
-                      <a href="shop.html">
-                        <img
-                          src="assets/img/category/category-3.png"
-                          alt="category thumb"
-                        />
-                      </a>
-                    </div>
-                    <div className="shop-collection text-center">
-                      <a className="shop-btn" href="shop.html">
-                        Bộ sưu tập cửa hàng
-                      </a>
-                    </div>
-                  </div>
-                  <div className="single-category-item">
-                    <div className="category-title">
-                      <a href="shop.html">Kids</a>
-                    </div>
-                    <div className="category-thumb">
-                      <a href="shop.html">
-                        <img
-                          src="assets/img/category/category-2.png"
-                          alt="category thumb"
-                        />
-                      </a>
-                    </div>
-                    <div className="shop-collection text-center">
-                      <a className="shop-btn" href="shop.html">
-                        Bộ sưu tập cửa hàng
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+        <Category />
         {/* category area end */}
         {/* product gallery area start */}
         <section className="product-gallery section-padding mt-100">
@@ -496,14 +288,14 @@ const handleAddToCart = async (product) => {
               {products.slice(0, 8).map((product) => (
                 <div key={product.id} className="product-item">
                   <div className="product-thumb">
-                    <a href="product-details.html">
+                    <Link to={`/product_details/${product.id}`}>
                       <img
                         src={product.image || '/path/to/placeholder.jpg'} // Đổ hình ảnh từ API
                         alt={product.name}
                       />
-                    </a>
+                    </Link>
                     <div className="button-group">
-                      
+
                       <a href="#" data-bs-toggle="modal" data-bs-target="#quick_view">
                         <span data-bs-toggle="tooltip" title="Quick View">
                           <i className="fa fa-eye" />
@@ -511,17 +303,17 @@ const handleAddToCart = async (product) => {
                         </span>
                       </a>
                     </div>
-                    
+
                   </div>
                   <div className="product-content">
                     <div className="product-caption">
                       <h6 className="product-name">
-                        <a href="product-details.html">{product.name}</a> {/* Đổ tên sản phẩm */}
+                        <Link to={`/product_details/${product.id}`}>{product.name}</Link> {/* Đổ tên sản phẩm */}
                       </h6>
                       <div className="price-box">
                         <span className="price-regular">${product.price}</span> {/* Đổ giá hiện tại */}
                       </div>
-                      <button className="add-to-cart" onClick={() => handleAddToCart(product)}><i className="fa fa-shopping-cart" /></button>
+                      <Link className="add-to-cart" to={`/product_details/${product.id}`}><i className="fa fa-shopping-cart" /></Link>
                     </div>
 
                   </div>
@@ -532,305 +324,10 @@ const handleAddToCart = async (product) => {
         </section>
         {/* product gallery area end */}
         {/* testimonial area start */}
-        <section
-          className="testimonial-area bg-img section-padding"
-          style={{
-            backgroundImage: "url(/assets/img/bg/bg-testimonial.jpg)",
-          }}
-        >
-          <div className="container">
-            <div className="row">
-              <div className="col-12">
-                <div className="testimonial-wrapper">
-                  <div className="testimonial-carousel">
-                    {/* slide item start */}
-                    <div className="testimonial-slide-item">
-                      <div className="testimonial-item text-center">
-                        <p className="testimonial-desc">
-                          "Khi khách hàng tiềm năng đang nghiên cứu về bạn trực tuyến, họ đang tìm hiểu về bạn qua nội dung của trang web của bạn."
-                        </p>
-                        <div className="testimonial-author">
-                          <img
-                            src="assets/img/testimonial/testimonial-1.png"
-                            alt="testimonial author"
-                          />
-                        </div>
-                        <h6 className="author-designation">MINH HIẾU</h6>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="brand-section">
-                  {Array.isArray(brands) && brands.length > 0 ? (
-                        brands.map((brand) => (
-                          <div key={brand.id} className="brand-item">
-                            <a href={brand.link}>
-                            <img
-                                    src={brand.image || '/path/to/placeholder.jpg'} // Đổ hình ảnh base64 từ API
-                                    alt={brand.name}
-                                    style={{ width: '100px', height: '100px' }} // Kích thước hình ảnh
-                                />
-                            </a>
-                          </div>
-                        ))
-                      ) : (
-                        <p>No brands available</p> // Hiển thị nếu không có thương hiệu nào
-                      )}
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+        <Brand />
         {/* testimonial area end */}
         {/* latest blog area start */}
-        <section className="latest-blog-area section-padding">
-          <div className="container">
-            <div className="row">
-              <div className="col-12">
-                <div className="section-title text-center">
-                  <h3 className="title">TỪ BLOG CỦA CHÚNG TÔI</h3>
-                  <h4 className="sub-title">
-                    "Các cuộc điều tra đã chứng minh rằng người đọc dễ dàng đọc tôi hơn vì họ đọc thường xuyên hơn; sự rõ ràng cũng là một quá trình động, theo sau sự thay đổi."
-                  </h4>
-                </div>
-              </div>
-            </div>
-            <div className="row">
-              <div className="col-12">
-                <div className="blog-carousel-active slick-row-5 slick-arrow-style">
-                  {/* blog single post start */}
-                  <div className="blog-slide-item">
-                    <div className="blog-post-item">
-                      <div className="blog-thumb">
-                        <a href="blog-details.html">
-                          <img
-                            src="assets/img/blog/blog-1.jpg"
-                            alt="blog thumb"
-                          />
-                        </a>
-                      </div>
-                      <div className="blog-content">
-                        <h6 className="blog-title">
-                          <a href="blog-details.html">
-                            Đây là bài viết đầu tiên XipBlog
-                          </a>
-                        </h6>
-                        <div className="blog-meta">
-                          <span>
-                            <i className="fa fa-calendar" />
-                            Ngày 05 tháng 8 năm 2021
-                          </span>
-                          <span>
-                            <i className="fa fa-user" />
-                            Admin
-                          </span>
-                        </div>
-                        <p className="blog-desc">
-                          Lorem Ipsum is simply dummy text of the printing and
-                          typesetting industry. ...
-                        </p>
-                        <a className="btn read-more" href="blog-details.html">
-                          Read More
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                  {/* blog single post end */}
-                  {/* blog single post start */}
-                  <div className="blog-slide-item">
-                    <div className="blog-post-item">
-                      <div className="blog-thumb">
-                        <a href="blog-details.html">
-                          <img
-                            src="assets/img/blog/blog-2.jpg"
-                            alt="blog thumb"
-                          />
-                        </a>
-                      </div>
-                      <div className="blog-content">
-                        <h6 className="blog-title">
-                          <a href="blog-details.html">
-                            Đây là bài viết đầu tiên XipBlog
-                          </a>
-                        </h6>
-                        <div className="blog-meta">
-                          <span>
-                            <i className="fa fa-calendar" />
-                            Jun 05, 2021
-                          </span>
-                          <span>
-                            <i className="fa fa-user" />
-                            Admin
-                          </span>
-                        </div>
-                        <p className="blog-desc">
-                          Lorem Ipsum is simply dummy text of the printing and
-                          typesetting industry. ...
-                        </p>
-                        <a className="btn read-more" href="blog-details.html">
-                          Read More
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                  {/* blog single post end */}
-                  {/* blog single post start */}
-                  <div className="blog-slide-item">
-                    <div className="blog-post-item">
-                      <div className="blog-thumb">
-                        <a href="blog-details.html">
-                          <img
-                            src="assets/img/blog/blog-3.jpg"
-                            alt="blog thumb"
-                          />
-                        </a>
-                      </div>
-                      <div className="blog-content">
-                        <h6 className="blog-title">
-                          <a href="blog-details.html">
-                            This is Third Post XipBlog
-                          </a>
-                        </h6>
-                        <div className="blog-meta">
-                          <span>
-                            <i className="fa fa-calendar" />
-                            May 05, 2021
-                          </span>
-                          <span>
-                            <i className="fa fa-user" />
-                            Admin
-                          </span>
-                        </div>
-                        <p className="blog-desc">
-                          Lorem Ipsum is simply dummy text of the printing and
-                          typesetting industry. ...
-                        </p>
-                        <a className="btn read-more" href="blog-details.html">
-                          Read More
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                  {/* blog single post end */}
-                  {/* blog single post start */}
-                  <div className="blog-slide-item">
-                    <div className="blog-post-item">
-                      <div className="blog-thumb">
-                        <a href="blog-details.html">
-                          <img
-                            src="assets/img/blog/blog-4.jpg"
-                            alt="blog thumb"
-                          />
-                        </a>
-                      </div>
-                      <div className="blog-content">
-                        <h6 className="blog-title">
-                          <a href="blog-details.html">
-                            This is Fourth Post XipBlog
-                          </a>
-                        </h6>
-                        <div className="blog-meta">
-                          <span>
-                            <i className="fa fa-calendar" />
-                            Jan 08, 2021
-                          </span>
-                          <span>
-                            <i className="fa fa-user" />
-                            Admin
-                          </span>
-                        </div>
-                        <p className="blog-desc">
-                          Lorem Ipsum is simply dummy text of the printing and
-                          typesetting industry. ...
-                        </p>
-                        <a className="btn read-more" href="blog-details.html">
-                          Read More
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                  {/* blog single post end */}
-                  {/* blog single post start */}
-                  <div className="blog-slide-item">
-                    <div className="blog-post-item">
-                      <div className="blog-thumb">
-                        <a href="blog-details.html">
-                          <img
-                            src="assets/img/blog/blog-2.jpg"
-                            alt="blog thumb"
-                          />
-                        </a>
-                      </div>
-                      <div className="blog-content">
-                        <h6 className="blog-title">
-                          <a href="blog-details.html">
-                            This is Fifth Post XipBlog
-                          </a>
-                        </h6>
-                        <div className="blog-meta">
-                          <span>
-                            <i className="fa fa-calendar" />
-                            Ngày 05 tháng 8 năm 2021
-                          </span>
-                          <span>
-                            <i className="fa fa-user" />
-                            Admin
-                          </span>
-                        </div>
-                        <p className="blog-desc">
-                          Lorem Ipsum is simply dummy text of the printing and
-                          typesetting industry. ...
-                        </p>
-                        <a className="btn read-more" href="blog-details.html">
-                          Read More
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                  {/* blog single post end */}
-                  {/* blog single post start */}
-                  <div className="blog-slide-item">
-                    <div className="blog-post-item">
-                      <div className="blog-thumb">
-                        <a href="blog-details.html">
-                          <img
-                            src="assets/img/blog/blog-3.jpg"
-                            alt="blog thumb"
-                          />
-                        </a>
-                      </div>
-                      <div className="blog-content">
-                        <h6 className="blog-title">
-                          <a href="blog-details.html">
-                            This is Seventh Post XipBlog
-                          </a>
-                        </h6>
-                        <div className="blog-meta">
-                          <span>
-                            <i className="fa fa-calendar" />
-                            Ngày 05 tháng 8 năm 2021
-                          </span>
-                          <span>
-                            <i className="fa fa-user" />
-                            Admin
-                          </span>
-                        </div>
-                        <p className="blog-desc">
-                          Lorem Ipsum is simply dummy text of the printing and
-                          typesetting industry. ...
-                        </p>
-                        <a className="btn read-more" href="blog-details.html">
-                          Read More
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                  {/* blog single post end */}
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+        <Blog />
         {/* latest blog area end */}
       </main>
     </div>

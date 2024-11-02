@@ -1,34 +1,54 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useLoginForm } from '../hooks/useLoginForm';
 import { useDispatch, useSelector } from 'react-redux';
 import Badge from '@mui/material/Badge'; // Kiểm tra đường dẫn đúng
-import { removeFromCart } from '../actions/action';
+import { loadCartFromLocalStorage, removeFromCart } from '../actions/action';
 
 const Header = () => {
   const dispatch = useDispatch()
   const { cart } = useSelector(state => state.updateCart)
+  const [localCart, setLocalCart] = useState([]);
+
+  // useEffect(() => {
+  //   const savedCart = loadCartFromLocalStorage(); // Lấy giỏ hàng từ localStorage
+  //   setLocalCart(savedCart); // Lưu vào state
+  //   console.log(savedCart); // In ra để kiểm tra
+  // }, []);
+  useEffect(() => {
+    setLocalCart(cart);
+  }, [cart]);
+  const handleHoverCart = () => {
+    const savedCart = JSON.parse(localStorage.getItem("cart")) || [];
+    setLocalCart(savedCart);
+  };
 
   const handleRemoveFromCart = (id) => {
-    dispatch(removeFromCart(id)); // Gửi action để xóa item khỏi giỏ hàng
+    const updatedCart = localCart.filter(product => product.id !== id);
+    setLocalCart(updatedCart); // Cập nhật local state
+    localStorage.setItem("cart", JSON.stringify(updatedCart)); // Cập nhật localStorage
+
+    // Cập nhật Redux store
+    dispatch(removeFromCart(id)); // Giả sử bạn có một action để xóa sản phẩm khỏi Redux store
   };
   const calculateTotal = () => {
-    return cart.reduce((total, item) => total + item.price * item.quantity, 0);
+    return localCart.reduce((total, item) => total + item.price * item.quantity, 0);
   };
   // code reload fix lỗi plugin không tải
-  const location = useLocation();
-  const prevLocation = useRef(location.pathname);
+  // const location = useLocation();
+  // const prevLocation = useRef(location.pathname);
   const { userInfo } = useLoginForm();
   console.log("Thông tin người dùng trong Account_info:", userInfo);
 
-  useEffect(() => {
+  // useEffect(() => {
 
-    if (prevLocation.current !== location.pathname) {
-      prevLocation.current = location.pathname;
-      window.location.reload();
-    }
-  }, [location]);
+  //   if (prevLocation.current !== location.pathname) {
+  //     prevLocation.current = location.pathname;
+  //     window.location.reload();
+  //   }
+  // }, [location]);
   // code reload fix lỗi plugin không tải
+  
   return (
 
     <header className="header-area">
@@ -149,9 +169,9 @@ const Header = () => {
                             <i className="fa fa-shopping-cart" />
                           </Badge>
                         </Link>
-                        <div className="cart-list-wrapper">
+                        <div className="cart-list-wrapper" onMouseEnter={handleHoverCart}>
                           <ul className="cart-list">
-                            {cart.map((product) => (
+                            {localCart.map((product) => (
                               <li key={product.id}>
                                 <div className="cart-img">
                                   <Link to={`/product/${product.id}`}>
@@ -168,18 +188,18 @@ const Header = () => {
                                 <div className="del-icon" onClick={() => handleRemoveFromCart(product.id)}>
                                   <i className="fa fa-times" />
                                 </div>
-                                
+
                               </li>
                             ))}
                           </ul>
                           <ul className="minicart-pricing-box">
-                                  <li className="total">
-                                    <span>Total</span>
-                                    <span>
-                                      <strong>{calculateTotal().toLocaleString()} Vnd</strong>
-                                    </span>
-                                  </li>
-                                </ul>
+                            <li className="total">
+                              <span>Total</span>
+                              <span>
+                                <strong>{calculateTotal().toLocaleString()} Vnd</strong>
+                              </span>
+                            </li>
+                          </ul>
                           <div className="minicart-button">
                             <Link to="/cart">
                               <i className="fa fa-shopping-cart" /> View Cart
@@ -253,136 +273,9 @@ const Header = () => {
                 </button>
               </form>
             </div>
-            {/* search box end */}
-            {/* mobile menu start */}
-            <div className="mobile-navigation">
-              {/* mobile menu navigation start */}
-              <nav>
-                <ul className="mobile-menu">
-                  <li className="menu-item-has-children">
-                    <Link to="/">
-                      Home
-                    </Link>
-                    <ul className="dropdown">
-                      <li>
-                        <Link to="/">
-                          Home
-                        </Link>
-                      </li>
-                    </ul>
-                  </li>
-                  <li className="menu-item-has-children">
-                    <a href="#">pages</a>
-                    <ul className="megamenu dropdown">
-                      <li className="mega-title menu-item-has-children">
-                        <a href="#">column 01</a>
-                        <ul className="dropdown">
-                          <li>
-                            <Link to="/shop">
-                              shop
-                            </Link>
-                          </li>
-                        </ul>
-                      </li>
-                      <li className="mega-title menu-item-has-children">
-                        <a href="#">column 02</a>
-                        <ul className="dropdown">
-                          <li>
-
-                            <Link to="/product_details">
-                              product details
-                            </Link>
-
-                          </li>
-                        </ul>
-                      </li>
-                      <li className="mega-title menu-item-has-children">
-                        <a href="#">column 03</a>
-                        <ul className="dropdown">
-                          <li>
-
-                            <Link to="/cart">
-                              cart
-                            </Link>
-
-                          </li>
-                          <li>
-
-                            <Link to="/checkout">
-                              checkout
-                            </Link>
-
-                          </li>
-                          <li>
-                            <a href="compare.html">compare</a>
-                          </li>
-                          <li>
-                            <a href="wishlist.html">wishlist</a>
-                          </li>
-                        </ul>
-                      </li>
-                      <li className="mega-title menu-item-has-children">
-                        <a href="#">column 04</a>
-                        <ul className="dropdown">
-                          <li>
-
-                            <Link to="/my-account">
-                              my-account
-                            </Link>
-
-                          </li>
-                          <li>
-                            <a href="login-register.html">login-register</a>
-                          </li>
-                          <li>
-
-                            <Link to="/about_us">
-                              about us
-                            </Link>
-                          </li>
-                          <li>
-                            <Link to="/contact_us">
-                              Contact us</Link>
-                          </li>
-                        </ul>
-                      </li>
-                    </ul>
-                  </li>
-                  <li className="menu-item-has-children ">
-                    <a href="#">shop</a>
-                    <ul className="dropdown">
-
-                      <li className="menu-item-has-children">
-                        <a href="#">products details</a>
-                        <ul className="dropdown">
-                          <li>
-                            <Link to="/product-details">
-                              product details
-                            </Link>
-                          </li>
-                        </ul>
-                      </li>
-                    </ul>
-                  </li>
-                  <li className="menu-item-has-children ">
-                    <Link to="/blog">
-                      Blog
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/contact_us">
-                      Contact us</Link>
-                  </li>
-                </ul>
-              </nav>
-              {/* mobile menu navigation end */}
-            </div>
             {/* mobile menu end */}
             <div className="mobile-settings">
               <ul className="nav">
-                <li>
-
-                </li>
                 <li>
                   <div className="dropdown mobile-top-dropdown">
                     <a
@@ -416,18 +309,6 @@ const Header = () => {
             </div>
             {/* offcanvas widget area start */}
             <div className="offcanvas-widget-area">
-              <div className="off-canvas-contact-widget">
-                <ul>
-                  <li>
-                    <i className="fa fa-mobile" />
-                    <a href="#">0123456789</a>
-                  </li>
-                  <li>
-                    <i className="fa fa-envelope-o" />
-                    <a href="#">info@yourdomain.com</a>
-                  </li>
-                </ul>
-              </div>
               <div className="off-canvas-social-widget">
                 <a href="#">
                   <i className="fa fa-facebook" />

@@ -79,3 +79,4 @@ Route::get('/sizes', [SizeController::class, 'index']);
 Route::get('/colors', [ColorController::class, 'index']);
 
 
+Route::get('/colors', [ColorController::class, 'index']);

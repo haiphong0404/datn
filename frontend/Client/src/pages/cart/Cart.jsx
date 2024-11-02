@@ -16,13 +16,15 @@ const [localCart, setLocalCart] = useState([]);
     console.log(savedCart); // In ra để kiểm tra
   }, []); // Chỉ chạy một lần khi component được mount
 
-
   const handleRemoveFromCart = (id) => {
-    // Lọc ra các sản phẩm không phải sản phẩm cần xóa
     const updatedCart = localCart.filter(product => product.id !== id);
-    setLocalCart(updatedCart); // Cập nhật state
-    localStorage.setItem("cart", JSON.stringify(updatedCart)); // Cập nhật lại localStorage
+    setLocalCart(updatedCart); // Cập nhật local state
+    localStorage.setItem("cart", JSON.stringify(updatedCart)); // Cập nhật localStorage
+  
+    // Cập nhật Redux store
+    dispatch(removeFromCart(id)); // Giả sử bạn có một action để xóa sản phẩm khỏi Redux store
   };
+  
   const calculateTotal = () => {
     return localCart.reduce((total, item) => total + item.price * item.quantity, 0);
   };
@@ -45,6 +47,7 @@ const [localCart, setLocalCart] = useState([]);
     setLocalCart(updatedCart);
     localStorage.setItem("cart", JSON.stringify(updatedCart));
   };
+  
   
   return (
     <div>

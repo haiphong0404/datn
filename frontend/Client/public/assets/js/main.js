@@ -1,6 +1,8 @@
 (function ($) {
 	"use strict";
 
+	console.log('init slider')
+
 	// Sticky menu
 	var $window = $(window);
 	$window.on('scroll', function () {
@@ -84,22 +86,22 @@
 	
 
 	// hero slider active js
-	$(document).ready(function() {
-		$('.hero-slider-active').slick({
-		  fade: true,
-		  speed: 1000,
-		  autoplay: false,
-		  prevArrow: '<button type="button" class="slick-prev"><i class="fa fa-angle-left"></i></button>',
-		  nextArrow: '<button type="button" class="slick-next"><i class="fa fa-angle-right"></i></button>',
-		  responsive: [{
-			breakpoint: 992,
-			settings: {
-			  arrows: false,	
-			  dots: true
-			}
-		  }]
-		});
-	  });
+	// $(document).ready(function() {
+	// 	$('.hero-slider-active').slick({
+	// 	  fade: true,
+	// 	  speed: 1000,
+	// 	  autoplay: false,
+	// 	  prevArrow: '<button type="button" class="slick-prev"><i class="fa fa-angle-left"></i></button>',
+	// 	  nextArrow: '<button type="button" class="slick-next"><i class="fa fa-angle-right"></i></button>',
+	// 	  responsive: [{
+	// 		breakpoint: 992,
+	// 		settings: {
+	// 		  arrows: false,	
+	// 		  dots: true
+	// 		}
+	// 	  }]
+	// 	});
+	//   });
 
 	/* =================================
 	product carousel active js
