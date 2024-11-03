@@ -6,7 +6,7 @@ const ProductItem = ({ product }) => { // Nhận product qua props
         <div key={product.id}> {/* Thêm thuộc tính key cho div chứa sản phẩm */}
             <div className="product-item">
                 <div className="product-thumb">
-                    <Link to={`/product-details/${product.id}`}>
+                    <Link to={`/product_details/${product.id}`}>
                         <img src={product.image || '/path/to/placeholder.jpg'} alt={product.name} />
                     </Link>
                     <div className="button-group">

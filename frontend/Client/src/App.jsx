@@ -12,7 +12,7 @@ import Shop from "./pages/Shop/Shop";
 import Blog from "./pages/Blog";
 import MyAccount from "./pages/My_account/Myacc";
 import Contact_us from "./pages/Contact_us";
-import Product_details from "./pages/Product_details";
+import Product_details from "./pages/Product_Detail/Product_details";
 import Cart from "./pages/cart/Cart";
 import LayoutClient from "./layout/LayoutClient";
 import Blog_detail from "./pages/Blog_detail";

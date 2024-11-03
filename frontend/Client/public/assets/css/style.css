@@ -6919,3 +6919,13 @@ blockquote {
   color: #efefef;
   
 }
+.variant-checkbox-thumbnail {
+  transition: transform 0.8s ease, border 0.8s ease;
+  border: 2px solid transparent; /* Đặt border mặc định */
+}
+
+.variant-checkbox-thumbnail.selected {
+  
+  transform: scale(1.05); /* Phóng to một chút khi chọn */
+}
+

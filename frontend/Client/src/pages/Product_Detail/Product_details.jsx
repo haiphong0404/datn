@@ -1,21 +1,11 @@
 
 
 import React from 'react';
-import { useParams } from 'react-router-dom';
-import useProductvariants from '../hooks/useProductVariants';
-
+import Details from './Details';
 const Product_details = () => {
   // Sử dụng hook để lấy dữ liệu sản phẩm variants
-  const { productId } = useParams();
-  const { variants, isLoading, error } = useProductvariants(productId);
+ 
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>Error fetching product details: {error.message}</div>;
-  }
   return (
     <div>
       <main>
@@ -59,99 +49,7 @@ const Product_details = () => {
               {/* product details wrapper start */}
               <div className="col-lg-12 order-1 order-lg-2">
                 {/* product details inner end */}
-                <div className="product-details-inner">
-                  <div className="row">
-                    <div className="col-lg-5">
-                      <div className="product-large-slider">
-                        {variants.map((variants) => (
-                          <div className="pro-large-img img-zoom" key={variants.id}>
-                            <img
-                              src={variants.images.length > 0 ? variants.images[0] : "assets/img/product/default.jpg"} // Hình ảnh đầu tiên của biến thể hoặc hình ảnh mặc định
-                              alt="product-details"
-                            />
-                          </div>
-                        ))}
-                      </div>
-                      <div className="pro-nav">
-                        {variants.map((variants) => (
-                          <div className="pro-nav-thumb" key={variants.id}>
-                            <img
-                              src={variants.images.length > 0 ? variants.images[0] : "assets/img/product/default.jpg"} // Hình ảnh đầu tiên của biến thể hoặc hình ảnh mặc định
-                              alt="product-details"
-                            />
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                    <div className="col-lg-7">
-                      {variants.map((variants) => (
-                        <div className="product-details-des" key={variants.id}>
-                          <h3 className="product-name">
-                            {variants.size} {variants.color} {/* Hiển thị tên biến thể */}
-                          </h3>
-                          <div className="price-box">
-                            <span className="price-old">
-                           {/* Giá cũ, ví dụ cộng thêm 20 */}
-                            </span>
-                            <span className="price-regular">${variants.price}</span>
-                          </div>
-                          <h5 className="offer-text">
-                            <strong>Hurry up</strong>! offer ends in:
-                          </h5>
-                          <div className="product-countdown" data-countdown="2021/09/20" />
-                          <div className="availability">
-                            <i className="fa fa-check-circle" />
-                            <span>{variants.quantity} in stock</span> {/* Hiển thị số lượng còn lại */}
-                          </div>
-                          <p className="pro-desc">
-                            Lorem ipsum do {/* Mô tả sản phẩm, có thể thay đổi tùy ý */}
-                          </p>
-                          <div className="quantity-cart-box d-flex align-items-center">
-                            <h6 className="option-title">qty:</h6>
-                            <div className="quantity">
-                              <div className="pro-qty">
-                                <input type="text" defaultValue={1} />
-                              </div>
-                            </div>
-                            <div className="action_link">
-                              <a className="btn btn-cart2" href="#">
-                                Add To Cart
-                              </a>
-                            </div>
-                          </div>
-                          <div className="useful-links">
-                            <a href="#">
-                              <i className="fa fa-refresh" />
-                              compare
-                            </a>
-                            <a href="#">
-                              <i className="fa fa-heart-o" />
-                              wishlist
-                            </a>
-                          </div>
-                          <div className="like-icon">
-                            <a className="facebook" href="#">
-                              <i className="fa fa-facebook" />
-                              like
-                            </a>
-                            <a className="twitter" href="#">
-                              <i className="fa fa-twitter" />
-                              tweet
-                            </a>
-                            <a className="pinterest" href="#">
-                              <i className="fa fa-pinterest" />
-                              save
-                            </a>
-                            <a className="google" href="#">
-                              <i className="fa fa-google-plus" />
-                              share
-                            </a>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
+              <Details/>
                 {/* product details inner end */}
                 {/* product details reviews start */}
                 <div className="product-details-reviews section-padding pb-0">
