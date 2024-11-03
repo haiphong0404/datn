@@ -98,6 +98,8 @@ const [localCart, setLocalCart] = useState([]);
                           <tr>
                             <th className="pro-thumbnail">Hình ảnh</th>
                             <th className="pro-title">Tên</th>
+                            <th className="pro-title">Size</th>
+                            <th className="pro-title">Màu</th>
                             <th className="pro-price">Giá</th>
                             <th className="pro-quantity">Số lượng</th>
                             <th className="pro-subtotal">tổng</th>
@@ -119,6 +121,12 @@ const [localCart, setLocalCart] = useState([]);
                               </td>
                               <td className="pro-title">
                                 <a href="#">{product.name}</a>
+                              </td>
+                              <td className="pro-title">
+                                <a href="#">{product.size}</a>
+                              </td>
+                              <td className="pro-title">
+                                <a href="#">{product.color}</a>
                               </td>
                               <td className="pro-price">
                                 <span>{product.price}</span>
