@@ -193,7 +193,9 @@ const Main = () => {
                         <Link to={`/product_details/${product.id}`}>{product.name}</Link> {/* Đổ tên sản phẩm */}
                       </h6>
                       <div className="price-box">
-                        <span className="price-regular">{product.price ? `${product.price} Vnd` : "Liên hệ"}</span>
+                      <span className="price-regular">
+                      {product.price ? `${new Intl.NumberFormat('vi-VN', { minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(product.price)} Vnd` : "Liên hệ"}
+                        </span>
 
                       </div>
                       {/* <a className="add-to-cart" >
@@ -311,7 +313,9 @@ const Main = () => {
                         <Link to={`/product_details/${product.id}`}>{product.name}</Link> {/* Đổ tên sản phẩm */}
                       </h6>
                       <div className="price-box">
-                        <span className="price-regular">{product.price} Vnd</span> {/* Đổ giá hiện tại */}
+                      <span className="price-regular">
+                      {product.price ? `${new Intl.NumberFormat('vi-VN', { minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(product.price)} Vnd` : "Liên hệ"}
+                        </span>
                       </div>
                       <Link className="add-to-cart" to={`/product_details/${product.id}`}><i className="fa fa-shopping-cart" /></Link>
                     </div>
