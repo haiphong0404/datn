@@ -177,14 +177,14 @@ const Main = () => {
                         alt={product.name}
                       />
                     </Link>
-                    <div className="button-group">
+                    {/* <div className="button-group">
 
                       <a href="#" data-bs-toggle="modal" data-bs-target="#quick_view">
                         <span data-bs-toggle="tooltip" title="Quick View">
                           <i className="fa fa-eye" />
                         </span>
                       </a>
-                    </div>
+                    </div> */}
 
                   </div>
                   <div className="product-content">
@@ -294,7 +294,7 @@ const Main = () => {
                         alt={product.name}
                       />
                     </Link>
-                    <div className="button-group">
+                    {/* <div className="button-group">
 
                       <a href="#" data-bs-toggle="modal" data-bs-target="#quick_view">
                         <span data-bs-toggle="tooltip" title="Quick View">
@@ -302,7 +302,7 @@ const Main = () => {
 
                         </span>
                       </a>
-                    </div>
+                    </div> */}
 
                   </div>
                   <div className="product-content">
@@ -311,7 +311,7 @@ const Main = () => {
                         <Link to={`/product_details/${product.id}`}>{product.name}</Link> {/* Đổ tên sản phẩm */}
                       </h6>
                       <div className="price-box">
-                        <span className="price-regular">${product.price}</span> {/* Đổ giá hiện tại */}
+                        <span className="price-regular">{product.price} Vnd</span> {/* Đổ giá hiện tại */}
                       </div>
                       <Link className="add-to-cart" to={`/product_details/${product.id}`}><i className="fa fa-shopping-cart" /></Link>
                     </div>

@@ -31,7 +31,6 @@ const Brand = () => {
                             alt="testimonial author"
                           />
                         </div>
-                        <h6 className="author-designation">MINH HIẾU</h6>
                       </div>
                     </div>
                   </div>
