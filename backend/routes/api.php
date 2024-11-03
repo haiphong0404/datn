@@ -9,11 +9,19 @@ use App\Http\Controllers\Api\Auth\RegisteredUserController;
 use App\Http\Controllers\Api\Auth\ConfirmablePasswordController;
 use App\Http\Controllers\Api\Auth\VerifyEmailController;
 use App\Http\Controllers\Api\Auth\AuthenticatedSessionController;
+
 use App\Http\Controllers\Api\UserController;
 
 
 use App\Http\Controllers\Api\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Api\Auth\NewPasswordController;
+
+use App\Http\Controllers\Api\Auth\ForgotPasswordController;
+use App\Http\Controllers\Api\Auth\ResetPasswordController;
+
+
+Route::post('password/email', [ForgotPasswordController::class, 'sendResetLinkEmail']);
+Route::post('password/reset', [ResetPasswordController::class, 'reset']);
 
 // Route cho việc xác nhận mật khẩu mới
 Route::post('/password/reset/store', [NewPasswordController::class, 'store'])

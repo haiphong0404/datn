@@ -37,10 +37,9 @@ export const useLoginForm = () => {
   }, []);
 
   const handleLogin = async (data) => {
+    console.log(data);
     try {
       const res = await login(data);
-      console.log("Phản hồi từ đăng nhập:", res);
-
       const currentUser = res.user;
 
       if (!currentUser || !currentUser.id || !currentUser.role) {
@@ -48,22 +47,16 @@ export const useLoginForm = () => {
       }
 
       const userId = currentUser.id;
-      console.log("ID người dùng:", userId);
-
-      // Gọi hàm getUserByid để lấy thông tin chi tiết người dùng
       const userData = await getUserByid(userId);
-      console.log("Thông tin người dùng:", userData.data);
 
-      // Kiểm tra và lưu vai trò của người dùng
+
       if (userData && userData.data && userData.data.role) {
         const role = userData.data.role;
-        console.log("Vai trò người dùng:", role);
 
-        // Lưu thông tin người dùng vào state và localStorage
         setUserInfo(userData.data);
         localStorage.setItem("userInfo", JSON.stringify(userData.data));
 
-        // Chuyển hướng dựa trên vai trò
+
         if (role === "admin") {
           window.location.href = "http://127.0.0.1:8000/";
         } else {
@@ -79,20 +72,27 @@ export const useLoginForm = () => {
     }
   };
 
-  // Hàm đăng xuất để xóa thông tin người dùng khỏi state và localStorage
+
   const handleLogout = () => {
     setUserInfo(null);
     localStorage.removeItem("userInfo");
-    navigate("/login"); // Chuyển hướng đến trang đăng nhập
+    navigate("/login");
   };
 
-  // Hàm cập nhật thông tin người dùng (chỉ dùng tạm thời)
-  const updateUserInfo = (updatedInfo) => {
-    const newUserInfo = { ...userInfo, ...updatedInfo };
-    setUserInfo(newUserInfo);
-    localStorage.setItem("userInfo", JSON.stringify(newUserInfo));
-    setSuccess("Cập nhật thông tin thành công!");
-    setError("");
+
+  const updateUserInfo = async (id, updatedInfo) => {
+    try {
+      const response = await getUserByid(id, updatedInfo);
+      const newUserInfo = { ...userInfo, ...response.data };
+      setUserInfo(newUserInfo);
+      localStorage.setItem("userInfo", JSON.stringify(newUserInfo));
+      setSuccess("Cập nhật thông tin thành công!");
+      setError("");
+    } catch (error) {
+      console.error("Lỗi cập nhật thông tin:", error);
+      setError("Cập nhật thông tin không thành công");
+      setSuccess("");
+    }
   };
 
   return {
@@ -103,7 +103,7 @@ export const useLoginForm = () => {
     success,
     handleLogin,
     userInfo,
-    handleLogout, // Trả về thêm hàm đăng xuất
-    updateUserInfo, // Trả về hàm cập nhật thông tin người dùng
+    handleLogout,
+    updateUserInfo,
   };
 };

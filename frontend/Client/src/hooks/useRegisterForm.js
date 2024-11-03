@@ -8,9 +8,9 @@ import { registerUser } from '../api/user.js'; // Đảm bảo đường dẫn �
 
 // Xác thực với Yup
 const schema = yup.object().shape({
-    username: yup.string().required("Username is required"),
-    email: yup.string().email("Invalid email").required("Email is required"),
-    password: yup.string().min(6, "Password must be at least 6 characters").required("Password is required"),
+    username: yup.string().required("Vui lòng nhập tên tài khoản"),
+    email: yup.string().email("Invalid email").required("Vui lòng nhập email"),
+    password: yup.string().min(6, "Mật khẩu phải đủ 6 ký tự").required("vui lòng nhập mật khẩu"),
 });
 
 export const useRegisterForm = () => {
@@ -25,11 +25,11 @@ export const useRegisterForm = () => {
     const handleRegister = async (data) => {
         try {
             const res = await registerUser(data); // Gọi hàm đăng ký
-            setSuccess("Registration successful! Please login.");
+            setSuccess("Đăng ký thành công.");
             setError('');
-            navigate('/login'); 
+            navigate('/login');
         } catch (err) {
-            setError("Registration failed");
+            setError("Đăng ký thất bại. Vui lòng thử lại.");
             setSuccess('');
         }
     };

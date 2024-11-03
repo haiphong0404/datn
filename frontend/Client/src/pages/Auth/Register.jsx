@@ -49,7 +49,7 @@ const Register = () => {
                                     <input
                                         type="password"
                                         placeholder="Nhập lại mật khẩu"
-                                        {...register('password_confirmation')} // Đảm bảo có trường xác nhận
+                                        {...register('password_confirmation')}
                                     />
                                     {errors.confirmPassword && <span className="text-danger">{errors.confirmPassword.message}</span>}
                                 </div>
@@ -59,7 +59,7 @@ const Register = () => {
                                     <input
                                         type="number"
                                         placeholder="Nhập số điện thoại"
-                                        {...register('phone')} // Đảm bảo có trường xác nhận
+                                        {...register('phone')}
                                     />
                                     {errors.confirmPassword && <span className="text-danger">{errors.confirmPassword.message}</span>}
                                 </div>
