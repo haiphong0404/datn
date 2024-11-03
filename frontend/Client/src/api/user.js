@@ -76,8 +76,10 @@ export const editUserById = async (id) => {
 
 // quên mật khẩu
 export const forgotPassword = async (email) => {
+    console.log(email);
+
     try {
-        const response = await axios.post("/password/reset-link", { email });
+        const response = await axios.post("/password/email", null, { params: { email } });
         return response.data;
     } catch (error) {
         throw error.response?.data || error.message;

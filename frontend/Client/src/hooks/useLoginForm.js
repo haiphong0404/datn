@@ -3,18 +3,17 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigate } from "react-router-dom";
-import { login, getUserByid } from "../api/user.js"; // Import getUserByid
+import { login, getUserByid, forgotPassword } from "../api/user.js"; // Import getUserByid
 
-// Tạo schema Yup để validate form
-const schema = yup.object().shape({
-  email: yup.string().email("Email không hợp lệ").required("Email là bắt buộc"),
-  password: yup
-    .string()
-    .min(6, "Mật khẩu phải ít nhất 6 ký tự")
-    .required("Mật khẩu là bắt buộc"),
-});
 
-export const useLoginForm = () => {
+export const useLoginForm = (isDisplay) => {
+
+  const schema = yup.object().shape({
+    email: yup.string().email("Email không hợp lệ").required("Email là bắt buộc"),
+    password: isDisplay
+      ? yup.string().notRequired()
+      : yup.string().min(6, "Mật khẩu phải ít nhất 6 ký tự").required("Mật khẩu là bắt buộc"),
+  });
   const {
     register,
     handleSubmit,
@@ -37,7 +36,7 @@ export const useLoginForm = () => {
   }, []);
 
   const handleLogin = async (data) => {
-    console.log(data);
+    // return
     try {
       const res = await login(data);
       const currentUser = res.user;
@@ -72,6 +71,13 @@ export const useLoginForm = () => {
     }
   };
 
+  const handleForgotPasswordSubmit = (data) => {
+    if (data.email) {
+      forgotPassword(data.email);
+    } else {
+      setError("Vui lòng nhập địa chỉ email.");
+    }
+  }
 
   const handleLogout = () => {
     setUserInfo(null);
@@ -98,6 +104,7 @@ export const useLoginForm = () => {
   return {
     register,
     handleSubmit,
+    handleForgotPasswordSubmit,
     errors,
     error,
     success,

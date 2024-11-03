@@ -12,7 +12,8 @@ const Login = () => {
         error,
         success,
         handleLogin,
-    } = useLoginForm();
+        handleForgotPasswordSubmit
+    } = useLoginForm(isDisplay);
 
     const { forgotPassword, loading, error: forgotError, success: forgotSuccess } = useForgotPassword();
 
@@ -20,17 +21,6 @@ const Login = () => {
         setIsDisplay(!isDisplay);
 
     };
-
-    const handleForgotPasswordSubmit = (data) => {
-        console.log(data);
-
-        if (data.email) {
-            forgotPassword(data.email);
-        } else {
-            setError("Vui lòng nhập địa chỉ email.");
-        }
-    };
-
 
     return (
         <div className="container mt-5 mb-5">
@@ -42,7 +32,6 @@ const Login = () => {
                             <input
                                 type="email"
                                 placeholder="Nhập địa chỉ email"
-                                onChange={(e) => setEmail(e.target.value)}
                                 {...register('email', { required: 'Vui lòng nhập địa chỉ email' })}
                             />
                             {errors.email && <span className="text-danger">{errors.email.message}</span>}
