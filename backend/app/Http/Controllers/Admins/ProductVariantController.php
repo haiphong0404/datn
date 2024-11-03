@@ -24,8 +24,6 @@ class ProductVariantController extends Controller
     }
 
 
-
-
     /**
      * Show the form for creating a new resource.
      */
@@ -62,7 +60,7 @@ class ProductVariantController extends Controller
         $variant->product_id = $productId;
         $variant->size_id = $request->size_id === 'new' ? null : $request->size_id;
         $variant->color_id = $request->color_id === 'new' ? null : $request->color_id;
-        $variant->price = $request->price;
+        $variant->price = round($request->price, 2); 
         $variant->quantity = $request->quantity;
         $variant->save();
         $product = Product::findOrFail($productId);
@@ -101,7 +99,7 @@ class ProductVariantController extends Controller
         $variant = ProductVariant::with('images')->findOrFail($variantId);
         $sizes = Size::all();
         $colors = Color::all();
-        return view('admin.product_variants.edit', compact('product', 'variant', 'colors','sizes'));
+        return view('admin.product_variants.edit', compact('product', 'variant', 'colors', 'sizes'));
     }
 
     /**
@@ -115,7 +113,7 @@ class ProductVariantController extends Controller
         $variant->update([
             'size_id' => $request->size_id,
             'color_id' => $request->color_id,
-            'price' => $request->price,
+            'price' => round($request->price, 2),
             'quantity' => $request->quantity,
         ]);
 

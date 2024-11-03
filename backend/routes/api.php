@@ -20,7 +20,6 @@ use App\Http\Controllers\Api\OrderController;
 use App\Models\Order;
 use App\Http\Controllers\Api\OrderDetailController;
 use App\Http\Controllers\Api\CartController;
-use App\Models\Cart;
 
 //Route GET để lấy thông tin hướng dẫn về việc gửi yêu cầu đặt lại mật khẩu
 Route::get('/password/reset-link', [PasswordResetLinkController::class, 'store'])
@@ -70,8 +69,10 @@ Route::apiResource('order-details', OrderDetailController::class);
 Route::apiResource('order', OrderController::class );
 Route::get('orders', [OrderController::class, 'abc']);
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/cart', [CartController::class, 'index']);
-    Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
+    Route::get('/cart', [CartController::class, 'index']);              
+    Route::post('/cart/add', [CartController::class, 'addToCart']);       
+    Route::put('/cart/update', [CartController::class, 'updateCart']);    
+    Route::delete('/cart/remove', [CartController::class, 'removeFromCart']); 
 });
 Route::get('products/{productId}/variants', [ProductVariantController::class, 'index']);
 Route::get('/variants/{id}', [ProductVariantController::class, 'show']);
