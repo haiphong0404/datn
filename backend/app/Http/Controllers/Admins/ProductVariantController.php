@@ -24,8 +24,6 @@ class ProductVariantController extends Controller
     }
 
 
-
-
     /**
      * Show the form for creating a new resource.
      */
@@ -101,7 +99,7 @@ class ProductVariantController extends Controller
         $variant = ProductVariant::with('images')->findOrFail($variantId);
         $sizes = Size::all();
         $colors = Color::all();
-        return view('admin.product_variants.edit', compact('product', 'variant', 'colors','sizes'));
+        return view('admin.product_variants.edit', compact('product', 'variant', 'colors', 'sizes'));
     }
 
     /**
