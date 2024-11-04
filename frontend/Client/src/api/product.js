@@ -18,7 +18,7 @@ export const fetchProducts = async () => {
 // Lấy thông tin chi tiết sản phẩm theo ID
 export const fetchProductById = async (productId) => {
     try {
-        const response = await axios.get(`https://mayfly-ultimate-toucan.ngrok-free.app/api/products/${productId}`, {
+        const response = await axios.get(`/products/${productId}`, {
             headers: {
                 'Accept': 'application/json', // Đảm bảo rằng bạn yêu cầu dữ liệu JSON
             },

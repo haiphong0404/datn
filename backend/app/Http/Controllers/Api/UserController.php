@@ -47,8 +47,8 @@ class UserController extends Controller
         DB::beginTransaction();
 
         try {
-            $file = $request->hasFile('avatar_img') 
-                ? $request->file('avatar_img')->store('uploads/users', 'public') 
+            $file = $request->hasFile('avatar_img')
+                ? $request->file('avatar_img')->store('uploads/users', 'public')
                 : null;
 
             $user = User::create([
@@ -67,7 +67,6 @@ class UserController extends Controller
                 'message' => 'Tạo người dùng thành công.',
                 'data' => $user
             ], 201);
-
         } catch (Exception $e) {
             DB::rollBack();
             return response()->json([
@@ -106,21 +105,8 @@ class UserController extends Controller
         try {
             $user->username = $request->username;
             $user->email = $request->email;
-
-            if ($request->filled('password')) {
-                $user->password = bcrypt($request->password);
-            }
-
-            if ($request->hasFile('avatar_img')) {
-                if ($user->avatar_img) {
-                    Storage::disk('public')->delete($user->avatar_img);
-                }
-                $user->avatar_img = $request->file('avatar_img')->store('uploads/users', 'public');
-            }
-
             $user->phone = $request->phone;
             $user->address = $request->address;
-            $user->role = $request->role;
 
             $user->save();
 
@@ -130,7 +116,6 @@ class UserController extends Controller
                 'message' => 'Cập nhật người dùng thành công.',
                 'data' => $user
             ], 200);
-
         } catch (Exception $e) {
             DB::rollBack();
             return response()->json([
@@ -167,7 +152,6 @@ class UserController extends Controller
             return response()->json([
                 'message' => 'Xóa người dùng thành công.'
             ], 200);
-
         } catch (Exception $e) {
             DB::rollBack();
             return response()->json([
