@@ -11,8 +11,8 @@ const useProductSlider = () => {
   });
 
   const [navSettings, setNavSettings] = useState({
-    slidesToShow: 3,
-    asNavFor: '.product-large-slider',
+    slidesToShow: 6,
+    asNavFor: '.product-slider',
     centerMode: true,
     arrows: false,
     centerPadding: '0',

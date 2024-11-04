@@ -33,6 +33,7 @@
     "react-helmet-async": "^2.0.5",
     "react-hook-form": "^7.52.1",
     "react-medium-image-zoom": "^5.2.10",
+    "react-modal": "^3.16.1",
     "react-router-dom": "^6.25.1",
     "react-scripts": "^5.0.1",
     "react-select": "^5.8.2",

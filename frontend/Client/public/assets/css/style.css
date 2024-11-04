@@ -6928,4 +6928,23 @@ blockquote {
   
   transform: scale(1.05); /* Phóng to một chút khi chọn */
 }
+  
+.product-large-img img {
+  max-height: 400px; /* Điều chỉnh chiều cao tối đa */
+  width: auto; /* Tự động điều chỉnh chiều rộng */
+  object-fit: cover; /* Đảm bảo ảnh không bị bóp méo */
+}
+
+
+
+
+
+
+.pro-qty {
+  font-size: 20px; /* Font size for displayed quantity */
+  font-weight: bold; /* Bold font weight for quantity */
+  color: #333; /* Color of the quantity number */
+  min-width: 30px; /* Minimum width for consistent alignment */
+  text-align: center; /
+}
 
