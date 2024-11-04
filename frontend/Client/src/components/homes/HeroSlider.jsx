@@ -3,6 +3,24 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
+const PrevArrow = (props) => {
+  const { className, onClick } = props;
+  return (
+    <button type="button" className={className} onClick={onClick} aria-label="Previous">
+      <i className="fa fa-angle-left"></i>
+    </button>
+  );
+};
+
+const NextArrow = (props) => {
+  const { className, onClick } = props;
+  return (
+    <button type="button" className={className} onClick={onClick} aria-label="Next">
+      <i className="fa fa-angle-right"></i>
+    </button>
+  );
+};
+
 const HeroSlider = () => {
   const settings = {
     dots: true,
@@ -10,8 +28,8 @@ const HeroSlider = () => {
     fade: true,
     speed: 1000,
     autoplay: false,
-    prevArrow: <button type="button" className="slick-prev"><i className="fa fa-angle-left"></i></button>,
-    nextArrow: <button type="button" className="slick-next"><i className="fa fa-angle-right"></i></button>,
+    prevArrow: <PrevArrow />,
+    nextArrow: <NextArrow />,
     responsive: [
       {
         breakpoint: 992,

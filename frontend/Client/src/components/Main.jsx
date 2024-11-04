@@ -10,10 +10,23 @@ import Brand from "./homes/Brand";
 import Blog from "./homes/Blog";
 import ProductTab from "./homes/ProductTab";
 import { Link } from "react-router-dom";
+import QuickViewModal from "./quickview/QuickView";
 
 
 
 const Main = () => {
+  const [showQuickView, setShowQuickView] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+
+  const handleQuickView = (product) => {
+    setSelectedProduct(product);
+    setShowQuickView(true);
+  };
+
+  const handleCloseQuickView = () => {
+    setShowQuickView(false);
+    setSelectedProduct(null);
+  };
   // const cart = useSelector(state => state.updateCart)
   // const [localCart, setLocalCart] = useState(cart);
   // const dispatch = useDispatch()
@@ -54,7 +67,7 @@ const Main = () => {
                     <h4 className="policy-title">
                       Giá trị lớn</h4>
                     <p className="policy-desc">
-                      Bây giờ, hãy đặt bản thân trước các quy tắc về chăm sóc sức khỏe khi còn có thể
+                    Chúng tôi cung cấp những sản phẩm với giá cả hợp lý, mang đến giá trị tốt nhất cho khách hàng.
                     </p>
                   </div>
                 </div>
@@ -66,9 +79,9 @@ const Main = () => {
                   </div>
                   <div className="policy-text">
                     <h4 className="policy-title">
-                      Giao hàng toàn cầu</h4>
+                    Miễn phí giao hàng</h4>
                     <p className="policy-desc">
-                      Bây giờ, hãy đặt bản thân trước các quy tắc về chăm sóc sức khỏe khi còn có thể
+                    Tất cả đơn hàng trên 500.000 VNĐ sẽ được miễn phí giao hàng, giúp bạn tiết kiệm chi phí khi mua sắm.
                     </p>
                   </div>
                 </div>
@@ -82,7 +95,7 @@ const Main = () => {
                     <h4 className="policy-title">
                       Thanh toán an toàn</h4>
                     <p className="policy-desc">
-                      Bây giờ, hãy đặt bản thân trước các quy tắc về chăm sóc sức khỏe khi còn có thể
+                    Chúng tôi đảm bảo rằng mọi giao dịch của bạn với hình thức thanh toán tiện lợi và an toàn.
                     </p>
                   </div>
                 </div>
@@ -95,7 +108,7 @@ const Main = () => {
                   <div className="policy-text">
                     <h4 className="policy-title">Trung tâm trợ giúp 24/7</h4>
                     <p className="policy-desc">
-                      Bây giờ, hãy đặt bản thân trước các quy tắc về chăm sóc sức khỏe khi còn có thể
+                    Đội ngũ hỗ trợ khách hàng luôn sẵn sàng 24/7 để giải đáp mọi thắc mắc của bạn .
                     </p>
                   </div>
                 </div>
@@ -125,25 +138,25 @@ const Main = () => {
               </div>
               <div className="col-lg-6">
                 <div className="about-content">
-                  <h2 className="about-title">Giới thiệu về giày thể thao THOR</h2>
+                  <h2 className="about-title">Giới thiệu về THOR</h2>
                   <h3 className="about-subtitle">
                     Nghiên cứu đã chỉ ra rằng độc giả đọc tôi.
                   </h3>
                   <p>
-                    Phần kết thúc mang tính động mạch. Vị trí của bạn khá thoải mái, nhưng không có câu trả lời rõ ràng. Giờ đây, tôi ở phía trước, muốn có sự hỗ trợ từ bạn
+                  Chào mừng bạn đến với Giày Thor - thiên đường cho những tín đồ yêu thích giày độc đáo và mạnh mẽ! Chúng tôi chuyên cung cấp các mẫu giày Thor ấn tượng, phù hợp với mọi lứa tuổi và phong cách.
                   </p>
                   <ul className="about-info">
                     <li className="add">
                       <i className="fa fa-home" />
-                      1 trinh van bo
+                      124 Đ. Di Trạch, Di Trạch, Từ Liêm, Hà Nội, Việt Nam
                     </li>
                     <li className="phone">
                       <i className="fa fa-phone" />
-                      Phone: +46 123 456 789
+                      Phone: 0969798999
                     </li>
                     <li className="mail">
                       <i className="fa fa-envelope" />
-                      Email: thor@gamil.com
+                      Email: shoesthor@gmail.com
                     </li>
                   </ul>
                 </div>
@@ -201,7 +214,7 @@ const Main = () => {
                       {/* <a className="add-to-cart" >
                         
                       </a> */}
-                      <Link className="add-to-cart" to={`/product_details/${product.id}`} ><i className="fa fa-shopping-cart" /></Link>
+                      <Link className="add-to-cart" onClick={() => handleQuickView(product)} ><i className="fa fa-shopping-cart" /></Link>
                     </div>
 
                   </div>
@@ -242,7 +255,7 @@ const Main = () => {
         </div>
         {/* banner statistics area end */}
         {/* product tab area start */}
-        <ProductTab />
+        {/* <ProductTab /> */}
         {/* product tab area end */}
         {/* category area start */}
         <Category />
@@ -271,16 +284,6 @@ const Main = () => {
                           Hàng Mới Về
                         </a>
                       </li>
-                      <li>
-                        <a href="#tab2" data-bs-toggle="tab">
-                          Sản Phẩm Bán Chạy Nhất.
-                        </a>
-                      </li>
-                      <li>
-                        <a href="#tab3" data-bs-toggle="tab">
-                          Sản Phẩm Nổi Bật
-                        </a>
-                      </li>
                     </ul>
                   </div>
                 </div>
@@ -296,7 +299,7 @@ const Main = () => {
                         alt={product.name}
                       />
                     </Link>
-                    {/* <div className="button-group">
+                    <div className="button-group">
 
                       <a href="#" data-bs-toggle="modal" data-bs-target="#quick_view">
                         <span data-bs-toggle="tooltip" title="Quick View">
@@ -304,7 +307,7 @@ const Main = () => {
 
                         </span>
                       </a>
-                    </div> */}
+                    </div>
 
                   </div>
                   <div className="product-content">
@@ -333,6 +336,7 @@ const Main = () => {
         {/* latest blog area start */}
         <Blog />
         {/* latest blog area end */}
+        <QuickViewModal show={showQuickView} onHide={handleCloseQuickView} product={selectedProduct} />
       </main>
     </div>
   );

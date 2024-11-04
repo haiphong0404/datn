@@ -10,47 +10,32 @@ const Header = () => {
   const { cart } = useSelector(state => state.updateCart)
   const [localCart, setLocalCart] = useState([]);
 
-  // useEffect(() => {
-  //   const savedCart = loadCartFromLocalStorage(); // Lấy giỏ hàng từ localStorage
-  //   setLocalCart(savedCart); // Lưu vào state
-  //   console.log(savedCart); // In ra để kiểm tra
-  // }, []);
   useEffect(() => {
     setLocalCart(cart);
   }, [cart]);
+
   const handleHoverCart = () => {
     const savedCart = JSON.parse(localStorage.getItem("cart")) || [];
     setLocalCart(savedCart);
   };
 
   const handleRemoveFromCart = (id) => {
-    const updatedCart = localCart.filter(product => product.id !== id);
+    const updatedCart = localCart.filter(variant => variant.id !== id);
     setLocalCart(updatedCart); // Cập nhật local state
     localStorage.setItem("cart", JSON.stringify(updatedCart)); // Cập nhật localStorage
 
     // Cập nhật Redux store
-    dispatch(removeFromCart(id)); // Giả sử bạn có một action để xóa sản phẩm khỏi Redux store
+    dispatch(removeFromCart(id)); // Giả sử bạn có một action để xóa biến thể khỏi Redux store
   };
+
   const calculateTotal = () => {
     return localCart.reduce((total, item) => total + item.price * item.quantity, 0);
   };
-  // code reload fix lỗi plugin không tải
-  // const location = useLocation();
-  // const prevLocation = useRef(location.pathname);
+
   const { userInfo } = useLoginForm();
-  console.log("Thông tin người dùng trong Account_info:", userInfo);
+  // console.log("Thông tin người dùng trong Account_info:", userInfo);
 
-  // useEffect(() => {
-
-  //   if (prevLocation.current !== location.pathname) {
-  //     prevLocation.current = location.pathname;
-  //     window.location.reload();
-  //   }
-  // }, [location]);
-  // code reload fix lỗi plugin không tải
-  
   return (
-
     <header className="header-area">
       {/* main header start */}
       <div className="main-header d-none d-lg-block">
@@ -122,14 +107,11 @@ const Header = () => {
                           <Link to="/">
                             Trang chủ
                           </Link>
-
                         </li>
-
                         <li>
                           <Link to="/shop">
                             Cửa hàng
                           </Link>
-
                         </li>
                         <li>
                           <Link to="/blog">
@@ -142,6 +124,11 @@ const Header = () => {
                         <li>
                           <Link to="/faqs">
                             Hỏi đáp
+                          </Link>
+                        </li>
+                        <li>
+                          <Link to="/about_us">
+                            Giới thiệu
                           </Link>
                         </li>
                       </ul>
@@ -164,31 +151,29 @@ const Header = () => {
                       {/* minicart của header */}
                       <li className="mini-cart-wrap">
                         <Link to="/cart" className="minicart-btn">
-
                           <Badge badgeContent={cart.length} color="success">
                             <i className="fa fa-shopping-cart" />
                           </Badge>
                         </Link>
                         <div className="cart-list-wrapper" onMouseEnter={handleHoverCart}>
                           <ul className="cart-list">
-                            {localCart.map((product) => (
-                              <li key={product.id}>
+                            {localCart.map((variant) => (
+                              <li key={variant.id}>
                                 <div className="cart-img">
-                                  <Link to={`/product/${product.id}`}>
-                                    <img src={product.image} alt={product.name} />
+                                  <Link to={`/product_details/${variant.id}`}>
+                                    <img src={variant.image} alt={variant.name} />
                                   </Link>
                                 </div>
                                 <div className="cart-info">
                                   <h6 className="product-name">
-                                    <Link to={`/product/${product.id}`}>{product.name}</Link>
+                                    <Link to={`/product_details/${variant.id}`}>{variant.productName}</Link>
                                   </h6>
-                                  <span className="cart-qty">Số lượng: {product.quantity}</span>
-                                  <span className="item-price">{(product.price * product.quantity).toFixed(2)}Vnd</span>
+                                  <span className="cart-qty">Số lượng: {variant.quantity}</span>
+                                  <span className="item-price">{(variant.price * variant.quantity)}Vnd</span>
                                 </div>
-                                <div className="del-icon" onClick={() => handleRemoveFromCart(product.id)}>
+                                <div className="del-icon" onClick={() => handleRemoveFromCart(variant.id)}>
                                   <i className="fa fa-times" />
                                 </div>
-
                               </li>
                             ))}
                           </ul>
@@ -222,7 +207,6 @@ const Header = () => {
       </div>
       {/* main header start */}
       {/* mobile header start */}
-      {/* mobile header start */}
       <div className="mobile-header d-lg-none d-md-block sticky black-soft">
         {/*mobile header top start */}
         <div className="container-fluid">
@@ -254,9 +238,7 @@ const Header = () => {
         {/* mobile header top start */}
       </div>
       {/* mobile header end */}
-      {/* mobile header end */}
       {/* offcanvas mobile menu start */}
-      {/* off-canvas menu start */}
       <aside className="off-canvas-wrapper">
         <div className="off-canvas-overlay" />
         <div className="off-canvas-inner-content">
@@ -281,60 +263,43 @@ const Header = () => {
                     <a
                       href="#"
                       className="dropdown-toggle"
-                      id="myaccount"
-                      data-bs-toggle="dropdown"
+                      data-toggle="dropdown"
                       aria-haspopup="true"
                       aria-expanded="false"
                     >
-                      Tài Khoản
-                      <i className="fa fa-angle-down" />
+                      Tài khoản
                     </a>
-                    <div className="dropdown-menu" aria-labelledby="myaccount">
-
-
-                      <Link className="dropdown-item" to="/my-account">
-                        Tài Khoản
+                    <div className="dropdown-menu">
+                      <Link className="dropdown-item" to="/my_account">
+                        Tài khoản của tôi
                       </Link>
-                      <a className="dropdown-item" href="login">
-                        {" "}
-                        Đăng Nhập
-                      </a>
-                      <a className="dropdown-item" href="register">
-                        Đăng kí
-                      </a>
+                      <Link className="dropdown-item" to="/my_account">
+                        Thông tin cá nhân
+                      </Link>
+                      <Link className="dropdown-item" to="/my_account">
+                        Lịch sử đơn hàng
+                      </Link>
+                      <Link className="dropdown-item" to="/checkout">
+                        Thanh toán
+                      </Link>
                     </div>
                   </div>
                 </li>
+                <li>
+                  <Link to="/contact_us">Liên hệ</Link>
+                </li>
+                <li>
+                  <Link to="/faqs">Hỏi đáp</Link>
+                </li>
               </ul>
             </div>
-            {/* offcanvas widget area start */}
-            <div className="offcanvas-widget-area">
-              <div className="off-canvas-social-widget">
-                <a href="#">
-                  <i className="fa fa-facebook" />
-                </a>
-                <a href="#">
-                  <i className="fa fa-twitter" />
-                </a>
-                <a href="#">
-                  <i className="fa fa-pinterest-p" />
-                </a>
-                <a href="#">
-                  <i className="fa fa-linkedin" />
-                </a>
-                <a href="#">
-                  <i className="fa fa-youtube-play" />
-                </a>
-              </div>
-            </div>
-            {/* offcanvas widget area end */}
+            {/* end of mobile settings */}
           </div>
         </div>
       </aside>
-      {/* off-canvas menu end */}
       {/* offcanvas mobile menu end */}
     </header>
-
   );
 };
+
 export default Header;

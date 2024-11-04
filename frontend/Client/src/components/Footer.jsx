@@ -159,13 +159,13 @@ const Footer = () => {
                 <div className="address-block mt-30">
                   <div className="footer-logo">
                     <a href="index.html">
-                      <img src="assets/img/logo/logo.png" alt="Brand Logo" />
+                      <img src="/assets/img/logo/logo.png" alt="Brand Logo" />
                     </a>
                   </div>
                   <address className="address-info d-flex align-items-center">
                     <i className="fa fa-map-marker" />
                     <p>
-                      <span>ĐỊA CHỈ : </span> Your address goes here
+                      <span>ĐỊA CHỈ : </span> 124 Đ. Di Trạch, Di Trạch, Từ Liêm, Hà Nội, Việt Nam
                     </p>
                   </address>
                 </div>
@@ -175,7 +175,7 @@ const Footer = () => {
                   <i className="fa fa-envelope" />
                   <p>
                     <span>EMAIL : </span>
-                    <a href="emailto:demo@examplecom">shoesthor@example.com</a>
+                    <a href="emailto:demo@examplecom">shoesthor@gmail.com</a>
                   </p>
                 </address>
               </div>
@@ -196,7 +196,7 @@ const Footer = () => {
             <div className="row">
               <div className="col-12">
                 <div className="payment-method-list">
-                  <img src="assets/img/payment-2.png" alt="payment method" />
+                  <img src="/assets/img/payment-2.png" alt="payment method" />
                 </div>
                 <div className="footer-link">
                   <a href="#">SITE MAP</a>

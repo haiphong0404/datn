@@ -1,54 +1,11 @@
 
 
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import useProductvariants from '../../hooks/useProductVariants';
-import { useDispatch, useSelector } from 'react-redux';
-import add, { loadCartFromLocalStorage } from '../../actions/action';
-
+import React from 'react';
+import Details from './Details';
 const Product_details = () => {
-  const cart = useSelector(state => state.updateCart)
-  const [localCart, setLocalCart] = useState(cart);
-  const dispatch = useDispatch()
-  const handleAddToCart = (product) => {
-    // Kiểm tra xem sản phẩm đã có trong giỏ hàng hay chưa
-    const existingProduct = localCart.find(item => item.id === product.id);
-    
-    if (existingProduct) {
-      // Nếu sản phẩm đã tồn tại và số lượng nhỏ hơn số lượng trong kho
-      if (existingProduct.quantity < product.quantity) {
-        existingProduct.quantity += 1;
-        setLocalCart([...localCart]);
-        localStorage.setItem("cart", JSON.stringify(localCart));
-        dispatch(add(existingProduct));
-      } else {
-        alert("Đã đạt số lượng tối đa trong kho!");
-      }
-    } else {
-      // Nếu sản phẩm chưa tồn tại trong giỏ hàng
-      product.quantity = 1; // Đặt số lượng ban đầu là 1
-      const updatedCart = [...localCart, product];
-      setLocalCart(updatedCart);
-      localStorage.setItem("cart", JSON.stringify(updatedCart));
-      dispatch(add(product));
-    }
-  };
-  
-  useEffect(() => {
-    const savedCart = loadCartFromLocalStorage(); // Lấy giỏ hàng từ localStorage
-    setLocalCart(savedCart);
-  }, [cart]);
   // Sử dụng hook để lấy dữ liệu sản phẩm variants
-  const { productId } = useParams();
-  const { variants, isLoading, error } = useProductvariants(productId);
+ 
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>Error fetching product details: {error.message}</div>;
-  }
   return (
     <div>
       <main>
@@ -92,99 +49,7 @@ const Product_details = () => {
               {/* product details wrapper start */}
               <div className="col-lg-12 order-1 order-lg-2">
                 {/* product details inner end */}
-                <div className="product-details-inner">
-                  <div className="row">
-                    <div className="col-lg-5">
-                      <div className="product-large-slider">
-                        {variants.map((product) => (
-                          <div className="pro-large-img img-zoom" key={product.id}>
-                            <img
-                              src={product.images.length > 0 ? product.images[0] : "assets/img/product/default.jpg"} // Hình ảnh đầu tiên của biến thể hoặc hình ảnh mặc định
-                              alt="product-details"
-                            />
-                          </div>
-                        ))}
-                      </div>
-                      <div className="pro-nav">
-                        {variants.map((product) => (
-                          <div className="pro-nav-thumb" key={product.id}>
-                            <img
-                              src={product.images.length > 0 ? product.images[0] : "assets/img/product/default.jpg"} // Hình ảnh đầu tiên của biến thể hoặc hình ảnh mặc định
-                              alt="product-details"
-                            />
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                    <div className="col-lg-7">
-                      {variants.map((product) => (
-                        <div className="product-details-des" key={product.id}>
-                          <h3 className="product-name">
-                            {product.size} {product.color} {/* Hiển thị tên biến thể */}
-                          </h3>
-                          <div className="price-box">
-                            <span className="price-old">
-                              {/* Giá cũ, ví dụ cộng thêm 20 */}
-                            </span>
-                            <span className="price-regular">${product.price}</span>
-                          </div>
-                          <h5 className="offer-text">
-                            <strong>Hurry up</strong>! offer ends in:
-                          </h5>
-                          <div className="product-countdown" data-countdown="2021/09/20" />
-                          <div className="availability">
-                            <i className="fa fa-check-circle" />
-                            <span>{product.quantity} in stock</span> {/* Hiển thị số lượng còn lại */}
-                          </div>
-                          <p className="pro-desc">
-                            Lorem ipsum do {/* Mô tả sản phẩm, có thể thay đổi tùy ý */}
-                          </p>
-                          <div className="quantity-cart-box d-flex align-items-center">
-                            <h6 className="option-title">qty:</h6>
-                            <div className="quantity">
-                              <div className="pro-qty">
-                                <input type="text" defaultValue={1} />
-                              </div>
-                            </div>
-                            <div className="action_link">
-                              <button className="btn btn-cart2" onClick={() => handleAddToCart(product)}>
-                                Add To Cart
-                              </button>
-                            </div>
-                          </div>
-                          <div className="useful-links">
-                            <a href="#">
-                              <i className="fa fa-refresh" />
-                              compare
-                            </a>
-                            <a href="#">
-                              <i className="fa fa-heart-o" />
-                              wishlist
-                            </a>
-                          </div>
-                          <div className="like-icon">
-                            <a className="facebook" href="#">
-                              <i className="fa fa-facebook" />
-                              like
-                            </a>
-                            <a className="twitter" href="#">
-                              <i className="fa fa-twitter" />
-                              tweet
-                            </a>
-                            <a className="pinterest" href="#">
-                              <i className="fa fa-pinterest" />
-                              save
-                            </a>
-                            <a className="google" href="#">
-                              <i className="fa fa-google-plus" />
-                              share
-                            </a>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
+              <Details/>
                 {/* product details inner end */}
                 {/* product details reviews start */}
                 <div className="product-details-reviews section-padding pb-0">
