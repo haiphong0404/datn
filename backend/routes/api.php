@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\ColorController;
 use App\Http\Controllers\Api\CommentController;
+use App\Http\Controllers\Api\ContactController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\ProductVariantController;
 use App\Http\Controllers\Api\SizeController;
@@ -71,6 +72,10 @@ Route::get('/sizes', [SizeController::class, 'index']);
 Route::get('/colors', [ColorController::class, 'index']);
 Route::get('/comments', [CommentController::class, 'index']);
 Route::delete('/comments/{id}', [CommentController::class, 'softDelete']);
+Route::get('contacts', [ContactController::class, 'index']); // Lấy danh sách tất cả contacts
+Route::get('contacts/{id}', [ContactController::class, 'show']); // Lấy contact theo ID
+
+
 
 
 
