@@ -10,6 +10,7 @@ use App\Http\Controllers\Admins\UserController;
 use App\Http\Controllers\AdminTestController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admins\VoucherController;
 
 /*
 |--------------------------------------------------------------------------
@@ -83,3 +84,8 @@ Route::group(
         Route::get('Admin', [AdminTestController::class, 'index'])->name('Admin');
     }
 );
+
+Route::resource('admin/vouchers', VoucherController::class);
+// Route::middleware(['auth', 'checkRole:admin,staff'])->group(function () {
+//     Route::resource('admin/vouchers', VoucherController::class);
+// });
