@@ -29,6 +29,10 @@ class User extends Authenticatable
         'remember_token'
 
     ];
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
 
     /**
      * The attributes that should be hidden for serialization.
@@ -53,5 +57,15 @@ class User extends Authenticatable
     public function vouchers()
     {
         return $this->hasMany(Voucher::class);
+    }
+
+    public function cartItems()
+    {
+        return $this->hasMany(Cart::class);
+    }
+    
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
     }
 }
