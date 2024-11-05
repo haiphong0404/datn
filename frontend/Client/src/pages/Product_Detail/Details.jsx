@@ -16,41 +16,35 @@ const Details = () => {
     const [selectedSize, setSelectedSize] = useState('');
     const [availabilityMessage, setAvailabilityMessage] = useState('');
     const [selectedPrice, setSelectedPrice] = useState(null);
-    const [selectedQuantity, setSelectedQuantity] = useState(1); // Initialize quantity to 1
+    const [selectedQuantity, setSelectedQuantity] = useState(1);
 
-    // Set the first variant image as the selected image when variants are loaded
     useEffect(() => {
         if (variants.length > 0) {
-            setSelectedImage(variants[0].images); // Select the first image by default
+            setSelectedImage(variants[0].images); // Default to the first image
         }
     }, [variants]);
 
-    useEffect(() => {
-        const selectedVariant = variants.find(
-            (variant) =>
-                variant.images === selectedImage &&
-                variant.color === selectedColor &&
-                variant.size === selectedSize
-        );
+    const allColors = Array.from(new Set(variants.map(variant => variant.color)));
+    const allSizes = Array.from(new Set(variants.map(variant => variant.size)));
 
+    const selectedVariant = variants.find(
+        (variant) =>
+            variant.color === selectedColor &&
+            variant.size === selectedSize
+    );
+
+    useEffect(() => {
         if (selectedVariant) {
-            setSelectedQuantity(1); // Reset quantity to 1 when selecting a variant
-            setAvailabilityMessage(selectedVariant.quantity > 0 ? ' ' : 'Sản phẩm này đã hết hàng.');
+            setSelectedQuantity(1);
+            setAvailabilityMessage(selectedVariant.quantity > 0 ? '' : '');
             setSelectedPrice(selectedVariant.quantity > 0 ? selectedVariant.price : null);
         } else {
-            setAvailabilityMessage('Sản phẩm này đã hết.');
+            setAvailabilityMessage('Vui lòng chọn màu và kích thước.');
             setSelectedPrice(null);
         }
-    }, [selectedImage, selectedColor, selectedSize, variants]);
+    }, [selectedColor, selectedSize, selectedVariant]);
 
     const handleIncrease = () => {
-        const selectedVariant = variants.find(
-            (variant) =>
-                variant.images === selectedImage &&
-                variant.color === selectedColor &&
-                variant.size === selectedSize
-        );
-
         if (selectedVariant && selectedQuantity < selectedVariant.quantity) {
             setSelectedQuantity(prevQuantity => prevQuantity + 1);
         }
@@ -70,88 +64,101 @@ const Details = () => {
         return <div>Error fetching product details: {productError?.message || variantsError?.message}</div>;
     }
 
-    // Check if the selected variant is out of stock
-    const selectedVariant = variants.find(
-        (variant) =>
-            variant.images === selectedImage &&
-            variant.color === selectedColor &&
-            variant.size === selectedSize
-    );
+    // Filter unique images
+    const uniqueImages = new Set();
+    const filteredVariants = variants.filter(variant => {
+        if (!uniqueImages.has(variant.images)) {
+            uniqueImages.add(variant.images);
+            return true; // Only return images not already in the Set
+        }
+        return false; // Skip images that are already included
+    });
 
-    const isOutOfStock = selectedVariant ? selectedVariant.quantity === 0 : true;
-
-    // Create unique color and size sets
-    const uniqueColors = Array.from(new Set(variants.map(variant => variant.color)));
-    const uniqueSizes = Array.from(new Set(variants.map(variant => variant.size)));
+    const isOutOfStock = !selectedVariant || selectedVariant.quantity <= 0;
 
     return (
         <div className="product-details-inner">
             <div className="row">
                 <div className="col-lg-5">
-                    <div className="product-large-img">
-                        <img src={selectedImage || variants[0].images} alt="product-large" />
-                    </div>
-                    <Slider {...settings} className="product-slider">
-                        {variants.map((variant) => (
-                            <div 
-                                key={variant.id} 
-                                className="pro" 
-                                onClick={() => {
-                                    setSelectedImage(variant.images);
-                                    setSelectedColor(''); // Reset color
-                                    setSelectedSize('');  // Reset size
-                                }}
-                            >
-                               
-                            </div>
-                        ))}
-                    </Slider>
-                    <div className="variant-checkbox-group">
-                        {variants.map((variant) => (
-                            <label key={variant.id} className="variant-checkbox-label">
-                                <div
-                                    className="variant-checkbox-thumbnail"
-                                    style={{ backgroundImage: `url(${variant.images})`, backgroundSize: 'cover', width: '150px', height: '150px', cursor: 'pointer' }}
+                    <div className="product">
+                        <div className="product-large-img">
+                            <img src={selectedImage || filteredVariants[0]?.images} alt="product-large" />
+                        </div>
+                        <Slider {...settings}>
+                            {filteredVariants.map((variant, index) => (
+                                <div className='imgslide'
+                                    key={index}
                                     onClick={() => {
                                         setSelectedImage(variant.images);
-                                        setSelectedColor(''); // Reset color
-                                        setSelectedSize('');  // Reset size
+                                        // Reset color and size selection on image click
+                                        setSelectedColor(''); 
+                                        setSelectedSize(''); 
                                     }}
-                                ></div>
-                            </label>
-                        ))}
+                                >
+                                    <img
+                                        src={variant.images}
+                                        alt={`Product ${index + 1}`}
+                                        className={`w-full h-auto cursor-pointer ${selectedImage === variant.images ? 'selected-image' : ''}`}
+                                        style={{ border: 'none' }} // Ensure no border
+                                    />
+                                </div>
+                            ))}
+                        </Slider>
                     </div>
                 </div>
 
                 <div className="col-lg-7">
                     <div className="product-details-des">
                         <h3 className="product-name">{product.name}</h3>
-                        
-                        <p className="text-gray-600 text-sm">Màu sắc</p>
-                        <div className="flex gap-3 my-2">
-                            {uniqueColors.map((color) => (
-                                <button
-                                    key={color}
-                                    className={`${selectedColor === color ? 'text-black' : 'text-[#d5a26e]'} font-semibold text-lg px-3 py-2 rounded-2xl border ${selectedColor === color ? 'border-none' : 'border-[#d5a26e]'}`}
-                                    onClick={() => setSelectedColor(color)}
-                                >
-                                    {color}
-                                </button>
-                            ))}
-                        </div>
 
-                        <p className="text-gray-600 text-sm">Kích thước</p>
-                        <div className="flex gap-3 my-2">
-                            {uniqueSizes.map((size) => (
-                                <button
-                                    key={size}
-                                    className={`${selectedSize === size ? 'text-black' : 'text-[#d5a26e]'} font-semibold text-lg px-3 py-2 rounded-2xl border ${selectedSize === size ? 'border-none' : 'border-[#d5a26e]'}`}
-                                    onClick={() => setSelectedSize(size)}
-                                >
-                                    {size}
-                                </button>
-                            ))}
-                        </div>
+                        {selectedImage && (
+                            <>
+                                <p className="text-gray-600 text-sm">Màu sắc</p>
+                                <div className="flex gap-3 my-2">
+                                    {allColors.map(color => {
+                                        const isColorAvailable = variants.some(variant =>
+                                            variant.color === color && variant.quantity > 0
+                                        );
+                                        return (
+                                            <button
+                                                key={color}
+                                                className={`font-semibold text-lg px-3 py-2 rounded-2xl border 
+                                                ${selectedColor === color ? 'bg-black text-white' : ''} 
+                                                ${isColorAvailable ? 'text-black border-black' : 'text-gray-400 border-gray-400'}`}
+                                                onClick={() => {
+                                                    setSelectedColor(color);
+                                                    setSelectedSize(''); // Reset size selection when color is changed
+                                                }}
+                                                disabled={!isColorAvailable}
+                                            >
+                                                {color}
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+
+                                <p className="text-gray-600 text-sm">Kích thước</p>
+                                <div className="flex gap-3 my-2">
+                                    {allSizes.map(size => {
+                                        const isSizeAvailable = variants.some(variant =>
+                                            variant.color === selectedColor && variant.size === size && variant.quantity > 0
+                                        );
+                                        return (
+                                            <button
+                                                key={size}
+                                                className={`font-semibold text-lg px-3 py-2 rounded-2xl border 
+                                                ${selectedSize === size ? 'bg-black text-white' : ''} 
+                                                ${isSizeAvailable ? 'text-black border-black' : 'text-gray-400 border-gray-400'}`}
+                                                onClick={() => setSelectedSize(size)}
+                                                disabled={!isSizeAvailable}
+                                            >
+                                                {size}
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+                            </>
+                        )}
 
                         {availabilityMessage && (
                             <p className={`text-sm ${availabilityMessage.includes('hết hàng') ? 'text-red-600' : 'text-green-600'}`}>
@@ -163,7 +170,6 @@ const Details = () => {
                             <span className="price-regular">${selectedPrice !== null ? selectedPrice : product.price}</span>
                         </div>
 
-                        {/* Quantity Control */}
                         <h6 className="option-title">Số lượng:</h6>
                         <div className="quantity d-flex align-items-center">
                             <button onClick={handleDecrease} disabled={selectedQuantity <= 1} className="btn-quantity">-</button>
@@ -179,16 +185,9 @@ const Details = () => {
                         <p className="pro-desc">{product.description}</p>
 
                         <div className="action_link">
-                            <a className={`btn btn-cart2 ${isOutOfStock ? 'disabled' : ''}`} href="#" onClick={isOutOfStock ? undefined : () => {/* handle add to cart */}}>
+                            <a className={`btn btn-cart2 ${isOutOfStock ? 'disabled' : ''}`} href="#" onClick={isOutOfStock ? undefined : () => {/* handle add to cart */ }}>
                                 Add To Cart
                             </a>
-                        </div>
-
-                        <div className="like-icon">
-                            <a className="facebook" href="#"><i className="fa fa-facebook"></i>like</a>
-                            <a className="twitter" href="#"><i className="fa fa-twitter"></i>tweet</a>
-                            <a className="pinterest" href="#"><i className="fa fa-pinterest"></i>save</a>
-                            <a className="google" href="#"><i className="fa fa-google-plus"></i>share</a>
                         </div>
                     </div>
                 </div>
