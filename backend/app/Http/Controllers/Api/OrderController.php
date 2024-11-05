@@ -44,43 +44,10 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-        // Validate request
-        $request->validate([
-            'order_date' => 'required|date',
-            'total_amount' => 'required|numeric',
-            'name' => 'required|string|max:255',
-            'phone' => 'required|string|max:15',
-            'address' => 'required|string|max:255',
-            'infor' => 'nullable|string',
-        ], [
-            'order_date.required' => 'Ngày đặt hàng là bắt buộc.',
-            'order_date.date' => 'Ngày đặt hàng không hợp lệ.',
-            'total_amount.required' => 'Số tiền tổng là bắt buộc.',
-            'total_amount.numeric' => 'Số tiền tổng phải là một số.',
-            'name.required' => 'Tên là bắt buộc.',
-            'name.string' => 'Tên phải là chuỗi.',
-            'name.max' => 'Tên không được vượt quá 255 ký tự.',
-            'phone.required' => 'Số điện thoại là bắt buộc.',
-            'phone.string' => 'Số điện thoại phải là chuỗi.',
-            'phone.max' => 'Số điện thoại không được vượt quá 15 ký tự.',
-            'address.required' => 'Địa chỉ là bắt buộc.',
-            'address.string' => 'Địa chỉ phải là chuỗi.',
-            'address.max' => 'Địa chỉ không được vượt quá 255 ký tự.',
-            'infor.string' => 'Thông tin bổ sung phải là chuỗi.',
-        ]);
+    
         
-        // Create new order
-        $order = Order::create([
-            'user_id' => Auth::id(), // Lấy user_id từ Authentication
-            'order_date' => $request->order_date,
-            'status' => $request->status,
-            'total_amount' => $request->total_amount,
-            'name' => $request->name,
-            'phone' => $request->phone,
-            'address' => $request->address,
-            'infor' => $request->infor,
-        ]);
-
+        
+   
         // Create new order
         $order = Order::create([
             'user_id' => Auth::id(), // Lấy user_id từ Authentication
