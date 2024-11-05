@@ -4,6 +4,7 @@ import { useLoginForm } from '../hooks/useLoginForm';
 import { useDispatch, useSelector } from 'react-redux';
 import Badge from '@mui/material/Badge'; // Kiểm tra đường dẫn đúng
 import { loadCartFromLocalStorage, removeFromCart } from '../actions/action';
+import SearchBox from './search/SearchBox';
 
 const Header = () => {
   const dispatch = useDispatch()
@@ -33,8 +34,10 @@ const Header = () => {
   };
 
   const { userInfo } = useLoginForm();
-  // console.log("Thông tin người dùng trong Account_info:", userInfo);
-
+  console.log("Thông tin người dùng trong Account_info:", userInfo);
+  
+  const products = useSelector((state) => state.product?.products || []);
+  console.log(products);
   return (
     <header className="header-area">
       {/* main header start */}
@@ -144,9 +147,10 @@ const Header = () => {
                   <div className="header-configure-area">
                     <ul className="nav">
                       <li>
-                        <a href="#" className="search-trigger">
+                        {/* <a href="#" className="search-trigger">
                           <i className="fa fa-search" />
-                        </a>
+                        </a> */}
+                        <SearchBox products={products} />
                       </li>
                       {/* minicart của header */}
                       <li className="mini-cart-wrap">
