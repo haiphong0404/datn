@@ -12,7 +12,7 @@
           <nav class="flex-shrink-0 my-2 my-sm-0 ms-sm-3" aria-label="breadcrumb">
               <ol class="breadcrumb">
                   <li class="breadcrumb-item">
-                      <a href="{{ route('admin.brands.index') }}" style="color: inherit;">Brands</a>
+                      <a href="{{ route('admin.brands.index') }}" style="color: inherit;">articles  </a>
                   </li>
                   <li class="breadcrumb-item active" aria-current="page">Thêm mới thương hiệu</li>
               </ol>

@@ -15,7 +15,7 @@
             <nav class="flex-shrink-0 my-2 my-sm-0 ms-sm-3" aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item">
-                        <a href="{{ route('admin.articles.index') }}" style="color: inherit;">Brands</a>
+                        <a href="{{ route('admin.articles.index') }}" style="color: inherit;">articles</a>
                     </li>
                     <li class="breadcrumb-item active" aria-current="page">Danh sách bài viết</li>
                 </ol>
@@ -46,6 +46,7 @@
                         <th class="text-center" style="width: 100px;">Thao tác</th>
                     </tr>
                 </thead>
+                
                 <tbody>
                     @foreach ($articles as $item)
                         <tr>
@@ -69,7 +70,7 @@
                                     <form action="{{route('admin.articles.destroy',$item)}}" method="POST" class="form-delete">
                                       @csrf
                                       @method('DELETE')
-                                      <button type="submit" class="btn btn-sm btn-alt-danger" data-bs-toggle="tooltip" title="Xóa" >
+                                      <button type="submit"  class="btn btn-sm btn-alt-danger" data-bs-toggle="tooltip" title="Xóa" >
                                         <i class="fa fa-times"></i>
                                       </button>
                                     </form>
