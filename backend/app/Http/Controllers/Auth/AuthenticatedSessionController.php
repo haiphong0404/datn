@@ -17,7 +17,8 @@ class AuthenticatedSessionController extends Controller
      */
     public function create(): View
     {
-      return redirect()->route('admin.admin');
+      // return redirect()->route('admin.admin');
+      return view('auth.login');
     }
 
     /**
