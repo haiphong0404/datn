@@ -69,9 +69,9 @@ class ProductVariantController extends Controller
         // Tạo biến thể mới
         $variant = new ProductVariant();
         $variant->product_id = $productId;
-        $variant->size_id = $request->size_id;
-        $variant->color_id = $request->color_id;
-        $variant->price = $request->price;
+        $variant->size_id = $request->size_id === 'new' ? null : $request->size_id;
+        $variant->color_id = $request->color_id === 'new' ? null : $request->color_id;
+        $variant->price = round($request->price, 2); 
         $variant->quantity = $request->quantity;
         $variant->save();
 
@@ -144,7 +144,7 @@ class ProductVariantController extends Controller
         $variant->update([
             'size_id' => $request->size_id,
             'color_id' => $request->color_id,
-            'price' => $request->price,
+            'price' => round($request->price, 2),
             'quantity' => $request->quantity,
         ]);
 

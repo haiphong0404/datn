@@ -27,11 +27,11 @@ class ProductController extends Controller
         $search = $request->input('search');
 
         $products = Product::withTrashed() // Lấy cả sản phẩm đã xóa mềm
-        ->with(['category' => function ($query) {
-            $query->withTrashed(); // Lấy cả category đã bị xóa mềm
-        }, 'brand' => function ($query) {
-            $query->withTrashed(); // Lấy cả brand đã bị xóa mềm
-        }])
+            ->with(['category' => function ($query) {
+                $query->withTrashed(); // Lấy cả category đã bị xóa mềm
+            }, 'brand' => function ($query) {
+                $query->withTrashed(); // Lấy cả brand đã bị xóa mềm
+            }])
             ->when($search, function ($query, $search) {
                 $query->where(function ($q) use ($search) {
                     $q->where('name', 'LIKE', "%{$search}%")
@@ -83,7 +83,7 @@ class ProductController extends Controller
                 'description' => $request->description,
                 'category_id' => $request->category_id,
                 'brand_id' => $request->brand_id,
-                'price' => $request->price,
+                'price' => round($request->price, 2),
                 'image' => $file,
                 'total_quantity_in_stock' => array_sum($request->variant_quantities),
                 'incoming_quantity'=>array_sum($request->variant_quantities),
@@ -109,7 +109,7 @@ class ProductController extends Controller
                     'product_id' => $product->id,
                     'size_id' => $sizeId,
                     'color_id' => $colorId,
-                    'price' => $request->variant_prices[$index],
+                    'price' => round($request->variant_prices[$index], 2),
                     'quantity' => $request->variant_quantities[$index],
                 ]);
 
@@ -126,13 +126,12 @@ class ProductController extends Controller
             DB::commit();
 
             return redirect()->route('admin.products.index')->with('success', 'Sản phẩm và biến thể đã được thêm mới thành công!');
-
         } catch (\Exception $e) {
             // Rollback transaction nếu có lỗi xảy ra
             DB::rollback();
 
             // Ghi lại lỗi
-            \Log::error('Error storing product: ' . $e->getMessage());
+            Log::error('Error storing product: ' . $e->getMessage());
 
             return redirect()->back()->with('error', 'Có lỗi xảy ra. Vui lòng thử lại sau.');
         }
@@ -150,7 +149,6 @@ class ProductController extends Controller
         $brands = Brand::all();
 
         return view('admin.products.edit', compact('product', 'categories', 'brands'));
-
     }
 
     /**
@@ -171,7 +169,7 @@ class ProductController extends Controller
         $product->description = $request->description;
         $product->category_id = $request->category_id;
         $product->brand_id = $request->brand_id;
-        $product->price = $request->price;
+        $product->price = round($request->price, 2);
         $product->save();
 
         return redirect()->route('admin.products.index')->with('success', 'Sản phẩm đã được cập nhật thành công!');
@@ -203,6 +201,4 @@ class ProductController extends Controller
 
         return redirect()->route('admin.products.index')->with('success', 'Sản phẩm đã được khôi phục thành công!');
     }
-
-
 }
