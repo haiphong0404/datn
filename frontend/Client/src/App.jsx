@@ -23,7 +23,8 @@ import Register from './pages/Auth/Register';
 import NotFoundPage from "./pages/404";
 import Order_detail_cancel from "./pages/Order_detail_cancel";
 import FAQs from "./pages/FAQs";
-import Bill from "./pages/Bill";  
+import Bill from "./pages/Bill";
+import 'react-refresh/runtime';
 
 
 
