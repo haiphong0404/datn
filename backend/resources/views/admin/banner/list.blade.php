@@ -18,13 +18,16 @@
             /* Hiển thị dấu "..." khi văn bản bị cắt */
         }
     </style>
+
     <div id="list" class="row">
         <div class="col-sm-12">
             <section class="card">
                 <header class="card-header">
-                    Danh Sách Bình Luận
+                    <strong>Danh Sách Banner</strong>
                     <span class="tools pull-right">
+                        <a href="{{ route('admin.banners.create') }}" class=" btn btn-success btn-sm">CRAETE</a>
                         <a href="javascript:;" class="fa fa-chevron-down"></a>
+
                     </span>
                 </header>
                 <div class="card-body">
@@ -44,9 +47,9 @@
                                 </div>
                                 <div class="span6">
                                     <div class="dataTables_filter" id="hidden-table-info_filter">
-                                        <form action="{{ route('admin.comments.index') }}" method="GET">
+                                        <form action="{{ route('admin.banners.index') }}" method="GET">
                                             <input type="text" name="search" class="form-control"
-                                                placeholder="Tìm kiếm bình luận" value="{{ request()->input('search') }}">
+                                                placeholder="Tìm kiếm banner" value="{{ request()->input('search') }}">
                                             <button type="submit" class="btn btn-primary">Tìm kiếm</button>
                                         </form>
                                     </div>
@@ -56,54 +59,49 @@
                             <table class="display table table-bordered" id="hidden-table-info"
                                 aria-describedby="hidden-table-info_info">
                                 <thead>
-                                    <tr role="row">
-                                        <th>Id</th>
-                                        <th>User</th>
-                                        <th>Product</th>
-                                        <th>Comment</th>
-                                        <th>File</th>
-                                        <th>Rating</th>
-                                        <th>Actions</th>
+                                    <tr>
+                                        <th>STT</th>
+                                        <th>Ảnh</th>
+                                        <th>Tiêu đề</th>
+                                        <th>Tiêu đề phụ</th>
+                                        <th>Tiêu đề phụ - 2</th>
+                                        <th>Thao tác</th>
                                     </tr>
                                 </thead>
-                                <tbody role="alert" aria-live="polite" aria-relevant="all">
-                                    @if ($noResults) 
+                                <tbody>
+                                    @if ($noResults)
                                         <tr>
-                                            <td colspan="7" class="text-center">Không có bình luận phù hợp</td>
+                                            <td colspan="7" class="text-center">Không có banner phù hợp</td>
                                         </tr>
                                     @else
-                                        @foreach ($comments as $item)
+                                        @foreach ($banners as $banner)
                                             <tr>
-                                                <td>{{ $item->id }}</td>
-                                                <td>{{ $item->user->username }}</td> 
-                                                <td class="text-truncate">{{ $item->product->name }}</td>
-                                                <td style="max-width: 300px;">{{ $item->comment }}</td>
-                                                <td>
-                                                    @if ($item->file)
-                                                        <a href="{{ Storage::url($item->file) }}" target="_blank">Tải file</a>
-                                                    @else
-                                                        Không có file
-                                                    @endif
-                                                </td>
-                                                <td>{{ $item->star_rating }} / 5</td>
-                                                <td>
-                                                    <a href="{{ route('admin.comments.show', $item->id) }}"
-                                                        class="btn btn-primary"><i class="fa fa-eye"></i></a>
+                                                <td>{{ $banner->id }}</td>
+                                                <td><img class="text-truncate "src="{{ asset('storage/' . $banner->image_url) }}"
+                                                        alt="{{ $banner->title }}" width="150"></td>
+                                                <td class="text-truncate">{{ $banner->title }}</td>
+                                                <td class="text-truncate">{{ $banner->sub_title }}</td>
+                                                <td class="text-truncate">{{ $banner->span_title }}</td>
 
-                                                    @if ($item->deleted_at)
-                                                        <form action="{{ route('admin.comments.restore', $item->id) }}" method="POST" style="display:inline;">
+                                                <td>
+                                                    <a href="{{ route('admin.banners.show', $banner->id) }}"
+                                                        class="btn btn-primary"><i class="fa fa-eye"></i></a>
+                                                    @if ($banner->deleted_at)
+                                                        <form action="{{ route('admin.banners.restore', $banner->id) }}"
+                                                            method="POST" style="display:inline;">
                                                             @csrf
-                                                            <button type="submit" class="btn btn-warning"><i class="bi bi-arrow-repeat"></i></button>
+                                                            <button type="submit" class="btn btn-warning"><i
+                                                                    class="bi bi-arrow-repeat"></i></button>
                                                         </form>
                                                     @else
-                                                    <form action="{{ route('admin.comments.destroy', $item->id) }}"
-                                                        method="POST" class="d-inline-block">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit" class="btn btn-danger"
-                                                            onclick="return confirm('Bạn có chắc muốn xóa comment này?')"><i
-                                                                class="fa fa-trash-o"></i></button>
-                                                    </form>
+                                                        <form action="{{ route('admin.banners.destroy', $banner->id) }}"
+                                                            method="POST" class="d-inline-block">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="btn btn-danger"
+                                                                onclick="return confirm('Bạn có chắc muốn xóa banner này?')"><i
+                                                                    class="fa fa-trash-o"></i></button>
+                                                        </form>
                                                     @endif
                                                 </td>
                                             </tr>
@@ -113,7 +111,8 @@
                             </table>
                             <div class="row-fluid">
                                 <div class="span6">
-                                    <div class="dataTables_info" id="hidden-table-info_info">Showing 11 to 20 of 57 entries</div>
+                                    <div class="dataTables_info" id="hidden-table-info_info">Showing 11 to 20 of 57
+                                        entries</div>
                                 </div>
                                 <div class="span6">
                                     <div class="dataTables_paginate paging_bootstrap pagination">
