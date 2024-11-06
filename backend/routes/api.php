@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\ArticlesController;
 use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\ColorController;
@@ -57,6 +58,8 @@ Route::get('logout', [AuthenticatedSessionController::class, 'destroy'])->name('
 Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
 Route::apiResource('Apibrands', BrandController::class);
+Route::apiResource('Apiarticle', ArticlesController::class); // bài viết
+
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
@@ -80,6 +83,7 @@ Route::get('/comments', [CommentController::class, 'index']);
 Route::delete('/comments/{id}', [CommentController::class, 'softDelete']);
 Route::get('contacts', [ContactController::class, 'index']); // Lấy danh sách tất cả contacts
 Route::get('contacts/{id}', [ContactController::class, 'show']); // Lấy contact theo ID
+
 
 
 
