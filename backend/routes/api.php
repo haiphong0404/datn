@@ -21,6 +21,8 @@ use App\Http\Controllers\Api\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Api\Auth\NewPasswordController;
 use App\Http\Controllers\Api\Auth\ForgotPasswordController;
 use App\Http\Controllers\Api\Auth\ResetPasswordController;
+use App\Http\Controllers\Api\BannerController;
+
 Route::post('password/email', [ForgotPasswordController::class, 'sendResetLinkEmail']);
 Route::post('password/reset', [ResetPasswordController::class, 'reset']);
 
@@ -83,6 +85,7 @@ Route::get('/comments', [CommentController::class, 'index']);
 Route::delete('/comments/{id}', [CommentController::class, 'softDelete']);
 Route::get('contacts', [ContactController::class, 'index']); // Lấy danh sách tất cả contacts
 Route::get('contacts/{id}', [ContactController::class, 'show']); // Lấy contact theo ID
+Route::get('/banners', [BannerController::class, 'index']);
 
 
 
