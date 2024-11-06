@@ -1,33 +1,22 @@
-// src/hooks/useProductSlider.js
+// useProductSlider.js
 import { useState } from 'react';
-import Slider from 'react-slick';
 
 const useProductSlider = () => {
-  const [settings, setSettings] = useState({
-    slidesToShow: 1,
-    arrows: false,
-    fade: true,
-    asNavFor: '.pro-nav',
+  const [settings] = useState({
+    dots: true, // Hiện các chấm điều hướng
+    infinite: false, // Không lặp lại slider
+    speed: 500, // Tốc độ chuyển đổi
+    slidesToShow: 3, // Số slide hiển thị
+    slidesToScroll: 1, // Số slide cuộn
+    arrows: true, // Hiện nút điều hướng
+   
   });
+ 
 
-  const [navSettings, setNavSettings] = useState({
-    slidesToShow: 6,
-    asNavFor: '.product-slider',
-    centerMode: true,
-    arrows: false,
-    centerPadding: '0',
-    focusOnSelect: true,
-    responsive: [
-      {
-        breakpoint: 576,
-        settings: {
-          slidesToShow: 3,
-        },
-      },
-    ],
-  });
+  // Kiểm tra số lượng variants
 
-  return { settings, navSettings };
+
+  return { settings }; // Trả về cấu hình slider và trạng thái slider
 };
 
 export default useProductSlider;

@@ -150,7 +150,7 @@ const Header = () => {
                         {/* <a href="#" className="search-trigger">
                           <i className="fa fa-search" />
                         </a> */}
-                        <SearchBox products={products} />
+                        {/* <SearchBox products={products} /> */}
                       </li>
                       {/* minicart của header */}
                       <li className="mini-cart-wrap">

@@ -10,23 +10,23 @@ import Brand from "./homes/Brand";
 import Blog from "./homes/Blog";
 import ProductTab from "./homes/ProductTab";
 import { Link } from "react-router-dom";
-import QuickViewModal from "./quickview/QuickView";
+// import QuickViewModal from "./quickview/QuickView";
 
 
 
 const Main = () => {
-  const [showQuickView, setShowQuickView] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState(null);
+  // const [showQuickView, setShowQuickView] = useState(false);
+  // const [selectedProduct, setSelectedProduct] = useState(null);
 
-  const handleQuickView = (product) => {
-    setSelectedProduct(product);
-    setShowQuickView(true);
-  };
+  // const handleQuickView = (product) => {
+  //   setSelectedProduct(product);
+  //   setShowQuickView(true);
+  // };
 
-  const handleCloseQuickView = () => {
-    setShowQuickView(false);
-    setSelectedProduct(null);
-  };
+  // const handleCloseQuickView = () => {
+  //   setShowQuickView(false);
+  //   setSelectedProduct(null);
+  // };
   // const cart = useSelector(state => state.updateCart)
   // const [localCart, setLocalCart] = useState(cart);
   // const dispatch = useDispatch()
@@ -67,7 +67,7 @@ const Main = () => {
                     <h4 className="policy-title">
                       Giá trị lớn</h4>
                     <p className="policy-desc">
-                    Chúng tôi cung cấp những sản phẩm với giá cả hợp lý, mang đến giá trị tốt nhất cho khách hàng.
+                      Chúng tôi cung cấp những sản phẩm với giá cả hợp lý, mang đến giá trị tốt nhất cho khách hàng.
                     </p>
                   </div>
                 </div>
@@ -79,9 +79,9 @@ const Main = () => {
                   </div>
                   <div className="policy-text">
                     <h4 className="policy-title">
-                    Miễn phí giao hàng</h4>
+                      Miễn phí giao hàng</h4>
                     <p className="policy-desc">
-                    Tất cả đơn hàng trên 500.000 VNĐ sẽ được miễn phí giao hàng, giúp bạn tiết kiệm chi phí khi mua sắm.
+                      Tất cả đơn hàng trên 500.000 VNĐ sẽ được miễn phí giao hàng, giúp bạn tiết kiệm chi phí khi mua sắm.
                     </p>
                   </div>
                 </div>
@@ -95,7 +95,7 @@ const Main = () => {
                     <h4 className="policy-title">
                       Thanh toán an toàn</h4>
                     <p className="policy-desc">
-                    Chúng tôi đảm bảo rằng mọi giao dịch của bạn với hình thức thanh toán tiện lợi và an toàn.
+                      Chúng tôi đảm bảo rằng mọi giao dịch của bạn với hình thức thanh toán tiện lợi và an toàn.
                     </p>
                   </div>
                 </div>
@@ -108,7 +108,7 @@ const Main = () => {
                   <div className="policy-text">
                     <h4 className="policy-title">Trung tâm trợ giúp 24/7</h4>
                     <p className="policy-desc">
-                    Đội ngũ hỗ trợ khách hàng luôn sẵn sàng 24/7 để giải đáp mọi thắc mắc của bạn .
+                      Đội ngũ hỗ trợ khách hàng luôn sẵn sàng 24/7 để giải đáp mọi thắc mắc của bạn .
                     </p>
                   </div>
                 </div>
@@ -143,7 +143,7 @@ const Main = () => {
                     Nghiên cứu đã chỉ ra rằng độc giả đọc tôi.
                   </h3>
                   <p>
-                  Chào mừng bạn đến với Giày Thor - thiên đường cho những tín đồ yêu thích giày độc đáo và mạnh mẽ! Chúng tôi chuyên cung cấp các mẫu giày Thor ấn tượng, phù hợp với mọi lứa tuổi và phong cách.
+                    Chào mừng bạn đến với Giày Thor - thiên đường cho những tín đồ yêu thích giày độc đáo và mạnh mẽ! Chúng tôi chuyên cung cấp các mẫu giày Thor ấn tượng, phù hợp với mọi lứa tuổi và phong cách.
                   </p>
                   <ul className="about-info">
                     <li className="add">
@@ -206,8 +206,8 @@ const Main = () => {
                         <Link to={`/product_details/${product.id}`}>{product.name}</Link> {/* Đổ tên sản phẩm */}
                       </h6>
                       <div className="price-box">
-                      <span className="price-regular">
-                      {product.price ? `${new Intl.NumberFormat('vi-VN', { minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(product.price)} Vnd` : "Liên hệ"}
+                        <span className="price-regular">
+                          {product.price ? `${new Intl.NumberFormat('vi-VN', { minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(product.price)} Vnd` : "Liên hệ"}
                         </span>
 
                       </div>
@@ -316,12 +316,13 @@ const Main = () => {
                         <Link to={`/product_details/${product.id}`}>{product.name}</Link> {/* Đổ tên sản phẩm */}
                       </h6>
                       <div className="price-box">
-                      <span className="price-regular">
-                      {product.price ? `${new Intl.NumberFormat('vi-VN', { minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(product.price)} Vnd` : "Liên hệ"}
+                        <span className="price-regular">
+                          {product.price ? `${new Intl.NumberFormat('vi-VN', { minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(product.price)} Vnd` : "Liên hệ"}
                         </span>
                       </div>
-                      <Link className="add-to-cart" to={`/product_details/${product.id}`}><i className="fa fa-shopping-cart" /></Link>
-                    </div>
+                      <Link className="add-to-cart" onClick={() => handleQuickView(product)} >
+                        <i className="fa fa-shopping-cart" />
+                      </Link>                    </div>
 
                   </div>
                 </div>
@@ -336,7 +337,8 @@ const Main = () => {
         {/* latest blog area start */}
         <Blog />
         {/* latest blog area end */}
-        <QuickViewModal show={showQuickView} onHide={handleCloseQuickView} product={selectedProduct} />
+        {/* <QuickViewModal show={showQuickView} onHide={handleCloseQuickView} product={selectedProduct} /> */}
+
       </main>
     </div>
   );

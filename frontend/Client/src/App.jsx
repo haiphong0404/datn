@@ -4,6 +4,9 @@ import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import "slick-carousel/slick/slick.css"; 
+import "slick-carousel/slick/slick-theme.css";
+
 
 import Main from "./components/Main";
 import Header from "./components/Header";
@@ -30,7 +33,6 @@ import Payment_method from "./pages/My_account/payment_method";
 import Address_edit from "./pages/My_account/address_edit";
 import Account_info from "./pages/My_account/account_info";
 import Product_details from "./pages/Product_Detail/Product_details";
-import QuickView from "./components/quickview/QuickView";
 
 
 
@@ -54,7 +56,6 @@ const routeConfig = [
       { path: "register", element: <Register /> },
       { path: "*", element: <NotFoundPage /> },
       { path: "faqs", element: <FAQs /> },
-      { path: "quickview", element: <QuickView /> },
       
       { path: "checkout/bill", element: <Bill /> },
     ],

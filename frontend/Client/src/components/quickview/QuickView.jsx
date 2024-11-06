@@ -1,32 +1,81 @@
-// QuickViewModal.js
-import React from 'react';
-import { Modal } from 'react-bootstrap';
+// // src/components/QuickView.js
+// import React, { useState, useEffect } from "react";
+// import { useDispatch } from "react-redux";
+// import add from "../../actions/action";
 
-const QuickViewModal = ({ show, onHide, product }) => {
-  if (!product) return null; // Kiểm tra nếu không có sản phẩm được truyền vào
+// const QuickViewModal = ({ product, onClose, show }) => {
+//   const [selectedSize, setSelectedSize] = useState(product?.sizes[0] || "");
+//   const [selectedColor, setSelectedColor] = useState(product?.colors[0] || "");
+//   const dispatch = useDispatch();
 
-  return (
-    <Modal show={show} onHide={onHide} size="lg" centered>
-      <Modal.Header closeButton>
-        <Modal.Title>{product.name}</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <div className="product-quick-view">
-          <img src={product.image || '/path/to/placeholder.jpg'} alt={product.name} />
-          <div className="product-details">
-            <h4>{product.name}</h4>
-            <p>{product.description}</p>
-            <div className="price-box">
-              <span className="price-regular">
-                {product.price ? `${new Intl.NumberFormat('vi-VN', { minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(product.price)} Vnd` : "Liên hệ"}
-              </span>
-            </div>
-            {/* Các chi tiết khác nếu cần */}
-          </div>
-        </div>
-      </Modal.Body>
-    </Modal>
-  );
-};
+//   useEffect(() => {
+//     if (product) {
+//       setSelectedSize(product.sizes[0]);
+//       setSelectedColor(product.colors[0]);
+//     }
+//   }, [product]);
 
-export default QuickViewModal;
+//   const handleAddToCart = () => {
+//     const variant = {
+//       id: product.id,
+//       name: product.name,
+//       price: product.price,
+//       size: selectedSize,
+//       color: selectedColor,
+//     };
+//     dispatch(add(variant));
+//     onClose(); // Đóng cửa sổ Quick View sau khi thêm vào giỏ
+//   };
+
+//   if (!show || !product) return null; // Nếu không có sản phẩm hoặc show = false thì không render modal
+
+//   return (
+//     <div className="quickview-overlay">
+//       <div className="quickview-modal">
+//         <button onClick={onClose} className="close-btn">X</button>
+//         <h2>{product.name}</h2>
+//         <img src={product.image} alt={product.name} />
+//         <p>{product.description}</p>
+//         <p className="price">
+//           {product.price ? `${new Intl.NumberFormat('vi-VN').format(product.price)} VND` : "Liên hệ"}
+//         </p>
+
+//         <div className="variant-selection">
+//           <div className="size-selector">
+//             <label>Size:</label>
+//             <select
+//               value={selectedSize}
+//               onChange={(e) => setSelectedSize(e.target.value)}
+//             >
+//               {product.sizes.map((size) => (
+//                 <option key={size} value={size}>
+//                   {size}
+//                 </option>
+//               ))}
+//             </select>
+//           </div>
+
+//           <div className="color-selector">
+//             <label>Color:</label>
+//             <select
+//               value={selectedColor}
+//               onChange={(e) => setSelectedColor(e.target.value)}
+//             >
+//               {product.colors.map((color) => (
+//                 <option key={color} value={color}>
+//                   {color}
+//                 </option>
+//               ))}
+//             </select>
+//           </div>
+//         </div>
+
+//         <button onClick={handleAddToCart} className="add-to-cart-btn">
+//           Add to Cart
+//         </button>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default QuickViewModal;
