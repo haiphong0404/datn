@@ -86,6 +86,7 @@ class ProductController extends Controller
                 'price' => round($request->price, 2),
                 'image' => $file,
                 'total_quantity_in_stock' => array_sum($request->variant_quantities),
+                'incoming_quantity'=>array_sum($request->variant_quantities),
             ]);
 
             // Xử lý các biến thể

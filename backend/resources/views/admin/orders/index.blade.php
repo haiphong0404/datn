@@ -1,24 +1,11 @@
 @extends('admin.layout')
 
 @section('css')
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link href="{{ asset('assets')}}/admin/css/list-brand.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link href="{{ asset('assets')}}/admin/css/list-brand.css" rel="stylesheet">
 @endsection
 
 @section('content')
-
-@if (session('success'))
-    <div class="alert alert-success">
-        {{ session('success') }}
-    </div>
-@endif
-
-@if (session('error'))
-    <div class="alert alert-danger">
-        {{ session('error') }}
-    </div>
-@endif
-
 <!-- Hero -->
 <div class="bg-body-light py-3">
     <div class="content content-full">
@@ -47,6 +34,24 @@
                 </a>
             </div>
         </div>
+        
+        @if (session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+        @endif
+
+        @if (session('info'))
+        <div class="alert alert-info">
+            {{ session('info') }}
+        </div>
+        @endif
+
+        @if (session('error'))
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
+        @endif
 
         <div class="block-content">
             <div class="table-responsive">
@@ -67,34 +72,34 @@
                     </thead>
                     <tbody>
                         @foreach ($orders as $order)
-                            <tr>
-                                <td class="text-center">{{ $order->id }}</td>
-                                <td>{{ $order->user_id }}</td>
-                                <td>{{ $order->name }}</td>
-                                <td>{{ $order->phone }}</td>
-                                <td>{{ \Str::limit($order->address, 30, '...') }}</td>
-                                <td class="text-end">{{ number_format($order->total_amount, 0, ',', '.') }} VND</td>
-                                <td>{{ $order->order_date }}</td>
-                                <td>{{ $order->updated_at }}</td>
-                                <td>
-                                    <form action="{{ route('admin.orders.updateStatus', $order->id) }}" method="POST">
-                                        @csrf
-                                        @method('PUT')
-                                        <select name="status" class="form-select" onchange="this.form.submit()">
-                                            @foreach($allowedTransitions[$order->status] as $status)
-                                                <option value="{{ $status }}" {{ $order->status == $status ? 'selected' : '' }}>
-                                                    {{ ucfirst($status) }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </form>
-                                </td>
-                                <td class="text-center">
-                                    <a href="{{ route('admin.orders.show', $order->id) }}" class="btn btn-sm btn-info">
-                                        <i class="fas fa-eye"></i> Show
-                                    </a>
-                                </td>
-                            </tr>
+                        <tr>
+                            <td class="text-center">{{ $order->id }}</td>
+                            <td>{{ $order->user_id }}</td>
+                            <td>{{ $order->name }}</td>
+                            <td>{{ $order->phone }}</td>
+                            <td>{{ \Str::limit($order->address, 30, '...') }}</td>
+                            <td class="text-end">{{ number_format($order->total_amount, 0, ',', '.') }} VND</td>
+                            <td>{{ $order->order_date }}</td>
+                            <td>{{ $order->updated_at }}</td>
+                            <td>
+                                <form action="{{ route('admin.orders.updateStatus', $order->id) }}" method="POST">
+                                    @csrf
+                                    @method('PUT')
+                                    <select name="status" class="form-select" onchange="this.form.submit()">
+                                        @foreach($allowedTransitions[$order->status] as $status)
+                                        <option value="{{ $status }}" {{ $order->status == $status ? 'selected' : '' }}>
+                                            {{ ucfirst($status) }}
+                                        </option>
+                                        @endforeach
+                                    </select>
+                                </form>
+                            </td>
+                            <td class="text-center">
+                                <a href="{{ route('admin.orders.show', $order->id) }}" class="btn btn-sm btn-info">
+                                    <i class="fas fa-eye"></i> Show
+                                </a>
+                            </td>
+                        </tr>
                         @endforeach
                     </tbody>
                 </table>

@@ -5,9 +5,13 @@
 @endsection
 
 @section('content')
-    @if (session()->has('error'))
+    @if ($errors->any())
         <div class="alert alert-danger">
-            {{ session()->get('error') }}
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
         </div>
     @endif
 
