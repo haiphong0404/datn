@@ -50,7 +50,8 @@
                                 <th>Giá</th>
                                 <th>Thương hiệu</th>
                                 <th>Hình ảnh</th>
-                                <th>Tổng số lượng </th>
+                                <th>Số lượng tồn kho  </th>
+                                <th>Tổng số lượng nhập kho</th>
                                 <th class="hidden-phone">Ngày tạo</th>
                                 <th class="center hidden-phone">Trạng thái</th>
                                 <th class="center hidden-phone">Hành động</th>
@@ -79,6 +80,7 @@
                                         <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" width="100">
                                     </td>
                                     <td>{{ $product->total_quantity_in_stock }}</td>
+                                    <td>{{$product->incoming_quantity}}</td>
                                     <td class="hidden-phone">{{ $product->created_at->format('Y-m-d') }}</td>
                                     <td class="hidden-phone">
                                         @if ($product->trashed())

@@ -48,21 +48,31 @@ class OrderController extends Controller
     // Hiển thị form tạo đơn hàng
     public function create()
     {
-        return view('admin.orders.create');
+        // Lấy danh sách sản phẩm từ request
+        $products = Product::all();
+        return view('admin.orders.create', compact('products'));
     }
 
     // Lưu thông tin đơn hàng và chi tiết đơn hàng
     public function store(StoreOrderRequest $request)
     {
+        // Lấy danh sách sản phẩm từ request
+        $products = Product::all();
+
         try {
             // Gọi phương thức createOrder từ service để tạo đơn hàng
             $this->orderService->createOrder($request);
 
             // Redirect thành công với thông báo
-            return redirect()->back()->with('success', 'Đơn hàng đã được tạo thành công');
+            return redirect()->route('admin.orders.index')->with('success', 'Đơn hàng đã được tạo thành công');
         } catch (\Exception $e) {
             // Xử lý lỗi nếu có
-            return redirect()->back()->with('error', 'Xảy ra lỗi trong khi tạo đơn hàng: ' . $e->getMessage());
+            return redirect()->back()
+            ->withInput($request->all()) // Giữ lại dữ liệu nhập
+            ->with([
+                'error' => 'Xảy ra lỗi trong khi tạo đơn hàng: ' . $e->getMessage(),
+                'products' => $products, // Truyền lại products vào view
+            ]);
         }
     }
 
@@ -71,14 +81,14 @@ class OrderController extends Controller
         // Lấy trạng thái mới từ request
         $newStatus = $request->status;
     
-        // Sử dụng service để kiểm tra và cập nhật trạng thái
-        $statusUpdated = $this->orderService->updateOrderStatus($order, $newStatus);
-    
         // Kiểm tra kết quả
         if ($newStatus === $order->status) {
             return redirect()->route('admin.orders.index')
                 ->with('info', 'Trạng thái đơn hàng đã là '.$newStatus.'. Không có thay đổi nào được thực hiện.');
         }
+
+        // Sử dụng service để kiểm tra và cập nhật trạng thái
+        $statusUpdated = $this->orderService->updateOrderStatus($order, $newStatus);
     
         if (!$statusUpdated) {
             return redirect()->route('admin.orders.index')
@@ -86,7 +96,7 @@ class OrderController extends Controller
         }
     
         // Trả về kết quả thành công nếu trạng thái được cập nhật
-        return redirect()->route('admin.orders.index')->with('success', 'Trạng thái đơn hàng đã được cập nhật thành công.');
+        return redirect()->back()->with('success', 'Trạng thái đơn hàng đã được cập nhật thành công.');
     }
     
     public function search(Request $request)
