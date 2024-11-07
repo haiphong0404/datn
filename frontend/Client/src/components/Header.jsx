@@ -1,4 +1,4 @@
-import { useEffect, useRef  } from 'react';
+import { useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useLoginForm } from '../hooks/useLoginForm';
 const Header = () => {
@@ -6,10 +6,9 @@ const Header = () => {
   const location = useLocation();
   const prevLocation = useRef(location.pathname);
   const { userInfo } = useLoginForm();
-  console.log("Thông tin người dùng trong Account_info:", userInfo); 
- 
+
   useEffect(() => {
- 
+
     if (prevLocation.current !== location.pathname) {
       prevLocation.current = location.pathname;
       window.location.reload();
@@ -87,9 +86,9 @@ const Header = () => {
                       <ul>
                         <li className="position-static">
                           <Link to="/">
-                            Trang chủ 
+                            Trang chủ
                           </Link>
-                          
+
                         </li>
                         <li className="position-static">
                           <a href="#">

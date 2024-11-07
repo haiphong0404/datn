@@ -10,9 +10,24 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class CartController extends Controller
 {
+    private function getImageAsBase64($imagePath)
+    {
+        // Kiểm tra nếu hình ảnh tồn tại
+        if ($imagePath && Storage::disk('public')->exists($imagePath)) {
+            // Lấy nội dung hình ảnh
+            $imageData = Storage::disk('public')->get($imagePath);
+            // Lấy loại mime type bằng cách sử dụng FFMpeg hoặc PHP
+            $mimeType = mime_content_type(storage_path('app/public/' . $imagePath)); // Sửa tại đây
+            // Mã hóa hình ảnh thành Base64
+            return 'data:' . $mimeType . ';base64,' . base64_encode($imageData);
+        }
+
+        return null; // Nếu không có hình ảnh, trả về null
+    }
     // Lấy danh sách giỏ hàng của người dùng
     public function index(Request $request)
     {
@@ -32,11 +47,11 @@ class CartController extends Controller
                 $image = $productVariant->images->first()->image ?? null;
 
                 return [
-                    'image' => $image,
+                    'image' => $this->getImageAsBase64($image),
                     'name' => $productVariant->product->name,
                     'color' => $productVariant->color->name,
                     'size' => $productVariant->size->name,
-                    'price' => $item->price,
+                    'price' => round($productVariant->price, 2),
                     'quantity' => $item->quantity,
                     'total_price' => $item->price * $item->quantity,
                 ];
@@ -71,8 +86,8 @@ class CartController extends Controller
                 ],
                 [
                     'quantity' => DB::raw("quantity + {$quantity}"),
-                    'price' => $productVariant->price
-                ]
+                    'price' => round($productVariant->price, 2),
+                    ]
             );
 
             return response()->json(['message' => 'Sản phẩm đã được thêm vào giỏ hàng', 'cart_item' => $cartItem], 200);

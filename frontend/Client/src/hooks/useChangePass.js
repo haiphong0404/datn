@@ -30,3 +30,4 @@ export const useChangePassword = () => {
 
     return { loading, message, error, handleChangePassword, resetMessage };
 };
+

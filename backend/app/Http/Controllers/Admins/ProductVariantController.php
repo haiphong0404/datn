@@ -24,8 +24,6 @@ class ProductVariantController extends Controller
     }
 
 
-
-
     /**
      * Show the form for creating a new resource.
      */
@@ -57,19 +55,35 @@ class ProductVariantController extends Controller
             'variant_images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // Kích thước tối đa 2MB
         ]);
 
+        // Kiểm tra xem có biến thể nào khác với cùng size_id và color_id hay không
+        $existingVariant = ProductVariant::where('product_id', $productId)
+            ->where('size_id', $request->size_id)
+            ->where('color_id', $request->color_id)
+            ->first();
+
+        if ($existingVariant) {
+            return back()->withErrors(['error' => 'Biến thể với kích thước và màu sắc này đã tồn tại.'])
+                ->withInput();
+        }
+
         // Tạo biến thể mới
         $variant = new ProductVariant();
         $variant->product_id = $productId;
         $variant->size_id = $request->size_id === 'new' ? null : $request->size_id;
         $variant->color_id = $request->color_id === 'new' ? null : $request->color_id;
-        $variant->price = $request->price;
+        $variant->price = round($request->price, 2); 
         $variant->quantity = $request->quantity;
         $variant->save();
-        $product = Product::findOrFail($productId);
-        $totalQuantity = $product->variants()->sum('quantity'); // Tính tổng số lượng của tất cả biến thể
-        $product->total_quantity_in_stock = $totalQuantity; // Giả sử bạn có cột total_quantity trong bảng products
-        $product->save();
 
+        // Tính tổng số lượng nhập vào và tổng số lượng trong kho
+        $product = Product::findOrFail($productId);
+
+        // Cập nhật incoming_quantity
+        // Giả sử incoming_quantity được cộng dồn lên mỗi khi có biến thể mới
+        $product->incoming_quantity += $variant->quantity; // Cộng thêm số lượng nhập vào
+        $product->total_quantity_in_stock = $product->total_quantity_in_stock + $variant->quantity; // Cập nhật số lượng trong kho
+
+        $product->save();
 
         // Lưu hình ảnh nếu có
         if ($request->hasFile('variant_images')) {
@@ -82,6 +96,8 @@ class ProductVariantController extends Controller
         return redirect()->route('admin.products.variants.index', $productId)
             ->with('success', 'Biến thể đã được thêm thành công.');
     }
+
+
 
 
     /**
@@ -101,7 +117,7 @@ class ProductVariantController extends Controller
         $variant = ProductVariant::with('images')->findOrFail($variantId);
         $sizes = Size::all();
         $colors = Color::all();
-        return view('admin.product_variants.edit', compact('product', 'variant', 'colors','sizes'));
+        return view('admin.product_variants.edit', compact('product', 'variant', 'colors', 'sizes'));
     }
 
     /**
@@ -109,13 +125,26 @@ class ProductVariantController extends Controller
      */
     public function update(UpdateProductVariantRequest $request, $productId, $variantId)
     {
+        // Tìm biến thể hiện tại
         $variant = ProductVariant::findOrFail($variantId);
+
+        // Kiểm tra xem có biến thể nào khác với cùng size_id và color_id không
+        $existingVariant = ProductVariant::where('product_id', $productId)
+            ->where('size_id', $request->size_id)
+            ->where('color_id', $request->color_id)
+            ->where('id', '!=', $variantId) // Loại trừ biến thể hiện tại
+            ->first();
+
+        if ($existingVariant) {
+            return back()->withErrors(['error' => 'Biến thể với kích thước và màu sắc này đã tồn tại.'])
+                ->withInput();
+        }
 
         // Cập nhật thông tin biến thể
         $variant->update([
             'size_id' => $request->size_id,
             'color_id' => $request->color_id,
-            'price' => $request->price,
+            'price' => round($request->price, 2),
             'quantity' => $request->quantity,
         ]);
 
@@ -131,10 +160,12 @@ class ProductVariantController extends Controller
         // Tính lại số lượng tổng cho sản phẩm cha
         $product = Product::findOrFail($productId);
         $product->update(['total_quantity_in_stock' => $product->variants->sum('quantity')]);
+        $product->update(['incoming_quantity' => $product->variants->sum('quantity')]);
 
         return redirect()->route('admin.products.variants.index', $productId)
             ->with('success', 'Cập nhật biến thể thành công');
     }
+
     /**
      * Remove the specified resource from storage.
      */
@@ -151,6 +182,7 @@ class ProductVariantController extends Controller
         $product = Product::findOrFail($productId);
         $totalQuantity = $product->variants()->sum('quantity'); // Tính lại tổng số lượng
         $product->total_quantity_in_stock = $totalQuantity; // Cập nhật tổng số lượng
+        $product->incoming_quantity = $totalQuantity;
         $product->save();
 
         return redirect()->route('admin.products.variants.index', $productId)
