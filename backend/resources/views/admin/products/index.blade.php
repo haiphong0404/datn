@@ -51,7 +51,8 @@ Danh sách sản phẩm
                                 <th>Giá</th>
                                 <th>Thương hiệu</th>
                                 <th>Hình ảnh</th>
-                                <th>Tổng số lượng </th>
+                                <th>Số lượng tồn kho  </th>
+                                <th>Tổng số lượng nhập kho</th>
                                 <th class="hidden-phone">Ngày tạo</th>
                                 <th class="center hidden-phone">Trạng thái</th>
                                 <th class="center hidden-phone">Hành động</th>

@@ -22,7 +22,6 @@ class StoreOrderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => 'required|exists:users,id',
             'name' => 'required|string|max:255',
             'phone' => 'required|string|max:15',
             'address' => 'required|string|max:255',
@@ -36,8 +35,6 @@ class StoreOrderRequest extends FormRequest
     public function messages()
     {
         return [
-            'user_id.required' => 'ID người dùng là bắt buộc.',
-            'user_id.exists' => 'Người dùng không tồn tại trong hệ thống.',
             'name.required' => 'Tên khách hàng là bắt buộc.',
             'name.max' => 'Tên khách hàng không được vượt quá 255 ký tự.',
             'phone.required' => 'Số điện thoại là bắt buộc.',

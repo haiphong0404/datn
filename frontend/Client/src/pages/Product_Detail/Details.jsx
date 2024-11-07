@@ -65,6 +65,8 @@ const Details = () => {
         const savedCart = loadCartFromLocalStorage(); // Lấy giỏ hàng từ localStorage
         setLocalCart(savedCart);
     }, [cart]);
+
+    
     // product variant
     const { productId } = useParams();
     const { product, loading: productLoading, error: productError } = useProductById(productId);

@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Badge from '@mui/material/Badge'; // Kiểm tra đường dẫn đúng
 import { loadCartFromLocalStorage, removeFromCart } from '../actions/action';
 import SearchBox from './search/SearchBox';
+import SearchProducts from './search/SearchBox';
 
 const Header = () => {
   const dispatch = useDispatch()
@@ -76,7 +77,7 @@ const Header = () => {
                     </Link>
                   </li>
                   <li>
-                    <a href="/register">
+                    <a href="/login">
                       <i className="fa fa-sign-in" /> Đăng nhập
                     </a>
                   </li>
@@ -146,11 +147,11 @@ const Header = () => {
                 <div className="header-right">
                   <div className="header-configure-area">
                     <ul className="nav">
-                      <li>
+                      <li className="mini-cart-wrap">
                         {/* <a href="#" className="search-trigger">
                           <i className="fa fa-search" />
                         </a> */}
-                        {/* <SearchBox products={products} /> */}
+                        <SearchProducts />
                       </li>
                       {/* minicart của header */}
                       <li className="mini-cart-wrap">

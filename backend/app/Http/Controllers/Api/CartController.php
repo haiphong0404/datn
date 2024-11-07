@@ -45,18 +45,30 @@ class CartController extends Controller
             'carts' => $cart->items->map(function ($item) {
                 $productVariant = $item->productVariant;
                 $image = $productVariant->images->first()->image ?? null;
-
+                $variants = $productVariant->product->variants->map(function ($variant) {
+                    return [
+                        'id' => $variant->id,
+                        'color' => $variant->color->name ?? null,
+                        'size' => $variant->size->name ?? null,
+                        'price' => round($variant->price, 2),
+                    ];
+                });
+        
                 return [
                     'image' => $this->getImageAsBase64($image),
                     'name' => $productVariant->product->name,
-                    'color' => $productVariant->color,
-                    'size' => $productVariant->size->name,
-                    'price' => round($productVariant->price, 2),
-                    'quantity' => $item->quantity,
-                    'total_price' => $item->price * $item->quantity,
+                    'current_variant' => [
+                        'id' => $productVariant->id,
+                        'color' => $productVariant->color->name ?? null,
+                        'size' => $productVariant->size->name ?? null,
+                        'price' => round($productVariant->price, 2),
+                        'quantity' => $item->quantity,
+                        'total_price' => $item->price * $item->quantity,
+                    ],
+                    'variants' => $variants,
                 ];
             })
-        ];
+        ];        
 
         return response()->json($cartData);
     }
@@ -78,16 +90,18 @@ class CartController extends Controller
             }
 
             $cart = Cart::firstOrCreate(['user_id' => $user->id]);
-
+            $cartItem = CartItem::where('cart_id', $cart->id)
+            ->where('product_variant_id', $productVariantId)
+            ->first();
             $cartItem = CartItem::updateOrCreate(
                 [
                     'cart_id' => $cart->id,
                     'product_variant_id' => $productVariantId,
                 ],
                 [
-                    'quantity' => DB::raw("quantity + {$quantity}"),
+                    'quantity' => $cartItem ? $cartItem->quantity + $quantity : $quantity,
                     'price' => round($productVariant->price, 2),
-                    ]
+                ]
             );
 
             return response()->json(['message' => 'Sản phẩm đã được thêm vào giỏ hàng', 'cart_item' => $cartItem], 200);
@@ -106,6 +120,8 @@ class CartController extends Controller
             $user = $request->user();
             $productVariantId = $request->input('product_variant_id');
             $quantity = $request->input('quantity');
+            $colorId = $request->input('color_id'); 
+            $sizeId = $request->input('size_id');   
 
             if (!is_numeric($quantity) || $quantity <= 0) {
                 return response()->json(['message' => 'Số lượng không hợp lệ'], 400);
@@ -128,7 +144,12 @@ class CartController extends Controller
             if (!$cartItem) {
                 return response()->json(['message' => 'Sản phẩm không có trong giỏ hàng'], 404);
             }
-
+            if ($colorId) {
+                $cartItem->color_id = $colorId; 
+            }
+            if ($sizeId) {
+                $cartItem->size_id = $sizeId; // Giả sử bạn có cột size_id trong bảng cart_item
+            }
             $cartItem->quantity = $quantity;
             $cartItem->save();
 

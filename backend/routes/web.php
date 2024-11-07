@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\Admins\ArticlesController;
 use App\Http\Controllers\Admins\BrandController;
 use App\Http\Controllers\Admins\CategoryController;
 use App\Http\Controllers\Admins\CommentController;
+use App\Http\Controllers\Admins\ContactController;
 use App\Http\Controllers\Admins\OrderController;
 use App\Http\Controllers\Admins\ProductController;
 use App\Http\Controllers\Admins\ProductVariantController;
@@ -10,6 +12,7 @@ use App\Http\Controllers\Admins\UserController;
 use App\Http\Controllers\AdminTestController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admins\VoucherController;
 
 /*
 |--------------------------------------------------------------------------
@@ -54,20 +57,16 @@ Route::group(
         Route::resource('products.variants', ProductVariantController::class); // Route cho biến thể sản phẩm
         Route::resource('user', UserController::class);  // Route cho người dùng
         Route::resource('comments', CommentController::class);  // Route cho bình luận
-
+        Route::resource('contacts', ContactController::class);
+        Route::resource('articles', ArticlesController::class);// Route cho bài viết
         // Route chức năng order và order detail
         Route::get('/orders/create', [OrderController::class, 'create'])->name('orders.create'); // Hiển thị form tạo order
         Route::post('/orders', [OrderController::class, 'store'])->name('orders.store'); // Lưu thông tin order
         Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
         Route::put('/orders/{order}/updateStatus', [OrderController::class, 'updateStatus'])->name('orders.updateStatus');
         Route::get('/orders/{order}/details', [OrderController::class, 'show'])->name('orders.show');
-
-        // Route để tìm kiếm sản phẩm với Select2
-        // Route::get('/products/search', [OrderController::class, 'searchProducts'])->name('products.search');
-
         // Route để lấy danh sách biến thể của sản phẩm
         Route::get('/get-variants/{productId}', [OrderController::class, 'getVariants'])->name('products.variants');
-        
         // Route để tìm kiếm sản phẩm
         Route::get('/search-products', [OrderController::class, 'search'])->name('products.search');
     }
@@ -83,3 +82,8 @@ Route::group(
         Route::get('Admin', [AdminTestController::class, 'index'])->name('Admin');
     }
 );
+
+Route::resource('admin/vouchers', VoucherController::class);
+// Route::middleware(['auth', 'checkRole:admin,staff'])->group(function () {
+//     Route::resource('admin/vouchers', VoucherController::class);
+// });

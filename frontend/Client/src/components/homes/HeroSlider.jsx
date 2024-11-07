@@ -7,7 +7,7 @@ const PrevArrow = (props) => {
   const { className, onClick } = props;
   return (
     <button type="button" className={className} onClick={onClick} aria-label="Previous">
-      <i className="fa fa-angle-left"></i>
+      {/* <i className="fa fa-angle-left"></i> */}
     </button>
   );
 };
@@ -16,7 +16,7 @@ const NextArrow = (props) => {
   const { className, onClick } = props;
   return (
     <button type="button" className={className} onClick={onClick} aria-label="Next">
-      <i className="fa fa-angle-right"></i>
+      {/* <i className="fa fa-angle-right"></i> */}
     </button>
   );
 };

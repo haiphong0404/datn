@@ -25,7 +25,7 @@ import Register from './pages/Auth/Register';
 import NotFoundPage from "./pages/404";
 import Order_detail from "./pages/My_account/Order_detail";
 import FAQs from "./pages/FAQs";
-import Bill from "./pages/Bill";  
+import Bill from "./pages/Bill";
 import Dashboard from "./pages/My_account/dashboard";
 import Orders from "./pages/My_account/orders";
 import Download from "./pages/My_account/download";
@@ -65,7 +65,8 @@ const routeConfig = [
     element: <MyAccount />,
     children: [
       { path: "", element: <Dashboard /> },
-      { path: "orders", element: <Orders /> ,
+      {
+        path: "orders", element: <Orders />,
       },
       { path: "Order_detail/:orderId", element: <Order_detail /> },
       { path: "downloads", element: <Download /> },

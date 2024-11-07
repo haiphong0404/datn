@@ -1,30 +1,67 @@
-// SearchBox.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { Link, useNavigate } from 'react-router-dom';
 
-const SearchBox = ({ products }) => {
-  const [searchTerm, setSearchTerm] = useState('');
+const SearchProducts = () => {
+  const [query, setQuery] = useState('');
+  const [products, setProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [showProducts, setShowProducts] = useState(false);
 
-  const handleSearch = (e) => {
-    e.preventDefault();
-    // Lọc sản phẩm dựa trên searchTerm
-    const filteredProducts = products.filter(product =>
-      product.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    console.log('Sản phẩm tìm kiếm:', filteredProducts);
-    // Bạn có thể thực hiện hành động khác với filteredProducts như hiển thị trên giao diện
-  };
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await axios.get('http://127.0.0.1:8000/api/products');
+        setProducts(response.data);
+      } catch (error) {
+        console.error('Lỗi khi gọi API:', error);
+      }
+    };
+    fetchProducts();
+  }, []);
+
+  useEffect(() => {
+    if (query.length > 0) {
+      const filtered = products.filter((product) =>
+        product.name.toLowerCase().includes(query.toLowerCase())
+      );
+      setFilteredProducts(filtered);
+      setShowProducts(true);
+    } else {
+      setShowProducts(false);
+    }
+  }, [query, products]);
 
   return (
-    <form onSubmit={handleSearch}>
+    <div className="search-container">
       <input
         type="text"
-        placeholder="Tìm kiếm sản phẩm..."
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
+        placeholder="Tìm..."
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
       />
-      <button type="submit">Tìm kiếm</button>
-    </form>
+      {/* <button><i className="bi bi-search"></i></button> */}
+      {showProducts && (
+        <div className="cart-list-wrapper">
+          <ul className="cart-list">
+            {filteredProducts.map((product) => (
+              <li key={product.id} className="product-search">
+                <div className="cart-img">
+                                  <Link to={`/product_details/${product.id}`}>
+                                    <img src={product.image} alt={product.name} />
+                                  </Link>
+                                </div>
+                <div className="search-list">
+                  <h4 className='search-name'><Link to={`/product_details/${product.id}`}>{product.name}</Link></h4>
+                  <p>{product.price} VND</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
   );
 };
 
-export default SearchBox;
+export default SearchProducts;
