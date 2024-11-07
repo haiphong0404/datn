@@ -25,11 +25,13 @@ class ProductController extends Controller
             return [
                 'id' => $product->id,
                 'name' => $product->name,
+                'price' => $product->price,
                 'description' => $product->description,
-                'price' => round($product->price, 2),
                 'category' => $product->category ? $product->category->name : null,
                 'brand' => $product->brand ? $product->brand->name : null,
-                'image' => $this->getImageAsBase64($product->image), // Chuyển đổi hình ảnh sang Base64
+                'image' => $this->getImageAsBase64($product->image),
+                'category_id' =>$product ->brand_id ,// Chuyển đổi hình ảnh sang Base64
+                'brand_id' =>$product ->category_id ,
             ];
         }), 200);
     }
