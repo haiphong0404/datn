@@ -1,5 +1,5 @@
 import React from "react";
-import { useRoutes } from "react-router-dom";
+import { Link, Route, Router, Routes, useRoutes } from "react-router-dom";
 import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ToastContainer } from 'react-toastify';
@@ -15,7 +15,6 @@ import Shop from "./pages/Shop/Shop";
 import Blog from "./pages/Blog";
 import MyAccount from "./pages/My_account/Myacc";
 import Contact_us from "./pages/Contact_us";
-import Product_details from "./pages/Product_Detail/Product_details";
 import Cart from "./pages/cart/Cart";
 import LayoutClient from "./layout/LayoutClient";
 import Blog_detail from "./pages/Blog_detail";
@@ -33,6 +32,7 @@ import Download from "./pages/My_account/download";
 import Payment_method from "./pages/My_account/payment_method";
 import Address_edit from "./pages/My_account/address_edit";
 import Account_info from "./pages/My_account/account_info";
+import Product_details from "./pages/Product_Detail/Product_details";
 
 
 
@@ -43,7 +43,7 @@ const routeConfig = [
     path: "/",
     element: <LayoutClient />,
     children: [
-      { path: "", element: <Main /> },
+      { path: "",  element: <Main /> },
       { path: "shop", element: <Shop /> },
       { path: "blog", element: <Blog /> },
       { path: "checkout", element: <Checkout /> },
@@ -57,6 +57,7 @@ const routeConfig = [
       { path: "*", element: <NotFoundPage /> },
       { path: "faqs", element: <FAQs /> },
 
+      
       { path: "checkout/bill", element: <Bill /> },
     ],
   },

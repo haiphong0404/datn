@@ -92,3 +92,6 @@ Route::get('/comments', [CommentController::class, 'index']);
 Route::delete('/comments/{id}', [CommentController::class, 'softDelete']);
 Route::get('contacts', [ContactController::class, 'index']); // Lấy danh sách tất cả contacts
 Route::get('contacts/{id}', [ContactController::class, 'show']); // Lấy contact theo ID
+
+
+Route::get('/colors', [ColorController::class, 'index']);

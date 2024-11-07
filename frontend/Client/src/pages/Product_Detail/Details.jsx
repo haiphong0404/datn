@@ -4,8 +4,68 @@ import useProductvariants from '../../hooks/useProductVariants';
 import useProductById from '../../hooks/useProductById';
 import useProductSlider from '../../hooks/useProductSlider';
 import Slider from 'react-slick';
+import { useDispatch, useSelector } from 'react-redux';
+import add, { loadCartFromLocalStorage } from '../../actions/action';
+import { toast } from 'react-toastify';
 
 const Details = () => {
+    // addtocart
+    const cart = useSelector(state => state.updateCart)
+    const [localCart, setLocalCart] = useState(cart);
+    const dispatch = useDispatch()
+    const handleAddToCart = () => {
+        const selectedVariant = variants.find(variant =>
+            variant.color === selectedColor && variant.size === selectedSize
+        );
+        const quantity = selectedQuantity;
+        const existingProduct = localCart.find(item => item.id === selectedVariant.id);
+
+        if (selectedVariant) {
+            if (existingProduct) {
+                if (existingProduct.quantity + quantity <= selectedVariant.quantity) {
+                    existingProduct.quantity += quantity;
+                    setLocalCart([...localCart]);
+                    localStorage.setItem("cart", JSON.stringify([...localCart]));
+                    dispatch(add(existingProduct));
+                    toast.success("Sản phẩm đã được thêm vào giỏ hàng!");
+                } else {
+                    toast.error("Số lượng bạn muốn thêm vượt quá số lượng tối đa trong kho!");
+                }
+            } else {
+                if (quantity <= selectedVariant.quantity) {
+                    const newProduct = {
+                        id: selectedVariant.id,
+                        productId: product.id,
+                        productName: product.name,
+                        image: selectedVariant.images,
+                        price: selectedVariant.price,
+                        quantity: quantity,
+                        size: selectedVariant.size,
+                        color: selectedVariant.color,
+                        stock: selectedVariant.quantity
+                    };
+                    const updatedCart = [...localCart, newProduct];
+                    setLocalCart(updatedCart);
+                    localStorage.setItem("cart", JSON.stringify(updatedCart));
+                    dispatch(add(newProduct));
+                    toast.success("Sản phẩm đã được thêm vào giỏ hàng!");
+                } else {
+                    toast.error("Số lượng bạn muốn thêm vượt quá số lượng tối đa trong kho!");
+                }
+            }
+        } else {
+            toast.error("Vui lòng chọn màu và kích thước sản phẩm!");
+        }
+    };
+    
+    
+    
+
+    useEffect(() => {
+        const savedCart = loadCartFromLocalStorage(); // Lấy giỏ hàng từ localStorage
+        setLocalCart(savedCart);
+    }, [cart]);
+    // product variant
     const { productId } = useParams();
     const { product, loading: productLoading, error: productError } = useProductById(productId);
     const { variants, isLoading: variantsLoading, error: variantsError } = useProductvariants(productId);
@@ -185,9 +245,13 @@ const Details = () => {
                         <p className="pro-desc">{product.description}</p>
 
                         <div className="action_link">
-                            <a className={`btn btn-cart2 ${isOutOfStock ? 'disabled' : ''}`} href="#" onClick={isOutOfStock ? undefined : () => {/* handle add to cart */ }}>
+                        <button
+                                className={`btn btn-cart2 ${isOutOfStock ? 'disabled' : ''}`}
+                                onClick={isOutOfStock ? undefined : handleAddToCart}
+                                disabled={isOutOfStock}
+                            >
                                 Add To Cart
-                            </a>
+                            </button>
                         </div>
                     </div>
                 </div>

@@ -49,7 +49,7 @@ class CartController extends Controller
                 return [
                     'image' => $this->getImageAsBase64($image),
                     'name' => $productVariant->product->name,
-                    'color' => $productVariant->color->name,
+                    'color' => $productVariant->color,
                     'size' => $productVariant->size->name,
                     'price' => round($productVariant->price, 2),
                     'quantity' => $item->quantity,

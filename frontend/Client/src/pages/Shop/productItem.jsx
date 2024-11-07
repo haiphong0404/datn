@@ -29,8 +29,9 @@ const ProductItem = ({ product }) => { // Nhận product qua props
                 <div className="product-content">
                     <div className="product-caption">
                         <h6 className="product-name">
-                            <Link to={`/product-details/${product.id}`}>
+                            <Link to={`/product_details/${product.id}`}>
                                 {product.name}
+
                             </Link>
                         </h6>
                         <div className="price-box">
