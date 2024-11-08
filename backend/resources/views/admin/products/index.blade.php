@@ -171,12 +171,26 @@ Danh sách sản phẩm
                                 </td>
                             </tr>
                             @endforeach
+<<<<<<< HEAD
                         </tbody>
 
                     </table>
+=======
+                            </tbody>
+                        </table>
+                        <div class="d-flex justify-content-end">
+                            {{ $products->links('pagination::bootstrap-5') }}
+                        </div>
+                    </div>
+>>>>>>> dev
                 </div>
             </div>
         </section>
     </div>
+<<<<<<< HEAD
 </div>
 @endsection
+=======
+
+@endsection
+>>>>>>> dev

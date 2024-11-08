@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Admins\ArticlesController;
+use App\Http\Controllers\Admins\BannerController;
 use App\Http\Controllers\Admins\BrandController;
 use App\Http\Controllers\Admins\CategoryController;
 use App\Http\Controllers\Admins\CommentController;
@@ -11,6 +13,7 @@ use App\Http\Controllers\Admins\UserController;
 use App\Http\Controllers\AdminTestController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admins\VoucherController;
 
 /*
 |--------------------------------------------------------------------------
@@ -56,6 +59,10 @@ Route::group(
         Route::resource('user', UserController::class);  // Route cho người dùng
         Route::resource('comments', CommentController::class);  // Route cho bình luận
         Route::resource('contacts', ContactController::class);
+        Route::resource('articles', ArticlesController::class);// Route cho bài viết
+        Route::resource('banners',BannerController::class);// Route cho banner
+        Route::post('banners/{id}/restore', [BannerController::class, 'restore'])->name('banners.restore');
+
         // Route chức năng order và order detail
         Route::get('/orders/create', [OrderController::class, 'create'])->name('orders.create'); // Hiển thị form tạo order
         Route::post('/orders', [OrderController::class, 'store'])->name('orders.store'); // Lưu thông tin order
@@ -79,3 +86,8 @@ Route::group(
         Route::get('Admin', [AdminTestController::class, 'index'])->name('Admin');
     }
 );
+
+Route::resource('admin/vouchers', VoucherController::class);
+// Route::middleware(['auth', 'checkRole:admin,staff'])->group(function () {
+//     Route::resource('admin/vouchers', VoucherController::class);
+// });

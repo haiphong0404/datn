@@ -27,11 +27,15 @@
     <!-- END Hero -->
 
     @if (session('success'))
-    <div class="alert alert-success">{{ session('success') }}</div>
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
     @endif
 
     @if (session('error'))
-    <div class="alert alert-danger">{{ session('error') }}</div>
+    <div class="alert alert-danger">
+        {{ session('error') }}
+    </div>
     @endif
 
     <form action="{{ route('admin.orders.store') }}" method="POST" id="order-form">
@@ -76,7 +80,7 @@
             </thead>
             <tbody id="order-details">
                 @if(old('products'))
-                @foreach(old('products') as $index => $product)
+                @foreach(old('products', []) as $index => $product)
                 <tr class="product-row">
                     <td>
                         <select class="form-control product-select" id="product_{{ $index+1 }}" name="products[{{ $index+1 }}][product_id]" required>

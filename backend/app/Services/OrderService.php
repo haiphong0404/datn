@@ -7,6 +7,7 @@ use App\Models\ProductVariant;
 use App\Models\OrderDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class OrderService
 {
@@ -90,7 +91,7 @@ class OrderService
         try {
             // Tạo đơn hàng
             $order = new Order();
-            $order->user_id = $request->input('user_id');
+            $order->user_id = Auth::id();
             $order->order_date = now();
             $order->status = 'pending';
             $order->total_amount = 0;

@@ -74,7 +74,7 @@ export const editUserById = async (id) => {
 
 };
 
-// quên mật khẩu
+// quên mật khẩu moi
 export const forgotPassword = async (email) => {
     console.log(email);
 

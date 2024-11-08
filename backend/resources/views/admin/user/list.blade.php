@@ -6,6 +6,18 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     @endif
+    <style>
+        .text-truncate {
+            max-width: 200px;
+            /* Đặt độ rộng cố định cho cột */
+            white-space: nowrap;
+            /* Không cho phép xuống dòng */
+            overflow: hidden;
+            /* Ẩn phần văn bản vượt quá */
+            text-overflow: ellipsis;
+            /* Hiển thị dấu "..." khi văn bản bị cắt */
+        }
+    </style>
 
     <div id="list" class="row">
         <div class="col-sm-12">
@@ -37,7 +49,7 @@
                                     <div class="dataTables_filter" id="hidden-table-info_filter">
                                         <form action="{{ route('admin.user.index') }}" method="GET">
                                             <input type="text" name="search" class="form-control"
-                                                placeholder="Tìm kiếm bình luận" value="{{ request()->input('search') }}">
+                                                placeholder="Tìm kiếm người dùng" value="{{ request()->input('search') }}">
                                             <button type="submit" class="btn btn-primary">Tìm kiếm</button>
                                         </form>
                                     </div>
@@ -65,26 +77,26 @@
                                         </tr>
                                     @else
                                         @foreach ($users as $item)
-                                            <tr>
+                                            <tr >
                                                 <td>{{ $item->id }}</td>
-                                                <td> <img src="{{ Storage::url($item->avatar_img) }}" width="100"
-                                                        height="100" alt="{{ $item->username }}"></td>
-                                                <td>{{ $item->username }}</td>
-                                                <td>{{ $item->phone }}</td>
-                                                <td>{{ $item->email }}</td>
-                                                <td>{{ $item->address }}</td>
-                                                <td>{{ $item->role }}</td>
+                                                <td style="width: 100px;"> <img src="{{ Storage::url($item->avatar_img) }}"
+                                                        width="100" height="100" alt="{{ $item->username }}"></td>
+                                                <td >{{ $item->username }}</td>
+                                                <td >{{ $item->phone }}</td>
+                                                <td class="text-truncate">{{ $item->email }}</td>
+                                                <td class="text-truncate">{{ $item->address }}</td>
+                                                <td class="text-td">{{ $item->role }}</td>
                                                 <td>
                                                     <a href="{{ route('admin.user.show', $item->id) }}"
-                                                        class="btn btn-primary btn-sm"><i class="fa fa-eye"></i></a>
-                                                    <form action="{{ route('admin.user.destroy', $item->id) }}" method="post">
+                                                        class="btn btn-primary"><i class="fa fa-eye"></i></a>
+                                                    <form action="{{ route('admin.user.destroy', $item->id) }}"
+                                                        method="POST" class="d-inline-block">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button onclick="return confirm('Ban co muon xoa khong')"
-                                                            class="btn btn-danger btn-sm" type="submit"> <i
+                                                        <button type="submit" class="btn btn-danger"
+                                                            onclick="return confirm('Bạn có chắc muốn xóa banner này?')"><i
                                                                 class="fa fa-trash-o"></i></button>
                                                     </form>
-
                                                 </td>
 
                                             </tr>
