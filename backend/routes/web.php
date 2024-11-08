@@ -11,6 +11,7 @@ use App\Http\Controllers\Admins\ProductController;
 use App\Http\Controllers\Admins\ProductVariantController;
 use App\Http\Controllers\Admins\UserController;
 use App\Http\Controllers\AdminTestController;
+use App\Http\Controllers\Admins\ProfileControllers;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admins\VoucherController;
@@ -49,6 +50,8 @@ Route::group(
     ],
     function () {
         Route::get('/', [AdminTestController::class, 'index'])->name('dashboard'); // Route dashboard admin
+        Route::get('profile', [ProfileControllers::class, 'index'])->name('profile'); // Route dashboard admin
+
         Route::resource('brands', BrandController::class); // Route cho thương hiệu
         Route::post('categories/{id}/restore', [CategoryController::class, 'restore'])->name('categories.restore');
         Route::post('products/{id}/restore', [ProductController::class, 'restore'])->name('products.restore');
