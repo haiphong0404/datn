@@ -8,6 +8,13 @@ import "./global.css";
 import { configAxios } from "./api/axios.js";
 
 
+import { Provider } from 'react-redux';
+import store from "./features/store.js";
+
+
+
+
+
 
 configAxios();
 
@@ -16,7 +23,9 @@ if (container) {
     const root = createRoot(container);
     root.render(
         <BrowserRouter>
-            <App />
+            <Provider store={store}>
+                <App />
+            </Provider>,
         </BrowserRouter>
     );
 }

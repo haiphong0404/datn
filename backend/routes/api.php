@@ -18,6 +18,11 @@ use App\Http\Controllers\Api\Auth\VerifyEmailController;
 use App\Http\Controllers\Api\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\Auth\PasswordResetLinkController;
+use App\Http\Controllers\Api\OrderController;
+use App\Models\Order;
+use App\Http\Controllers\Api\OrderDetailController;
+
+use App\Models\Cart;
 use App\Http\Controllers\Api\Auth\NewPasswordController;
 use App\Http\Controllers\Api\Auth\ForgotPasswordController;
 use App\Http\Controllers\Api\Auth\ResetPasswordController;
@@ -65,6 +70,12 @@ Route::middleware('api')->group(function () {
     Route::apiResource('products', ProductController::class);
 });
 Route::apiResource('user', UserController::class);
+
+Route::get('order-details/{order_id}', [OrderDetailController::class, 'getOrderDetails']);
+Route::apiResource('order-details', OrderDetailController::class);
+
+Route::apiResource('order', OrderController::class );
+Route::get('orders', [OrderController::class, 'abc']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/cart', [CartController::class, 'index']);
     Route::post('/cart/add', [CartController::class, 'addToCart']);
@@ -75,6 +86,7 @@ Route::get('products/{productId}/variants', [ProductVariantController::class, 'i
 Route::get('/variants/{id}', [ProductVariantController::class, 'show']);
 Route::get('/sizes', [SizeController::class, 'index']);
 Route::get('/colors', [ColorController::class, 'index']);
+Route::get('/colors', [ColorController::class, 'index']);
 Route::get('/comments', [CommentController::class, 'index']);
 Route::delete('/comments/{id}', [CommentController::class, 'softDelete']);
 Route::get('contacts', [ContactController::class, 'index']); // Lấy danh sách tất cả contacts
@@ -83,5 +95,4 @@ Route::get('/banners', [BannerController::class, 'index']);
 
 
 
-
-
+Route::get('/colors', [ColorController::class, 'index']);

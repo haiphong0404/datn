@@ -1,18 +1,11 @@
 import React from 'react';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
-
+import { useLoginForm } from '../../hooks/useLoginForm';
 const MyAccount = () => {
   const navigate = useNavigate();
   
 
-  const handleLogout = () => {
-    // Remove user info from localStorage
-    localStorage.removeItem('userInfo');
-    localStorage.removeItem('token'); // Optionally, remove token as well
-
-    // Redirect to login page
-    navigate('/login');
-  };
+  const {  handleLogout  } = useLoginForm();
 
   return (
     <div>

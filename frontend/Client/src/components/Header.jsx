@@ -1,22 +1,44 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useLoginForm } from '../hooks/useLoginForm';
+import { useDispatch, useSelector } from 'react-redux';
+import Badge from '@mui/material/Badge'; // Kiểm tra đường dẫn đúng
+import { loadCartFromLocalStorage, removeFromCart } from '../actions/action';
+import SearchBox from './search/SearchBox';
+
 const Header = () => {
-  // code reload fix lỗi plugin không tải
-  const location = useLocation();
-  const prevLocation = useRef(location.pathname);
-  const { userInfo } = useLoginForm();
+  const dispatch = useDispatch()
+  const { cart } = useSelector(state => state.updateCart)
+  const [localCart, setLocalCart] = useState([]);
 
   useEffect(() => {
+    setLocalCart(cart);
+  }, [cart]);
 
-    if (prevLocation.current !== location.pathname) {
-      prevLocation.current = location.pathname;
-      window.location.reload();
-    }
-  }, [location]);
-  // code reload fix lỗi plugin không tải
+  const handleHoverCart = () => {
+    const savedCart = JSON.parse(localStorage.getItem("cart")) || [];
+    setLocalCart(savedCart);
+  };
+
+  const handleRemoveFromCart = (id) => {
+    const updatedCart = localCart.filter(variant => variant.id !== id);
+    setLocalCart(updatedCart); // Cập nhật local state
+    localStorage.setItem("cart", JSON.stringify(updatedCart)); // Cập nhật localStorage
+
+    // Cập nhật Redux store
+    dispatch(removeFromCart(id)); // Giả sử bạn có một action để xóa biến thể khỏi Redux store
+  };
+
+  const calculateTotal = () => {
+    return localCart.reduce((total, item) => total + item.price * item.quantity, 0);
+  };
+
+  const { userInfo , handleLogout  } = useLoginForm();
+  console.log("Thông tin người dùng trong Account_info:", userInfo);
+
+  const products = useSelector((state) => state.product?.products || []);
+  console.log(products);
   return (
-
     <header className="header-area">
       {/* main header start */}
       <div className="main-header d-none d-lg-block">
@@ -45,18 +67,26 @@ const Header = () => {
                 <ul className="user-info-block">
                   <li>
                     <Link to="/my_account">
-                      <i className="fa fa-user-circle" /> {userInfo?.username || 'My Account'}
+                      {JSON.parse(localStorage.getItem("userInfo"))?.username || "Tài khoản"}
                     </Link>
                   </li>
                   <li>
                     <Link to="/checkout">
-                      <i className="fa fa-credit-card" /> Checkout
+                      <i className="fa fa-credit-card" /> Thanh Toán
                     </Link>
                   </li>
                   <li>
-                    <a href="/login">
-                      <i className="fa fa-sign-in" /> Sign In
-                    </a>
+                  {JSON.parse(localStorage.getItem("userInfo")) ? (
+                      // Nếu đã đăng nhập, hiển thị Đăng xuất
+                      <a href="#" onClick={handleLogout}>
+                        <i className="fa fa-sign-out" /> Đăng xuất
+                      </a>
+                    ) : (
+                      // Nếu chưa đăng nhập, hiển thị Đăng nhập
+                      <a href="/login">
+                        <i className="fa fa-sign-in" /> Đăng nhập
+                      </a>
+                    )}
                   </li>
                 </ul>
               </div>
@@ -88,117 +118,11 @@ const Header = () => {
                           <Link to="/">
                             Trang chủ
                           </Link>
-
-                        </li>
-                        <li className="position-static">
-                          <a href="#">
-                            Chọn Trang <i className="fa fa-angle-down" />
-                          </a>
-                          <ul className="megamenu dropdown">
-                            <li className="mega-title">
-                              <span>column 01</span>
-                              <ul>
-                                <li>
-                                  <Link to="/shop">
-                                    shop
-                                  </Link>
-                                </li>
-                              </ul>
-                            </li>
-                            <li className="mega-title">
-                              <span>column 02</span>
-                              <ul>
-                                <li>
-                                  <Link to="/product_details">
-                                    product details
-                                  </Link>
-                                </li>
-                              </ul>
-                            </li>
-                            <li className="mega-title">
-                              <span>column 03</span>
-                              <ul>
-                                <li>
-                                  <Link to="/cart">
-                                    cart
-                                  </Link>
-                                </li>
-                                <li>
-
-                                  <Link to="/checkout">
-                                    checkout
-                                  </Link>
-
-                                </li>
-
-                              </ul>
-                            </li>
-                            <li className="mega-title">
-                              <span>column 04</span>
-                              <ul>
-                                <li>
-
-                                  <Link to="/my_account">
-                                    my-account
-                                  </Link>
-
-                                </li>
-                                <li>
-                                  <a href="login-register.html">
-                                    login-register
-                                  </a>
-                                </li>
-                                <li>
-
-                                  <Link to="/about_us">
-                                    about us
-                                  </Link>
-                                </li>
-                                <li>
-                                  <Link to="/contact_us">
-                                    contact us
-                                  </Link>
-                                </li>
-                                <li>
-                                  <Link to="/faqs">
-                                    FAQ
-                                  </Link>
-                                </li>
-                              </ul>
-                            </li>
-                          </ul>
                         </li>
                         <li>
                           <Link to="/shop">
-                            Cửa hàng <i className="fa fa-angle-down" />
+                            Cửa hàng
                           </Link>
-                          <ul className="dropdown">
-                            <li>
-                              <Link to="#" className="shop-link">
-                                Shop{" "}
-                                <i className="fa fa-angle-right" />
-                              </Link>
-                              <ul className="dropdown">
-                                <li>
-                                  <Link to="/shop" className="shop-grid-left-sidebar">
-                                    shop
-                                  </Link>
-                                </li>
-                              </ul>
-                            </li>
-                            <li>
-                              <Link to="/product-details" className="products-details">
-                                products details <i className="fa fa-angle-right" />
-                              </Link>
-                              <ul className="dropdown">
-                                <li>
-                                  <Link to="/product_details">
-                                    product details
-                                  </Link>
-                                </li>
-                              </ul>
-                            </li>
-                          </ul>
                         </li>
                         <li>
                           <Link to="/blog">
@@ -207,6 +131,16 @@ const Header = () => {
                         <li>
                           <Link to="/contact_us">
                             Liên hệ</Link>
+                        </li>
+                        <li>
+                          <Link to="/faqs">
+                            Hỏi đáp
+                          </Link>
+                        </li>
+                        <li>
+                          <Link to="/about_us">
+                            Giới thiệu
+                          </Link>
                         </li>
                       </ul>
                     </nav>
@@ -221,86 +155,45 @@ const Header = () => {
                   <div className="header-configure-area">
                     <ul className="nav">
                       <li>
-                        <a href="#" className="search-trigger">
+                        {/* <a href="#" className="search-trigger">
                           <i className="fa fa-search" />
-                        </a>
+                        </a> */}
+                        {/* <SearchBox products={products} /> */}
                       </li>
                       {/* minicart của header */}
                       <li className="mini-cart-wrap">
-                        <Link to="cart" className="minicart-btn">
-                          <i className="fa fa-shopping-cart" />
-                          <span className="notification">2</span>
+                        <Link to="/cart" className="minicart-btn">
+                          <Badge badgeContent={cart.length} color="success">
+                            <i className="fa fa-shopping-cart" />
+                          </Badge>
                         </Link>
-                        <div className="cart-list-wrapper">
+                        <div className="cart-list-wrapper" onMouseEnter={handleHoverCart}>
                           <ul className="cart-list">
-                            <li>
-                              <div className="cart-img">
-                                <a href="product-details.html">
-                                  <img
-                                    src="assets/img/cart/cart-1.jpg"
-                                    alt=""
-                                  />
-                                </a>
-                              </div>
-                              <div className="cart-info">
-                                <h6 className="product-name">
-                                  <a href="product-details.html">
-                                    7th Generation classic
-                                  </a>
-                                </h6>
-                                <span className="cart-qty">Qty: 1</span>
-                                <span className="item-price">$60.00</span>
-                              </div>
-                              <div className="del-icon">
-                                <i className="fa fa-times" />
-                              </div>
-                            </li>
-                            <li>
-                              <div className="cart-img">
-                                <a href="product-details.html">
-                                  <img
-                                    src="assets/img/cart/cart-2.jpg"
-                                    alt=""
-                                  />
-                                </a>
-                              </div>
-                              <div className="cart-info">
-                                <h6 className="product-name">
-                                  <a href="product-details.html">
-                                    Digital 8th generation
-                                  </a>
-                                </h6>
-                                <span className="cart-qty">Qty: 2</span>
-                                <span className="item-price">$70.00</span>
-                              </div>
-                              <div className="del-icon">
-                                <i className="fa fa-times" />
-                              </div>
-                            </li>
+                            {localCart.map((variant) => (
+                              <li key={variant.id}>
+                                <div className="cart-img">
+                                  <Link to={`/product_details/${variant.id}`}>
+                                    <img src={variant.image} alt={variant.name} />
+                                  </Link>
+                                </div>
+                                <div className="cart-info">
+                                  <h6 className="product-name">
+                                    <Link to={`/product_details/${variant.id}`}>{variant.productName}</Link>
+                                  </h6>
+                                  <span className="cart-qty">Số lượng: {variant.quantity}</span>
+                                  <span className="item-price">{(variant.price * variant.quantity)}Vnd</span>
+                                </div>
+                                <div className="del-icon" onClick={() => handleRemoveFromCart(variant.id)}>
+                                  <i className="fa fa-times" />
+                                </div>
+                              </li>
+                            ))}
                           </ul>
                           <ul className="minicart-pricing-box">
-                            <li>
-                              <span>Sub-Total</span>
-                              <span>
-                                <strong>$300.00</strong>
-                              </span>
-                            </li>
-                            <li>
-                              <span>Eco Tax (-2.00)</span>
-                              <span>
-                                <strong>$10.00</strong>
-                              </span>
-                            </li>
-                            <li>
-                              <span>VAT (20%)</span>
-                              <span>
-                                <strong>$60.00</strong>
-                              </span>
-                            </li>
                             <li className="total">
                               <span>Total</span>
                               <span>
-                                <strong>$370.00</strong>
+                                <strong>{calculateTotal().toLocaleString()} Vnd</strong>
                               </span>
                             </li>
                           </ul>
@@ -325,7 +218,6 @@ const Header = () => {
         {/* header middle area end */}
       </div>
       {/* main header start */}
-      {/* mobile header start */}
       {/* mobile header start */}
       <div className="mobile-header d-lg-none d-md-block sticky black-soft">
         {/*mobile header top start */}
@@ -358,9 +250,7 @@ const Header = () => {
         {/* mobile header top start */}
       </div>
       {/* mobile header end */}
-      {/* mobile header end */}
       {/* offcanvas mobile menu start */}
-      {/* off-canvas menu start */}
       <aside className="off-canvas-wrapper">
         <div className="off-canvas-overlay" />
         <div className="off-canvas-inner-content">
@@ -377,207 +267,51 @@ const Header = () => {
                 </button>
               </form>
             </div>
-            {/* search box end */}
-            {/* mobile menu start */}
-            <div className="mobile-navigation">
-              {/* mobile menu navigation start */}
-              <nav>
-                <ul className="mobile-menu">
-                  <li className="menu-item-has-children">
-                    <Link to="/">
-                      Home
-                    </Link>
-                    <ul className="dropdown">
-                      <li>
-                        <Link to="/">
-                          Home
-                        </Link>
-                      </li>
-                    </ul>
-                  </li>
-                  <li className="menu-item-has-children">
-                    <a href="#">pages</a>
-                    <ul className="megamenu dropdown">
-                      <li className="mega-title menu-item-has-children">
-                        <a href="#">column 01</a>
-                        <ul className="dropdown">
-                          <li>
-                            <Link to="/shop">
-                              shop
-                            </Link>
-                          </li>
-                        </ul>
-                      </li>
-                      <li className="mega-title menu-item-has-children">
-                        <a href="#">column 02</a>
-                        <ul className="dropdown">
-                          <li>
-
-                            <Link to="/product_details">
-                              product details
-                            </Link>
-
-                          </li>
-                        </ul>
-                      </li>
-                      <li className="mega-title menu-item-has-children">
-                        <a href="#">column 03</a>
-                        <ul className="dropdown">
-                          <li>
-
-                            <Link to="/cart">
-                              cart
-                            </Link>
-
-                          </li>
-                          <li>
-
-                            <Link to="/checkout">
-                              checkout
-                            </Link>
-
-                          </li>
-                          <li>
-                            <a href="compare.html">compare</a>
-                          </li>
-                          <li>
-                            <a href="wishlist.html">wishlist</a>
-                          </li>
-                        </ul>
-                      </li>
-                      <li className="mega-title menu-item-has-children">
-                        <a href="#">column 04</a>
-                        <ul className="dropdown">
-                          <li>
-
-                            <Link to="/my-account">
-                              my-account
-                            </Link>
-
-                          </li>
-                          <li>
-                            <a href="login-register.html">login-register</a>
-                          </li>
-                          <li>
-
-                            <Link to="/about_us">
-                              about us
-                            </Link>
-                          </li>
-                          <li>
-                            <Link to="/contact_us">
-                              Contact us</Link>
-                          </li>
-                        </ul>
-                      </li>
-                    </ul>
-                  </li>
-                  <li className="menu-item-has-children ">
-                    <a href="#">shop</a>
-                    <ul className="dropdown">
-
-                      <li className="menu-item-has-children">
-                        <a href="#">products details</a>
-                        <ul className="dropdown">
-                          <li>
-                            <Link to="/product-details">
-                              product details
-                            </Link>
-                          </li>
-                        </ul>
-                      </li>
-                    </ul>
-                  </li>
-                  <li className="menu-item-has-children ">
-                    <Link to="/blog">
-                      Blog
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/contact_us">
-                      Contact us</Link>
-                  </li>
-                </ul>
-              </nav>
-              {/* mobile menu navigation end */}
-            </div>
             {/* mobile menu end */}
             <div className="mobile-settings">
               <ul className="nav">
-                <li>
-
-                </li>
                 <li>
                   <div className="dropdown mobile-top-dropdown">
                     <a
                       href="#"
                       className="dropdown-toggle"
-                      id="myaccount"
-                      data-bs-toggle="dropdown"
+                      data-toggle="dropdown"
                       aria-haspopup="true"
                       aria-expanded="false"
                     >
-                      My Account
-                      <i className="fa fa-angle-down" />
+                      Tài khoản
                     </a>
-                    <div className="dropdown-menu" aria-labelledby="myaccount">
-
-
-                      <Link className="dropdown-item" to="/my-account">
-                        my account
+                    <div className="dropdown-menu">
+                      <Link className="dropdown-item" to="/my_account">
+                        Tài khoản của tôi
                       </Link>
-                      <a className="dropdown-item" href="login-register.html">
-                        {" "}
-                        login
-                      </a>
-                      <a className="dropdown-item" href="login-register.html">
-                        register
-                      </a>
+                      <Link className="dropdown-item" to="/my_account">
+                        Thông tin cá nhân
+                      </Link>
+                      <Link className="dropdown-item" to="/my_account">
+                        Lịch sử đơn hàng
+                      </Link>
+                      <Link className="dropdown-item" to="/checkout">
+                        Thanh toán
+                      </Link>
                     </div>
                   </div>
                 </li>
+                <li>
+                  <Link to="/contact_us">Liên hệ</Link>
+                </li>
+                <li>
+                  <Link to="/faqs">Hỏi đáp</Link>
+                </li>
               </ul>
             </div>
-            {/* offcanvas widget area start */}
-            <div className="offcanvas-widget-area">
-              <div className="off-canvas-contact-widget">
-                <ul>
-                  <li>
-                    <i className="fa fa-mobile" />
-                    <a href="#">0123456789</a>
-                  </li>
-                  <li>
-                    <i className="fa fa-envelope-o" />
-                    <a href="#">info@yourdomain.com</a>
-                  </li>
-                </ul>
-              </div>
-              <div className="off-canvas-social-widget">
-                <a href="#">
-                  <i className="fa fa-facebook" />
-                </a>
-                <a href="#">
-                  <i className="fa fa-twitter" />
-                </a>
-                <a href="#">
-                  <i className="fa fa-pinterest-p" />
-                </a>
-                <a href="#">
-                  <i className="fa fa-linkedin" />
-                </a>
-                <a href="#">
-                  <i className="fa fa-youtube-play" />
-                </a>
-              </div>
-            </div>
-            {/* offcanvas widget area end */}
+            {/* end of mobile settings */}
           </div>
         </div>
       </aside>
-      {/* off-canvas menu end */}
       {/* offcanvas mobile menu end */}
     </header>
-
   );
 };
+
 export default Header;
