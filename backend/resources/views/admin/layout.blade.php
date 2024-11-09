@@ -275,21 +275,34 @@
                     <!-- user login dropdown start-->
                     <li class="dropdown">
                         <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                            <img alt="" src="{{ asset('assets') }}/admin/img/avatar1_small.jpg">
-                            <span class="username">Jhon Doue</span>
+                            <img src="{{ Storage::url(optional(Auth::user())->avatar_img) }}" alt="{{ optional(Auth::user())->username }}" width="30px">
+                            <span class="username">{{ optional(Auth::user())->username }}</span>
                             <b class="caret"></b>
                         </a>
-                        <ul class="dropdown-menu extended logout dropdown-menu-right">
-                            <div class="log-arrow-up"></div>
-                            <li><a href="{{ route('admin.profile') }}"><i class=" fa fa-suitcase"></i>Profile</a></li>
-                            <li><a href="#"><i class="fa fa-cog"></i> Settings</a></li>
-                            <li><a href="#"><i class="fa fa-bell-o"></i> Notification</a></li>
-                            <li><a href="login.html"><i class="fa fa-key"></i> Log Out</a></li>
+                        
+                        
+                        <ul class="dropdown-menu dropdown-menu-right">
+                            <li>
+                                <a href="{{ route('admin.profile') }}" class="dropdown-item">
+                                    <i class="fa fa-suitcase"></i> Profile
+                                </a>
+                            </li>
+                            <li>
+                                {{-- <a href="{{ route('admin.logout') }}" class="dropdown-item">
+                                    <i class="fa fa-key"></i> Logout
+                                </a> --}}
+                                <form action="{{ route('logout') }}" method="POST" style="display: inline;">
+                                    @csrf
+                                    <button type="submit" class="btn btn-link"><i class="fa fa-key"></i> Logout</button>
+                                </form>
+                                
+                            </li>
                         </ul>
+                        
                     </li>
-                    {{-- <li class="sb-toggle-right">
-                        <i class="fa  fa-align-right"></i>
-                    </li> --}}
+                    <li class="sb-toggle-right">
+                        <i class="fa fa-sign-in mr-2"></i>Website
+                    </li>
                     <!-- user login dropdown end -->
                 </ul>
                 <!--search & user info end-->

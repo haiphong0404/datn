@@ -23,13 +23,11 @@ use App\Http\Controllers\Admins\VoucherController;
 | Route cho Web, dành cho phần admin và người dùng
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [AdminTestController::class, 'index'])->middleware('auth');
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+// Route::get('/dashboard', function () {
+//     return view('dashboard');
+// })->middleware(['auth', 'verified'])->name('dashboard');
 
 // Route profile
 Route::middleware('auth')->group(function () {
@@ -49,8 +47,14 @@ Route::group(
         // 'middleware' => ['auth', 'admin'] // Nếu cần middleware xác thực
     ],
     function () {
-        Route::get('/', [AdminTestController::class, 'index'])->name('dashboard'); // Route dashboard admin
-        Route::get('profile', [ProfileControllers::class, 'index'])->name('profile'); // Route dashboard admin
+        // Route::get('/', function () {
+        //     return view('admin/index');
+        // });
+        Route::get('profile', [ProfileControllers::class, 'index'])->name('profile');
+        // Route trong group 'admin' cho trang profile
+        Route::get('profile/edit', [ProfileControllers::class, 'edit'])->name('profile.edit');
+        Route::put('profile/update', [ProfileControllers::class, 'update'])->name('profile.update');
+        // Route::post('/admin/logout', [ProfileControllers::class, 'logout'])->name('logout');
 
         Route::resource('brands', BrandController::class); // Route cho thương hiệu
         Route::post('categories/{id}/restore', [CategoryController::class, 'restore'])->name('categories.restore');
@@ -62,8 +66,8 @@ Route::group(
         Route::resource('user', UserController::class);  // Route cho người dùng
         Route::resource('comments', CommentController::class);  // Route cho bình luận
         Route::resource('contacts', ContactController::class);
-        Route::resource('articles', ArticlesController::class);// Route cho bài viết
-        Route::resource('banners',BannerController::class);// Route cho banner
+        Route::resource('articles', ArticlesController::class); // Route cho bài viết
+        Route::resource('banners', BannerController::class); // Route cho banner
         Route::post('banners/{id}/restore', [BannerController::class, 'restore'])->name('banners.restore');
 
         // Route chức năng order và order detail
