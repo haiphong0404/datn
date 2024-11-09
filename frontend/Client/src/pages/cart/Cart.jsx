@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { loadCartFromLocalStorage, removeFromCart } from '../../actions/action';
+import { loadCartFromLocalStorage, loadCartFromRedux, removeFromCart, updateCart } from '../../actions/action';
 import { Link } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 const Cart = () => {
@@ -34,34 +34,36 @@ const Cart = () => {
 
   const handleQuantityChange = (id, newQuantity) => {
     const variant = localCart.find(variant => variant.id === id);
-  
+
     if (!variant) return; // Nếu không tìm thấy biến thể, không làm gì cả
-  
+
     // Kiểm tra xem số lượng mới có vượt quá số lượng tồn kho không
-    if (newQuantity > variant.stock) { // Thay variant.stock bằng thuộc tính mà bạn dùng để xác định số lượng tối đa
+    if (newQuantity > variant.stock) {
       toast.error("Số lượng vượt quá số lượng tối đa trong kho!");
-      return; // Ngăn không cho cập nhật số lượng nếu vượt quá
+      return;
     }
-  
+
     if (newQuantity <= 0) return; // Ngăn không cho số lượng nhỏ hơn hoặc bằng 0
-  
+
     const updatedCart = localCart.map((variant) =>
       variant.id === id ? { ...variant, quantity: newQuantity } : variant
     );
-  
+
     setLocalCart(updatedCart);
     localStorage.setItem("cart", JSON.stringify(updatedCart));
-  
-    // Cập nhật quantity cho sản phẩm đang chọn
-    const updatedSelectedVariants = selectedVariants.map((variant) =>
-      variant.id === id ? { ...variant, quantity: newQuantity } : variant
-    );
-  
-    setSelectedVariants(updatedSelectedVariants);
+
+    // Cập nhật giỏ hàng trong Redux
+    dispatch(updateCart(updatedCart));  // updateCart là một action bạn phải tạo ra để cập nhật cart trong Redux
   };
-  
-  
-  
+
+
+  useEffect(() => {
+    const savedCart = loadCartFromLocalStorage(); // Lấy giỏ hàng từ localStorage
+    setLocalCart(savedCart);
+    dispatch(loadCartFromRedux(savedCart)); // loadCartFromRedux là một action để cập nhật giỏ hàng trong Redux nếu cần
+  }, []);
+
+
 
 
   const handleCheckboxChange = (variant) => {
@@ -78,11 +80,11 @@ const Cart = () => {
   return (
     <div>
       <div
-          className="breadcrumb-area breadcrumb-img bg-img"
-          style={{
-            backgroundImage: "url(/assets/img/banner/shop.jpg)",
-          }}
-        ></div>
+        className="breadcrumb-area breadcrumb-img bg-img"
+        style={{
+          backgroundImage: "url(/assets/img/banner/shop.jpg)",
+        }}
+      ></div>
       <main>
         <div className="cart-main-wrapper section-padding">
           <div className="container">
@@ -102,49 +104,55 @@ const Cart = () => {
                             <img src={variant.image} alt={variant.name} width={200} />
                           </Link>
                         </div>
+
                         <div className="variant-info">
-                        <Link to={`/product_details/${variant.productId}`}>
-                          <h4 className="variant-name">{variant.productName}</h4>
+                          <Link to={`/product_details/${variant.productId}`}>
+                            <h4 className="variant-name">{variant.productName}</h4>
                           </Link>
-                          <p className="variant-size">Size: {variant.size}</p>
-                          <p className="variant-color">Màu: {variant.color}</p>
-                          <p className="variant-price">Giá: {variant.price} Vnd</p>
-                          <div className="variant-quantity">
-                            <button onClick={() => handleQuantityChange(variant.id, variant.quantity - 1)}>
-                              -
-                            </button>
-                            <span>{variant.quantity}</span>
-                            <button onClick={() => handleQuantityChange(variant.id, variant.quantity + 1)}>
-                              +
-                            </button>
+                          <div className="variant-size-color">
+                            <p className="variant-color">Màu: {variant.color}</p>
+                            <p className="variant-size">Size: {variant.size}</p>
                           </div>
                         </div>
-                        <button className="remove-button" onClick={() => handleRemoveFromCart(variant.id)}>
-                          <i className="fa fa-trash-o" />
-                        </button>
+
+                        <div className="variant-price-quantity">
+                          <p className="variant-price"> {variant.price} Vnd</p>
+                          <div className="variant-quantity">
+                            <button onClick={() => handleQuantityChange(variant.id, variant.quantity - 1)}>-</button>
+                            <span>{variant.quantity}</span>
+                            <button onClick={() => handleQuantityChange(variant.id, variant.quantity + 1)}>+</button>
+                          </div>
+                        </div>
+
+                        <div className="remove-section">
+                          <button className="remove-button" onClick={() => handleRemoveFromCart(variant.id)}>
+                            <i className="fa fa-trash-o" />
+                          </button>
+                        </div>
                       </div>
                     ))}
                   </div>
                 </div>
 
                 <div className="col-lg-4">
-                  <div className="cart-calculator-wrapper">
-                    <div className="cart-calculate-items">
+                  <div className="total-calculation-wrapper">
+                    <div className="total-items-summary">
                       <h6>Tổng Số Tiền</h6>
-                      <p>
-                        {calculateTotalSelected()} Vnd {/* Hiển thị tổng tiền của sản phẩm được chọn */}
-                      </p>
-                      <button className="btn btn-sqr d-block" onClick={() => toast("Proceed to checkout!")}>
-                       Thanh toán
+                      <p>{calculateTotalSelected()} Vnd {/* Hiển thị tổng tiền của sản phẩm được chọn */}</p>
+                      <button className="checkout-button d-block" onClick={() => toast("Proceed to checkout!")}>
+                        Thanh toán
                       </button>
                     </div>
                   </div>
                 </div>
+
               </div>
             </div>
           </div>
         </div>
       </main>
+
+
     </div>
   );
 };

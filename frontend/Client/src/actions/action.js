@@ -22,3 +22,13 @@ export const removeFromCart = (id) => {
     return savedCart ? JSON.parse(savedCart) : [];
   };
   
+  // action.js
+export const updateCart = (cart) => ({
+  type: 'UPDATE_CART',
+  payload: cart,
+});
+
+export const loadCartFromRedux = (cart) => ({
+  type: 'LOAD_CART',
+  payload: cart,
+});

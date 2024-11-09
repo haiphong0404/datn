@@ -47,12 +47,17 @@ const SearchProducts = () => {
             {filteredProducts.map((product) => (
               <li key={product.id} className="product-search">
                 <div className="cart-img">
-                                  <Link to={`/product_details/${product.id}`}>
-                                    <img src={product.image} alt={product.name} />
-                                  </Link>
-                                </div>
+                  <Link to={`/product_details/${product.id}`}>
+                    <img src={product.image} alt={product.name} />
+                  </Link>
+                </div>
                 <div className="search-list">
-                  <h4 className='search-name'><Link to={`/product_details/${product.id}`}>{product.name}</Link></h4>
+                  <h4 className='search-name'><Link to={`/product_details/${product.id}`}><span style={{
+                    color: 'black',  // màu chữ
+                    fontSize: '16px',  // kích thước chữ
+                    fontWeight: 'bold',  // độ đậm chữ
+                    textDecoration: 'none',  // bỏ gạch dưới liên kết
+                  }} > {product.name}</span></Link></h4>
                   <p>{product.price} VND</p>
                 </div>
               </li>

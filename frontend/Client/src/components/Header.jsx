@@ -156,7 +156,7 @@ const Header = () => {
                       {/* minicart của header */}
                       <li className="mini-cart-wrap">
                         <Link to="/cart" className="minicart-btn">
-                          <Badge badgeContent={cart.length} color="success">
+                          <Badge badgeContent={localCart.length} color="success">
                             <i className="fa fa-shopping-cart" />
                           </Badge>
                         </Link>

@@ -34,7 +34,7 @@ const Details = () => {
             } else {
                 if (quantity <= selectedVariant.quantity) {
                     const newProduct = {
-                        id: selectedVariant.id,
+                        id: `${product.id}-${selectedColor}-${selectedSize}`, // Thống nhất cấu trúc ID
                         productId: product.id,
                         productName: product.name,
                         image: selectedVariant.images,
@@ -44,6 +44,7 @@ const Details = () => {
                         color: selectedVariant.color,
                         stock: selectedVariant.quantity
                     };
+                    
                     const updatedCart = [...localCart, newProduct];
                     setLocalCart(updatedCart);
                     localStorage.setItem("cart", JSON.stringify(updatedCart));

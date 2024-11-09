@@ -38,7 +38,16 @@ const initialState ={
     cart: state.cart.filter((item) => item.id !== action.payload),
   };
   
-
+  case 'UPDATE_CART':
+    return {
+      ...state,
+      cart: action.payload,
+    };
+  case 'LOAD_CART':
+    return {
+      ...state,
+      cart: action.payload,
+    };
   default:
   return state;
 
