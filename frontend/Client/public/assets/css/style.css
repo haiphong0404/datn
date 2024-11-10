@@ -7231,5 +7231,43 @@ blockquote {
 .imgslide:hover {
   box-shadow: none; /* Remove any shadow effect on hover */
 }
+/* Container cho số lượng */
+.g {
+  text-align: center;
+}
+
+/* Container của các nút thay đổi số lượng */
+.h {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+/* Nút - và + */
+.h button {
+  background-color: #f4f4f4;
+  border: 1px solid #ccc;
+  padding: 5px 10px;
+  font-size: 18px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+/* Nút - khi hover */
+.h button:hover {
+  background-color: #f1f1f1;
+}
+
+/* Input hiển thị số lượng */
+.h input {
+  width: 50px;
+  text-align: center;
+  font-size: 16px;
+  padding: 5px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  margin: 0;
+}
 
 

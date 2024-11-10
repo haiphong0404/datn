@@ -20,7 +20,7 @@ const Orders = () => {
                             <thead className="thead-light">
                                 <tr>
                                     <th>Đơn Hàng</th>
-                                    <th>Ngày</th>
+                                    <th>Ngày Đặt</th>
                                     <th>Trạng Thái</th>
                                     <th>Tổng Cộng</th>
                                     <th>Hành Động</th>

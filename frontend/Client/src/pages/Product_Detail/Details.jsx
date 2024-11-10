@@ -227,7 +227,7 @@ const Details = () => {
                         )}
 
                         <div className="price-box">
-                            <span className="price-regular">${selectedPrice !== null ? selectedPrice : product.price}</span>
+                            <span className="price-regular">{selectedPrice !== null ? selectedPrice : product.price}vnd</span>
                         </div>
 
                         <h6 className="option-title">Số lượng:</h6>
