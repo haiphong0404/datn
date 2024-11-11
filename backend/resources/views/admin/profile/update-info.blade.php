@@ -105,7 +105,7 @@
                     @enderror
                 </div>
 
-                <div class="form-group mb-4">
+                {{-- <div class="form-group mb-4">
                     <label for="role" class="form-label">Quyền</label>
                     <select class="form-select" id="role" name="role">
                         <option value="user" {{ old('role', $user->role) == 'user' ? 'selected' : '' }}>User
@@ -115,7 +115,7 @@
                         <option value="admin" {{ old('role', $user->role) == 'admin' ? 'selected' : '' }}>Admin
                         </option>
                     </select>
-                </div>
+                </div> --}}
 
                 <div class="mb-3 d-flex">
                     <a href="{{ route('admin.profile') }}" class="btn btn-secondary btn-lg flex-fill me-1">Quay lại</a>

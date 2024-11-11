@@ -374,12 +374,12 @@
                             <span>Product</span>
                         </a>
                     </li>
-                    {{-- <li>
-                        <a href="{{ route('admin.product_variant.index') }}">
-                            <i class="bi bi-chat-square-dots-fill"></i>
-                            <span>Product Variant</span>
+                    <li>
+                        <a href="{{ route('admin.vouchers.index') }}">
+                            <i class="fas fa-ticket-alt"></i>
+                            <span> Voucher</span>
                         </a>
-                    </li> --}}
+                    </li>
 
                 </ul>
                 <!-- sidebar menu end-->
