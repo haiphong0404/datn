@@ -16,6 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id');
             $table->date('order_date');
             $table->enum('status', ['pending', 'processing', 'completed', 'cancelled'])->default('pending');
+            $table->enum('payment_status', ['unpaid' ,'paid'])->default('unpaid');
             $table->decimal('total_amount', 10, 2);
             $table->string('name')->nullable(false);
             $table->string('phone')->nullable(false);
@@ -24,6 +25,7 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+           
         });
     }
 

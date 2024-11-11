@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Models\OrderDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class OrderController extends Controller
@@ -23,7 +25,7 @@ class OrderController extends Controller
         return response()->json($orders);
     }
 
-    // Hàm hỗ trợ chuyển đổi hình ảnh sang chuỗi Base64
+   
     private function getImageAsBase64($imagePath)
     {
         // Kiểm tra nếu hình ảnh tồn tại
@@ -42,28 +44,71 @@ class OrderController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
-    {
-    
-        
+ 
         
    
         // Create new order
-        $order = Order::create([
-            'user_id' => Auth::id(), // Lấy user_id từ Authentication
-            'order_date' => $request->order_date,
-            'status' => $request->status,
-            'total_amount' => $request->total_amount,
-            'name' => $request->name,
-            'phone' => $request->phone,
-            'address' => $request->address,
-            'infor' => $request->infor,
-        ]);
+        public function store(Request $request)
+        {
+            DB::beginTransaction();
+    
+            try {
+                // Lấy id của người dùng hiện tại
+                $userId = Auth::id();
+    
+                // Chuẩn bị dữ liệu để thêm vào bảng Order
+                $orderData = [
+                    'user_id' => $userId,
+                    'order_date' => $request->input('order_date'),
+                    'status' => $request->input('status'),
+                    'total_amount' => $request->input('total_amount'),
+                    'name' => $request->input('name'),
+                    'phone' => $request->input('phone'),
+                    'address' => $request->input('address'),
+                    'infor' => $request->input('infor')
+                ];
+    
+                // Kiểm tra nếu người dùng chọn `payment_status`
+                if ($request->has('payment_status')) {
+                    $orderData['payment_status'] = $request->input('payment_status');
+                } else {
+                    $orderData['payment_status'] = null;
+                }
+                // Tạo mới bản ghi Order
+                $order = Order::create($orderData);
+    
+                // Lấy ID của order mới tạo
+                $orderId = $order->id;
+    
+                // Thêm mới dữ liệu vào bảng OrderDetail
+                $orderDetails = $request->input('order_details');
+    
+                foreach ($orderDetails as $detail) {
+                    OrderDetail::create([
+                        'order_id' => $orderId,
+                        'product_variant_id' => $detail['product_variant_id'],
+                        'quantity' => $detail['quantity'],
+                        'price' => $detail['price']
+                    ]);
+                }
+    
+                DB::commit();
+    
+                return response()->json([
+                    'message' => 'Order và OrderDetail đã được thêm thành công!',
+                    'order' => $order,
+                ], 201);
+            } catch (\Exception $e) {
+                DB::rollBack();
+    
+                return response()->json([
+                    'message' => 'Đã xảy ra lỗi khi thêm Order và OrderDetail.',
+                    'error' => $e->getMessage(),
+                ], 500);
+            }
+        }
 
-        return response()->json($order, 201); // Trả về đơn hàng vừa tạo với status 201
-    }
-
-    /**
+    /**v
      * Display the specified resource.
      */
     public function show($id)
