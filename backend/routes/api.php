@@ -58,6 +58,8 @@ Route::middleware('api')->group(function () {
 });
 Route::apiResource('user', UserController::class);
 
-//route api order
-Route::apiResource('order', OrderController::class );
+
 Route::get('orders', [OrderController::class, 'abc']);
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('order', [OrderController::class, 'store']);
+});
