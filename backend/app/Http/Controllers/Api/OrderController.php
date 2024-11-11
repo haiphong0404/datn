@@ -4,21 +4,20 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
-use App\Models\User;
+use App\Models\OrderDetail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class OrderController extends Controller
 {
-
-
-   public function abc(Request $request)
+    public function abc(Request $request)
     {
         $userId = $request->query('user_id');
 
         if (!$userId) {
-            return response()->json(['error' => 'bạn phải đăng nhập vào'], 400);
+            return response()->json(['error' => 'Bạn phải đăng nhập vào'], 400);
         }
 
         $orders = Order::where('user_id', $userId)->get();
@@ -26,49 +25,153 @@ class OrderController extends Controller
         return response()->json($orders);
     }
 
+   
+    private function getImageAsBase64($imagePath)
+    {
+        // Kiểm tra nếu hình ảnh tồn tại
+        if ($imagePath && Storage::disk('public')->exists($imagePath)) {
+            // Lấy nội dung hình ảnh
+            $imageData = Storage::disk('public')->get($imagePath);
+            // Lấy loại mime type của hình ảnh
+            $mimeType = mime_content_type(storage_path('app/public/' . $imagePath));
+            // Mã hóa hình ảnh thành Base64
+            return 'data:' . $mimeType . ';base64,' . base64_encode($imageData);
+        }
 
-// Hàm hỗ trợ chuyển đổi hình ảnh sang chuỗi Base64
-private function getImageAsBase64($imagePath)
-{
-    // Kiểm tra nếu hình ảnh tồn tại
-    if ($imagePath && Storage::disk('public')->exists($imagePath)) {
-        // Lấy nội dung hình ảnh
-        $imageData = Storage::disk('public')->get($imagePath);
-        // Lấy loại mime type của hình ảnh
-        $mimeType = mime_content_type(storage_path('app/public/' . $imagePath));
-        // Mã hóa hình ảnh thành Base64
-        return 'data:' . $mimeType . ';base64,' . base64_encode($imageData);
+        return null; // Nếu không có hình ảnh, trả về null
     }
-
-    return null; // Nếu không có hình ảnh, trả về null
-}
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
-    {
-      
+ 
+        
+   
+        // Create new order
+        public function store(Request $request)
+        {
+            DB::beginTransaction();
+    
+            try {
+                // Lấy id của người dùng hiện tại
+                $userId = Auth::id();
+    
+                // Chuẩn bị dữ liệu để thêm vào bảng Order
+                $orderData = [
+                    'user_id' => $userId,
+                    'order_date' => $request->input('order_date'),
+                    'status' => $request->input('status'),
+                    'total_amount' => $request->input('total_amount'),
+                    'name' => $request->input('name'),
+                    'phone' => $request->input('phone'),
+                    'address' => $request->input('address'),
+                    'infor' => $request->input('infor')
+                ];
+    
+                // Kiểm tra nếu người dùng chọn `payment_status`
+                if ($request->has('payment_status')) {
+                    $orderData['payment_status'] = $request->input('payment_status');
+                } else {
+                    $orderData['payment_status'] = null;
+                }
+                // Tạo mới bản ghi Order
+                $order = Order::create($orderData);
+    
+                // Lấy ID của order mới tạo
+                $orderId = $order->id;
+    
+                // Thêm mới dữ liệu vào bảng OrderDetail
+                $orderDetails = $request->input('order_details');
+    
+                foreach ($orderDetails as $detail) {
+                    OrderDetail::create([
+                        'order_id' => $orderId,
+                        'product_variant_id' => $detail['product_variant_id'],
+                        'quantity' => $detail['quantity'],
+                        'price' => $detail['price']
+                    ]);
+                }
+    
+                DB::commit();
+    
+                return response()->json([
+                    'message' => 'Order và OrderDetail đã được thêm thành công!',
+                    'order' => $order,
+                ], 201);
+            } catch (\Exception $e) {
+                DB::rollBack();
+    
+                return response()->json([
+                    'message' => 'Đã xảy ra lỗi khi thêm Order và OrderDetail.',
+                    'error' => $e->getMessage(),
+                ], 500);
+            }
+        }
 
-      
-    }
-
-    /**
+    /**v
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show($id)
     {
-        
+        // Tìm bản ghi theo id
+        $order = Order::findOrFail($id);
+    
+        // Trả về response với dữ liệu bản ghi
+        return response()->json([
+            'message' => 'Order details retrieved successfully',
+            'data' => $order,
+        ], 200);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-     
-    }
+        // Tìm bản ghi cần sửa
+        $order = Order::findOrFail($id);
 
+        // Validate request
+        $request->validate([
+            'order_date' => 'required|date',
+            'status' => 'required|string',
+            'total_amount' => 'required|numeric',
+            'name' => 'required|string|max:255',
+            'phone' => 'required|string|max:15',
+            'address' => 'required|string|max:255',
+            'infor' => 'nullable|string',
+        ], [
+            'order_date.required' => 'Ngày đặt hàng là bắt buộc.',
+            'order_date.date' => 'Ngày đặt hàng không hợp lệ.',
+            'status.required' => 'Trạng thái là bắt buộc.',
+            'status.string' => 'Trạng thái phải là chuỗi.',
+            'total_amount.required' => 'Số tiền tổng là bắt buộc.',
+            'total_amount.numeric' => 'Số tiền tổng phải là một số.',
+            'name.required' => 'Tên là bắt buộc.',
+            'name.string' => 'Tên phải là chuỗi.',
+            'name.max' => 'Tên không được vượt quá 255 ký tự.',
+            'phone.required' => 'Số điện thoại là bắt buộc.',
+            'phone.string' => 'Số điện thoại phải là chuỗi.',
+            'phone.max' => 'Số điện thoại không được vượt quá 15 ký tự.',
+            'address.required' => 'Địa chỉ là bắt buộc.',
+            'address.string' => 'Địa chỉ phải là chuỗi.',
+            'address.max' => 'Địa chỉ không được vượt quá 255 ký tự.',
+            'infor.string' => 'Thông tin bổ sung phải là chuỗi.',
+        ]);
+
+        // Cập nhật thông tin đơn hàng
+        $order->update($request->only([
+            'order_date',
+            'status',
+            'total_amount',
+            'name',
+            'phone',
+            'address',
+            'infor',
+        ]));
+
+        return response()->json($order, 200); // Trả về đơn hàng đã được cập nhật
+    }
 
     /**
      * Remove the specified resource from storage.
@@ -76,14 +179,9 @@ private function getImageAsBase64($imagePath)
     public function destroy($id)
     {
         // Kiểm tra xem đơn hàng có tồn tại không
-        $order = Order::find($id);
-        
-        if (!$order) {
-            return response()->json(['message' => 'Order not found.'], 404); // Nếu không tìm thấy đơn hàng
-        }
-
+        $order = Order::findOrFail($id);
         $order->delete(); // Xóa đơn hàng
 
-        return response()->json(['message' => 'Order deleted successfully.'], 200);
+        return response()->json(['message' => 'Order deleted successfully'], 200); // Trả về thông báo xóa thành công
     }
 }
