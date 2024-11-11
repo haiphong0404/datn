@@ -80,7 +80,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/cart', [CartController::class, 'index']);
     Route::post('/cart/add', [CartController::class, 'addToCart']);
     Route::put('/cart/update', [CartController::class, 'updateCart']);
-    Route::delete('/cart/remove', [CartController::class, 'removeFromCart']);
+    Route::delete('/cart/remove/{product_variant_id}', [CartController::class, 'removeFromCart']);
 });
 Route::get('products/{productId}/variants', [ProductVariantController::class, 'index']);
 Route::get('/variants/{id}', [ProductVariantController::class, 'show']);
