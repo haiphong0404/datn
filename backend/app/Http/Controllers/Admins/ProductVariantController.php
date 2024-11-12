@@ -17,8 +17,10 @@ class ProductVariantController extends Controller
      */
     public function index($productId)
     {
-        // Lấy sản phẩm cùng với các biến thể và ảnh của từng biến thể
-        $product = Product::with(['variants.images'])->findOrFail($productId);
+        // Lấy sản phẩm cùng với các biến thể (theo thứ tự id mới nhất) và ảnh của từng biến thể
+        $product = Product::with(['variants' => function ($query) {
+            $query->orderBy('id', 'desc');
+        }, 'variants.images'])->findOrFail($productId);
 
         return view('admin.products.show', compact('product'));
     }
@@ -62,7 +64,7 @@ class ProductVariantController extends Controller
             ->first();
 
         if ($existingVariant) {
-            return back()->withErrors(['error' => 'Biến thể với kích thước và màu sắc này đã tồn tại.'])
+            return back()->withErrors(['error' => 'Sản phẩm với kích thước và màu sắc này đã tồn tại.'])
                 ->withInput();
         }
 
@@ -71,7 +73,7 @@ class ProductVariantController extends Controller
         $variant->product_id = $productId;
         $variant->size_id = $request->size_id === 'new' ? null : $request->size_id;
         $variant->color_id = $request->color_id === 'new' ? null : $request->color_id;
-        $variant->price = round($request->price, 2); 
+        $variant->price = round($request->price, 2);
         $variant->quantity = $request->quantity;
         $variant->save();
 
@@ -98,8 +100,6 @@ class ProductVariantController extends Controller
     }
 
 
-
-
     /**
      * Display the specified resource.
      */
@@ -123,48 +123,85 @@ class ProductVariantController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateProductVariantRequest $request, $productId, $variantId)
+    public function update(Request $request, $productId, $variantId)
     {
+        // Xác thực dữ liệu đầu vào
+        $request->validate([
+            'size_id' => 'required',
+            'color_id' => 'required',
+            'price' => 'required|numeric|min:0',
+            'quantity' => 'required|integer|min:0',
+            'variant_images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // Kích thước tối đa 2MB
+        ]);
+
         // Tìm biến thể hiện tại
         $variant = ProductVariant::findOrFail($variantId);
 
-        // Kiểm tra xem có biến thể nào khác với cùng size_id và color_id không
+        // Kiểm tra và thêm size mới nếu cần
+        if ($request->size_id === 'new' && $request->new_size) {
+            $newSize = Size::firstOrCreate(['name' => $request->new_size]);
+            $sizeId = $newSize->id;
+        } else {
+            $sizeId = $request->size_id;
+            if (!Size::where('id', $sizeId)->exists()) {
+                return back()->withErrors(['error' => 'Kích thước không tồn tại.'])->withInput();
+            }
+        }
+
+        // Kiểm tra và thêm color mới nếu cần
+        if ($request->color_id === 'new' && $request->new_color) {
+            $newColor = Color::firstOrCreate(['name' => $request->new_color]);
+            $colorId = $newColor->id;
+        } else {
+            $colorId = $request->color_id;
+            if (!Color::where('id', $colorId)->exists()) {
+                return back()->withErrors(['error' => 'Màu sắc không tồn tại.'])->withInput();
+            }
+        }
+
+        // Kiểm tra biến thể trùng lặp
         $existingVariant = ProductVariant::where('product_id', $productId)
-            ->where('size_id', $request->size_id)
-            ->where('color_id', $request->color_id)
-            ->where('id', '!=', $variantId) // Loại trừ biến thể hiện tại
+            ->where('size_id', $sizeId)
+            ->where('color_id', $colorId)
+            ->where('id', '!=', $variantId)
             ->first();
 
         if ($existingVariant) {
-            return back()->withErrors(['error' => 'Biến thể với kích thước và màu sắc này đã tồn tại.'])
-                ->withInput();
+            return back()->withErrors(['error' => 'Biến thể với kích thước và màu sắc này đã tồn tại.'])->withInput();
         }
+
+        // Tính toán chênh lệch số lượng để cập nhật incoming_quantity và total_quantity_in_stock
+        $quantityDifference = $request->quantity - $variant->quantity;
 
         // Cập nhật thông tin biến thể
         $variant->update([
-            'size_id' => $request->size_id,
-            'color_id' => $request->color_id,
+            'size_id' => $sizeId,
+            'color_id' => $colorId,
             'price' => round($request->price, 2),
             'quantity' => $request->quantity,
         ]);
 
-        // Xử lý hình ảnh mới nếu có
-        if ($request->hasFile('variant_images')) {
-            $variant->images()->delete(); // Xóa ảnh cũ
-            foreach ($request->file('variant_images') as $image) {
-                $imagePath = $image->store('variant_images', 'public');
-                $variant->images()->create(['image' => $imagePath]);
-            }
+        // Cập nhật số lượng tổng của sản phẩm cha
+        $product = Product::findOrFail($productId);
+
+        // Chỉ cập nhật `total_quantity_in_stock` và `incoming_quantity` khi có sự thay đổi trong số lượng thực tế
+        if ($quantityDifference > 0) {
+            // Tăng `incoming_quantity` và `total_quantity_in_stock` khi số lượng tăng
+            $product->total_quantity_in_stock += $quantityDifference; // Tăng số lượng trong kho
+            $product->incoming_quantity += $quantityDifference; // Tăng số lượng nhập vào kho
+        } elseif ($quantityDifference < 0) {
+            // Giảm `total_quantity_in_stock` khi số lượng giảm
+            $product->total_quantity_in_stock += $quantityDifference; // Giảm số lượng trong kho
         }
 
-        // Tính lại số lượng tổng cho sản phẩm cha
-        $product = Product::findOrFail($productId);
-        $product->update(['total_quantity_in_stock' => $product->variants->sum('quantity')]);
-        $product->update(['incoming_quantity' => $product->variants->sum('quantity')]);
+        $product->save();
 
         return redirect()->route('admin.products.variants.index', $productId)
             ->with('success', 'Cập nhật biến thể thành công');
     }
+
+
+
 
     /**
      * Remove the specified resource from storage.
@@ -176,17 +213,26 @@ class ProductVariantController extends Controller
     {
         // Tìm biến thể theo ID
         $variant = ProductVariant::findOrFail($variantId);
+
+        // Lấy số lượng của biến thể bị xóa
+        $quantityToRemove = $variant->quantity;
+
         // Xóa biến thể
         $variant->delete();
-        // Cập nhật tổng số lượng sản phẩm
+
+        // Cập nhật tổng số lượng của sản phẩm
         $product = Product::findOrFail($productId);
-        $totalQuantity = $product->variants()->sum('quantity'); // Tính lại tổng số lượng
-        $product->total_quantity_in_stock = $totalQuantity; // Cập nhật tổng số lượng
-        $product->incoming_quantity = $totalQuantity;
+
+        // Giảm tổng số lượng trong kho (total_quantity_in_stock) và số lượng nhập vào (incoming_quantity)
+        $product->total_quantity_in_stock -= $quantityToRemove;
+        $product->incoming_quantity -= $quantityToRemove;
+
+        // Lưu lại thay đổi
         $product->save();
 
         return redirect()->route('admin.products.variants.index', $productId)
             ->with('success', 'Biến thể đã được xóa thành công.');
     }
+
 
 }

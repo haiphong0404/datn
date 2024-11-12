@@ -20,6 +20,9 @@ class BannerSeeder extends Seeder
         for ($i = 0; $i < 5; $i++) {
             DB::table('banners')->insert([
                 'image_url' => $faker->imageUrl,
+                'title' => $faker->sentence,
+                'sub_title' => $faker->sentence,
+                'span_title' => $faker->sentence,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ]);

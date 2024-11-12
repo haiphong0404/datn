@@ -13,28 +13,28 @@ class CommentController extends Controller
      */
     public function index(Request $request)
     {
-        $search = $request->input('search');  
-    
+        $search = $request->input('search');
+
         $comments = Comment::withTrashed()
-            ->with('user', 'product') 
+            ->with('user', 'product')
             ->when($search, function ($query, $search) {
                 $query->where(function ($q) use ($search) {
                     $q->where('star_rating', 'LIKE', "%{$search}%")
-                      ->orWhereHas('user', function ($q) use ($search) {
-                          $q->where('username', 'LIKE', "%{$search}%");
-                      })
-                      ->orWhereHas('product', function ($q) use ($search) {
-                          $q->where('name', 'LIKE', "%{$search}%");
-                      });
+                        ->orWhereHas('user', function ($q) use ($search) {
+                            $q->where('username', 'LIKE', "%{$search}%");
+                        })
+                        ->orWhereHas('product', function ($q) use ($search) {
+                            $q->where('name', 'LIKE', "%{$search}%");
+                        });
                 });
             })
             ->get();
 
         $noResults = $comments->isEmpty();
-    
-        return view('admin.comment.list', compact('comments','noResults'));
+
+        return view('admin.comment.list', compact('comments', 'noResults'));
     }
-             
+
     /**
      * Show the form for creating a new resource.
      */
@@ -56,7 +56,7 @@ class CommentController extends Controller
      */
     public function show(string $id)
     {
-        $comments = Comment::findOrFail($id);// Lấy tất cả bình luận cùng với user và product liên quan
+        $comments = Comment::findOrFail($id); // Lấy tất cả bình luận cùng với user và product liên quan
         return view('admin.comment.show', compact('comments')); // Trả về view kèm dữ liệu bình luận
 
     }
@@ -88,11 +88,9 @@ class CommentController extends Controller
         return redirect()->route('admin.comments.index')->with('success', 'Bình luận đã được xóa thành công (xóa mềm)!');
     }
     public function restore($id)
-{
-    $comment = Comment::withTrashed()->findOrFail($id);
-    $comment->restore();
-    return redirect()->route('admin.comments.index')->with('success', 'Bình luận đã được khôi phục thành công!');
-}
-
-    
+    {
+        $comment = Comment::withTrashed()->findOrFail($id);
+        $comment->restore();
+        return redirect()->route('admin.comments.index')->with('success', 'Bình luận đã được khôi phục thành công!');
+    }
 }

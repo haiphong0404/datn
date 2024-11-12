@@ -5,9 +5,9 @@ import axios from "axios";
 import HeroSlider from "./homes/HeroSlider";
 import Category from "./homes/Category";
 import Brand from "./homes/Brand";
-import Blog from "./homes/Blog";
 import { Link } from "react-router-dom";
 import QuickViewModal from "./quickview/QuickView";
+import Blog from "./homes/Blog";
 
 
 

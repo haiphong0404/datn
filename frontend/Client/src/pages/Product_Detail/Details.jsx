@@ -5,69 +5,66 @@ import useProductById from '../../hooks/useProductById';
 import useProductSlider from '../../hooks/useProductSlider';
 import Slider from 'react-slick';
 import { useDispatch, useSelector } from 'react-redux';
-import add, { loadCartFromLocalStorage } from '../../actions/action';
+import add, { addCart, loadCartFromLocalStorage } from '../../actions/action';
 import { toast } from 'react-toastify';
+import axios from 'axios';
 
 const Details = () => {
     // addtocart
-    const cart = useSelector(state => state.updateCart)
+    const cart = useSelector(state => state.updateCart.cartItems);
+
+    // Hiển thị giỏ hàng
+    console.log(cart); // Kiểm tra xem dữ liệu giỏ hàng đã được cập nhật chưa
+
     const [localCart, setLocalCart] = useState(cart);
     const dispatch = useDispatch()
-    const handleAddToCart = () => {
+    const handleAddToCart = async () => {
         const selectedVariant = variants.find(variant =>
             variant.color === selectedColor && variant.size === selectedSize
         );
         const quantity = selectedQuantity;
-        const existingProduct = localCart.find(item => item.id === selectedVariant.id);
-
+    
         if (selectedVariant) {
-            if (existingProduct) {
-                if (existingProduct.quantity + quantity <= selectedVariant.quantity) {
-                    existingProduct.quantity += quantity;
-                    setLocalCart([...localCart]);
-                    localStorage.setItem("cart", JSON.stringify([...localCart]));
-                    dispatch(add(existingProduct));
+            try {
+                const response = await axios.post('/cart/add', {
+                    product_variant_id: selectedVariant.id,
+                    quantity: quantity,
+                    color: selectedColor,    // Gửi thông tin màu sắc
+                size: selectedSize, 
+                }, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}` // Gửi token xác thực
+                    }
+            });
+    
+                if (response.status === 200) {
                     toast.success("Sản phẩm đã được thêm vào giỏ hàng!");
-                } else {
-                    toast.error("Số lượng bạn muốn thêm vượt quá số lượng tối đa trong kho!");
-                }
-            } else {
-                if (quantity <= selectedVariant.quantity) {
-                    const newProduct = {
-                        id: `${product.id}-${selectedColor}-${selectedSize}`, // Thống nhất cấu trúc ID
-                        productId: product.id,
-                        productName: product.name,
-                        image: selectedVariant.images,
-                        price: selectedVariant.price,
-                        quantity: quantity,
-                        size: selectedVariant.size,
-                        color: selectedVariant.color,
-                        stock: selectedVariant.quantity
-                    };
+                    dispatch(addCart(response.data.cart_item)); // Cập nhật Redux
                     
-                    const updatedCart = [...localCart, newProduct];
+                    // Cập nhật localStorage
+                    const updatedCart = [...localCart, response.data.cart_item]; // Cập nhật localCart
                     setLocalCart(updatedCart);
-                    localStorage.setItem("cart", JSON.stringify(updatedCart));
-                    dispatch(add(newProduct));
-                    toast.success("Sản phẩm đã được thêm vào giỏ hàng!");
-                } else {
-                    toast.error("Số lượng bạn muốn thêm vượt quá số lượng tối đa trong kho!");
+                    localStorage.setItem("cart", JSON.stringify(updatedCart)); // Lưu giỏ hàng vào localStorage
                 }
+            } catch (error) {
+                toast.error("Đã có lỗi xảy ra, vui lòng thử lại");
             }
         } else {
             toast.error("Vui lòng chọn màu và kích thước sản phẩm!");
         }
     };
     
-    
-    
+
+
 
     useEffect(() => {
         const savedCart = loadCartFromLocalStorage(); // Lấy giỏ hàng từ localStorage
+        console.log(savedCart); // Kiểm tra dữ liệu
         setLocalCart(savedCart);
     }, [cart]);
 
-    
+
+
     // product variant
     const { productId } = useParams();
     const { product, loading: productLoading, error: productError } = useProductById(productId);
@@ -154,8 +151,8 @@ const Details = () => {
                                     onClick={() => {
                                         setSelectedImage(variant.images);
                                         // Reset color and size selection on image click
-                                        setSelectedColor(''); 
-                                        setSelectedSize(''); 
+                                        setSelectedColor('');
+                                        setSelectedSize('');
                                     }}
                                 >
                                     <img
@@ -248,7 +245,7 @@ const Details = () => {
                         <p className="pro-desc">{product.description}</p>
 
                         <div className="action_link">
-                        <button
+                            <button
                                 className={`btn btn-cart2 ${isOutOfStock ? 'disabled' : ''}`}
                                 onClick={isOutOfStock ? undefined : handleAddToCart}
                                 disabled={isOutOfStock}

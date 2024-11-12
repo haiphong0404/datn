@@ -34,9 +34,9 @@ const Header = () => {
     return localCart.reduce((total, item) => total + item.price * item.quantity, 0);
   };
 
-  const { userInfo } = useLoginForm();
+  const { userInfo , handleLogout  } = useLoginForm();
   console.log("Thông tin người dùng trong Account_info:", userInfo);
-  
+
   const products = useSelector((state) => state.product?.products || []);
   console.log(products);
   return (
@@ -68,7 +68,7 @@ const Header = () => {
                 <ul className="user-info-block">
                   <li>
                     <Link to="/my_account">
-                      <i className="fa fa-user-circle" /> {userInfo?.username || 'Tài khoản'}
+                      {JSON.parse(localStorage.getItem("userInfo"))?.username || "Tài khoản"}
                     </Link>
                   </li>
                   <li>
@@ -77,9 +77,17 @@ const Header = () => {
                     </Link>
                   </li>
                   <li>
-                    <a href="/login">
-                      <i className="fa fa-sign-in" /> Đăng nhập
-                    </a>
+                  {JSON.parse(localStorage.getItem("userInfo")) ? (
+                      // Nếu đã đăng nhập, hiển thị Đăng xuất
+                      <a href="#" onClick={handleLogout}>
+                        <i className="fa fa-sign-out" /> Đăng xuất
+                      </a>
+                    ) : (
+                      // Nếu chưa đăng nhập, hiển thị Đăng nhập
+                      <a href="/login">
+                        <i className="fa fa-sign-in" /> Đăng nhập
+                      </a>
+                    )}
                   </li>
                 </ul>
               </div>

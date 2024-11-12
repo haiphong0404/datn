@@ -7,6 +7,19 @@ const add = (product) =>{
 }
 export default add;
 
+export const addCart = (cartItem) =>{
+
+    return {
+        type : "ADD_TO_CART",
+        payload: cartItem
+    }
+}
+
+export const loadCartFromDatabase = (cartItems) => ({
+  type: 'LOAD_CART_FROM_DB',
+  payload: cartItems,
+});
+
 export const removeFromCart = (id) => {
     return {
       type: "REMOVEFROMCART",
@@ -32,3 +45,4 @@ export const loadCartFromRedux = (cart) => ({
   type: 'LOAD_CART',
   payload: cart,
 });
+

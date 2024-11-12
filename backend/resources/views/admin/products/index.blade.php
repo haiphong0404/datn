@@ -51,7 +51,7 @@ Danh sách sản phẩm
                                 <th>Giá</th>
                                 <th>Thương hiệu</th>
                                 <th>Hình ảnh</th>
-                                <th>Số lượng tồn kho  </th>
+                                <th>Số lượng tồn kho</th>
                                 <th>Tổng số lượng nhập kho</th>
                                 <th class="hidden-phone">Ngày tạo</th>
                                 <th class="center hidden-phone">Trạng thái</th>
@@ -59,7 +59,7 @@ Danh sách sản phẩm
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($products as $index => $product)
+                            @foreach($products as $product)
                             <tr class="gradeA">
                                 <td class="center">{{ $product->id }}</td>
                                 <td>{{ $product->name }}</td>
@@ -82,6 +82,7 @@ Danh sách sản phẩm
                                         alt="Ảnh đại diện hiện tại" class="mt-2">
                                 </td>
                                 <td>{{ $product->total_quantity_in_stock }}</td>
+                                <td>{{ $product->incoming_quantity }}</td>
                                 <td class="hidden-phone">{{ $product->created_at->format('Y-m-d') }}</td>
                                 <td class="hidden-phone">
                                     @if ($product->trashed())
@@ -108,7 +109,6 @@ Danh sách sản phẩm
                                         class="btn btn-secondary btn-sm" title="Xem biến thể">
                                         <i class="fa fa-list"></i> Biến thể
                                     </a>
-
                                     <form action="{{ route('admin.products.destroy', $product->id) }}" method="POST"
                                         style="display:inline;">
                                         @csrf
@@ -123,11 +123,14 @@ Danh sách sản phẩm
                             </tr>
                             @endforeach
                         </tbody>
-
                     </table>
+                    <div class="d-flex justify-content-end">
+                        {{ $products->links('pagination::bootstrap-5') }}
+                    </div>
                 </div>
             </div>
         </section>
     </div>
 </div>
+
 @endsection

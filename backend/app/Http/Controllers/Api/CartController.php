@@ -53,7 +53,7 @@ class CartController extends Controller
                         'price' => round($variant->price, 2),
                     ];
                 });
-        
+
                 return [
                     'image' => $this->getImageAsBase64($image),
                     'name' => $productVariant->product->name,
@@ -68,7 +68,7 @@ class CartController extends Controller
                     'variants' => $variants,
                 ];
             })
-        ];        
+        ];
 
         return response()->json($cartData);
     }
@@ -120,8 +120,8 @@ class CartController extends Controller
             $user = $request->user();
             $productVariantId = $request->input('product_variant_id');
             $quantity = $request->input('quantity');
-            $colorId = $request->input('color_id'); 
-            $sizeId = $request->input('size_id');   
+            $colorId = $request->input('color_id');
+            $sizeId = $request->input('size_id');
 
             if (!is_numeric($quantity) || $quantity <= 0) {
                 return response()->json(['message' => 'Số lượng không hợp lệ'], 400);
@@ -145,7 +145,7 @@ class CartController extends Controller
                 return response()->json(['message' => 'Sản phẩm không có trong giỏ hàng'], 404);
             }
             if ($colorId) {
-                $cartItem->color_id = $colorId; 
+                $cartItem->color_id = $colorId;
             }
             if ($sizeId) {
                 $cartItem->size_id = $sizeId; // Giả sử bạn có cột size_id trong bảng cart_item
