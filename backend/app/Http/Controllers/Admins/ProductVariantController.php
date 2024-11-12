@@ -103,10 +103,20 @@ class ProductVariantController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show($productId, $variantId)
     {
-        //
+        // Tìm sản phẩm theo ID
+        $product = Product::findOrFail($productId);
+
+        // Tìm biến thể theo ID trong sản phẩm
+        $variant = ProductVariant::with(['images', 'size', 'color'])
+            ->where('product_id', $productId)
+            ->findOrFail($variantId);
+
+        // Trả về view với dữ liệu sản phẩm và biến thể
+        return view('admin.product_variants.show', compact('product', 'variant'));
     }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -181,6 +191,29 @@ class ProductVariantController extends Controller
             'quantity' => $request->quantity,
         ]);
 
+        // Xử lý ảnh biến thể nếu có ảnh mới
+        if ($request->hasFile('variant_images')) {
+            // Xóa ảnh cũ (nếu cần)
+            foreach ($variant->images as $image) {
+                // Xóa ảnh khỏi thư mục
+                if (file_exists(public_path('storage/' . $image->image))) {
+                    unlink(public_path('storage/' . $image->image));
+                }
+                // Xóa ảnh trong database
+                $image->delete();
+            }
+
+            // Lưu các ảnh mới
+            foreach ($request->file('variant_images') as $imageFile) {
+                $path = $imageFile->store('variant_images', 'public'); // Lưu ảnh vào thư mục public/variant_images
+
+                // Tạo bản ghi trong bảng images
+                $variant->images()->create([
+                    'image' => $path,
+                ]);
+            }
+        }
+
         // Cập nhật số lượng tổng của sản phẩm cha
         $product = Product::findOrFail($productId);
 
@@ -199,6 +232,7 @@ class ProductVariantController extends Controller
         return redirect()->route('admin.products.variants.index', $productId)
             ->with('success', 'Cập nhật biến thể thành công');
     }
+
 
 
 

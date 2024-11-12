@@ -65,11 +65,11 @@ class AuthenticatedSessionController extends Controller
 
       }else{
         return redirect()->back()->with([
-           'message'=>'Email hoặc Mật khẩu không đúng vui lòng nhập lại !!' 
+           'message'=>'Email hoặc Mật khẩu không đúng vui lòng nhập lại !!'
         ]);
       }
     }
-    
+
 
 
     /**
