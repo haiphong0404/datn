@@ -18,6 +18,9 @@ module.exports = {
     ]
   },
   resolve: {
-    extensions: ['.js', '.jsx'] // Đảm bảo Webpack nhận diện các file .js và .jsx
+    extensions: ['.js', '.jsx'], // Đảm bảo Webpack nhận diện các file .js và .jsx
+    alias: {
+      'react-refresh': path.resolve(__dirname, 'node_modules/react-refresh'),
+    }
   }
 };

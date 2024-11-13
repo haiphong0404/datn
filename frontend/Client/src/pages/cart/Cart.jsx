@@ -1,244 +1,152 @@
-import React from 'react';
-
+import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { loadCartFromLocalStorage, removeFromCart } from '../../actions/action';
+import { Link } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
 const Cart = () => {
+  const dispatch = useDispatch();
+  const [localCart, setLocalCart] = useState([]);
+  const [selectedVariants, setSelectedVariants] = useState([]); // Danh sách biến thể được chọn
+
+  useEffect(() => {
+    const savedCart = loadCartFromLocalStorage();
+    setLocalCart(savedCart);
+  }, []);
+
+  const handleRemoveFromCart = (id) => {
+    const updatedCart = localCart.filter(variant => variant.id !== id);
+    setLocalCart(updatedCart);
+    localStorage.setItem("cart", JSON.stringify(updatedCart));
+    dispatch(removeFromCart(id));
+
+    // Loại bỏ biến thể khỏi danh sách selectedVariants nếu nó đã được chọn
+    const updatedSelectedVariants = selectedVariants.filter(variant => variant.id !== id);
+    setSelectedVariants(updatedSelectedVariants);
+  };
+
+
+  const calculateTotalSelected = () => {
+    return selectedVariants.reduce((total, item) => {
+      return total + item.price * item.quantity; // Tính tổng giá cho từng sản phẩm được chọn
+    }, 0);
+  };
+
+
+  const handleQuantityChange = (id, newQuantity) => {
+    const variant = localCart.find(variant => variant.id === id);
+  
+    if (!variant) return; // Nếu không tìm thấy biến thể, không làm gì cả
+  
+    // Kiểm tra xem số lượng mới có vượt quá số lượng tồn kho không
+    if (newQuantity > variant.stock) { // Thay variant.stock bằng thuộc tính mà bạn dùng để xác định số lượng tối đa
+      toast.error("Số lượng vượt quá số lượng tối đa trong kho!");
+      return; // Ngăn không cho cập nhật số lượng nếu vượt quá
+    }
+  
+    if (newQuantity <= 0) return; // Ngăn không cho số lượng nhỏ hơn hoặc bằng 0
+  
+    const updatedCart = localCart.map((variant) =>
+      variant.id === id ? { ...variant, quantity: newQuantity } : variant
+    );
+  
+    setLocalCart(updatedCart);
+    localStorage.setItem("cart", JSON.stringify(updatedCart));
+  
+    // Cập nhật quantity cho sản phẩm đang chọn
+    const updatedSelectedVariants = selectedVariants.map((variant) =>
+      variant.id === id ? { ...variant, quantity: newQuantity } : variant
+    );
+  
+    setSelectedVariants(updatedSelectedVariants);
+  };
+  
+  
+  
+
+
+  const handleCheckboxChange = (variant) => {
+    const isSelected = selectedVariants.some((item) => item.id === variant.id);
+    if (isSelected) {
+      // Bỏ chọn biến thể nếu nó đã được chọn
+      setSelectedVariants(selectedVariants.filter((item) => item.id !== variant.id));
+    } else {
+      // Chọn biến thể nếu nó chưa được chọn
+      setSelectedVariants([...selectedVariants, variant]);
+    }
+  };
+
   return (
     <div>
-      <main>
-        {/* breadcrumb area start */}
-        <div
+      <div
           className="breadcrumb-area breadcrumb-img bg-img"
           style={{
             backgroundImage: "url(/assets/img/banner/shop.jpg)",
           }}
-        >
-          <div className="container">
-            <div className="row">
-              <div className="col-12">
-                <div className="breadcrumb-wrap">
-                  <nav aria-label="breadcrumb">
-                    <h3 className="breadcrumb-title">SHOP</h3>
-                    <ul className="breadcrumb justify-content-center">
-                      <li className="breadcrumb-item">
-                        <a href="index.html">
-                          <i className="fa fa-home" />
-                        </a>
-                      </li>
-                      <li className="breadcrumb-item">
-                        <a href="shop.html">Shop</a>
-                      </li>
-                      <li className="breadcrumb-item active" aria-current="page">
-                        Cart
-                      </li>
-                    </ul>
-                  </nav>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        {/* breadcrumb area end */}
-        {/* cart main wrapper start */}
+        ></div>
+      <main>
         <div className="cart-main-wrapper section-padding">
           <div className="container">
             <div className="section-bg-color">
               <div className="row">
-                <div className="col-lg-12">
-                  {/* Cart Table Area */}
-                  <div className="cart-table table-responsive">
-                    <table className="table table-bordered">
-                      <thead>
-                        <tr>
-                          <th className="pro-thumbnail">Thumbnail</th>
-                          <th className="pro-title">Product</th>
-                          <th className="pro-price">Price</th>
-                          <th className="pro-quantity">Quantity</th>
-                          <th className="pro-subtotal">Total</th>
-                          <th className="pro-remove">Remove</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td className="pro-thumbnail">
-                            <a href="#">
-                              <img
-                                className="img-fluid"
-                                src="assets/img/product/product-1.jpg"
-                                alt="Product"
-                              />
-                            </a>
-                          </td>
-                          <td className="pro-title">
-                            <a href="#">PRIMITIVE MENS SHOES</a>
-                          </td>
-                          <td className="pro-price">
-                            <span>$295.00</span>
-                          </td>
-                          <td className="pro-quantity">
-                            <div className="pro-qty">
-                              <input type="text" defaultValue={1} />
-                            </div>
-                          </td>
-                          <td className="pro-subtotal">
-                            <span>$295.00</span>
-                          </td>
-                          <td className="pro-remove">
-                            <a href="#">
-                              <i className="fa fa-trash-o" />
-                            </a>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td className="pro-thumbnail">
-                            <a href="#">
-                              <img
-                                className="img-fluid"
-                                src="assets/img/product/product-2.jpg"
-                                alt="Product"
-                              />
-                            </a>
-                          </td>
-                          <td className="pro-title">
-                            <a href="#">LEATHER MENS SLIPPERS</a>
-                          </td>
-                          <td className="pro-price">
-                            <span>$275.00</span>
-                          </td>
-                          <td className="pro-quantity">
-                            <div className="pro-qty">
-                              <input type="text" defaultValue={2} />
-                            </div>
-                          </td>
-                          <td className="pro-subtotal">
-                            <span>$550.00</span>
-                          </td>
-                          <td className="pro-remove">
-                            <a href="#">
-                              <i className="fa fa-trash-o" />
-                            </a>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td className="pro-thumbnail">
-                            <a href="#">
-                              <img
-                                className="img-fluid"
-                                src="assets/img/product/product-3.jpg"
-                                alt="Product"
-                              />
-                            </a>
-                          </td>
-                          <td className="pro-title">
-                            <a href="#">REXPO WOMENS SHOES</a>
-                          </td>
-                          <td className="pro-price">
-                            <span>$295.00</span>
-                          </td>
-                          <td className="pro-quantity">
-                            <div className="pro-qty">
-                              <input type="text" defaultValue={1} />
-                            </div>
-                          </td>
-                          <td className="pro-subtotal">
-                            <span>$295.00</span>
-                          </td>
-                          <td className="pro-remove">
-                            <a href="#">
-                              <i className="fa fa-trash-o" />
-                            </a>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td className="pro-thumbnail">
-                            <a href="#">
-                              <img
-                                className="img-fluid"
-                                src="assets/img/product/product-4.jpg"
-                                alt="Product"
-                              />
-                            </a>
-                          </td>
-                          <td className="pro-title">
-                            <a href="#">QUICKIIN MENS SHOES</a>
-                          </td>
-                          <td className="pro-price">
-                            <span>$110.00</span>
-                          </td>
-                          <td className="pro-quantity">
-                            <div className="pro-qty">
-                              <input type="text" defaultValue={3} />
-                            </div>
-                          </td>
-                          <td className="pro-subtotal">
-                            <span>$110.00</span>
-                          </td>
-                          <td className="pro-remove">
-                            <a href="#">
-                              <i className="fa fa-trash-o" />
-                            </a>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                  {/* Cart Update Option */}
-                  <div className="cart-update-option d-block d-md-flex justify-content-between">
-                    <div className="apply-coupon-wrapper">
-                      <form action="#" method="post" className=" d-block d-md-flex">
+                <div className="col-lg-8">
+                  <div className="cart-variants">
+                    {localCart.map((variant) => (
+                      <div key={variant.id} className="cart-variant-card">
                         <input
-                          type="text"
-                          placeholder="Enter Your Coupon Code"
-                          required=""
+                          type="checkbox"
+                          checked={selectedVariants.some((item) => item.id === variant.id)}
+                          onChange={() => handleCheckboxChange(variant)} // Thay đổi khi nhấn checkbox
                         />
-                        <button className="btn btn-sqr">Apply Coupon</button>
-                      </form>
-                    </div>
-                    <div className="cart-update">
-                      <a href="#" className="btn btn-sqr">
-                        Update Cart
-                      </a>
-                    </div>
+                        <div className="variant-image">
+                          <Link to={`/product_details/${variant.productId}`}>
+                            <img src={variant.image} alt={variant.name} width={200} />
+                          </Link>
+                        </div>
+                        <div className="variant-info">
+                        <Link to={`/product_details/${variant.productId}`}>
+                          <h4 className="variant-name">{variant.productName}</h4>
+                          </Link>
+                          <p className="variant-size">Size: {variant.size}</p>
+                          <p className="variant-color">Màu: {variant.color}</p>
+                          <p className="variant-price">Giá: {variant.price} Vnd</p>
+                          <div className="variant-quantity">
+                            <button onClick={() => handleQuantityChange(variant.id, variant.quantity - 1)}>
+                              -
+                            </button>
+                            <span>{variant.quantity}</span>
+                            <button onClick={() => handleQuantityChange(variant.id, variant.quantity + 1)}>
+                              +
+                            </button>
+                          </div>
+                        </div>
+                        <button className="remove-button" onClick={() => handleRemoveFromCart(variant.id)}>
+                          <i className="fa fa-trash-o" />
+                        </button>
+                      </div>
+                    ))}
                   </div>
                 </div>
-              </div>
-              <div className="row">
-                <div className="col-lg-5 ms-auto">
-                  {/* Cart Calculation Area */}
+
+                <div className="col-lg-4">
                   <div className="cart-calculator-wrapper">
                     <div className="cart-calculate-items">
-                      <h6>Cart Totals</h6>
-                      <div className="table-responsive">
-                        <table className="table">
-                          <tbody>
-                            <tr>
-                              <td>Sub Total</td>
-                              <td>$230</td>
-                            </tr>
-                            <tr>
-                              <td>Shipping</td>
-                              <td>$70</td>
-                            </tr>
-                            <tr className="total">
-                              <td>Total</td>
-                              <td className="total-amount">$300</td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
+                      <h6>Tổng Số Tiền</h6>
+                      <p>
+                        {calculateTotalSelected()} Vnd {/* Hiển thị tổng tiền của sản phẩm được chọn */}
+                      </p>
+                      <button className="btn btn-sqr d-block" onClick={() => toast("Proceed to checkout!")}>
+                       Thanh toán
+                      </button>
                     </div>
-                    <a href="checkout.html" className="btn btn-sqr d-block">
-                      Proceed Checkout
-                    </a>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        {/* cart main wrapper end */}
       </main>
-
     </div>
-
   );
 };
+
 export default Cart;

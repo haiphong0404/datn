@@ -6,7 +6,18 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     @endif
-
+    <style>
+        .text-truncate {
+            max-width: 200px;
+            /* Đặt độ rộng cố định cho cột */
+            white-space: nowrap;
+            /* Không cho phép xuống dòng */
+            overflow: hidden;
+            /* Ẩn phần văn bản vượt quá */
+            text-overflow: ellipsis;
+            /* Hiển thị dấu "..." khi văn bản bị cắt */
+        }
+    </style>
     <div id="list" class="row">
         <div class="col-sm-12">
             <section class="card">
@@ -65,8 +76,8 @@
                                             <tr>
                                                 <td>{{ $item->id }}</td>
                                                 <td>{{ $item->user->username }}</td> 
-                                                <td>{{ $item->product->name }}</td>
-                                                <td>{{ $item->comment }}</td>
+                                                <td class="text-truncate">{{ $item->product->name }}</td>
+                                                <td style="max-width: 300px;">{{ $item->comment }}</td>
                                                 <td>
                                                     @if ($item->file)
                                                         <a href="{{ Storage::url($item->file) }}" target="_blank">Tải file</a>
@@ -76,9 +87,8 @@
                                                 </td>
                                                 <td>{{ $item->star_rating }} / 5</td>
                                                 <td>
-                                                    <a href="{{ route('admin.comments.show', $item->id) }}" class="btn btn-primary btn-sm">
-                                                        <i class="fa fa-eye"></i>
-                                                    </a>
+                                                    <a href="{{ route('admin.comments.show', $item->id) }}"
+                                                        class="btn btn-primary"><i class="fa fa-eye"></i></a>
 
                                                     @if ($item->deleted_at)
                                                         <form action="{{ route('admin.comments.restore', $item->id) }}" method="POST" style="display:inline;">
@@ -86,11 +96,14 @@
                                                             <button type="submit" class="btn btn-warning"><i class="bi bi-arrow-repeat"></i></button>
                                                         </form>
                                                     @else
-                                                        <form action="{{ route('admin.comments.destroy', $item->id) }}" method="POST" style="display:inline;">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button type="submit" class="btn btn-danger"><i class="fa fa-trash-o"></i></button>
-                                                        </form>
+                                                    <form action="{{ route('admin.comments.destroy', $item->id) }}"
+                                                        method="POST" class="d-inline-block">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="btn btn-danger"
+                                                            onclick="return confirm('Bạn có chắc muốn xóa comment này?')"><i
+                                                                class="fa fa-trash-o"></i></button>
+                                                    </form>
                                                     @endif
                                                 </td>
                                             </tr>
