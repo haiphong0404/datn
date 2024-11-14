@@ -35,7 +35,8 @@ const initialState ={
         ...state,
         cartItems: action.payload,
     };
-
+    case 'LOAD_CART':
+      return { ...state, cart: action.payload };
   case "REMOVEFROMCART":
   return {
     ...state,

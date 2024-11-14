@@ -6,39 +6,107 @@ import Badge from '@mui/material/Badge'; // Kiểm tra đường dẫn đúng
 import { loadCartFromLocalStorage, removeFromCart } from '../actions/action';
 import SearchBox from './search/SearchBox';
 import SearchProducts from './search/SearchBox';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
 const Header = () => {
   const dispatch = useDispatch()
-  const { cart } = useSelector(state => state.updateCart)
+  const { cart } = useSelector((state) => state.updateCart || {});
+
   const [localCart, setLocalCart] = useState([]);
 
-  useEffect(() => {
-    setLocalCart(cart);
-  }, [cart]);
-
+  
   const handleHoverCart = () => {
     const savedCart = JSON.parse(localStorage.getItem("cart")) || [];
     setLocalCart(savedCart);
   };
+  const fetchCartFromAPI = async () => {
+    try {
+      const response = await axios.get('/cart'); // Thay đổi đường dẫn API theo cấu trúc của bạn
+      const apiCart = response.data;
+      setLocalCart(apiCart);
+      localStorage.setItem("cart", JSON.stringify(apiCart));
+    } catch (error) {
+      console.error("Lỗi khi gọi API giỏ hàng:", error);
+    }
+  };
+  useEffect(() => {
+    if (cart && cart.length > 0) {
+      setLocalCart(cart);
+      localStorage.setItem('cart', JSON.stringify(cart)); // Đồng bộ với localStorage
+    } else {
+      const savedCart = loadCartFromLocalStorage(); // Lấy giỏ hàng từ localStorage nếu có
+      setLocalCart(savedCart);
+    }
+  }, [cart]);
+  useEffect(() => {
+    // Kiểm tra localStorage để lấy giỏ hàng, nếu có
+    const savedCart = JSON.parse(localStorage.getItem("cart"));
+    if (Array.isArray(savedCart)) {
+      setLocalCart(savedCart);
+    } else {
+      // Nếu không có dữ liệu, gọi API để lấy dữ liệu giỏ hàng
+      fetchCartFromAPI();
+    }
+  }, [cart]);
+  
+  const handleRemoveFromCart = async (id_productVariant) => {
+    console.log("id_productVariant:", id_productVariant); // Kiểm tra giá trị
+    if (!id_productVariant) {
+      console.error('Product variant ID is undefined!');
+      return; // Dừng nếu ID không hợp lệ
+    }
 
-  const handleRemoveFromCart = (id) => {
-    const updatedCart = localCart.filter(variant => variant.id !== id);
-    setLocalCart(updatedCart); // Cập nhật local state
-    localStorage.setItem("cart", JSON.stringify(updatedCart)); // Cập nhật localStorage
+    try {
+      // Gọi API xóa sản phẩm khỏi backend
+      const response = await axios.delete(`/cart/remove/${id_productVariant}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
 
-    // Cập nhật Redux store
-    dispatch(removeFromCart(id)); // Giả sử bạn có một action để xóa biến thể khỏi Redux store
+      if (response.status === 200) {
+        // Nếu xóa thành công, cập nhật lại localCart và localStorage
+        setLocalCart((prevCart) => {
+          const updatedCart = prevCart.filter(item => item.id_productVariant !== id_productVariant);
+          localStorage.setItem('cart', JSON.stringify(updatedCart));
+          return updatedCart;
+        });
+        toast('Sản phẩm đã được xóa khỏi giỏ hàng.');
+      } else {
+        toast('Không thể xóa sản phẩm. Vui lòng thử lại.');
+      }
+    } catch (error) {
+      console.error('Error removing item from cart:', error);
+      alert('Không thể xóa sản phẩm khỏi giỏ hàng. Vui lòng thử lại.');
+    }
   };
 
+
+  useEffect(() => {
+    const savedCart = JSON.parse(localStorage.getItem('cart'));
+
+    // Ensure savedCart is an array, or fall back to an empty array
+    if (Array.isArray(savedCart)) {
+      setLocalCart(savedCart);
+    } else {
+      setLocalCart([]); // If it's not an array, reset to empty array
+    }
+  }, []);
+
+  // Function to calculate total price
   const calculateTotal = () => {
-    return localCart.reduce((total, item) => total + item.price * item.quantity, 0);
+    if (Array.isArray(localCart)) {
+      return localCart.reduce((total, item) => total + item.price * item.quantity, 0);
+    } else {
+      console.error('localCart is not an array:', localCart);
+      return 0;
+    }
   };
 
   const { userInfo , handleLogout  } = useLoginForm();
   console.log("Thông tin người dùng trong Account_info:", userInfo);
 
-  const products = useSelector((state) => state.product?.products || []);
-  console.log(products);
   return (
     <header className="header-area">
       {/* main header start */}
@@ -169,32 +237,38 @@ const Header = () => {
                           </Badge>
                         </Link>
                         <div className="cart-list-wrapper" onMouseEnter={handleHoverCart}>
-                          <ul className="cart-list">
-                            {localCart.map((variant) => (
-                              <li key={variant.id}>
+                        <ul className="cart-list">
+                        {Array.isArray(localCart) && localCart.length > 0 ? (
+                              localCart.map((variant) => (
+                              <li key={variant.id_productVariant}>
                                 <div className="cart-img">
-                                  <Link to={`/product_details/${variant.id}`}>
+                                  <Link to={`/product_details/${variant.productId}`}>
                                     <img src={variant.image} alt={variant.name} />
                                   </Link>
                                 </div>
                                 <div className="cart-info">
                                   <h6 className="product-name">
-                                    <Link to={`/product_details/${variant.id}`}>{variant.productName}</Link>
+                                    <Link to={`/product_details/${variant.productId}`}>
+                                      {variant.name || variant.productName}
+                                    </Link>
                                   </h6>
                                   <span className="cart-qty">Số lượng: {variant.quantity}</span>
-                                  <span className="item-price">{(variant.price * variant.quantity)}Vnd</span>
+                                  <span className="item-price">{(variant.price * variant.quantity).toLocaleString()} VND</span>
                                 </div>
-                                <div className="del-icon" onClick={() => handleRemoveFromCart(variant.id)}>
+                                <div className="del-icon" onClick={() => handleRemoveFromCart(variant.id_productVariant)}>
                                   <i className="fa fa-times" />
                                 </div>
                               </li>
-                            ))}
+                            ))
+                          ) : (
+                            <li>Giỏ hàng trống</li>
+                          )}
                           </ul>
                           <ul className="minicart-pricing-box">
                             <li className="total">
                               <span>Total</span>
                               <span>
-                                <strong>{calculateTotal().toLocaleString()} Vnd</strong>
+                                <strong>{calculateTotal()} Vnd</strong>
                               </span>
                             </li>
                           </ul>
