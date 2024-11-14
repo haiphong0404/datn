@@ -38,7 +38,7 @@ export const getOrderDetail = async (order_id) => {
 };
 export const postOrderByUserId = async (user_id, orderData) => {
     try {
-        const response = await axios.post(`/orders`, orderData, {
+        const response = await axios.post(`/order`, orderData, {
             params: { user_id }, // Send user_id as query parameter
             headers: {
                 'Content-Type': 'application/json',
