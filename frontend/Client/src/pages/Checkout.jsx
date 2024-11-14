@@ -54,15 +54,23 @@ const Checkout = () => {
   };
 
   const handleSubmitOrder = () => {
+    // Lấy thời gian hiện tại làm order_date
+    const orderDate = new Date().toISOString(); // Định dạng ISO cho ngày (ví dụ: "2024-11-11T15:30:00Z")
+  
+    // Tạo dữ liệu đơn hàng với user_id và order_date
     const orderData = {
+      user_id: userInfo?.id,  // Thêm user_id vào dữ liệu đơn hàng
       userDetails,
       selectedVariants,
       totalAmount,
       info: userDetails.info,
-      paymentMethod // Include the selected payment method in the order data
+      paymentMethod,
+      order_date: orderDate  // Thêm order_date vào dữ liệu đơn hàng
     };
+  
     console.log('Dữ liệu đơn hàng đang được gửi:', orderData);
-    // Call postOrder with user_id and orderData
+  
+    // Kiểm tra nếu có user_id, thì gọi API gửi dữ liệu
     if (userInfo?.id) {
       postOrder(userInfo.id, orderData)
         .then(() => {
@@ -75,6 +83,7 @@ const Checkout = () => {
       toast.error("Không tìm thấy người dùng!"); // Nếu không có user_id
     }
   };
+  
 
   return (
     <div>
