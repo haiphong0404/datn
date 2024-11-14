@@ -65,7 +65,9 @@ const Checkout = () => {
       totalAmount,
       info: userDetails.info,
       paymentMethod,
+      status: "pending" ,// Thêm trạng thái mặc định là "pending"
       order_date: orderDate  // Thêm order_date vào dữ liệu đơn hàng
+      
     };
   
     console.log('Dữ liệu đơn hàng đang được gửi:', orderData);
