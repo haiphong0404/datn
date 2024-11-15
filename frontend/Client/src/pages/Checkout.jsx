@@ -56,7 +56,7 @@ const Checkout = () => {
   const handleSubmitOrder = () => {
     // Lấy thời gian hiện tại làm order_date
     const orderDate = new Date().toISOString(); // Định dạng ISO cho ngày (ví dụ: "2024-11-11T15:30:00Z")
-  
+
     // Tạo dữ liệu đơn hàng dựa trên state hiện tại
     const orderData = {
       order_date: orderDate,
@@ -74,9 +74,9 @@ const Checkout = () => {
         price: variant.price,
       })),
     };
-  
+
     console.log('Dữ liệu đơn hàng đang được gửi:', orderData);
-  
+
     // Kiểm tra nếu có user_id, thì gọi API gửi dữ liệu
     if (userInfo?.id) {
       postOrder(userInfo.id, orderData)
@@ -90,7 +90,7 @@ const Checkout = () => {
       toast.error("Không tìm thấy người dùng!"); // Nếu không có user_id
     }
   };
-  
+
 
   return (
     <div>
@@ -218,6 +218,8 @@ const Checkout = () => {
                         <thead>
                           <tr>
                             <th><b>Sản phẩm</b></th>
+                            <th><b>Màu sắc</b></th>
+                            <th><b>Kích cỡ</b></th>
                             <th><b>Tạm tính</b></th>
                           </tr>
                         </thead>
@@ -229,14 +231,16 @@ const Checkout = () => {
                                   {variant.productName} <strong> × {variant.quantity}</strong>
                                 </a>
                               </td>
+                              <td>{variant.color}</td>
+                              <td>{variant.size}</td> {/* Displaying the size */}
                               <td>${(variant.price * variant.quantity).toFixed(2)}</td>
                             </tr>
                           ))}
                         </tbody>
                         <tfoot>
                           <tr>
-                            <td>Tổng cộng</td>
-                            <td>${totalAmount.toFixed(2)}</td>
+                            <td colSpan="3" className="text-center"><b>Tổng cộng</b></td>
+                            <td className="text-center"><b>${totalAmount.toFixed(2)}</b></td>
                           </tr>
                         </tfoot>
                       </table>
