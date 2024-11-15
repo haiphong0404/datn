@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
 
 class OrderController extends Controller
 {
@@ -65,10 +67,10 @@ class OrderController extends Controller
         if ($request->input('payment_method') === 'online') {
             $paymentStatus = 'paid';  // Đặt payment_status là 'paid' nếu chọn thanh toán trực tuyến
         }
-
+        $orderDate = Carbon::parse($request->input('order_date'))->format('Y-m-d H:i:s');
         $orderData = [
             'user_id' => $userId,
-            'order_date' => $request->input('order_date'),
+            'order_date' => $orderDate,  // Sử dụng giá trị đã được định dạng lại
             'status' => $request->input('status'),
             'total_amount' => $request->input('total_amount'),
             'name' => $request->input('name'),
@@ -109,7 +111,7 @@ class OrderController extends Controller
 
     } catch (\Exception $e) {
         DB::rollBack();
-
+        Log::error('Error creating order: ' . $e->getMessage()); // Log chi tiết lỗi
         return response()->json([
             'message' => 'Đã xảy ra lỗi khi thêm Đơn hàng và Chi tiết đơn hàng.',
             'error' => $e->getMessage(),

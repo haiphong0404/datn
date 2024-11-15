@@ -57,17 +57,22 @@ const Checkout = () => {
     // Lấy thời gian hiện tại làm order_date
     const orderDate = new Date().toISOString(); // Định dạng ISO cho ngày (ví dụ: "2024-11-11T15:30:00Z")
   
-    // Tạo dữ liệu đơn hàng với user_id và order_date
+    // Tạo dữ liệu đơn hàng dựa trên state hiện tại
     const orderData = {
-      user_id: userInfo?.id,  // Thêm user_id vào dữ liệu đơn hàng
-      userDetails,
-      selectedVariants,
-      totalAmount,
-      info: userDetails.info,
-      paymentMethod,
-      status: "pending" ,// Thêm trạng thái mặc định là "pending"
-      order_date: orderDate  // Thêm order_date vào dữ liệu đơn hàng
-      
+      order_date: orderDate,
+      status: "pending", // Hoặc bạn có thể lấy từ một state nếu cần
+      total_amount: totalAmount,
+      name: userDetails.username,
+      phone: userDetails.phone,
+      address: userDetails.address,
+      infor: userDetails.info,
+      payment_status: paymentMethod || 'null',
+      user_id: userInfo?.id,
+      products: selectedVariants.map((variant) => ({
+        product_variant_id: variant.id,
+        quantity: variant.quantity,
+        price: variant.price,
+      })),
     };
   
     console.log('Dữ liệu đơn hàng đang được gửi:', orderData);

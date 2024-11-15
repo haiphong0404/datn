@@ -10,6 +10,11 @@ const Orders = () => {
         return <div>Error: {error}</div>;
     }
 
+    // Hàm tạo mã ngẫu nhiên
+    const generateRandomCode = () => {
+        return 'THOR-' + Math.random().toString(36).substr(2, 9).toUpperCase(); // Tạo mã ngẫu nhiên
+    };
+
     return (
         <div>
             <div>
@@ -30,8 +35,20 @@ const Orders = () => {
                                 {orders.length > 0 ? (
                                     orders.map(order => (
                                         <tr key={order.id}>
-                                            <td>{order.id}</td>
-                                            <td>{new Date(order.order_date).toLocaleDateString('vi-VN')}</td>
+                                            <td>{generateRandomCode()}</td> {/* Mã ngẫu nhiên */}
+                                            <td>
+                                                {new Date(order.order_date).toLocaleString('vi-VN', {
+                                                    timeZone: 'Asia/Ho_Chi_Minh', // Đảm bảo múi giờ Việt Nam
+                                                    weekday: 'long', // Ngày trong tuần (ví dụ: thứ Hai)
+                                                    year: 'numeric', // Năm
+                                                    month: 'long', // Tháng
+                                                    day: 'numeric', // Ngày
+                                                    hour: '2-digit', // Giờ
+                                                    minute: '2-digit', // Phút
+                                                    second: '2-digit', // Giây
+                                                    hour12: true, // Hiển thị AM/PM
+                                                })}
+                                            </td>
                                             <td>{order.status}</td>
                                             <td>${order.total_amount}</td>
                                             <td>

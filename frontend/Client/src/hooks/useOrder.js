@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { postOrderByUserId } from '../api/order.js'; 
+import { getOrderByUserId } from '../api/order.js'; 
 
 const useOrders = () => {
     const [orders, setOrders] = useState([]);
