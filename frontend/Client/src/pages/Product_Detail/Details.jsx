@@ -76,56 +76,73 @@ const Details = () => {
 
     // Cập nhật giỏ hàng khi người dùng thêm sản phẩm
     const handleAddToCart = async () => {
-    const selectedVariant = variants.find(variant =>
-        variant.color === selectedColor && variant.size === selectedSize
-    );
-    const quantity = selectedQuantity;
-
-    if (selectedVariant) {
-        try {
-            const id_productVariant = selectedVariant.id;  // Đảm bảo lấy id của biến thể sản phẩm
-
-            if (localStorage.getItem('token')) {
-                // Nếu người dùng đã đăng nhập, đồng bộ giỏ hàng lên server
-                const response = await axios.post('/cart/add', {
-                    product_variant_id: id_productVariant, // Dùng id_productVariant
-                    productId: product.id,
-                    productName: product.name,
-                    quantity: quantity,
-                    color: selectedColor,
-                    size: selectedSize,
-                }, {
-                    headers: {
-                        'Authorization': `Bearer ${localStorage.getItem('token')}` // Gửi token xác thực
+        const selectedVariant = variants.find(variant =>
+            variant.color === selectedColor && variant.size === selectedSize
+        );
+        const quantity = selectedQuantity;
+    
+        if (selectedVariant) {
+            try {
+                const id_productVariant = selectedVariant.id;  // Đảm bảo lấy id của biến thể sản phẩm
+    
+                if (localStorage.getItem('token')) {
+                    // Nếu người dùng đã đăng nhập, đồng bộ giỏ hàng lên server
+                    const response = await axios.post('/cart/add', {
+                        product_variant_id: id_productVariant, // Dùng id_productVariant
+                        productId: product.id,
+                        quantity: quantity,
+                        color: selectedColor,
+                        size: selectedSize,
+                    }, {
+                        headers: {
+                            'Authorization': `Bearer ${localStorage.getItem('token')}` // Gửi token xác thực
+                        }
+                    });
+    
+                    if (response.status === 200) {
+                        toast.success("Sản phẩm đã được thêm vào giỏ hàng!");
+                        dispatch(addCart(response.data.cart_item)); // Cập nhật Redux
                     }
-                });
-
-                if (response.status === 200) {
+                } else {
+                    // Nếu người dùng chưa đăng nhập, lưu giỏ hàng vào localStorage
+                    const cartData = localStorage.getItem('cart');
+                    let updatedCart = cartData ? JSON.parse(cartData) : [];
+    
+                    // Kiểm tra xem sản phẩm đã có trong giỏ hàng chưa
+                    const existingProductIndex = updatedCart.findIndex(item => 
+                        item.id_productVariant === id_productVariant && 
+                        item.size === selectedSize && 
+                        item.color === selectedColor
+                    );
+    
+                    if (existingProductIndex !== -1) {
+                        // Nếu sản phẩm đã có, chỉ cần cập nhật số lượng
+                        updatedCart[existingProductIndex].quantity += quantity;
+                    } else {
+                        // Nếu sản phẩm chưa có, thêm vào giỏ hàng mới
+                        updatedCart.push({
+                            id_productVariant,
+                            color: selectedColor,
+                            productName: product.name,
+                            image: selectedVariant.images,
+                            price: selectedVariant.price,
+                            size: selectedSize,
+                            quantity,
+                        });
+                    }
+    
+                    setLocalCart(updatedCart); // Cập nhật state localCart
+                    localStorage.setItem("cart", JSON.stringify(updatedCart)); // Lưu giỏ hàng vào localStorage
                     toast.success("Sản phẩm đã được thêm vào giỏ hàng!");
-                    dispatch(addCart(response.data.cart_item)); // Cập nhật Redux
                 }
-            } else {
-                // Nếu người dùng chưa đăng nhập, lưu giỏ hàng vào localStorage
-                const updatedCart = [...localCart, { 
-                    id_productVariant, // Thêm id_productVariant vào giỏ hàng
-                    color: selectedColor,
-                    productName: product.name,
-                    image: selectedVariant.images,
-                    price: selectedVariant.price,
-                    size: selectedSize,
-                    quantity
-                }];
-                setLocalCart(updatedCart); // Cập nhật state localCart
-                localStorage.setItem("cart", JSON.stringify(updatedCart)); // Lưu giỏ hàng vào localStorage
-                toast.success("Sản phẩm đã được thêm vào giỏ hàng!");
+            } catch (error) {
+                toast.error("Đã có lỗi xảy ra, vui lòng thử lại");
             }
-        } catch (error) {
-            toast.error("Đã có lỗi xảy ra, vui lòng thử lại");
+        } else {
+            toast.error("Vui lòng chọn màu và kích thước sản phẩm!");
         }
-    } else {
-        toast.error("Vui lòng chọn màu và kích thước sản phẩm!");
-    }
-};
+    };
+    
 
 
     if (productLoading || variantsLoading) {

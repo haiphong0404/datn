@@ -125,6 +125,7 @@ const Cart = () => {
       setSelectedItems(prevSelected => new Set([...prevSelected].filter(item => item !== id_productVariant)));
   
       toast('Sản phẩm đã được xóa khỏi giỏ hàng.');
+      window.location.reload()
     }
   };
   

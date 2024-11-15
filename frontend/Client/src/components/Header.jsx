@@ -14,7 +14,7 @@ const Header = () => {
   const { cart } = useSelector((state) => state.updateCart || {});
 
   const [localCart, setLocalCart] = useState([]);
-
+  const [selectedItems, setSelectedItems] = useState(new Set()); 
   
   const handleHoverCart = () => {
     const savedCart = JSON.parse(localStorage.getItem("cart")) || [];
@@ -56,29 +56,56 @@ const Header = () => {
       console.error('Product variant ID is undefined!');
       return; // Dừng nếu ID không hợp lệ
     }
-
-    try {
-      // Gọi API xóa sản phẩm khỏi backend
-      const response = await axios.delete(`/cart/remove/${id_productVariant}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-      });
-
-      if (response.status === 200) {
-        // Nếu xóa thành công, cập nhật lại localCart và localStorage
-        setLocalCart((prevCart) => {
-          const updatedCart = prevCart.filter(item => item.id_productVariant !== id_productVariant);
-          localStorage.setItem('cart', JSON.stringify(updatedCart));
-          return updatedCart;
+  
+    const token = localStorage.getItem('token'); // Kiểm tra token
+  
+    if (token) {
+      // Nếu có token, gửi yêu cầu với token để xóa sản phẩm trên server
+      try {
+        const response = await axios.delete(`/cart/remove/${id_productVariant}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         });
-        toast('Sản phẩm đã được xóa khỏi giỏ hàng.');
-      } else {
-        toast('Không thể xóa sản phẩm. Vui lòng thử lại.');
+  
+        if (response.status === 200) {
+          // Cập nhật lại giỏ hàng sau khi xóa sản phẩm từ cơ sở dữ liệu
+          setLocalCart(prevCart => {
+            const updatedCart = prevCart.filter(item => item.id_productVariant !== id_productVariant);
+            localStorage.setItem('cart', JSON.stringify(updatedCart)); // Đồng bộ hóa lại localStorage
+            return updatedCart;
+          });
+          setSelectedItems(prevSelected => new Set([...prevSelected].filter(item => item !== id_productVariant)));
+          toast('Sản phẩm đã được xóa khỏi giỏ hàng.');
+          window.location.reload(); // Reload lại trang sau khi xóa thành công
+        } else {
+          toast('Không thể xóa sản phẩm. Vui lòng thử lại.');
+        }
+      } catch (error) {
+        console.error('Error removing item from cart:', error);
+        alert('Không thể xóa sản phẩm khỏi giỏ hàng. Vui lòng thử lại.');
       }
-    } catch (error) {
-      console.error('Error removing item from cart:', error);
-      alert('Không thể xóa sản phẩm khỏi giỏ hàng. Vui lòng thử lại.');
+    } else {
+      // Nếu không có token (chưa đăng nhập), chỉ xóa sản phẩm từ localStorage
+      const cartData = localStorage.getItem('cart');
+      if (!cartData) {
+        console.log('Giỏ hàng trống hoặc không có dữ liệu trong localStorage');
+        return;
+      }
+  
+      const parsedCart = JSON.parse(cartData);
+  
+      // Lọc bỏ sản phẩm cần xóa
+      const updatedCart = parsedCart.filter(item => item.id_productVariant !== id_productVariant);
+  
+      // Cập nhật lại giỏ hàng trong localStorage
+      localStorage.setItem('cart', JSON.stringify(updatedCart));
+  
+      // Cập nhật lại trạng thái giỏ hàng trong React
+      setLocalCart(updatedCart);
+      setSelectedItems(prevSelected => new Set([...prevSelected].filter(item => item !== id_productVariant)));
+  
+      toast('Sản phẩm đã được xóa khỏi giỏ hàng.');
     }
   };
 
