@@ -24,6 +24,7 @@ use App\Http\Controllers\Api\OrderDetailController;
 use App\Models\Cart;
 use App\Http\Controllers\Api\Auth\NewPasswordController;
 use App\Http\Controllers\Api\Auth\ForgotPasswordController;
+use App\Http\Controllers\Api\Auth\ProfileController;
 use App\Http\Controllers\Api\Auth\ResetPasswordController;
 Route::post('password/email', [ForgotPasswordController::class, 'sendResetLinkEmail']);
 Route::post('password/reset', [ResetPasswordController::class, 'reset']);
@@ -95,3 +96,8 @@ Route::get('contacts/{id}', [ContactController::class, 'show']); // Lấy contac
 
 
 Route::get('/colors', [ColorController::class, 'index']);
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit']);
+    Route::put('/profile', [ProfileController::class, 'update']);
+    Route::delete('/profile', [ProfileController::class, 'destroy']);
+});
