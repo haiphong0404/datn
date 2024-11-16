@@ -31,24 +31,21 @@ const Header = () => {
     }
   };
   useEffect(() => {
-    if (cart && cart.length > 0) {
-      setLocalCart(cart);
-      localStorage.setItem('cart', JSON.stringify(cart)); // Đồng bộ với localStorage
-    } else {
-      const savedCart = loadCartFromLocalStorage(); // Lấy giỏ hàng từ localStorage nếu có
-      setLocalCart(savedCart);
-    }
-  }, [cart]);
-  useEffect(() => {
-    // Kiểm tra localStorage để lấy giỏ hàng, nếu có
     const savedCart = JSON.parse(localStorage.getItem("cart"));
-    if (Array.isArray(savedCart)) {
+  
+    if (cart && cart.length > 0) {
+      // Nếu giỏ hàng hiện tại có dữ liệu, lưu vào localStorage
+      setLocalCart(cart);
+      localStorage.setItem('cart', JSON.stringify(cart));
+    } else if (Array.isArray(savedCart)) {
+      // Nếu không có dữ liệu trong `cart`, kiểm tra localStorage
       setLocalCart(savedCart);
     } else {
-      // Nếu không có dữ liệu, gọi API để lấy dữ liệu giỏ hàng
+      // Nếu localStorage cũng không có dữ liệu, gọi API để lấy giỏ hàng
       fetchCartFromAPI();
     }
   }, [cart]);
+  
   
   const handleRemoveFromCart = async (id_productVariant) => {
     console.log("id_productVariant:", id_productVariant); // Kiểm tra giá trị

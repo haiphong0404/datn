@@ -164,7 +164,7 @@ const Cart = () => {
                     <img
                       src={variant.image || '/default-image.jpg'}
                       alt={variant.name}
-                      width={200}
+                      width={100}
                     />
                   </Link>
                 </div>

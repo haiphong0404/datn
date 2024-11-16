@@ -14,7 +14,7 @@ class BannerController extends Controller
      */
     public function index()
     {
-        $banner = Banner::withTrashed()->get();
+        $banner = Banner::withTrashed()->get(); 
         if ($banner->isEmpty()) {
             return response()->json([
                 'message' => 'Không có banner nào được tìm thấy!'

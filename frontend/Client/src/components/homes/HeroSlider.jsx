@@ -57,25 +57,25 @@ const HeroSlider = () => {
   return (
     <section className="hero-slider">
       <Slider {...settings} className="hero-slider-active slick-arrow-style slick-arrow-style_hero slick-dot-style">
-        {banners.map((banner, index) => (
+        {banners.sort((a, b) => b.id - a.id).slice(0,3).map((banner, index) => (
           <div key={index} className="hero-single-slide hero-overlay">
             <div className="hero-slider-item hero-1 bg-img">
               <img src={banner.image_url} alt={banner.title} /> {/* Sử dụng banner.image_url */}
-              <div className="container">
+              {/* <div className="container">
                 <div className="row">
                   <div className="col-md-12">
                     <div className="hero-slider-content slide-1">
                       <h1 className="slide-title">{banner.title}</h1>
                       <h2 className="slide-subtitle">
-                        {banner.subtitle} <span>{banner.highlight}</span>
+                        {banner.sub_title} 
                       </h2>
                       <a href="/shop" className="btn btn-large btn-bg">
-                        Mua Ngay
+                      {banner.span_title} 
                       </a>
                     </div>
                   </div>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         ))}

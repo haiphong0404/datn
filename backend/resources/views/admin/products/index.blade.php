@@ -92,6 +92,10 @@ Danh sách sản phẩm
                                     @endif
                                 </td>
                                 <td class="center hidden-phone">
+                                    <a href="{{ route('admin.products.show', $product->id) }}" class="btn btn-info btn-sm"
+                                       title="Xem chi tiết">
+                                        <i class="fa fa-eye"></i> Xem
+                                    </a>
                                     @if ($product->trashed())
                                     <form action="{{ route('admin.products.restore', $product->id) }}" method="POST"
                                         style="display:inline;">

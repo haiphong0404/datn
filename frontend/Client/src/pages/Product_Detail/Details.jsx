@@ -122,6 +122,7 @@ const Details = () => {
                         // Nếu sản phẩm chưa có, thêm vào giỏ hàng mới
                         updatedCart.push({
                             id_productVariant,
+                            productId: product.id,
                             color: selectedColor,
                             productName: product.name,
                             image: selectedVariant.images,
@@ -169,7 +170,7 @@ const Details = () => {
                                     setSelectedSize('');
                                 }}>
                                     <img
-                                        src={variant.images}
+                                        src={variant.images} 
                                         alt={`Product ${index + 1}`}
                                         className={`w-full h-auto cursor-pointer ${selectedImage === variant.images ? 'selected-image' : ''}`}
                                     />
@@ -235,7 +236,7 @@ const Details = () => {
                         <p className="text-sm">{availabilityMessage}</p>
 
                         <div className="price-box">
-                            <span className="price-regular">${selectedPrice !== null ? selectedPrice : product.price}</span>
+                            <span className="price-regular">{selectedPrice !== null ? selectedPrice : product.price} Vnd</span>
                         </div>
 
                         <h6 className="option-title">Số lượng:</h6>

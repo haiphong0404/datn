@@ -68,6 +68,7 @@ const QuickViewModal = ({ show, onClose, product }) => {
 
     const cartItem = { 
       id_productVariant: selectedVariant.id,
+      productId: product.id,
       color: selectedColor,
       size: selectedSize,
       price: selectedVariant.price,

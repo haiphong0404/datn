@@ -1,3 +1,4 @@
+
 <?php
 
 use App\Http\Controllers\Api\ArticlesController;
@@ -74,12 +75,31 @@ Route::apiResource('user', UserController::class);
 Route::get('order-details/{order_id}', [OrderDetailController::class, 'getOrderDetails']);
 Route::apiResource('order-details', OrderDetailController::class);
 
-Route::apiResource('order', OrderController::class );
-Route::get('orders', [OrderController::class, 'abc']);
+
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/cart', [CartController::class, 'index']);
     Route::post('/cart/add', [CartController::class, 'addToCart']);
     Route::put('/cart/update', [CartController::class, 'updateCart']);
+    Route::delete('/cart/remove', [CartController::class, 'removeFromCart']);
+    Route::delete('/cart/remove/{product_variant_id}', [CartController::class, 'removeFromCart']);
+});
+Route::get('products/{productId}/variants', [ProductVariantController::class, 'index']);
+Route::get('/variants/{id}', [ProductVariantController::class, 'show']);
+Route::get('/sizes', [SizeController::class, 'index']);
+Route::get('/colors', [ColorController::class, 'index']);
+Route::get('/colors', [ColorController::class, 'index']);
+Route::get('/comments', [CommentController::class, 'index']);
+Route::delete('/comments/{id}', [CommentController::class, 'softDelete']);
+Route::get('contacts', [ContactController::class, 'index']); // Lấy danh sách tất cả contacts
+Route::get('contacts/{id}', [ContactController::class, 'show']); // Lấy contact theo ID
+Route::get('/banners', [BannerController::class, 'index']);
+
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/cart', [CartController::class, 'index']);
+    Route::post('/cart/add', [CartController::class, 'addToCart']);
+    Route::put('/cart/update', [CartController::class, 'updateCart']);
+    Route::delete('/cart/remove', [CartController::class, 'removeFromCart']);
     Route::delete('/cart/remove/{product_variant_id}', [CartController::class, 'removeFromCart']);
 });
 Route::get('products/{productId}/variants', [ProductVariantController::class, 'index']);
@@ -95,6 +115,6 @@ Route::get('/banners', [BannerController::class, 'index']);
 
 
 
-
-
 Route::get('/colors', [ColorController::class, 'index']);
+Route::apiResource('order', OrderController::class );
+Route::get('orders', [OrderController::class, 'abc']);
