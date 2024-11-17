@@ -1,49 +1,30 @@
 import React, { useEffect, useState } from "react";
 import { useQuery } from '@tanstack/react-query';
 import { fetchProducts } from '../api/product';
-import { useDispatch, useSelector } from "react-redux";
-import add, { loadCartFromLocalStorage } from "../actions/action"
 import axios from "axios";
 import HeroSlider from "./homes/HeroSlider";
 import Category from "./homes/Category";
 import Brand from "./homes/Brand";
-import Blog from "./homes/Blog";
-import ProductTab from "./homes/ProductTab";
 import { Link } from "react-router-dom";
-// import QuickViewModal from "./quickview/QuickView";
+import QuickViewModal from "./quickview/QuickView";
+import Blog from "./homes/Blog";
+
 
 
 
 const Main = () => {
-  // const [showQuickView, setShowQuickView] = useState(false);
-  // const [selectedProduct, setSelectedProduct] = useState(null);
+  const [showQuickView, setShowQuickView] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
 
-  // const handleQuickView = (product) => {
-  //   setSelectedProduct(product);
-  //   setShowQuickView(true);
-  // };
+  const handleQuickView = (product) => {
+    console.log('QuickView triggered for:', product); // Kiểm tra xem sản phẩm đã được truyền đúng chưa
+    setSelectedProduct(product);
+    setShowQuickView(true);
+  };
 
-  // const handleCloseQuickView = () => {
-  //   setShowQuickView(false);
-  //   setSelectedProduct(null);
-  // };
-  // const cart = useSelector(state => state.updateCart)
-  // const [localCart, setLocalCart] = useState(cart);
-  // const dispatch = useDispatch()
-  //   const handleAddToCart = (product) => {
-  //     // Thêm sản phẩm vào giỏ hàng
-  //     const updatedCart = [...localCart, product];
-  //     setLocalCart(updatedCart); // Cập nhật local state
-  //     localStorage.setItem("cart", JSON.stringify(updatedCart)); // Lưu vào localStorage
-
-  //     // Cập nhật Redux store
-  //     dispatch(add(product)); // Giả sử bạn có một action để thêm sản phẩm vào Redux store
-  // };
-  // useEffect(() => {
-  //   const savedCart = loadCartFromLocalStorage(); // Lấy giỏ hàng từ localStorage
-  //   setLocalCart(savedCart);
-  // }, [cart]);
-
+  const handleCloseQuickView = () => {
+    setShowQuickView(false);
+  };
   const { data: products = [], error: productsError } = useQuery({
     queryKey: ['Products'],
     queryFn: fetchProducts,
@@ -214,7 +195,7 @@ const Main = () => {
                       {/* <a className="add-to-cart" >
                         
                       </a> */}
-                      <Link className="add-to-cart" onClick={() => handleQuickView(product)} ><i className="fa fa-shopping-cart" /></Link>
+                      <button className="add-to-cart" onClick={() => handleQuickView(product)} ><i className="fa fa-shopping-cart" /></button>
                     </div>
 
                   </div>
@@ -299,16 +280,7 @@ const Main = () => {
                         alt={product.name}
                       />
                     </Link>
-                    <div className="button-group">
-
-                      <a href="#" data-bs-toggle="modal" data-bs-target="#quick_view">
-                        <span data-bs-toggle="tooltip" title="Quick View">
-                          <i className="fa fa-eye" />
-
-                        </span>
-                      </a>
-                    </div>
-
+                    
                   </div>
                   <div className="product-content">
                     <div className="product-caption">
@@ -338,7 +310,13 @@ const Main = () => {
         <Blog />
         {/* latest blog area end */}
         {/* <QuickViewModal show={showQuickView} onHide={handleCloseQuickView} product={selectedProduct} /> */}
-
+        {selectedProduct && (
+  <QuickViewModal
+    show={showQuickView}
+    onClose={handleCloseQuickView}
+    product={selectedProduct}
+  />
+)}
       </main>
     </div>
   );

@@ -43,7 +43,7 @@ const Brand = () => {
                             <img
                                     src={brand.image || '/path/to/placeholder.jpg'} // Đổ hình ảnh base64 từ API
                                     alt={brand.name}
-                                    style={{ width: '100px', height: '100px' }} // Kích thước hình ảnh
+                                    width={100}// Kích thước hình ảnh
                                 />
                             </a>
                           </div>

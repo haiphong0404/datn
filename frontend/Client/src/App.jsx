@@ -47,7 +47,7 @@ const routeConfig = [
       { path: "shop", element: <Shop /> },
       { path: "blog", element: <Blog /> },
       { path: "checkout", element: <Checkout /> },
-      { path: "blog/blog_detail", element: <Blog_detail /> },
+      { path: "blog-details/:articleId", element: <Blog_detail /> },
       { path: "contact_us", element: <Contact_us /> },
       { path: "product_details/:productId", element: <Product_details /> },
       { path: "cart", element: <Cart /> },
@@ -56,7 +56,6 @@ const routeConfig = [
       { path: "register", element: <Register /> },
       { path: "*", element: <NotFoundPage /> },
       { path: "faqs", element: <FAQs /> },
-
       
       { path: "checkout/bill", element: <Bill /> },
     ],

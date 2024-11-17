@@ -47,6 +47,8 @@ class CartController extends Controller
             $image = $productVariant->images->first()->image ?? null;
 
             return [
+                'id_productVariant' => $productVariant->id,
+                'productId' => $productVariant->product->id,
                 'image' => $this->getImageAsBase64($image), // Lấy ảnh và chuyển sang định dạng Base64
                 'name' => $productVariant->product->name, // Tên sản phẩm
                 'size' => $productVariant->size->name ?? null, // Kích thước

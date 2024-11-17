@@ -60,7 +60,7 @@ export const useLoginForm = (isDisplay) => {
         if (role === "admin") {
           window.location.href = "http://127.0.0.1:8000/";
         } else {
-          navigate("/my_account");
+          navigate("/");
         }
       } else {
         throw new Error("Không tìm thấy thông tin vai trò người dùng.");

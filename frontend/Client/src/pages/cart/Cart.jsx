@@ -1,161 +1,216 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { loadCartFromLocalStorage, removeFromCart } from '../../actions/action';
+import axios from 'axios';
 import { Link } from 'react-router-dom';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
+
 const Cart = () => {
-  const navigate = useNavigate(); // Hook để điều hướng
-  const dispatch = useDispatch();
-  const [localCart, setLocalCart] = useState([]);
-  const [selectedVariants, setSelectedVariants] = useState([]); // Danh sách biến thể được chọn
+  const [localCart, setLocalCart] = useState([]); // Lưu trữ giỏ hàng
+  const [isLoading, setIsLoading] = useState(true); // Trạng thái tải giỏ hàng
+  const [totalPrice, setTotalPrice] = useState(0); // Tổng tiền
+  const [totalQuantity, setTotalQuantity] = useState(0); // Tổng số lượng
+  const [selectedItems, setSelectedItems] = useState(new Set()); // Danh sách sản phẩm đã chọn để thanh toán
 
   useEffect(() => {
-    const savedCart = loadCartFromLocalStorage();
-    setLocalCart(savedCart);
+    const fetchCart = async () => {
+      if (localStorage.getItem('token')) { // Nếu người dùng đã đăng nhập
+        try {
+          const response = await axios.get('/cart', {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
+          });
+  
+          if (response.data && Array.isArray(response.data.carts)) {
+            setLocalCart(response.data.carts);
+            localStorage.setItem('cart', JSON.stringify(response.data.carts)); // Đồng bộ hóa với localStorage
+          } else {
+            setLocalCart([]);
+          }
+        } catch (error) {
+          console.error("Error fetching cart data", error);
+          setLocalCart([]);
+        } finally {
+          setIsLoading(false);
+        }
+      } else { // Nếu người dùng chưa đăng nhập
+        const cartData = localStorage.getItem('cart');
+        if (cartData) {
+          setLocalCart(JSON.parse(cartData)); // Lấy dữ liệu từ localStorage
+        }
+        setIsLoading(false);
+      }
+    };
+  
+    fetchCart();
   }, []);
 
-  const handleRemoveFromCart = (id) => {
-    const updatedCart = localCart.filter(variant => variant.id !== id);
-    setLocalCart(updatedCart);
-    localStorage.setItem("cart", JSON.stringify(updatedCart));
-    dispatch(removeFromCart(id));
+  useEffect(() => {
+    let calculatedPrice = 0;
+    let calculatedQuantity = 0;
 
-    // Loại bỏ biến thể khỏi danh sách selectedVariants nếu nó đã được chọn
-    const updatedSelectedVariants = selectedVariants.filter(variant => variant.id !== id);
-    setSelectedVariants(updatedSelectedVariants);
-  };
+    localCart.forEach(variant => {
+      if (selectedItems.has(variant.id_productVariant)) { // Sử dụng id_productVariant
+        calculatedPrice += variant.price * variant.quantity;
+        calculatedQuantity += variant.quantity;
+      }
+    });
 
+    setTotalPrice(calculatedPrice);
+    setTotalQuantity(calculatedQuantity);
+  }, [selectedItems, localCart]);
 
-  const calculateTotalSelected = () => {
-    return selectedVariants.reduce((total, item) => {
-      return total + item.price * item.quantity; // Tính tổng giá cho từng sản phẩm được chọn
-    }, 0);
-  };
-
-
-  const handleQuantityChange = (id, newQuantity) => {
-    const variant = localCart.find(variant => variant.id === id);
-
-    if (!variant) return; // Nếu không tìm thấy biến thể, không làm gì cả
-
-    // Kiểm tra xem số lượng mới có vượt quá số lượng tồn kho không
-    if (newQuantity > variant.stock) { // Thay variant.stock bằng thuộc tính mà bạn dùng để xác định số lượng tối đa
-      toast.error("Số lượng vượt quá số lượng tối đa trong kho!");
-      return; // Ngăn không cho cập nhật số lượng nếu vượt quá
+  const handleCheckboxChange = (variantId) => {
+    const updatedSelectedItems = new Set(selectedItems);
+    if (updatedSelectedItems.has(variantId)) {
+      updatedSelectedItems.delete(variantId); // Nếu sản phẩm đã được chọn, bỏ chọn
+    } else {
+      updatedSelectedItems.add(variantId); // Nếu sản phẩm chưa được chọn, chọn nó
     }
-
-    if (newQuantity <= 0) return; // Ngăn không cho số lượng nhỏ hơn hoặc bằng 0
-
-    const updatedCart = localCart.map((variant) =>
-      variant.id === id ? { ...variant, quantity: newQuantity } : variant
-    );
-
-    setLocalCart(updatedCart);
-    localStorage.setItem("cart", JSON.stringify(updatedCart));
-
-    // Cập nhật quantity cho sản phẩm đang chọn
-    const updatedSelectedVariants = selectedVariants.map((variant) =>
-      variant.id === id ? { ...variant, quantity: newQuantity } : variant
-    );
-
-    setSelectedVariants(updatedSelectedVariants);
-    console.log('Selected Variants:', selectedVariants);
+    setSelectedItems(updatedSelectedItems);
   };
+
+  const handleRemoveFromCart = async (id_productVariant) => {
+    console.log("id_productVariant:", id_productVariant); // Kiểm tra giá trị
+    if (!id_productVariant) {
+      console.error('Product variant ID is undefined!');
+      return; // Dừng nếu ID không hợp lệ
+    }
+  
+    const token = localStorage.getItem('token'); // Kiểm tra token
+  
+    if (token) {
+      // Nếu có token, gửi yêu cầu với token để xóa sản phẩm trên server
+      try {
+        const response = await axios.delete(`/cart/remove/${id_productVariant}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+  
+        if (response.status === 200) {
+          // Cập nhật lại giỏ hàng sau khi xóa sản phẩm từ cơ sở dữ liệu
+          setLocalCart(prevCart => {
+            const updatedCart = prevCart.filter(item => item.id_productVariant !== id_productVariant);
+            localStorage.setItem('cart', JSON.stringify(updatedCart)); // Đồng bộ hóa lại localStorage
+            return updatedCart;
+          });
+          setSelectedItems(prevSelected => new Set([...prevSelected].filter(item => item !== id_productVariant)));
+          toast('Sản phẩm đã được xóa khỏi giỏ hàng.');
+          window.location.reload(); // Reload lại trang sau khi xóa thành công
+        } else {
+          toast('Không thể xóa sản phẩm. Vui lòng thử lại.');
+        }
+      } catch (error) {
+        console.error('Error removing item from cart:', error);
+        alert('Không thể xóa sản phẩm khỏi giỏ hàng. Vui lòng thử lại.');
+      }
+    } else {
+      // Nếu không có token (chưa đăng nhập), chỉ xóa sản phẩm từ localStorage
+      const cartData = localStorage.getItem('cart');
+      if (!cartData) {
+        console.log('Giỏ hàng trống hoặc không có dữ liệu trong localStorage');
+        return;
+      }
+  
+      const parsedCart = JSON.parse(cartData);
+  
+      // Lọc bỏ sản phẩm cần xóa
+      const updatedCart = parsedCart.filter(item => item.id_productVariant !== id_productVariant);
+  
+      // Cập nhật lại giỏ hàng trong localStorage
+      localStorage.setItem('cart', JSON.stringify(updatedCart));
+  
+      // Cập nhật lại trạng thái giỏ hàng trong React
+      setLocalCart(updatedCart);
+      setSelectedItems(prevSelected => new Set([...prevSelected].filter(item => item !== id_productVariant)));
+  
+      toast('Sản phẩm đã được xóa khỏi giỏ hàng.');
+      window.location.reload()
+    }
+  };
+  
+  
+  
+
   const handleCheckout = () => {
-    if (selectedVariants.length > 0) {
-      // Lưu selectedVariants vào localStorage trước khi điều hướng
-      localStorage.setItem("selectedVariants", JSON.stringify(selectedVariants));
-      navigate('/checkout'); // Điều hướng đến trang thanh toán
+    if (selectedItems.size > 0) {  // Sử dụng .size thay vì length
+      console.log('Đang thanh toán cho sản phẩm:', [...selectedItems]);
     } else {
-      toast.error('Chưa có sản phẩm nào được chọn!');
+      alert('Vui lòng chọn ít nhất một sản phẩm để thanh toán!');
     }
   };
+  console.log("productId:");  // Kiểm tra giá trị productId
 
-
-
-
-  const handleCheckboxChange = (variant) => {
-    const isSelected = selectedVariants.some((item) => item.id === variant.id);
-    if (isSelected) {
-      // Bỏ chọn biến thể nếu nó đã được chọn
-      setSelectedVariants(selectedVariants.filter((item) => item.id !== variant.id));
-    } else {
-      // Chọn biến thể nếu nó chưa được chọn
-      setSelectedVariants([...selectedVariants, variant]);
-    }
-  };
 
   return (
-    <div>
-      <div
-        className="breadcrumb-area breadcrumb-img bg-img"
-        style={{
-          backgroundImage: "url(/assets/img/banner/shop.jpg)",
-        }}
-      ></div>
-      <main>
-        <div className="cart-main-wrapper section-padding">
-          <div className="container">
-            <div className="section-bg-color">
-              <div className="row">
-                <div className="col-lg-8">
-                  <div className="cart-variants">
-                    {localCart.map((variant) => (
-                      <div key={variant.id} className="cart-variant-card">
-                        <input
-                          type="checkbox"
-                          checked={selectedVariants.some((item) => item.id === variant.id)}
-                          onChange={() => handleCheckboxChange(variant)} // Thay đổi khi nhấn checkbox
-                        />
-                        <div className="variant-image">
-                          <Link to={`/product_details/${variant.productId}`}>
-                            <img src={variant.image} alt={variant.name} width={200} />
-                          </Link>
-                        </div>
-                        <div className="variant-info">
-                          <Link to={`/product_details/${variant.productId}`}>
-                            <h4 className="variant-name">{variant.productName}</h4>
-                          </Link>
-                          <p className="variant-size">Size: {variant.size}</p>
-                          <p className="variant-color">Màu: {variant.color}</p>
-                          <p className="variant-price">Giá: {variant.price} Vnd</p>
-                          <div className="variant-quantity">
-                            <button onClick={() => handleQuantityChange(variant.id, variant.quantity - 1)}>
-                              -
-                            </button>
-                            <span>{variant.quantity}</span>
-                            <button onClick={() => handleQuantityChange(variant.id, variant.quantity + 1)}>
-                              +
-                            </button>
-                          </div>
-                        </div>
-                        <button className="remove-button" onClick={() => handleRemoveFromCart(variant.id)}>
-                          <i className="fa fa-trash-o" />
-                        </button>
-                      </div>
-                    ))}
+    <div className="cart-container">
+      {isLoading ? (
+        <p>Đang tải giỏ hàng...</p>
+      ) : (
+        <div className="cart-variants">
+          {Array.isArray(localCart) && localCart.length > 0 ? (
+            localCart.map((variant) => (
+              <div key={variant.id_productVariant} className="cart-variant-card">
+                <div className="variant-image">
+                  <div className="checkbox-control">
+                    <input 
+                      type="checkbox" 
+                      checked={selectedItems.has(variant.id_productVariant)} // Sử dụng id_productVariant
+                      onChange={() => handleCheckboxChange(variant.id_productVariant)} 
+                    />
+                  </div>
+                  
+                  <Link to={`/product_details/${variant.productId}`}>
+                    <img
+                      src={variant.image || '/default-image.jpg'}
+                      alt={variant.name}
+                      width={100}
+                    />
+                  </Link>
+                </div>
+
+                <div className="variant-info">
+                  <Link to={`/product_details/${variant.productId}`}>
+                  <h4 className="variant-name">{variant.name || variant.productName}</h4>
+
+                  </Link>
+                  <div className="variant-size-color">
+                    <p className="variant-color">Màu: {variant.color || 'Không xác định'}</p>
+                    <p className="variant-size">Size: {variant.size || 'Không xác định'}</p>
                   </div>
                 </div>
 
-                <div className="col-lg-4">
-                  <div className="cart-calculator-wrapper">
-                    <div className="cart-calculate-items">
-                      <h6>Tổng Số Tiền</h6>
-                      <p>
-                        {calculateTotalSelected()} Vnd {/* Hiển thị tổng tiền của sản phẩm được chọn */}
-                      </p>
-                      <button className="btn btn-sqr d-block"  onClick={handleCheckout}>
-                        Thanh toán
-                      </button>
-                    </div>
+                <div className="variant-quantity">
+                  <div className="quantity-control">
+                    <label>Số lượng:</label>
+                    <span className="quantity-display">{variant.quantity}</span>
                   </div>
+                  <p className="variant-price">Giá: {variant.price} VND</p>
+                </div>
+
+                <div className="variant-actions">
+                  <button
+                    className="remove-button"
+                    onClick={() => handleRemoveFromCart(variant.id_productVariant)} // Sử dụng id_productVariant
+                  >
+                    <i className="bi bi-trash"></i> Xóa
+                  </button>
                 </div>
               </div>
-            </div>
-          </div>
+            ))
+          ) : (
+            <p>Giỏ hàng của bạn hiện tại trống!</p>
+          )}
         </div>
-      </main>
+      )}
+
+      <div className="col-lg-4">
+        <div className="total-calculation">
+          <h5>Tổng: {totalQuantity} sản phẩm</h5>
+          <h5>Tổng tiền: {totalPrice} VND</h5>
+          <button onClick={handleCheckout}>Thanh toán</button>
+        </div>
+      </div>
     </div>
   );
 };

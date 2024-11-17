@@ -85,6 +85,7 @@ const AboutUs = () => {
             </div>
           </div>
         </section>
+        
         {/* about us area end */}
         {/* choosing area start */}
         <div className="choosing-area section-padding pt-0">
@@ -133,159 +134,10 @@ const AboutUs = () => {
         </div>
         {/* choosing area end */}
         {/* testimonial area start */}
-        <section
-          className="testimonial-area bg-img section-padding"
-          style={{
-            backgroundImage: "url(/assets/img/bg/bg-testimonial.jpg)",
-          }}
-
-        >
-          <div className="container">
-            <div className="row">
-              <div className="col-12">
-                <div className="testimonial-wrapper">
-                  <div className="testimonial-carousel">
-                    {/* slide item start */}
-                    <div className="testimonial-slide-item">
-                      <div className="testimonial-item text-center">
-                        <h6 className="author-designation">Sản Phẩm của Chúng Tôi</h6>
-                        <br />
-                        <p className="testimonial-desc">
-                          "Chúng tôi tự hào mang đến đa dạng mẫu mã giày Thor, từ giày thể thao đến giày thời trang, với nhiều màu sắc và kích cỡ khác nhau. Tất cả sản phẩm đều được làm từ chất liệu cao cấp, đảm bảo sự thoải mái và an toàn cho đôi chân của bạn."
-                        </p>
-                        
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+        
         {/* testimonial area end */}
         {/* team area start */}
-        <div className="team-area section-padding">
-          <div className="container">
-            <div className="row">
-              <div className="col-12">
-                <div className="section-title text-center">
-                  <h3 className="title">
-                  ĐỘI NGŨ CỦA CHÚNG TÔI</h3>
-                  <h4 className="sub-title">
-                  Tại Giày Thor, chúng tôi tự hào có một đội ngũ chuyên nghiệp và nhiệt huyết, những người không chỉ có kiến thức sâu rộng về sản phẩm mà còn đam mê với ngành thời trang giày dép. Đội ngũ của chúng tôi bao gồm:
-                  </h4>
-                </div>
-              </div>
-            </div>
-            <div className="row mbn-30">
-              <div className="col-lg-3 col-md-6 col-sm-6">
-                <div className="team-member mb-30">
-                  <div className="team-thumb">
-                    <img src="assets/img/team/01.jpg" alt="" />
-                    <div className="team-social">
-                      <a href="#">
-                        <i className="fa fa-facebook" />
-                      </a>
-                      <a href="#">
-                        <i className="fa fa-twitter" />
-                      </a>
-                      <a href="#">
-                        <i className="fa fa-linkedin" />
-                      </a>
-                      <a href="#">
-                        <i className="fa fa-google-plus" />
-                      </a>
-                    </div>
-                  </div>
-                  <div className="team-content text-center">
-                    <h6 className="team-member-name">Ngô Hải Phong</h6>
-                    <p>Ceo</p>
-                  </div>
-                </div>
-              </div>{" "}
-              {/* end single team member */}
-              <div className="col-lg-3 col-md-6 col-sm-6">
-                <div className="team-member mb-30">
-                  <div className="team-thumb">
-                    <img src="assets/img/team/02.jpg" alt="" />
-                    <div className="team-social">
-                      <a href="#">
-                        <i className="fa fa-facebook" />
-                      </a>
-                      <a href="#">
-                        <i className="fa fa-twitter" />
-                      </a>
-                      <a href="#">
-                        <i className="fa fa-linkedin" />
-                      </a>
-                      <a href="#">
-                        <i className="fa fa-google-plus" />
-                      </a>
-                    </div>
-                  </div>
-                  <div className="team-content text-center">
-                    <h6 className="team-member-name">Đỗ Quang Quyết</h6>
-                    <p>Designer</p>
-                  </div>
-                </div>
-              </div>{" "}
-              {/* end single team member */}
-              <div className="col-lg-3 col-md-6 col-sm-6">
-                <div className="team-member mb-30">
-                  <div className="team-thumb">
-                    <img src="assets/img/team/03.jpg" alt="" />
-                    <div className="team-social">
-                      <a href="#">
-                        <i className="fa fa-facebook" />
-                      </a>
-                      <a href="#">
-                        <i className="fa fa-twitter" />
-                      </a>
-                      <a href="#">
-                        <i className="fa fa-linkedin" />
-                      </a>
-                      <a href="#">
-                        <i className="fa fa-google-plus" />
-                      </a>
-                    </div>
-                  </div>
-                  <div className="team-content text-center">
-                    <h6 className="team-member-name">Nguyễn Quang Huy</h6>
-                    <p>Developer</p>
-                  </div>
-                </div>
-              </div>{" "}
-              {/* end single team member */}
-              <div className="col-lg-3 col-md-6 col-sm-6">
-                <div className="team-member mb-30">
-                  <div className="team-thumb img-full">
-                    <img src="assets/img/team/04.jpg" alt="" />
-                    <div className="team-social">
-                      <a href="#">
-                        <i className="fa fa-facebook" />
-                      </a>
-                      <a href="#">
-                        <i className="fa fa-twitter" />
-                      </a>
-                      <a href="#">
-                        <i className="fa fa-linkedin" />
-                      </a>
-                      <a href="#">
-                        <i className="fa fa-google-plus" />
-                      </a>
-                    </div>
-                  </div>
-                  <div className="team-content text-center">
-                    <h6 className="team-member-name">Vũ Trung Kiên</h6>
-                    <p>Marketing Officer</p>
-                  </div>
-                </div>
-              </div>{" "}
-              {/* end single team member */}
-            </div>
-          </div>
-        </div>
-        {/* team area end */}
+       
       </main>
 
 
