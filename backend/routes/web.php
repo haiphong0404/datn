@@ -22,23 +22,21 @@ use App\Http\Controllers\Admins\VoucherController;
 |--------------------------------------------------------------------------
 | Route cho Web, dành cho phần admin và người dùng
 */
+Route::get('/', function () {
+    return redirect()->route('login');
+});
 
-// Route::middleware('auth')->get('/admin', function () {
-//     return view('admin.index');
-// });
-Route::get('/admin', [AdminTestController::class, 'index'])->name('admin.index');
-
-// Route::get('/dashboard', function () {
-//     return view('dashboard');
-// })->middleware(['auth', 'verified'])->name('dashboard');
 
 // Route profile
 Route::middleware('auth')->group(function () {
     Route::get('/admin', [AdminTestController::class, 'index'])->name('admin.index');
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('profile', [ProfileControllers::class, 'index'])->name('admin.profile');
+    Route::get('/profile/edit', [ProfileControllers::class, 'edit'])->name('admin.profile.edit');
+    Route::put('/profile', [ProfileControllers::class, 'update'])->name('admin.profile.update');
+    Route::delete('/profile', [ProfileControllers::class, 'destroy'])->name('admin.profile.destroy');
 });
+
+            // Route::post('/admin/logout', [ProfileControllers::class, 'logout'])->name('logout');
 
 // Đảm bảo route '/' không trùng lặp
 require __DIR__ . '/auth.php';
@@ -51,15 +49,6 @@ Route::group(
         // 'middleware' => ['auth', 'admin'] // Nếu cần middleware xác thực
     ],
     function () {
-        // Route::get('/', function () {
-        //     return view('admin/index');
-        // });
-        Route::get('profile', [ProfileControllers::class, 'index'])->name('profile');
-        // Route trong group 'admin' cho trang profile
-        Route::get('profile/edit', [ProfileControllers::class, 'edit'])->name('profile.edit');
-        Route::put('profile/update', [ProfileControllers::class, 'update'])->name('profile.update');
-        // Route::post('/admin/logout', [ProfileControllers::class, 'logout'])->name('logout');
-
         Route::resource('brands', BrandController::class); // Route cho thương hiệu
         Route::post('categories/{id}/restore', [CategoryController::class, 'restore'])->name('categories.restore');
         Route::post('products/{id}/restore', [ProductController::class, 'restore'])->name('products.restore');

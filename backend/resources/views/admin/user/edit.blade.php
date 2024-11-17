@@ -118,15 +118,17 @@
 
                         <div class="form-group mb-4">
                             <label for="role" class="form-label">Quyền</label>
-                            <select class="form-select" id="role" name="role">
-                                <option value="user" {{ old('role', $user->role) == 'user' ? 'selected' : '' }}>User
-                                </option>
-                                <option value="staff" {{ old('role', $user->role) == 'staff' ? 'selected' : '' }}>Staff
-                                </option>
-                                <option value="admin" {{ old('role', $user->role) == 'admin' ? 'selected' : '' }}>Admin
-                                </option>
-                            </select>
+                            @if(auth()->user()->role !== 'admin' || $user->role !== 'admin')
+                                <select class="form-select" id="role" name="role">
+                                    <option value="user" {{ old('role', $user->role) == 'user' ? 'selected' : '' }}>User</option>
+                                    <option value="staff" {{ old('role', $user->role) == 'staff' ? 'selected' : '' }}>Staff</option>
+                                    <option value="admin" {{ old('role', $user->role) == 'admin' ? 'selected' : '' }}>Admin</option>
+                                </select>
+                            @else
+                                <input type="text" class="form-control" value="{{ $user->role }}" disabled />
+                            @endif
                         </div>
+                        
 
                         <div class="mb-3 d-flex">
                             <a href="{{ route('admin.user.index') }}"

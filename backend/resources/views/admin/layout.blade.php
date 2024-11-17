@@ -273,36 +273,41 @@
                         {{-- <input type="text" class="form-control search" placeholder="Search"> --}}
                     </li>
                     <!-- user login dropdown start-->
-                    <li class="dropdown">
-                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                            <img src="{{ Storage::url(optional(Auth::user())->avatar_img) }}" alt="{{ optional(Auth::user())->username }}" width="30px">
-                            <span class="username">{{ optional(Auth::user())->username }}</span>
-                            <b class="caret"></b>
-                        </a>
-                        
-                        
-                        <ul class="dropdown-menu dropdown-menu-right">
-                            <li>
-                                <a href="{{ route('admin.profile') }}" class="dropdown-item">
-                                    <i class="fa fa-suitcase"></i> Profile
-                                </a>
-                            </li>
-                            <li>
-                                {{-- <a href="{{ route('admin.logout') }}" class="dropdown-item">
-                                    <i class="fa fa-key"></i> Logout
-                                </a> --}}
-                                <form action="{{ route('logout') }}" method="POST" style="display: inline;">
-                                    @csrf
-                                    <button type="submit" class="btn btn-link"><i class="fa fa-key"></i> Logout</button>
-                                </form>
-                                
-                            </li>
-                        </ul>
-                        
-                    </li>
+                    @auth
+                        <li class="dropdown">
+                            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                                <img src="{{ optional(Auth::user()->avatar_img) ? Storage::url(Auth::user()->avatar_img) : asset('default-avatar.png') }}"
+                                    alt="{{ optional(Auth::user())->username }}" width="30px">
+                                <span class="username">{{ optional(Auth::user())->username }}</span>
+                                <b class="caret"></b>
+                            </a>
+
+                            <ul class="dropdown-menu dropdown-menu-right">
+                                <li>
+                                    <a href="{{ route('admin.profile') }}" class="dropdown-item">
+                                        <i class="fa fa-suitcase"></i> Profile
+                                    </a>
+                                </li>
+                                <li>
+                                    <form action="{{ route('logout') }}" method="POST" style="display: inline;">
+                                        @csrf
+                                        <button type="submit" class="btn btn-link dropdown-item"><i
+                                                class="fa fa-key"></i> Logout</button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </li>
+                    @else
+                        <li>
+                            <a href="{{ route('login') }}" class="dropdown-item">Đăng nhập</a>
+                        </li>
+                    @endauth
                     <li class="sb-toggle-right">
-                        <i class="fa fa-sign-in mr-2"></i>Website
+                        <a href="http://localhost:3000/" target="_blank" rel="noopener noreferrer">
+                            <i class="fa fa-sign-in mr-2"></i>Website
+                        </a>
                     </li>
+                    
                     <!-- user login dropdown end -->
                 </ul>
                 <!--search & user info end-->
@@ -315,7 +320,7 @@
                 <!-- sidebar menu start-->
                 <ul class="sidebar-menu" id="nav-accordion">
                     <li>
-                        <a class="active" href="index.html">
+                        <a href="index.html">
                             <i class="fa fa-dashboard"></i>
                             <span>Dashboard</span>
                         </a>
@@ -396,177 +401,16 @@
 
             </section>
         </section>
-
-
-        <!--main content end-->
-
-        <!-- Right Slidebar start -->
-        {{-- <div class="sb-slidebar sb-right sb-style-overlay">
-            <h5 class="side-title">Online Customers</h5>
-            <ul class="quick-chat-list">
-                <li class="online">
-                    <div class="media">
-                        <a href="#" class="">
-                            <img alt="" src="img/chat-avatar2.jpg" class="mr-3 rounded-circle">
-                        </a>
-                        <div class="media-body">
-                            <strong>John Doe</strong>
-                            <small>Dream Land, AU</small>
-                        </div>
-                    </div><!-- media -->
-                </li>
-                <li class="online">
-                    <div class="media">
-                        <a href="#" class="">
-                            <img alt="" src="img/chat-avatar.jpg" class="mr-3 rounded-circle">
-                        </a>
-                        <div class="media-body">
-                            <div class="media-status">
-                                <span class=" badge bg-important">3</span>
-                            </div>
-                            <strong>Jonathan Smith</strong>
-                            <small>United States</small>
-                        </div>
-                    </div><!-- media -->
-                </li>
-
-                <li class="online">
-                    <div class="media">
-                        <a href="#" class="">
-                            <img alt="" src="img/pro-ac-1.png" class="mr-3 rounded-circle">
-                        </a>
-                        <div class="media-body">
-                            <div class="media-status">
-                                <span class=" badge badge-success">5</span>
-                            </div>
-                            <strong>Jane Doe</strong>
-                            <small>ABC, USA</small>
-                        </div>
-                    </div><!-- media -->
-                </li>
-                <li class="online">
-                    <div class="media">
-                        <a href="#" class="">
-                            <img alt="" src="img/avatar1.jpg" class="mr-3 rounded-circle">
-                        </a>
-                        <div class="media-body">
-                            <strong>Anjelina Joli</strong>
-                            <small>Fockland, UK</small>
-                        </div>
-                    </div><!-- media -->
-                </li>
-                <li class="online">
-                    <div class="media">
-                        <a href="#" class="">
-                            <img alt="" src="img/mail-avatar.jpg" class="mr-3 rounded-circle">
-                        </a>
-                        <div class="media-body">
-                            <div class="media-status">
-                                <span class=" badge bg-warning">7</span>
-                            </div>
-                            <strong>Mr Tasi</strong>
-                            <small>Dream Land, USA</small>
-                        </div>
-                    </div><!-- media -->
-                </li>
-            </ul>
-            <h5 class="side-title"> pending Task</h5>
-            <ul class="p-task tasks-bar">
-                <li>
-                    <a href="#">
-                        <div class="task-info">
-                            <div class="desc">Dashboard v1.3</div>
-                            <div class="percent">40%</div>
-                        </div>
-                        <div class="progress">
-                            <div style="width: 40%" aria-valuemax="100" aria-valuemin="0" aria-valuenow="40"
-                                role="progressbar" class="progress-bar progress-bar-striped bg-success">
-                                <span class="sr-only">40% Complete (success)</span>
-                            </div>
-                        </div>
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <div class="task-info">
-                            <div class="desc">Database Update</div>
-                            <div class="percent">60%</div>
-                        </div>
-                        <div class="progress">
-                            <div style="width: 60%" aria-valuemax="100" aria-valuemin="0" aria-valuenow="60"
-                                role="progressbar" class="progress-bar progress-bar-striped bg-warning">
-                                <span class="sr-only">60% Complete (warning)</span>
-                            </div>
-                        </div>
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <div class="task-info">
-                            <div class="desc">Iphone Development</div>
-                            <div class="percent">87%</div>
-                        </div>
-                        <div class="progress">
-                            <div style="width: 87%" aria-valuemax="100" aria-valuemin="0" aria-valuenow="20"
-                                role="progressbar" class="progress-bar progress-bar-striped bg-info">
-                                <span class="sr-only">87% Complete</span>
-                            </div>
-                        </div>
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <div class="task-info">
-                            <div class="desc">Mobile App</div>
-                            <div class="percent">33%</div>
-                        </div>
-                        <div class="progress">
-                            <div style="width: 33%" aria-valuemax="100" aria-valuemin="0" aria-valuenow="80"
-                                role="progressbar" class="progress-bar progress-bar-striped bg-danger">
-                                <span class="sr-only">33% Complete (danger)</span>
-                            </div>
-                        </div>
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <div class="task-info">
-                            <div class="desc">Dashboard v1.3</div>
-                            <div class="percent">45%</div>
-                        </div>
-                        <div class="progress">
-                            <div style="width: 45%" aria-valuemax="100" aria-valuemin="0" aria-valuenow="45"
-                                role="progressbar" class="progress-bar progress-bar-striped">
-                                <span class="sr-only">45% Complete</span>
-                            </div>
-                        </div>
-
-                    </a>
-                </li>
-                <li class="external">
-                    <a href="#">See All Tasks</a>
-                </li>
-            </ul>
-        </div> --}}
-        <!-- Right Slidebar end -->
-
-        <!--footer start-->
-        {{--      <footer class="site-footer"> --}}
-        {{--          <div class="text-center"> --}}
-        {{--              2018 &copy; FlatLab by VectorLab. --}}
-        {{--              <a href="#" class="go-top"> --}}
-        {{--                  <i class="fa fa-angle-up"></i> --}}
-        {{--              </a> --}}
-        {{--          </div> --}}
-        {{--      </footer> --}}
-        <!--footer end-->
     </section>
 
     <!-- Section for additional JS -->
     @yield('js')
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 
+    <!-- JS của Select2 -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <!-- js placed at the end of the document so the pages load faster -->
-    <script src="{{ asset('assets/admin/js/jquery.js') }}"></script>
+    {{-- <script src="{{ asset('assets/admin/js/jquery.js') }}"></script> --}}
     <script src="{{ asset('assets') }}/admin/js/bootstrap.bundle.min.js"></script>
     <script class="include" type="text/javascript" src="{{ asset('assets') }}/admin/js/jquery.dcjqaccordion.2.7.js">
     </script>

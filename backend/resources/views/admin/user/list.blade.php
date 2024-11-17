@@ -101,14 +101,16 @@
                                                 <td>
                                                     <a href="{{ route('admin.user.show', $item->id) }}"
                                                         class="btn btn-primary"><i class="fa fa-eye"></i></a>
-                                                    <form action="{{ route('admin.user.destroy', $item->id) }}"
-                                                        method="POST" class="d-inline-block">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit" class="btn btn-danger"
-                                                            onclick="return confirm('Bạn có chắc muốn xóa banner này?')"><i
-                                                                class="fa fa-trash-o"></i></button>
-                                                    </form>
+                                                        @if($item->role !== 'admin')
+                                                        <form action="{{ route('admin.user.destroy', $item->id) }}" method="POST" class="d-inline-block">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="btn btn-danger"
+                                                                    onclick="return confirm('Bạn có chắc muốn xóa người dùng này?')">
+                                                                <i class="fa fa-trash-o"></i>
+                                                            </button>
+                                                        </form>
+                                                    @endif
                                                 </td>
 
                                             </tr>

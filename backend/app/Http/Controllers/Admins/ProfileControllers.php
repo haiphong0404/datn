@@ -75,7 +75,7 @@ class ProfileControllers extends Controller
         }
         $user->phone = $request->phone;
         $user->address = $request->address;
-        $user->role = $request->role;
+        // $user->role = $request->role;
 
         $user->save();
         return redirect()->route('admin.profile')->with('success', 'Thông tin đã được cập nhật.');
