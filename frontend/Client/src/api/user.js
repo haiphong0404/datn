@@ -87,7 +87,7 @@ export const forgotPassword = async (email) => {
 };
 
 // Đặt lại mật khẩu
-export const resetPassword = async (data) => {
+export const changePassword = async (data) => {
     try {
         const response = await axios.post("/password/reset/store", data);
         return response.data;

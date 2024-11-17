@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLoginForm } from '../../hooks/useLoginForm.js';
 import { useEditUser } from '../../hooks/useEditUser';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 const Account_info = () => {
     const { userInfo, setUserInfo } = useLoginForm();
@@ -114,6 +115,9 @@ const Account_info = () => {
                             <button type="submit" className="btn btn-sqr" disabled={loading}>
                                 {loading ? 'Đang lưu...' : 'Lưu Thay Đổi'}
                             </button>
+                            <Link to="/changePassword" type="button" className="btn btn-sqr mt-2">
+                                <a >Đổi Mật Khẩu</a   >
+                            </Link>
                         </div>
                         {error && <p className="error-message">{error}</p>}
                     </form>

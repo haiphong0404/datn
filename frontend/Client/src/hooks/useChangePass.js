@@ -5,8 +5,33 @@ export const useChangePassword = () => {
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState('');
     const [error, setError] = useState(null);
+    const [oldPasswordError, setOldPasswordError] = useState('');
+    const [newPasswordError, setNewPasswordError] = useState('');
+
+    const validate = (oldPassword, newPassword) => {
+        let isValid = true;
+        setOldPasswordError('');
+        setNewPasswordError('');
+
+        if (!oldPassword) {
+            setOldPasswordError('Mật khẩu cũ không được để trống.');
+            isValid = false;
+        }
+
+        if (!newPassword) {
+            setNewPasswordError('Mật khẩu mới không được để trống.');
+            isValid = false;
+        } else if (oldPassword === newPassword) {
+            setNewPasswordError('Mật khẩu mới phải khác mật khẩu cũ.');
+            isValid = false;
+        }
+
+        return isValid;
+    };
 
     const handleChangePassword = async (oldPassword, newPassword) => {
+        if (!validate(oldPassword, newPassword)) return; // Validate before proceeding
+
         setLoading(true);
         setMessage('');
         setError(null);
@@ -28,6 +53,13 @@ export const useChangePassword = () => {
         setError(null);
     };
 
-    return { loading, message, error, handleChangePassword, resetMessage };
+    return {
+        loading,
+        message,
+        error,
+        handleChangePassword,
+        resetMessage,
+        oldPasswordError,
+        newPasswordError
+    };
 };
-
