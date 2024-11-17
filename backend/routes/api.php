@@ -25,6 +25,7 @@ use App\Http\Controllers\Api\OrderDetailController;
 use App\Models\Cart;
 use App\Http\Controllers\Api\Auth\NewPasswordController;
 use App\Http\Controllers\Api\Auth\ForgotPasswordController;
+use App\Http\Controllers\Api\Auth\ProfileController;
 use App\Http\Controllers\Api\Auth\ResetPasswordController;
 use App\Http\Controllers\Api\BannerController;
 
@@ -96,3 +97,8 @@ Route::get('/banners', [BannerController::class, 'index']);
 
 
 Route::get('/colors', [ColorController::class, 'index']);
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit']);
+    Route::put('/profile', [ProfileController::class, 'update']);
+    Route::delete('/profile', [ProfileController::class, 'destroy']);
+});
