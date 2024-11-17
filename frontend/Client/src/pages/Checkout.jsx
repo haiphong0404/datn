@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { useLoginForm } from '../hooks/useLoginForm';
-import usePostOrder from '../hooks/usePostOrder'; // Import the custom hook for posting order
+import usePostOrder from '../hooks/usePostOrder';
+import axios from 'axios';
 
 const Checkout = () => {
   const { userInfo } = useLoginForm();
-  const { postOrder, loading, error, orderResponse } = usePostOrder(); // Destructure from usePostOrder
+  const { postOrder, loading, error, orderResponse } = usePostOrder();
 
   const [userDetails, setUserDetails] = useState({
     email: '',
@@ -15,10 +16,26 @@ const Checkout = () => {
     info: ''
   });
 
-  const [selectedVariants, setSelectedVariants] = useState([]);
+  const [selectedProducts, setSelectedProducts] = useState([]);
   const [totalAmount, setTotalAmount] = useState(0);
-  const [paymentMethod, setPaymentMethod] = useState('cash'); // Track selected payment method
+  const [paymentMethod, setPaymentMethod] = useState('cash');
 
+  // Get token from localStorage or any state where it's saved
+  const token = localStorage.getItem('token'); // or use some global state management
+
+  const deleteProductFromCart = async (productId) => {
+    try {
+      const response = await axios.delete(`/cart/remove/${productId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Xóa sản phẩm khỏi giỏ hàng thất bại:', error);
+      throw error;
+    }
+  };
+
+  // Lấy dữ liệu người dùng và giỏ hàng khi component được mount
   useEffect(() => {
     if (userInfo) {
       setUserDetails({
@@ -30,12 +47,16 @@ const Checkout = () => {
       });
     }
 
-    const storedVariants = JSON.parse(localStorage.getItem('selectedVariants')) || [];
-    setSelectedVariants(storedVariants);
-
-    const storedTotal = calculateTotalSelected(storedVariants);
-    setTotalAmount(storedTotal);
+    // Lấy sản phẩm đã chọn từ localStorage
+    const storedCart = JSON.parse(localStorage.getItem('selectedProducts') || '[]');
+    setSelectedProducts(storedCart);
+    setTotalAmount(calculateTotalAmount(storedCart));
   }, [userInfo]);
+
+  // Hàm tính toán tổng số tiền của giỏ hàng
+  const calculateTotalAmount = (items) => {
+    return items.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+  };
 
   const handleInputChange = (e) => {
     const { id, value } = e.target;
@@ -46,56 +67,72 @@ const Checkout = () => {
   };
 
   const handlePaymentMethodChange = (e) => {
-    setPaymentMethod(e.target.value); // Update payment method based on selected radio button
+    setPaymentMethod(e.target.value);
   };
 
-  const calculateTotalSelected = (variants) => {
-    return variants.reduce((total, variant) => total + (variant.price * variant.quantity), 0);
+  const validateForm = () => {
+    const { username, address, phone } = userDetails;
+    if (!username || !address || !phone) {
+      toast.error("Vui lòng điền đầy đủ thông tin bắt buộc!");
+      return false;
+    }
+    return true;
   };
 
-  const handleSubmitOrder = () => {
-    // Lấy thời gian hiện tại làm order_date
-    const orderDate = new Date().toISOString(); // Định dạng ISO cho ngày (ví dụ: "2024-11-11T15:30:00Z")
-
-    // Tạo dữ liệu đơn hàng dựa trên state hiện tại
+  const handleSubmitOrder = async () => {
+    if (!validateForm()) return;
+  
+    const orderDate = new Date().toISOString();
     const orderData = {
       order_date: orderDate,
-      status: "pending", // Hoặc bạn có thể lấy từ một state nếu cần
+      status: "pending",
       total_amount: totalAmount,
       name: userDetails.username,
       phone: userDetails.phone,
       address: userDetails.address,
       infor: userDetails.info,
-      payment_status: paymentMethod || 'null',
+      payment_status: paymentMethod,
       user_id: userInfo?.id,
-      products: selectedVariants.map((variant) => ({
-        product_variant_id: variant.id,
-        quantity: variant.quantity,
-        price: variant.price,
+      products: selectedProducts.map((item) => ({
+        product_variant_id: item.id_productVariant,
+        color: item.color,
+        size: item.size,
+        quantity: item.quantity,
+        price: item.price,
       })),
     };
-
-    console.log('Dữ liệu đơn hàng đang được gửi:', orderData);
-
-    // Kiểm tra nếu có user_id, thì gọi API gửi dữ liệu
+  
+    console.log('Dữ liệu đơn hàng:', orderData);
+  
     if (userInfo?.id) {
-      postOrder(userInfo.id, orderData)
-        .then(() => {
-          toast.success("Đặt hàng thành công!"); // Thông báo thành công
-        })
-        .catch((error) => {
-          toast.error(`Đặt hàng thất bại: ${error.message}`); // Thông báo thất bại
-        });
+      try {
+        // Gửi dữ liệu đơn hàng
+        await postOrder(userInfo.id, orderData);
+        toast.success("Đặt hàng thành công!");
+  
+        // Xóa sản phẩm khỏi giỏ hàng trong cơ sở dữ liệu
+        for (const item of selectedProducts) {
+          await deleteProductFromCart(item.id_productVariant);
+        }
+  
+        // Xóa giỏ hàng trong localStorage
+        localStorage.removeItem('selectedProducts');
+        localStorage.removeItem('cart');
+        setSelectedProducts([]);
+        setTotalAmount(0);
+      } catch (error) {
+        toast.error(`Đặt hàng thất bại: ${error.message}`);
+      }
     } else {
-      toast.error("Không tìm thấy người dùng!"); // Nếu không có user_id
+      toast.error("Không tìm thấy người dùng!");
     }
   };
-
+  
 
   return (
     <div>
       <main>
-        {/* breadcrumb area start */}
+        {/* Vùng breadcrumb bắt đầu */}
         <div
           className="breadcrumb-area breadcrumb-img bg-img"
           style={{
@@ -107,7 +144,7 @@ const Checkout = () => {
               <div className="col-12">
                 <div className="breadcrumb-wrap">
                   <nav aria-label="breadcrumb">
-                    <h3 className="breadcrumb-title">SHOP</h3>
+                    <h3 className="breadcrumb-title">CỬA HÀNG</h3>
                     <ul className="breadcrumb justify-content-center">
                       <li className="breadcrumb-item">
                         <a href="index.html">
@@ -115,10 +152,10 @@ const Checkout = () => {
                         </a>
                       </li>
                       <li className="breadcrumb-item">
-                        <a href="shop.html">Shop</a>
+                        <a href="shop.html">Cửa hàng</a>
                       </li>
                       <li className="breadcrumb-item active" aria-current="page">
-                        Checkout
+                        Thanh toán
                       </li>
                     </ul>
                   </nav>
@@ -127,18 +164,18 @@ const Checkout = () => {
             </div>
           </div>
         </div>
-        {/* breadcrumb area end */}
+        {/* Vùng breadcrumb kết thúc */}
 
-        {/* checkout main wrapper start */}
+        {/* Vùng wrapper thanh toán bắt đầu */}
         <div className="checkout-page-wrapper section-padding">
           <div className="container">
             <div className="row">
               <div className="col-12">
-                {/* Add more content here if needed */}
+                {/* Thêm nội dung vào đây nếu cần */}
               </div>
             </div>
             <div className="row">
-              {/* Checkout Billing Details */}
+              {/* Chi tiết thanh toán */}
               <div className="col-lg-6">
                 <div className="checkout-billing-details-wrap">
                   <h5 className="checkout-title">Chi tiết thanh toán</h5>
@@ -152,7 +189,6 @@ const Checkout = () => {
                           placeholder="Họ và tên"
                           value={userDetails.username}
                           onChange={handleInputChange}
-
                         />
                       </div>
                       <div className="single-input-item">
@@ -162,37 +198,35 @@ const Checkout = () => {
                         <input
                           type="email"
                           id="email"
-                          placeholder="Email Address"
+                          placeholder="Email"
                           value={userDetails.email}
                           onChange={handleInputChange}
-
                         />
                       </div>
                       <div className="single-input-item">
-                        <label htmlFor="town" className="required">Địa Chỉ</label>
+                        <label htmlFor="town" className="required">Địa chỉ</label>
                         <input
                           type="text"
                           id="address"
-                          placeholder="Địa Chỉ"
+                          placeholder="Địa chỉ"
                           value={userDetails.address || ""}
                           onChange={handleInputChange}
                         />
                       </div>
 
                       <div className="single-input-item">
-                        <label htmlFor="phone">Số Điện Thoại</label>
+                        <label htmlFor="phone">Số điện thoại</label>
                         <input
                           type="text"
                           id="phone"
-                          placeholder="Số Điện Thoại"
+                          placeholder="Số điện thoại"
                           value={userDetails.phone}
                           onChange={handleInputChange}
-
                         />
                       </div>
 
                       <div className="single-input-item">
-                        <label htmlFor="info">Thông Tin Thêm</label>
+                        <label htmlFor="info">Thông tin thêm</label>
                         <textarea
                           name="info"
                           id="info"
@@ -208,7 +242,7 @@ const Checkout = () => {
                 </div>
               </div>
 
-              {/* Order Summary Details */}
+              {/* Chi tiết tóm tắt đơn hàng */}
               <div className="col-lg-6">
                 <div className="order-summary-details">
                   <h5 className="checkout-title">Tóm tắt đơn hàng của bạn</h5>
@@ -224,28 +258,32 @@ const Checkout = () => {
                           </tr>
                         </thead>
                         <tbody>
-                          {selectedVariants.map((variant, index) => (
+                          {selectedProducts.map((product, index) => (
                             <tr key={index}>
                               <td>
                                 <a href="product-details.html">
-                                  {variant.productName} <strong> × {variant.quantity}</strong>
+                                  {product.name} <strong> × {product.quantity}</strong>
                                 </a>
                               </td>
-                              <td>{variant.color}</td>
-                              <td>{variant.size}</td> {/* Displaying the size */}
-                              <td>${(variant.price * variant.quantity).toFixed(2)}</td>
+                              <td>{product.color}</td>
+                              <td>{product.size}</td> {/* Hiển thị kích cỡ */}
+                              <td>${(product.price * product.quantity).toFixed(2)}</td>
                             </tr>
                           ))}
                         </tbody>
                         <tfoot>
                           <tr>
-                            <td colSpan="3" className="text-center"><b>Tổng cộng</b></td>
-                            <td className="text-center"><b>${totalAmount.toFixed(2)}</b></td>
+                            <th className="text-right" colSpan={3}>Tổng cộng</th>
+                            <td>${totalAmount.toFixed(2)}</td>
                           </tr>
                         </tfoot>
                       </table>
                     </div>
-                    <div className="order-payment-method">
+                  </div>
+                </div>
+
+
+                <div className="order-payment-method">
                       <div className="single-payment-method show">
                         <div className="payment-method-name">
                           <div className="custom-control custom-radio">
@@ -314,9 +352,9 @@ const Checkout = () => {
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-        {/* checkout main wrapper end */}
+     
+       
+    
       </main>
     </div>
   );
