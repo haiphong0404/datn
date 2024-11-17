@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { loadCartFromLocalStorage, removeFromCart } from '../../actions/action';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
@@ -8,7 +11,9 @@ const Cart = () => {
   const [isLoading, setIsLoading] = useState(true); // Trạng thái tải giỏ hàng
   const [totalPrice, setTotalPrice] = useState(0); // Tổng tiền
   const [totalQuantity, setTotalQuantity] = useState(0); // Tổng số lượng
-  const [selectedItems, setSelectedItems] = useState(new Set()); // Danh sách sản phẩm đã chọn để thanh toán
+  const [selectedVariants, setSelectedVariants] = useState(new Set()); // Danh sách biến thể đã chọn để thanh toán
+  const navigate = useNavigate(); // Hook để điều hướng
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchCart = async () => {
@@ -49,7 +54,7 @@ const Cart = () => {
     let calculatedQuantity = 0;
 
     localCart.forEach(variant => {
-      if (selectedItems.has(variant.id_productVariant)) { // Sử dụng id_productVariant
+      if (selectedVariants.has(variant.id_productVariant)) { // Sử dụng id_productVariant
         calculatedPrice += variant.price * variant.quantity;
         calculatedQuantity += variant.quantity;
       }
@@ -57,17 +62,29 @@ const Cart = () => {
 
     setTotalPrice(calculatedPrice);
     setTotalQuantity(calculatedQuantity);
-  }, [selectedItems, localCart]);
+  }, [selectedVariants, localCart]);
 
   const handleCheckboxChange = (variantId) => {
-    const updatedSelectedItems = new Set(selectedItems);
-    if (updatedSelectedItems.has(variantId)) {
-      updatedSelectedItems.delete(variantId); // Nếu sản phẩm đã được chọn, bỏ chọn
+    const updatedSelectedVariants = new Set(selectedVariants);
+    if (updatedSelectedVariants.has(variantId)) {
+      updatedSelectedVariants.delete(variantId); // Nếu sản phẩm đã được chọn, bỏ chọn
     } else {
-      updatedSelectedItems.add(variantId); // Nếu sản phẩm chưa được chọn, chọn nó
+      updatedSelectedVariants.add(variantId); // Nếu sản phẩm chưa được chọn, chọn nó
     }
-    setSelectedItems(updatedSelectedItems);
+    setSelectedVariants(updatedSelectedVariants);
   };
+
+  const handleCheckout = () => {
+    if (selectedVariants.size > 0) {
+      // Lưu danh sách biến thể đã chọn vào LocalStorage
+      const selectedData = localCart.filter(item => selectedVariants.has(item.id_productVariant));
+      localStorage.setItem("selectedVariants", JSON.stringify(selectedData));
+      navigate('/checkout'); // Điều hướng sang trang thanh toán
+    } else {
+      toast.error('Chưa có sản phẩm nào được chọn!');
+    }
+  };
+  
 
   const handleRemoveFromCart = async (id_productVariant) => {
     console.log("id_productVariant:", id_productVariant); // Kiểm tra giá trị
@@ -94,7 +111,7 @@ const Cart = () => {
             localStorage.setItem('cart', JSON.stringify(updatedCart)); // Đồng bộ hóa lại localStorage
             return updatedCart;
           });
-          setSelectedItems(prevSelected => new Set([...prevSelected].filter(item => item !== id_productVariant)));
+          setSelectedVariants(prevSelected => new Set([...prevSelected].filter(item => item !== id_productVariant)));
           toast('Sản phẩm đã được xóa khỏi giỏ hàng.');
           window.location.reload(); // Reload lại trang sau khi xóa thành công
         } else {
@@ -122,25 +139,12 @@ const Cart = () => {
   
       // Cập nhật lại trạng thái giỏ hàng trong React
       setLocalCart(updatedCart);
-      setSelectedItems(prevSelected => new Set([...prevSelected].filter(item => item !== id_productVariant)));
+      setSelectedVariants(prevSelected => new Set([...prevSelected].filter(item => item !== id_productVariant)));
   
       toast('Sản phẩm đã được xóa khỏi giỏ hàng.');
       window.location.reload()
     }
   };
-  
-  
-  
-
-  const handleCheckout = () => {
-    if (selectedItems.size > 0) {  // Sử dụng .size thay vì length
-      console.log('Đang thanh toán cho sản phẩm:', [...selectedItems]);
-    } else {
-      alert('Vui lòng chọn ít nhất một sản phẩm để thanh toán!');
-    }
-  };
-  console.log("productId:");  // Kiểm tra giá trị productId
-
 
   return (
     <div className="cart-container">
@@ -155,7 +159,7 @@ const Cart = () => {
                   <div className="checkbox-control">
                     <input 
                       type="checkbox" 
-                      checked={selectedItems.has(variant.id_productVariant)} // Sử dụng id_productVariant
+                      checked={selectedVariants.has(variant.id_productVariant)} // Sử dụng id_productVariant
                       onChange={() => handleCheckboxChange(variant.id_productVariant)} 
                     />
                   </div>

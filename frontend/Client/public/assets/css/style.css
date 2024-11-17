@@ -8248,6 +8248,50 @@ only screen and (max-width: 767.98px) {
   color: white;
   font-size: 18px;
 }
+/* Container cho số lượng */
+.g {
+  text-align: center;
+}
+
+/* Container của các nút thay đổi số lượng */
+.h {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+/* Nút - và + */
+.h button {
+  background-color: #f4f4f4;
+  border: 1px solid #ccc;
+  padding: 5px 10px;
+  font-size: 18px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+/* Nút - khi hover */
+.h button:hover {
+  background-color: #f1f1f1;
+}
+
+/* Input hiển thị số lượng */
+.h input {
+  width: 50px;
+  text-align: center;
+  font-size: 16px;
+  padding: 5px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  margin: 0;
+}
+.centered-cell {
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center;     /* Center vertically */
+  text-align: center;      /* Align text horizontally */
+}
 
 
 /* Giao diện cho container chứa danh sách tìm kiếm */

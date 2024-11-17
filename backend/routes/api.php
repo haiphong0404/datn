@@ -1,4 +1,3 @@
-
 <?php
 
 use App\Http\Controllers\Api\ArticlesController;
@@ -10,6 +9,7 @@ use App\Http\Controllers\Api\ContactController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\ProductVariantController;
 use App\Http\Controllers\Api\SizeController;
+use App\Http\Controllers\PaymentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\BrandController;
@@ -101,6 +101,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/cart/update', [CartController::class, 'updateCart']);
     Route::delete('/cart/remove', [CartController::class, 'removeFromCart']);
     Route::delete('/cart/remove/{product_variant_id}', [CartController::class, 'removeFromCart']);
+    Route::apiResource('order', OrderController::class );
 });
 Route::get('products/{productId}/variants', [ProductVariantController::class, 'index']);
 Route::get('/variants/{id}', [ProductVariantController::class, 'show']);
@@ -116,5 +117,7 @@ Route::get('/banners', [BannerController::class, 'index']);
 
 
 Route::get('/colors', [ColorController::class, 'index']);
-Route::apiResource('order', OrderController::class );
 Route::get('orders', [OrderController::class, 'abc']);
+
+// Route::post('/create-payment', [PaymentController::class, 'createPayment']);
+// Route::get('/payment-return', [PaymentController::class, 'returnPayment'])->name('payment.return');
