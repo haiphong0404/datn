@@ -52,72 +52,75 @@ class OrderController extends Controller
  
         
    
-    public function store(Request $request)
-{
-    DB::beginTransaction();
-
-    try {
-        $userId = Auth::id();
-        if (!$userId) {
-            return response()->json(['error' => 'Người dùng chưa đăng nhập'], 401);
-        }
-
-        // Kiểm tra phương thức thanh toán và đặt giá trị payment_status
-        $paymentStatus = 'unpaid';  // Mặc định là 'unpaid' nếu không có phương thức thanh toán
-        if ($request->input('payment_method') === 'online') {
-            $paymentStatus = 'paid';  // Đặt payment_status là 'paid' nếu chọn thanh toán trực tuyến
-        }
-        $orderDate = Carbon::parse($request->input('order_date'))->format('Y-m-d H:i:s');
-        $orderData = [
-            'user_id' => $userId,
-            'order_date' => $orderDate,  // Sử dụng giá trị đã được định dạng lại
-            'status' => $request->input('status'),
-            'total_amount' => $request->input('total_amount'),
-            'name' => $request->input('name'),
-            'phone' => $request->input('phone'),
-            'address' => $request->input('address'),
-            'infor' => $request->input('infor'),
-            'payment_status' => $paymentStatus,  // Đặt payment_status dựa trên phương thức thanh toán
-        ];
-
-        $order = Order::create($orderData);
-
-        foreach ($request->products as $product) {
-            OrderDetail::create([
-                'order_id' => $order->id,
-                'product_variant_id' => $product['product_variant_id'],
-                'quantity' => $product['quantity'],
-                'price' => $product['price'],
-            ]);
-            $productVariant = ProductVariant::find($product['product_variant_id']);
-            if ($productVariant) {
-                // Kiểm tra nếu số lượng còn lại trong kho đủ để giảm
-                if ($productVariant->quantity >= $product['quantity']) {
-                    // Giảm số lượng của sản phẩm theo số lượng đã đặt
-                    $productVariant->quantity -= $product['quantity'];
-                    $productVariant->save();  // Lưu lại số lượng đã cập nhật
-                } else {
-                    // Xử lý khi số lượng trong kho không đủ
-                    // Có thể ném ra lỗi hoặc thực hiện hành động phù hợp
-                    throw new \Exception('Số lượng sản phẩm không đủ.');
-                }
-            }
-        }
-        DB::commit();
-        return response()->json([
-            'message' => 'Đơn hàng và Chi tiết đơn hàng đã được tạo thành công!',
-            'order' => $order,
-        ], 201);
-
-    } catch (\Exception $e) {
-        DB::rollBack();
-        Log::error('Error creating order: ' . $e->getMessage()); // Log chi tiết lỗi
-        return response()->json([
-            'message' => 'Đã xảy ra lỗi khi thêm Đơn hàng và Chi tiết đơn hàng.',
-            'error' => $e->getMessage(),
-        ], 500);
-    }
-}
+     public function store(Request $request)
+     {
+         DB::beginTransaction();
+     
+         try {
+             $userId = Auth::id();
+             if (!$userId) {
+                 return response()->json(['error' => 'Người dùng chưa đăng nhập'], 401);
+             }
+     
+             // Kiểm tra phương thức thanh toán và đặt giá trị payment_status
+             $paymentStatus = $request->input('payment_method') === 'online' ? 'paid' : 'unpaid';
+             $orderDate = Carbon::parse($request->input('order_date'))->format('Y-m-d H:i:s');
+     
+             $orderData = [
+                 'user_id' => $userId,
+                 'order_date' => $orderDate,
+                 'status' => $request->input('status'),
+                 'total_amount' => $request->input('total_amount'),
+                 'name' => $request->input('name'),
+                 'phone' => $request->input('phone'),
+                 'email' => $request->input('email'),
+                 'address' => $request->input('address'),
+                 'infor' => $request->input('infor'),
+                 'payment_status' => $paymentStatus,
+             ];
+     
+             $order = Order::create($orderData);
+     
+             foreach ($request->products as $product) {
+                 OrderDetail::create([
+                     'order_id' => $order->id,
+                     'product_variant_id' => $product['product_variant_id'],
+                     'quantity' => $product['quantity'],
+                     'price' => $product['price'],
+                 ]);
+     
+                 // Cập nhật số lượng sản phẩm trong kho
+                 $productVariant = ProductVariant::find($product['product_variant_id']);
+                 if ($productVariant) {
+                     if ($productVariant->quantity >= $product['quantity']) {
+                         $productVariant->quantity -= $product['quantity'];
+                         $productVariant->save();
+                     } else {
+                         throw new \Exception('Số lượng sản phẩm không đủ.');
+                     }
+                 }
+             }
+     
+             DB::commit();
+     
+             // Lấy chi tiết đơn hàng sau khi tạo
+             $order->load('orderDetails.productVariant');
+     
+             return response()->json([
+                 'message' => 'Đơn hàng và Chi tiết đơn hàng đã được tạo thành công!',
+                 'order' => $order,
+             ], 201);
+     
+         } catch (\Exception $e) {
+             DB::rollBack();
+             Log::error('Error creating order: ' . $e->getMessage());
+             return response()->json([
+                 'message' => 'Đã xảy ra lỗi khi thêm Đơn hàng và Chi tiết đơn hàng.',
+                 'error' => $e->getMessage(),
+             ], 500);
+         }
+     }
+     
 
      
      
