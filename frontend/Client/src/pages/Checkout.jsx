@@ -96,6 +96,7 @@ const Checkout = () => {
       user_id: userInfo?.id,
       products: selectedProducts.map((item) => ({
         product_variant_id: item.id_productVariant,
+        image : item.image,
         color: item.color,
         size: item.size,
         quantity: item.quantity,

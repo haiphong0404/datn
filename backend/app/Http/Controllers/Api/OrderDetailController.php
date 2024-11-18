@@ -31,13 +31,7 @@ class OrderDetailController extends Controller
             $images = $detail->productVariant->images;
             $variant = $detail->productVariant;  // Lấy thông tin của variant
 
-            // Lấy ảnh sản phẩm chính nếu có
-            $productImageBase64 = $product->image ? $this->getImageAsBase64('storage/' . $product->image) : null;
-
-            // Lấy ảnh của từng variant nếu có
-            $variantImagesBase64 = $images->map(function ($img) {
-                return $img->image ? $this->getImageAsBase64('storage/' . $img->image) : null;
-            });
+            
 
             return [
                 'product_variant_id' => $detail->product_variant_id,
@@ -48,9 +42,9 @@ class OrderDetailController extends Controller
                     'description' => $product->description,
                     'category_id' => $product->category_id,
                     'brand_id' => $product->brand_id,
-                    'image' => $productImageBase64,
+                    'image' => $this->getImageAsBase64($product->image),
                 ],
-                'variantImages' => $variantImagesBase64,
+                'variantImages' => $this->getImageAsBase64($variant->image),
                 'color' => $variant->color,  // Lấy màu sắc từ variant
                 'size' => $variant->size,    // Lấy kích thước từ variant
             ];
@@ -79,19 +73,17 @@ class OrderDetailController extends Controller
      */
     private function getImageAsBase64($imagePath)
     {
-        // Kiểm tra xem ảnh có tồn tại trong thư mục `storage` không
-        if (Storage::exists($imagePath)) {
-            $imageData = Storage::get($imagePath);
-            return base64_encode($imageData);
-        } elseif (file_exists(public_path('storage/' . $imagePath))) {
-            // Kiểm tra nếu ảnh tồn tại trong thư mục `public/storage`
-            $imageData = file_get_contents(public_path('storage/' . $imagePath));
-            return base64_encode($imageData);
-        } elseif (file_exists(public_path($imagePath))) {
-            // Kiểm tra nếu ảnh tồn tại trong thư mục `public`
-            $imageData = file_get_contents(public_path($imagePath));
-            return base64_encode($imageData);
+        // Kiểm tra nếu hình ảnh tồn tại
+        if ($imagePath && Storage::disk('public')->exists($imagePath)) {
+            // Lấy nội dung hình ảnh
+            $imageData = Storage::disk('public')->get($imagePath);
+            // Lấy loại mime type bằng cách sử dụng FFMpeg hoặc PHP
+            $mimeType = mime_content_type(storage_path('app/public/' . $imagePath)); // Sửa tại đây
+            // Mã hóa hình ảnh thành Base64
+            return 'data:' . $mimeType . ';base64,' . base64_encode($imageData);
         }
-        return null; // Trả về null nếu hình ảnh không tồn tại
+
+        return null; // Nếu không có hình ảnh, trả về null
     }
+
 }

@@ -83,7 +83,8 @@ const Order_detail = () => {
                                     <table className="table table-bordered">
                                         <thead>
                                             <tr>
-                                                <th className="pro-title">Sản phẩm</th>
+                                                <th className="pro-title">Tên</th>
+                                                <th className="pro-title">Ảnh</th>
                                                 <th className="pro-title">Màu sắc</th>
                                                 <th className="pro-title">Kích thước</th>
                                                 <th className="pro-price">Giá</th>
@@ -98,10 +99,13 @@ const Order_detail = () => {
                                                         {item.product?.name || 'Tên sản phẩm không có'}
                                                     </td>
                                                     <td className="pro-title">
-                                                        {item.color?.name  || 'Màu sắc không có' }
+                                                        <img src={item.product?.image || 'Ảnh sản phẩm không có'}    style={{ width: '50px', height: '50px'  }}  />
                                                     </td>
                                                     <td className="pro-title">
-                                                        {item.size?.name  || 'Kích thước không có'}
+                                                        {item.color?.name || 'Màu sắc không có'}
+                                                    </td>
+                                                    <td className="pro-title">
+                                                        {item.size?.name || 'Kích thước không có'}
                                                     </td>
                                                     <td className="pro-price">
                                                         <span>{parseFloat(item.price).toFixed(0)}₫</span>
@@ -112,8 +116,19 @@ const Order_detail = () => {
                                                     <td className="pro-subtotal">
                                                         <span>{(parseFloat(item.price) * item.quantity).toFixed(0)}₫</span>
                                                     </td>
+
                                                 </tr>
+
                                             ))}
+
+                                            <tr className="total-amount-row">
+                                                <th colSpan="5" style={{ textAlign: 'center' }}>Tổng Tiền:</th>
+                                                <th style={{ fontWeight: 'bold', color: '#e63946' }}>
+                                                    {parseFloat(orderDetail.total_amount).toFixed(0)}₫
+                                                </th>
+                                            </tr>
+
+
                                         </tbody>
                                     </table>
                                 </div>
