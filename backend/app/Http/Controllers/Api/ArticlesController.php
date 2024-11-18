@@ -13,6 +13,22 @@ class ArticlesController extends Controller
     /**
      * Display a listing of the resource.
      */
+
+
+     public function hieungu($id)
+     {
+         // Tìm bài viết theo ID
+         $article = Article::find($id);
+     
+         if (!$article) {
+             return response()->json(['message' => 'Article not found'], 404);
+         }
+     
+         // Chuyển đổi ảnh sang dạng Base64
+         $article->image = $this->getImageAsBase64($article->image);
+     
+         return response()->json($article);
+     }     
     public function index()
     {
         // Lấy danh sách bài viết và trả về dạng JSON

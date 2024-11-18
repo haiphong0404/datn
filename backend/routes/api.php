@@ -21,6 +21,7 @@ use App\Http\Controllers\Api\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Api\Auth\NewPasswordController;
 use App\Http\Controllers\Api\Auth\ForgotPasswordController;
 use App\Http\Controllers\Api\Auth\ResetPasswordController;
+
 Route::post('password/email', [ForgotPasswordController::class, 'sendResetLinkEmail']);
 Route::post('password/reset', [ResetPasswordController::class, 'reset']);
 
@@ -59,6 +60,7 @@ Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name(
 
 Route::apiResource('Apibrands', BrandController::class);
 Route::apiResource('Apiarticle', ArticlesController::class); // bài viết
+Route::get('/articles/{id}', [ArticlesController::class, 'hieungu']);// bài viết bát theo id
 
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
