@@ -22,6 +22,7 @@ use App\Http\Controllers\Api\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Api\OrderController;
 use App\Models\Order;
 use App\Http\Controllers\Api\OrderDetailController;
+use App\Http\Controllers\Api\VoucherController;
 
 use App\Models\Cart;
 use App\Http\Controllers\Api\Auth\NewPasswordController;
@@ -95,3 +96,4 @@ Route::get('/banners', [BannerController::class, 'index']);
 
 Route::apiResource('order', OrderController::class );
 Route::get('orders', [OrderController::class, 'abc']);
+Route::post('/apply-voucher', [VoucherController::class, 'applyVoucher']);
