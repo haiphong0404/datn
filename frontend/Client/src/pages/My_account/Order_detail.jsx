@@ -104,13 +104,13 @@ const Order_detail = () => {
                                                         {item.size?.name  || 'Kích thước không có'}
                                                     </td>
                                                     <td className="pro-price">
-                                                        <span>{parseFloat(item.price).toFixed(2)}₫</span>
+                                                        <span>{parseFloat(item.price).toFixed(0)}₫</span>
                                                     </td>
                                                     <td className="pro-quantity">
                                                         <span>{item.quantity}</span>
                                                     </td>
                                                     <td className="pro-subtotal">
-                                                        <span>{(parseFloat(item.price) * item.quantity).toFixed(2)}₫</span>
+                                                        <span>{(parseFloat(item.price) * item.quantity).toFixed(0)}₫</span>
                                                     </td>
                                                 </tr>
                                             ))}

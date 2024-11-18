@@ -46,7 +46,15 @@ const Orders = () => {
                                                     hour12: true, // Hiển thị AM/PM
                                                 })}
                                             </td>
-                                            <td>{order.status}</td>
+                                            <td>
+                                                {
+                                                    {
+                                                        pending: 'Đang Xử Lý',
+                                                        completed: 'Hoàn Thành',
+                                                        cancelled: 'Đã Hủy'
+                                                    }[order.status] || 'Trạng Thái Không Xác Định'
+                                                }
+                                            </td>
                                             <td>${order.total_amount}</td>
                                             <td>
                                                 <Link to={`/my_account/Order_detail/${order.id}`} className="btn btn-sqr">
