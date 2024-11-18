@@ -88,6 +88,7 @@ const Checkout = () => {
       status: "pending",
       total_amount: totalAmount,
       name: userDetails.username,
+      email: userDetails.email,
       phone: userDetails.phone,
       address: userDetails.address,
       infor: userDetails.info,

@@ -43,9 +43,6 @@ const Orders = () => {
                                                     year: 'numeric', // Năm
                                                     month: 'long', // Tháng
                                                     day: 'numeric', // Ngày
-                                                    hour: '2-digit', // Giờ
-                                                    minute: '2-digit', // Phút
-                                                    second: '2-digit', // Giây
                                                     hour12: true, // Hiển thị AM/PM
                                                 })}
                                             </td>
