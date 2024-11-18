@@ -14,7 +14,7 @@
             <nav class="flex-shrink-0 my-2 my-sm-0 ms-sm-3" aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item">
-                        <a href="{{ route('vouchers.index') }}" style="color: inherit;">Vouchers</a>
+                        <a href="{{ route('admin.vouchers.index') }}" style="color: inherit;">Vouchers</a>
                     </li>
                     <li class="breadcrumb-item active" aria-current="page">Chỉnh sửa mã giảm giá</li>
                 </ol>
@@ -42,7 +42,7 @@
             <h4 class="block-title">Thông tin mã giảm giá</h4>
         </div>
         <div class="block-content">
-            <form action="{{ route('vouchers.update', $voucher->id) }}" method="POST">
+            <form action="{{ route('admin.vouchers.update', $voucher->id) }}" method="POST">
                 @csrf
                 @method('PUT') <!-- Sử dụng phương thức PUT cho cập nhật -->
 
