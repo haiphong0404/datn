@@ -87,6 +87,7 @@ class OrderController extends Controller
                      'product_variant_id' => $product['product_variant_id'],
                      'quantity' => $product['quantity'],
                      'price' => $product['price'],
+                     'image' => $product['image'],
                  ]);
      
                  // Cập nhật số lượng sản phẩm trong kho
