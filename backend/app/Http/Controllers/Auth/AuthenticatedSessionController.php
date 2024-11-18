@@ -17,7 +17,6 @@ class AuthenticatedSessionController extends Controller
      */
     public function create(): View
     {
-      // return redirect()->route('admin.admin');
       return view('auth.login');
     }
 
@@ -30,7 +29,7 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->route('/');
+        return redirect()->route('admin.index');
     }
 
 
@@ -65,11 +64,11 @@ class AuthenticatedSessionController extends Controller
 
       }else{
         return redirect()->back()->with([
-           'message'=>'Email hoặc Mật khẩu không đúng vui lòng nhập lại !!' 
+           'message'=>'Email hoặc Mật khẩu không đúng vui lòng nhập lại !!'
         ]);
       }
     }
-    
+
 
 
     /**
@@ -83,6 +82,6 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        return redirect('/login');
     }
 }

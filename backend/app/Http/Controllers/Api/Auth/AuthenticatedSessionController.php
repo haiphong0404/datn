@@ -18,7 +18,7 @@ class AuthenticatedSessionController extends Controller
         if (Auth::attempt($request->only('email', 'password'), $request->filled('remember'))) {
             $user = Auth::user();
             // Optionally generate a token if you're using token-based authentication
-            $token = $user->createToken('YourAppName')->plainTextToken;
+           $token = $user->createToken('YourAppName')->plainTextToken;
 
             return response()->json([
                 'message' => 'Logged in successfully.',

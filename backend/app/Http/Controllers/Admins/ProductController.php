@@ -27,11 +27,11 @@ class ProductController extends Controller
         $search = $request->input('search');
 
         $products = Product::withTrashed() // Lấy cả sản phẩm đã xóa mềm
-            ->with(['category' => function ($query) {
-                $query->withTrashed(); // Lấy cả category đã bị xóa mềm
-            }, 'brand' => function ($query) {
-                $query->withTrashed(); // Lấy cả brand đã bị xóa mềm
-            }])
+        ->with(['category' => function ($query) {
+            $query->withTrashed(); // Lấy cả category đã bị xóa mềm
+        }, 'brand' => function ($query) {
+            $query->withTrashed(); // Lấy cả brand đã bị xóa mềm
+        }])
             ->when($search, function ($query, $search) {
                 $query->where(function ($q) use ($search) {
                     $q->where('name', 'LIKE', "%{$search}%")
@@ -44,10 +44,12 @@ class ProductController extends Controller
                         ->orWhere('created_at', 'LIKE', "%{$search}%");
                 });
             })
-            ->get();
+            ->orderBy('id', 'desc') // Sắp xếp theo ID mới nhất
+            ->paginate(10); // Phân trang với 6 sản phẩm mỗi trang
 
         return view('admin.products.index', compact('products'));
     }
+
 
 
     /**
@@ -93,14 +95,14 @@ class ProductController extends Controller
             foreach ($request->sizes as $index => $sizeId) {
                 // Kiểm tra và lưu kích thước mới
                 if ($sizeId === 'new') {
-                    $size = Size::create(['name' => $request->new_sizes[$index]]);
+                    $size = Size::firstOrCreate(['name' => $request->new_sizes[$index]]);
                     $sizeId = $size->id; // Cập nhật id của kích thước mới
                 }
 
                 // Kiểm tra và lưu màu mới
                 $colorId = $request->colors[$index];
                 if ($colorId === 'new') {
-                    $color = Color::create(['name' => $request->new_colors[$index]]);
+                    $color = Color::firstOrCreate(['name' => $request->new_colors[$index]]);
                     $colorId = $color->id; // Cập nhật id của màu mới
                 }
 
@@ -142,6 +144,15 @@ class ProductController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
+    public function show($productId)
+    {
+        // Lấy thông tin của sản phẩm cùng với các biến thể (variants)
+        $product = Product::with(['variants' => function ($query) {
+            $query->orderBy('id', 'desc');
+        }, 'variants.images'])->findOrFail($productId);
+        return view('admin.products.show_all',compact('product'));
+    }
+
     public function edit(string $id)
     {
         $product = Product::findOrFail($id);

@@ -1,4 +1,13 @@
 @extends('admin.layout')
+@section('search')
+    <form action="{{ route('admin.user.index') }}" method="GET">
+        <div class="input-group mt-1">
+            <input type="text" name="search" class="form-control" placeholder="Tìm kiếm người dùng"
+                value="{{ request()->input('search') }}">
+            <button class="btn btn-outline-secondary" type="submit"><i class="bi bi-search"></i></button>
+        </div>
+    </form>
+@endsection
 @section('content')
     @if (session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -6,17 +15,34 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     @endif
+    <style>
+        .text-truncate {
+            max-width: 200px;
+            /* Đặt độ rộng cố định cho cột */
+            white-space: nowrap;
+            /* Không cho phép xuống dòng */
+            overflow: hidden;
+            /* Ẩn phần văn bản vượt quá */
+            text-overflow: ellipsis;
+            /* Hiển thị dấu "..." khi văn bản bị cắt */
+        }
+    </style>
 
     <div id="list" class="row">
         <div class="col-sm-12">
             <section class="card">
                 <header class="card-header">
-                    Danh Sách Người Dùng
-                    <span class="tools pull-right">
-                        <a href="{{ route('admin.user.create') }}" class=" btn btn-success btn-sm">CRAETE</a>
-                        <a href="javascript:;" class="fa fa-chevron-down"></a>
-
-                    </span>
+                    <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center">
+                        <h1 class="flex-grow-1 fs-3 fw-semibold my-2 my-sm-3">Danh Sách User</h1>
+                        <nav class="flex-shrink-0 my-2 my-sm-0 ms-sm-3" aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item">
+                                    <a href="{{ route('admin.user.index') }}" style="color: inherit;">User</a>
+                                </li>
+                                <li class="breadcrumb-item active" aria-current="page">Danh Sách User</li>
+                            </ol>
+                        </nav>
+                    </div>
                 </header>
                 <div class="card-body">
                     <div class="adv-table">
@@ -35,11 +61,9 @@
                                 </div>
                                 <div class="span6">
                                     <div class="dataTables_filter" id="hidden-table-info_filter">
-                                        <form action="{{ route('admin.user.index') }}" method="GET">
-                                            <input type="text" name="search" class="form-control"
-                                                placeholder="Tìm kiếm bình luận" value="{{ request()->input('search') }}">
-                                            <button type="submit" class="btn btn-primary">Tìm kiếm</button>
-                                        </form>
+                                        <a href="{{ route('admin.user.create') }}"
+                                            class=" btn btn-success btn-sm">CREATE</a>
+
                                     </div>
                                 </div>
                             </div>
@@ -67,24 +91,26 @@
                                         @foreach ($users as $item)
                                             <tr>
                                                 <td>{{ $item->id }}</td>
-                                                <td> <img src="{{ Storage::url($item->avatar_img) }}" width="100"
-                                                        height="100" alt="{{ $item->username }}"></td>
+                                                <td style="width: 100px;"> <img src="{{ Storage::url($item->avatar_img) }}"
+                                                        width="100" height="100" alt="{{ $item->username }}"></td>
                                                 <td>{{ $item->username }}</td>
                                                 <td>{{ $item->phone }}</td>
-                                                <td>{{ $item->email }}</td>
-                                                <td>{{ $item->address }}</td>
-                                                <td>{{ $item->role }}</td>
+                                                <td class="text-truncate">{{ $item->email }}</td>
+                                                <td class="text-truncate">{{ $item->address }}</td>
+                                                <td class="text-td">{{ $item->role }}</td>
                                                 <td>
                                                     <a href="{{ route('admin.user.show', $item->id) }}"
-                                                        class="btn btn-primary btn-sm"><i class="fa fa-eye"></i></a>
-                                                    <form action="{{ route('admin.user.destroy', $item->id) }}" method="post">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button onclick="return confirm('Ban co muon xoa khong')"
-                                                            class="btn btn-danger btn-sm" type="submit"> <i
-                                                                class="fa fa-trash-o"></i></button>
-                                                    </form>
-
+                                                        class="btn btn-primary"><i class="fa fa-eye"></i></a>
+                                                        @if($item->role !== 'admin')
+                                                        <form action="{{ route('admin.user.destroy', $item->id) }}" method="POST" class="d-inline-block">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="btn btn-danger"
+                                                                    onclick="return confirm('Bạn có chắc muốn xóa người dùng này?')">
+                                                                <i class="fa fa-trash-o"></i>
+                                                            </button>
+                                                        </form>
+                                                    @endif
                                                 </td>
 
                                             </tr>
