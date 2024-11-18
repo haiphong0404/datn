@@ -15,7 +15,7 @@
             <nav class="flex-shrink-0 my-2 my-sm-0 ms-sm-3" aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item">
-                        <a href="{{ route('vouchers.index') }}" style="color: inherit;">Vouchers</a>
+                        <a href="{{ route('admin.vouchers.index') }}" style="color: inherit;">Vouchers</a>
                     </li>
                     <li class="breadcrumb-item active" aria-current="page">Danh sách mã giảm giá</li>
                 </ol>
@@ -50,7 +50,7 @@
             <h4 class="block-title">Voucher Type: {{ ucfirst($type) }}</h4>
             <div class="block-options">
                 <div class="block-options-item">
-                    <a href="{{ route('vouchers.create') }}" class="btn btn-sm btn-alt-primary" data-bs-toggle="tooltip" title="Thêm mã giảm giá"><i class="fa fa-plus"></i></a>
+                    <a href="{{ route('admin.vouchers.create') }}" class="btn btn-sm btn-alt-primary" data-bs-toggle="tooltip" title="Thêm mã giảm giá"><i class="fa fa-plus"></i></a>
                 </div>
             </div>
         </div>
@@ -112,16 +112,16 @@
                         <td class="fw-semibold">{{ $item->updated_at }}</td>
                         <td class="text-center">
                             <div class="btn-group">
-                                <a href="{{ route('vouchers.show', $item) }}" class="btn btn-sm btn-info">
+                                <a href="{{ route('admin.vouchers.show', $item) }}" class="btn btn-sm btn-info">
                                     <i class="fas fa-eye"></i> Show
                                 </a>
                                 {{-- EDIT --}}
-                                <a href="{{ route('vouchers.edit', $item) }}" type="button" class="btn btn-sm btn-alt-warning mx-2" data-bs-toggle="tooltip" title="Chỉnh sửa">
+                                <a href="{{ route('admin.vouchers.edit', $item) }}" type="button" class="btn btn-sm btn-alt-warning mx-2" data-bs-toggle="tooltip" title="Chỉnh sửa">
                                     <i class="fa fa-pencil-alt"></i>
                                 </a>
 
                                 {{-- DELETE --}}
-                                <form action="{{ route('vouchers.destroy', $item) }}" method="POST" class="form-delete">
+                                <form action="{{ route('admin.vouchers.destroy', $item) }}" method="POST" class="form-delete">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-sm btn-alt-danger" data-bs-toggle="tooltip" title="Xóa">

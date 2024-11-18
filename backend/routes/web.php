@@ -67,6 +67,7 @@ Route::group(
         Route::get('/get-variants/{productId}', [OrderController::class, 'getVariants'])->name('products.variants');
         // Route để tìm kiếm sản phẩm
         Route::get('/search-products', [OrderController::class, 'search'])->name('products.search');
+        Route::resource('admin/vouchers', VoucherController::class);
     }
 );
 
@@ -81,7 +82,7 @@ Route::group(
     }
 );
 
-Route::resource('admin/vouchers', VoucherController::class);
+
 // Route::middleware(['auth', 'checkRole:admin,staff'])->group(function () {
 //     Route::resource('admin/vouchers', VoucherController::class);
 // });
