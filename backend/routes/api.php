@@ -78,11 +78,12 @@ Route::apiResource('order-details', OrderDetailController::class);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/cart', [CartController::class, 'index']);
-    Route::post('/cart/add', [CartController::class, 'addToCart']);
-    Route::put('/cart/update', [CartController::class, 'updateCart']);
-    Route::delete('/cart/remove', [CartController::class, 'removeFromCart']);
+    Route::put('/cart/update/{id_cart_item}', [CartController::class, 'updateCart']);
     Route::delete('/cart/remove/{product_variant_id}', [CartController::class, 'removeFromCart']);
 });
+    Route::post('/cart/add', [CartController::class, 'addToCart']);
+    Route::post('/cart/sync-cart', [CartController::class, 'syncCartWithDatabase']);
+
 Route::get('products/{productId}/variants', [ProductVariantController::class, 'index']);
 Route::get('/variants/{id}', [ProductVariantController::class, 'show']);
 Route::get('/sizes', [SizeController::class, 'index']);
@@ -95,13 +96,13 @@ Route::get('contacts/{id}', [ContactController::class, 'show']); // Lấy contac
 Route::get('/banners', [BannerController::class, 'index']);
 
 
-Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/cart', [CartController::class, 'index']);
-    Route::post('/cart/add', [CartController::class, 'addToCart']);
-    Route::put('/cart/update', [CartController::class, 'updateCart']);
-    Route::delete('/cart/remove', [CartController::class, 'removeFromCart']);
-    Route::delete('/cart/remove/{product_variant_id}', [CartController::class, 'removeFromCart']);
-});
+// Route::middleware('auth:sanctum')->group(function () {
+//     Route::get('/cart', [CartController::class, 'index']);
+//     Route::post('/cart/add', [CartController::class, 'addToCart']);
+//     Route::put('/cart/update', [CartController::class, 'updateCart']);
+//     Route::delete('/cart/remove', [CartController::class, 'removeFromCart']);
+//     Route::delete('/cart/remove/{product_variant_id}', [CartController::class, 'removeFromCart']);
+// });
 Route::get('products/{productId}/variants', [ProductVariantController::class, 'index']);
 Route::get('/variants/{id}', [ProductVariantController::class, 'show']);
 Route::get('/sizes', [SizeController::class, 'index']);
