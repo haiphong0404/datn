@@ -55,9 +55,9 @@ class AuthenticatedSessionController extends Controller
         if(Auth::user()->role=='admin'){
             return redirect()->route('admin.admin');
             // return redirect()->route('/');
-        }else  if(Auth::user()->role=='2'){
+        }else  if(Auth::user()->role=='staff'){
           // return redirect()->route('nhanvien.nhanvien');
-          return redirect()->route('/');
+          return redirect()->route('staff.staff');
       }else{
           return redirect()->route('/');
         }

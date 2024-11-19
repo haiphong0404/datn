@@ -29,6 +29,7 @@ Route::get('/', function () {
 
 // Route profile
 Route::middleware('auth')->group(function () {
+    Route::get('/staff', [AdminTestController::class, 'indexStaff'])->name('staff.index');
     Route::get('/admin', [AdminTestController::class, 'index'])->name('admin.index');
     Route::get('profile', [ProfileControllers::class, 'index'])->name('admin.profile');
     Route::get('/profile/edit', [ProfileControllers::class, 'edit'])->name('admin.profile.edit');
@@ -46,7 +47,7 @@ Route::group(
     [
         'prefix' => 'admin',
         'as' => 'admin.',
-        // 'middleware' => ['auth', 'admin'] // Nếu cần middleware xác thực
+         'middleware' => ['auth', 'admin'] // Nếu cần middleware xác thực
     ],
     function () {
         Route::resource('brands', BrandController::class); // Route cho thương hiệu
@@ -82,10 +83,10 @@ Route::group(
     [
         'prefix' => 'staff',
         'as' => 'staff.',
-//        'middleware' => 'staff'
+        'middleware' => ['auth','staff']
     ],
     function () {
-        Route::get('Admin', [AdminTestController::class, 'index'])->name('Admin');
+        Route::get('/staff', [AdminTestController::class, 'indexStaff'])->name('staff.index');
         Route::resource('brands', BrandController::class); // Route cho thương hiệu
         Route::post('categories/{id}/restore', [CategoryController::class, 'restore'])->name('categories.restore');
         Route::post('products/{id}/restore', [ProductController::class, 'restore'])->name('products.restore');
