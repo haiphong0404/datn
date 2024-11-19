@@ -96,7 +96,7 @@ class UserController extends Controller
         }
         $user->phone = $request->phone;
         $user->address = $request->address;
-        $user->role = $request->role;
+        $user->role = $request->role ?? $user->role;
 
         $user->save();
 
