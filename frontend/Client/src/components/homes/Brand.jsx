@@ -23,7 +23,7 @@ const Brand = () => {
                     <div className="testimonial-slide-item">
                       <div className="testimonial-item text-center">
                         <p className="testimonial-desc">
-                          "Khi khách hàng tiềm năng đang nghiên cứu về bạn trực tuyến, họ đang tìm hiểu về bạn qua nội dung của trang web của bạn."
+                        Giá trị cốt lõi là những nguyên tắc và tiêu chuẩn mà thương hiệu luôn tuân thủ. Đây là yếu tố quan trọng giúp xây dựng niềm tin và sự trung thành của khách hàng.
                         </p>
                         <div className="testimonial-author">
                           <img
@@ -43,7 +43,7 @@ const Brand = () => {
                             <img
                                     src={brand.image || '/path/to/placeholder.jpg'} // Đổ hình ảnh base64 từ API
                                     alt={brand.name}
-                                    style={{ width: '100px', height: '100px' }} // Kích thước hình ảnh
+                                    width={100}// Kích thước hình ảnh
                                 />
                             </a>
                           </div>

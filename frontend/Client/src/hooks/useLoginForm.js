@@ -4,6 +4,8 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigate } from "react-router-dom";
 import { login, getUserByid, forgotPassword } from "../api/user.js"; // Import getUserByid
+import axios from "axios";
+import { toast } from "react-toastify";
 
 
 export const useLoginForm = (isDisplay) => {
@@ -26,7 +28,7 @@ export const useLoginForm = (isDisplay) => {
   const [success, setSuccess] = useState("");
   const [userInfo, setUserInfo] = useState(null);
   const navigate = useNavigate();
-  
+
 
   // Lấy thông tin người dùng từ localStorage nếu có
   useEffect(() => {
@@ -35,6 +37,53 @@ export const useLoginForm = (isDisplay) => {
       setUserInfo(JSON.parse(storedUserInfo));
     }
   }, []);
+  const syncCartToServer = async (userId, cartData) => {
+    if (cartData && cartData.length > 0) { // Kiểm tra xem dữ liệu có trống không
+      try {
+        // Thêm userId và chuẩn bị dữ liệu cho cartItem
+        const cartDataWithDetails = cartData.map((item) => ({
+          cart_id: userId, // userId hoặc cart_id (tùy vào cách bạn tổ chức)
+          product_variant_id: item.id_productVariant,
+          quantity: item.quantity,
+          price: item.price,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        }));
+  
+        console.log("Cart data before sync:", cartDataWithDetails);
+  
+        // Gửi yêu cầu đồng bộ giỏ hàng lên server
+        const response = await axios.post(
+          '/cart/sync', // URL endpoint của server
+          { cart: cartDataWithDetails }, // Gửi dữ liệu giỏ hàng đã được chuẩn bị
+          { 
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}` // Token xác thực
+            }
+          }
+        );
+  
+        // Kiểm tra phản hồi từ server
+        console.log("Sync response:", response);
+  
+        if (response.status === 200) {
+          // Đồng bộ giỏ hàng thành công
+          setLocalCart(response.data.cart); // Cập nhật giỏ hàng từ server vào state
+          localStorage.setItem('cart', JSON.stringify(response.data.cart)); // Lưu giỏ hàng đồng bộ vào localStorage
+          toast.success("Giỏ hàng đã được đồng bộ thành công!");
+        }
+      } catch (error) {
+        console.error("Error syncing cart to server:", error.response ? error.response.data : error);
+        toast.error("Có lỗi xảy ra khi đồng bộ giỏ hàng!");
+      }
+    } else {
+      console.error("Error syncing cart to server: Cart data is empty!");
+      toast.error("Dữ liệu giỏ hàng trống!");
+    }
+  };
+  
+  
+  
 
   const handleLogin = async (data) => {
     // return
@@ -55,12 +104,19 @@ export const useLoginForm = (isDisplay) => {
 
         setUserInfo(userData.data);
         localStorage.setItem("userInfo", JSON.stringify(userData.data));
+        // send cart data to server
+      const cartData =  localStorage.getItem('cart')
+      if (cartData) {
+        const parsedCart = JSON.parse(cartData);
 
+        // Gửi giỏ hàng lên server
+        await syncCartToServer(userId, parsedCart); // Gọi API đồng bộ giỏ hàng
+      }
 
         if (role === "admin") {
           window.location.href = "http://127.0.0.1:8000/admin";
         } else {
-          navigate("/my_account");
+          navigate("/");
         }
       } else {
         throw new Error("Không tìm thấy thông tin vai trò người dùng.");
@@ -85,12 +141,12 @@ export const useLoginForm = (isDisplay) => {
     setUserInfo(null);
     localStorage.removeItem("userInfo");
     localStorage.removeItem("token");
-  
+
     // Chuyển hướng đến trang đăng nhập và bắt buộc tải lại trang
-    
+
     navigate("/login");
   };
-  
+
 
 
   const updateUserInfo = async (id, updatedInfo) => {

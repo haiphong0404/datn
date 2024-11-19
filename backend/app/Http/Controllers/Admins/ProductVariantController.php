@@ -47,57 +47,72 @@ class ProductVariantController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request, $productId)
-    {
-        // Xác thực dữ liệu đầu vào
-        $request->validate([
-            'size_id' => 'required|exists:sizes,id',
-            'color_id' => 'required|exists:colors,id',
-            'price' => 'required|numeric|min:0',
-            'quantity' => 'required|integer|min:0',
-            'variant_images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // Kích thước tối đa 2MB
-        ]);
+{
+    // Xác thực dữ liệu đầu vào
+    $request->validate([
+        'size_id' => 'required|nullable',
+        'new_size' => 'nullable|string|max:255', // Dành cho size mới
+        'color_id' => 'required|nullable',
+        'new_color' => 'nullable|string|max:255', // Dành cho color mới
+        'price' => 'required|numeric|min:0',
+        'quantity' => 'required|integer|min:0',
+        'variant_images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // Kích thước tối đa 2MB
+    ]);
 
-        // Kiểm tra xem có biến thể nào khác với cùng size_id và color_id hay không
-        $existingVariant = ProductVariant::where('product_id', $productId)
-            ->where('size_id', $request->size_id)
-            ->where('color_id', $request->color_id)
-            ->first();
-
-        if ($existingVariant) {
-            return back()->withErrors(['error' => 'Sản phẩm với kích thước và màu sắc này đã tồn tại.'])
-                ->withInput();
-        }
-
-        // Tạo biến thể mới
-        $variant = new ProductVariant();
-        $variant->product_id = $productId;
-        $variant->size_id = $request->size_id === 'new' ? null : $request->size_id;
-        $variant->color_id = $request->color_id === 'new' ? null : $request->color_id;
-        $variant->price = round($request->price, 2);
-        $variant->quantity = $request->quantity;
-        $variant->save();
-
-        // Tính tổng số lượng nhập vào và tổng số lượng trong kho
-        $product = Product::findOrFail($productId);
-
-        // Cập nhật incoming_quantity
-        // Giả sử incoming_quantity được cộng dồn lên mỗi khi có biến thể mới
-        $product->incoming_quantity += $variant->quantity; // Cộng thêm số lượng nhập vào
-        $product->total_quantity_in_stock = $product->total_quantity_in_stock + $variant->quantity; // Cập nhật số lượng trong kho
-
-        $product->save();
-
-        // Lưu hình ảnh nếu có
-        if ($request->hasFile('variant_images')) {
-            foreach ($request->file('variant_images') as $image) {
-                $imagePath = $image->store('variant_images', 'public');
-                $variant->images()->create(['image' => $imagePath]);
-            }
-        }
-
-        return redirect()->route('admin.products.variants.index', $productId)
-            ->with('success', 'Biến thể đã được thêm thành công.');
+    // Kiểm tra và xử lý kích thước
+    $sizeId = $request->size_id;
+    if ($request->size_id === 'new' && $request->new_size) {
+        $newSize = Size::firstOrCreate(['name' => $request->new_size]);
+        $sizeId = $newSize->id;
+    } elseif (!Size::where('id', $sizeId)->exists()) {
+        return back()->withErrors(['error' => 'Kích thước không hợp lệ.'])->withInput();
     }
+
+    // Kiểm tra và xử lý màu sắc
+    $colorId = $request->color_id;
+    if ($request->color_id === 'new' && $request->new_color) {
+        $newColor = Color::firstOrCreate(['name' => $request->new_color]);
+        $colorId = $newColor->id;
+    } elseif (!Color::where('id', $colorId)->exists()) {
+        return back()->withErrors(['error' => 'Màu sắc không hợp lệ.'])->withInput();
+    }
+
+    // Kiểm tra biến thể trùng lặp
+    $existingVariant = ProductVariant::where('product_id', $productId)
+        ->where('size_id', $sizeId)
+        ->where('color_id', $colorId)
+        ->first();
+
+    if ($existingVariant) {
+        return back()->withErrors(['error' => 'Biến thể với kích thước và màu sắc này đã tồn tại.'])->withInput();
+    }
+
+    // Tạo biến thể mới
+    $variant = new ProductVariant();
+    $variant->product_id = $productId;
+    $variant->size_id = $sizeId;
+    $variant->color_id = $colorId;
+    $variant->price = round($request->price, 2);
+    $variant->quantity = $request->quantity;
+    $variant->save();
+
+    // Cập nhật số lượng tổng của sản phẩm cha
+    $product = Product::findOrFail($productId);
+    $product->total_quantity_in_stock += $variant->quantity; // Tăng tổng số lượng
+    $product->incoming_quantity += $variant->quantity; // Tăng số lượng nhập
+    $product->save();
+
+    // Lưu hình ảnh nếu có
+    if ($request->hasFile('variant_images')) {
+        foreach ($request->file('variant_images') as $image) {
+            $imagePath = $image->store('variant_images', 'public'); // Lưu vào thư mục
+            $variant->images()->create(['image' => $imagePath]); // Lưu đường dẫn vào database
+        }
+    }
+
+    return redirect()->route('admin.products.variants.index', $productId)
+        ->with('success', 'Biến thể đã được thêm thành công.');
+}
 
 
     /**

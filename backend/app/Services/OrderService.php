@@ -25,7 +25,7 @@ class OrderService
 
     /**
      * Tạo chi tiết đơn hàng
-     * 
+     *
      * @param Order $order
      * @param array $products
      * @return float Tổng số tiền của đơn hàng
@@ -72,6 +72,7 @@ class OrderService
             // Trừ số lượng từ biến thể
             $variant->quantity -= $productData['quantity'];
             $variant->save();
+
         }
 
         return [$totalAmount, $originalQuantities]; // Trả về tổng tiền và số lượng ban đầu
@@ -80,7 +81,7 @@ class OrderService
 
     /**
      * Tạo một đơn hàng mới
-     * 
+     *
      * @param Request $request
      * @return Order
      */

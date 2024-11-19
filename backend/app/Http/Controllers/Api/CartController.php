@@ -38,7 +38,7 @@ class CartController extends Controller
             ->first();
 
         if (!$cart || $cart->items->isEmpty()) {
-            return response()->json(['message' => 'Giỏ hàng trống'], 404);
+            return response()->json(['message' => 'Giỏ hàng trống'], 200);
         }
 
         $cartData = [
