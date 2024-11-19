@@ -60,28 +60,28 @@ class AuthenticatedSessionController extends Controller
         'email.email' => 'Email không đúng định dạng',
         'password.required' => 'Vui lòng nhập mật khẩu',
         'password.min' => 'Mật khẩu phải có ít nhất 6 ký tự',
-      ]
-    );
-    $dataUserLogin = [
-      'email' => $req->email,
-      'password' => $req->password,
-    ];
-    $remember = $req->has('remember');
-    if (Auth::attempt($dataUserLogin, $remember)) {
-      if (Auth::user()->role == 'admin') {
-        return redirect()->route('admin.admin');
-        // return redirect()->route('/');
-      } else  if (Auth::user()->role == '2') {
-        // return redirect()->route('nhanvien.nhanvien');
-        return redirect()->route('/');
-      } else {
-        return redirect()->route('/');
+    ]);
+      $dataUserLogin=[
+        'email'=> $req->email,
+        'password'=> $req->password,
+      ];
+      $remember = $req->has('remember');
+      if(Auth::attempt($dataUserLogin,$remember)){
+        if(Auth::user()->role=='admin'){
+            return redirect()->route('admin.admin');
+            // return redirect()->route('/');
+        }else  if(Auth::user()->role=='2'){
+          // return redirect()->route('nhanvien.nhanvien');
+          return redirect()->route('/');
+      }else{
+          return redirect()->route('/');
+        }
+
+      }else{
+        return redirect()->back()->with([
+           'message'=>'Email hoặc Mật khẩu không đúng vui lòng nhập lại !!'
+        ]);
       }
-    } else {
-      return redirect()->back()->with([
-        'message' => 'Email hoặc Mật khẩu không đúng vui lòng nhập lại !!'
-      ]);
-    }
   }
 
 
