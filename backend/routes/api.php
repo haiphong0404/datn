@@ -21,6 +21,7 @@ use App\Http\Controllers\Api\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Api\OrderController;
 use App\Models\Order;
 use App\Http\Controllers\Api\OrderDetailController;
+use App\Http\Controllers\Api\VoucherController;
 
 use App\Models\Cart;
 use App\Http\Controllers\Api\Auth\NewPasswordController;
@@ -74,26 +75,6 @@ Route::apiResource('user', UserController::class);
 Route::get('order-details/{order_id}', [OrderDetailController::class, 'getOrderDetails']);
 Route::apiResource('order-details', OrderDetailController::class);
 
-
-Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/cart', [CartController::class, 'index']);
-    Route::post('/cart/add', [CartController::class, 'addToCart']);
-    Route::put('/cart/update', [CartController::class, 'updateCart']);
-    Route::delete('/cart/remove', [CartController::class, 'removeFromCart']);
-    Route::delete('/cart/remove/{product_variant_id}', [CartController::class, 'removeFromCart']);
-});
-Route::get('products/{productId}/variants', [ProductVariantController::class, 'index']);
-Route::get('/variants/{id}', [ProductVariantController::class, 'show']);
-Route::get('/sizes', [SizeController::class, 'index']);
-Route::get('/colors', [ColorController::class, 'index']);
-Route::get('/colors', [ColorController::class, 'index']);
-Route::get('/comments', [CommentController::class, 'index']);
-Route::delete('/comments/{id}', [CommentController::class, 'softDelete']);
-Route::get('contacts', [ContactController::class, 'index']); // Lấy danh sách tất cả contacts
-Route::get('contacts/{id}', [ContactController::class, 'show']); // Lấy contact theo ID
-Route::get('/banners', [BannerController::class, 'index']);
-
-
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/cart', [CartController::class, 'index']);
     Route::post('/cart/add', [CartController::class, 'addToCart']);
@@ -113,5 +94,5 @@ Route::get('contacts', [ContactController::class, 'index']); // Lấy danh sách
 Route::get('contacts/{id}', [ContactController::class, 'show']); // Lấy contact theo ID
 Route::get('/banners', [BannerController::class, 'index']);
 
-
 Route::get('orders', [OrderController::class, 'abc']);
+Route::post('/apply-voucher', [VoucherController::class, 'applyVoucher']);

@@ -17,7 +17,6 @@ class AuthenticatedSessionController extends Controller
      */
     public function create(): View
     {
-      // return redirect()->route('admin.admin');
       return view('auth.login');
     }
 
@@ -30,7 +29,7 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->route('/');
+        return redirect()->route('admin.index');
     }
 
 
@@ -83,6 +82,6 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        return redirect('/login');
     }
 }

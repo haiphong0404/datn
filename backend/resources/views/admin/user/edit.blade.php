@@ -1,11 +1,31 @@
 @extends('admin.layout')
+@section('search')
+    <form action="{{ route('admin.user.index') }}" method="GET">
+        <div class="input-group mt-1">
+            <input type="text" name="search" class="form-control" placeholder="Tìm kiếm người dùng"
+                value="{{ request()->input('search') }}">
+            <button class="btn btn-outline-secondary" type="submit"><i class="bi bi-search"></i></button>
+        </div>
+    </form>
+@endsection
+
 @section('content')
     <div class="container">
         <div class="row ">
             <div class="card shadow-sm">
-                <div class="card-header bg-primary text-white">
-                    <h4 class="mb-0">Chỉnh Sửa Người Dùng</h4>
-                </div>
+                <header class="card-header">
+                    <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center">
+                        <h1 class="flex-grow-1 fs-3 fw-semibold my-2 my-sm-3">Chỉnh Sửa User</h1>
+                        <nav class="flex-shrink-0 my-2 my-sm-0 ms-sm-3" aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item">
+                                    <a href="{{ route('admin.user.index') }}" style="color: inherit;">User</a>
+                                </li>
+                                <li class="breadcrumb-item active" aria-current="page">Chỉnh Sửa User</li>
+                            </ol>
+                        </nav>
+                    </div>
+                </header>
 
                 <div class="card-body">
 
@@ -14,7 +34,7 @@
                         @method('PUT')
                         <div class="mb-3 text-center">
                             <label class="form-label"><strong>Ảnh đại diện:</strong></label>
-                            
+
                             <div class="d-flex flex-column align-items-center">
                                 @if ($user->avatar_img)
                                     <img src="{{ Storage::url($user->avatar_img) }}" alt="Avatar" class="img-thumbnail"
@@ -25,13 +45,14 @@
                                     </div>
                                 @endif
                                 <label class="form-label"><strong>Thay đổi ảnh đại diện:</strong></label>
-                                <input type="file" class="form-control" id="avatar_img" name="avatar_img" style="width: auto;">
+                                <input type="file" class="form-control" id="avatar_img" name="avatar_img"
+                                    style="width: auto;">
                                 @error('avatar_img')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
                         </div>
-                        
+
                         <div class="form-group mb-3">
                             <label for="username" class="form-label">Tên người dùng</label>
                             <div class="input-group">
@@ -97,15 +118,21 @@
 
                         <div class="form-group mb-4">
                             <label for="role" class="form-label">Quyền</label>
-                            <select class="form-select" id="role" name="role">
-                                <option value="user" {{ old('role', $user->role) == 'user' ? 'selected' : '' }}>User</option>
-                                <option value="staff" {{ old('role', $user->role) == 'staff' ? 'selected' : '' }}>Staff</option>
-                                <option value="admin" {{ old('role', $user->role) == 'admin' ? 'selected' : '' }}>Admin</option>
-                            </select>
+                            @if(auth()->user()->role !== 'admin' || $user->role !== 'admin')
+                                <select class="form-select" id="role" name="role">
+                                    <option value="user" {{ old('role', $user->role) == 'user' ? 'selected' : '' }}>User</option>
+                                    <option value="staff" {{ old('role', $user->role) == 'staff' ? 'selected' : '' }}>Staff</option>
+                                    <option value="admin" {{ old('role', $user->role) == 'admin' ? 'selected' : '' }}>Admin</option>
+                                </select>
+                            @else
+                                <input type="text" class="form-control" value="{{ $user->role }}" disabled />
+                            @endif
                         </div>
+                        
 
                         <div class="mb-3 d-flex">
-                            <a href="{{ route('admin.user.index') }}" class="btn btn-secondary btn-lg flex-fill me-1">Quay lại</a>
+                            <a href="{{ route('admin.user.index') }}"
+                                class="btn btn-secondary btn-lg flex-fill me-1">Quay lại</a>
                             <button type="reset" class="btn btn-warning btn-lg flex-fill me-1">Reset</button>
                             <button type="submit" class="btn btn-primary btn-lg flex-fill">Cập nhật</button>
                         </div>
