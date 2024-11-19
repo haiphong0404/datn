@@ -276,8 +276,7 @@
                     @auth
                         <li class="dropdown">
                             <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                                <img src="{{ optional(Auth::user()->avatar_img) ? Storage::url(Auth::user()->avatar_img) : asset('default-avatar.png') }}"
-                                    alt="{{ optional(Auth::user())->username }}" width="30px">
+                                <img src="{{ optional(Auth::user()->avatar_img) ? Storage::url(Auth::user()->avatar_img) : asset('default-avatar.png') }}" width="30px">
                                 <span class="username">{{ optional(Auth::user())->username }}</span>
                                 <b class="caret"></b>
                             </a>
@@ -302,11 +301,11 @@
                             <a href="{{ route('login') }}" class="dropdown-item">Đăng nhập</a>
                         </li>
                     @endauth
-                    <li class="sb-toggle-right">
+                    {{-- <li class="sb-toggle-right">
                         <a href="http://localhost:3000/" target="_blank" rel="noopener noreferrer">
                             <i class="fa fa-sign-in mr-2"></i>Website
                         </a>
-                    </li>
+                    </li> --}}
                     
                     <!-- user login dropdown end -->
                 </ul>
