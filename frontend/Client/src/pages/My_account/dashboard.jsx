@@ -26,14 +26,14 @@ const Dashboard = () => {
                         </p>
 
                         {/* Nút xác nhận */}
-                        <div className="button-container">
+                        {/* <div className="button-container">
                             <div className="button_mail">
                                 <button className="news-btn" id="mc-submit">
                                     Gửi lại xác nhận
                                 </button>
                             </div>
                         </div>
-                        <p id="status-message" className="mt-2"></p>
+                        <p id="status-message" className="mt-2"></p> */}
                     </>
                 ) : (
                     <>

@@ -25,8 +25,8 @@ class NewPasswordController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-      
-         $request->validate([
+
+        $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'password_confirmation' => ['required'],
@@ -36,22 +36,22 @@ class NewPasswordController extends Controller
             'password_confirmation.required' => 'Vui lòng nhập lại mật khẩu để xác nhận.',
         ]);
 
-     
+
         $user = Password::getUser($request->only('email'));
 
-    
+
         if (!$user) {
             return response()->json(['error' => 'Người dùng không tồn tại.'], 404); // Not Found
         }
 
-    
+
         $user->forceFill([
-       
+
             'password' => Hash::make($request->password),
         ])->save();
 
         event(new PasswordReset($user));
 
-        return response()->json(['message' =>('Mật khẩu của bạn đã được đặt lại')], 200);
+        return response()->json(['message' => ('Mật khẩu của bạn đã được đặt lại')], 200);
     }
 }

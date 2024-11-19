@@ -75,7 +75,7 @@ Route::apiResource('user', UserController::class);
 Route::get('order-details/{order_id}', [OrderDetailController::class, 'getOrderDetails']);
 Route::apiResource('order-details', OrderDetailController::class);
 
-Route::apiResource('order', OrderController::class );
+Route::apiResource('order', OrderController::class);
 Route::get('orders', [OrderController::class, 'abc']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/cart', [CartController::class, 'index']);
@@ -98,7 +98,5 @@ Route::get('/banners', [BannerController::class, 'index']);
 
 Route::get('/colors', [ColorController::class, 'index']);
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit']);
-    Route::put('/profile', [ProfileController::class, 'update']);
-    Route::delete('/profile', [ProfileController::class, 'destroy']);
+    Route::post('/change-password', [ProfileController::class, 'changePassword']);
 });

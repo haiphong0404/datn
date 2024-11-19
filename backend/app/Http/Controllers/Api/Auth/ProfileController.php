@@ -7,66 +7,41 @@ use App\Http\Requests\ProfileUpdateRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Hash;
 
 class ProfileController extends Controller
 {
-    /**
-     * Get the user's profile.
-     */
-    public function edit(Request $request)
+    public function changePassword(Request $request)
     {
-        return response()->json([
-            'user' => $request->user(),
-        ], 200);
-    }
+        // Xác thực thông tin người dùng
+        $user = Auth::user();
 
-    /**
-     * Update the user's profile information.
-     */
-    public function update(ProfileUpdateRequest $request)
-    {
-        $user = $request->user();
-        $user->fill($request->validated());
-
-        if ($user->isDirty('email')) {
-            $user->email_verified_at = null;
-        }
-
-        $user->save();
-
-        return response()->json([
-            'message' => 'Profile updated successfully.',
-            'user' => $user,
-        ], 200);
-    }
-
-    /**
-     * Delete the user's account.
-     */
-    public function destroy(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'password' => ['required', 'current_password'],
+        // Kiểm tra dữ liệu đầu vào
+        $request->validate([
+            'oldpassword' => 'required|string',
+            'password' => 'required|string|min:8|confirmed',
+        ], [
+            'oldpassword.required' => 'Mật khẩu hiện tại là bắt buộc.',
+            'password.required' => 'Mật khẩu mới là bắt buộc.',
+            'password.min' => 'Mật khẩu mới phải có ít nhất 8 ký tự.',
+            'password.confirmed' => 'Xác nhận mật khẩu mới không khớp.',
         ]);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'message' => 'Validation failed.',
-                'errors' => $validator->errors(),
-            ], 422);
+        // Kiểm tra mật khẩu hiện tại
+        if (!Hash::check($request->oldpassword, $user->password)) {
+            throw ValidationException::withMessages([
+                'oldpassword' => ['Mật khẩu hiện tại không đúng.'],
+            ]);
         }
 
-        $user = $request->user();
+        // Cập nhật mật khẩu mới
+        $user->password = Hash::make($request->password);
+        $user->save();
 
-        Auth::logout();
-
-        $user->delete();
-
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
+        // Trả về phản hồi thành công
         return response()->json([
-            'message' => 'User account deleted successfully.',
-        ], 200);
+            'message' => 'Mật khẩu đã được thay đổi thành công.',
+        ]);
     }
 }
