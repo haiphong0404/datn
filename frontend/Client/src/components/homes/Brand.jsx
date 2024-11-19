@@ -23,7 +23,7 @@ const Brand = () => {
                     <div className="testimonial-slide-item">
                       <div className="testimonial-item text-center">
                         <p className="testimonial-desc">
-                          "Khi khách hàng tiềm năng đang nghiên cứu về bạn trực tuyến, họ đang tìm hiểu về bạn qua nội dung của trang web của bạn."
+                        Giá trị cốt lõi là những nguyên tắc và tiêu chuẩn mà thương hiệu luôn tuân thủ. Đây là yếu tố quan trọng giúp xây dựng niềm tin và sự trung thành của khách hàng.
                         </p>
                         <div className="testimonial-author">
                           <img

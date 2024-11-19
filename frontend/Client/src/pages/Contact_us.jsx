@@ -53,7 +53,7 @@ const Contact_us = () => {
         <div className="contact-area section-padding pt-0">
           <div className="container">
             <div className="row">
-              <div className="col-lg-6">
+              {/* <div className="col-lg-6">
                 <div className="contact-message">
                   <h4 className="contact-title">Bạn có thể điền vào mẫu dưới đây</h4>
                   <form id="contact-form" action="" method="post" className="contact-form">
@@ -82,8 +82,8 @@ const Contact_us = () => {
                     </div>
                   </form>
                 </div>
-              </div>
-              {contactInfo.slice(0, 1).map((info) => (
+              </div> */}
+              {contactInfo.slice(0, 2).map((info) => (
                 <div className="col-lg-6" key={info.id}>
                   <div className="contact-info">
                     <h4 className="contact-title">Liên hệ với chúng tôi</h4>

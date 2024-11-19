@@ -79,7 +79,7 @@ Route::apiResource('order-details', OrderDetailController::class);
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/cart', [CartController::class, 'index']);
     Route::post('/cart/add', [CartController::class, 'addToCart']);
-    Route::put('/cart/update', [CartController::class, 'updateCart']);
+    Route::put('/cart/update/', [CartController::class, 'updateCart']);
     Route::delete('/cart/remove', [CartController::class, 'removeFromCart']);
     Route::delete('/cart/remove/{product_variant_id}', [CartController::class, 'removeFromCart']);
 });
@@ -97,12 +97,14 @@ Route::get('/banners', [BannerController::class, 'index']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/cart', [CartController::class, 'index']);
-    Route::post('/cart/add', [CartController::class, 'addToCart']);
-    Route::put('/cart/update', [CartController::class, 'updateCart']);
-    Route::delete('/cart/remove', [CartController::class, 'removeFromCart']);
+    Route::put('/cart/update/{id_cart_item}', [CartController::class, 'updateCart']);
     Route::delete('/cart/remove/{product_variant_id}', [CartController::class, 'removeFromCart']);
     Route::apiResource('order', OrderController::class );
+    Route::post('/cart/add', [CartController::class, 'addToCart']);
+    Route::post('/cart/sync', [CartController::class, 'syncCartWithDatabase']);
 });
+
+
 Route::get('products/{productId}/variants', [ProductVariantController::class, 'index']);
 Route::get('/variants/{id}', [ProductVariantController::class, 'show']);
 Route::get('/sizes', [SizeController::class, 'index']);
@@ -119,5 +121,3 @@ Route::get('/banners', [BannerController::class, 'index']);
 Route::get('/colors', [ColorController::class, 'index']);
 Route::get('orders', [OrderController::class, 'abc']);
 
-// Route::post('/create-payment', [PaymentController::class, 'createPayment']);
-// Route::get('/payment-return', [PaymentController::class, 'returnPayment'])->name('payment.return');

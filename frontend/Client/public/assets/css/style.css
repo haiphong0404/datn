@@ -8148,6 +8148,7 @@ only screen and (max-width: 767.98px) {
   padding: 30px;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin-top: 10px;
 }
 
 .contact-info ul {
@@ -8452,6 +8453,7 @@ only screen and (max-width: 767.98px) {
 }
 
 .quickview-product-price {
+  color: red;
   font-size: 18px;
   font-weight: bold;
 }
@@ -8560,6 +8562,7 @@ only screen and (max-width: 767.98px) {
     font-size: 14px;
   }
 }
+
 .cart-container {
   display: flex;
   justify-content: space-between;
@@ -8568,7 +8571,7 @@ only screen and (max-width: 767.98px) {
 }
 
 .cart-variants {
-  flex: 6; /* Phần giỏ hàng chiếm 6 phần */
+  flex: 7; /* Phần giỏ hàng chiếm 6 phần */
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -8627,7 +8630,7 @@ only screen and (max-width: 767.98px) {
 }
 
 .total-calculation {
-  flex: 4; /* Phần tính tổng chiếm 4 phần */
+  flex: 3; /* Phần tính tổng chiếm 4 phần */
   border: 1px solid #ddd;
   border-radius: 8px;
   background-color: #f9f9f9;
@@ -8650,4 +8653,35 @@ only screen and (max-width: 767.98px) {
 
 .total-calculation button:hover {
   background-color: #2ecc71;
+}
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Khoảng cách giữa các phần tử */
+}
+
+.quantity-btn {
+  background-color: #87b106;
+  border: 1px solid #87b106;  
+  padding: 5px 10px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.quantity-btn:hover {
+  background-color: #ddd; /* Chế độ hover cho nút */
+  transform: scale(1.1); /* Hiệu ứng phóng to nút khi hover */
+}
+
+.quantity-btn:disabled {
+  background-color: #e0e0e0;
+  cursor: not-allowed;
+}
+
+.quantity-display {
+  font-size: 18px;
+  font-weight: bold;
+  width: 40px;
+  text-align: center;
 }

@@ -55,17 +55,33 @@ const QuickViewModal = ({ show, onClose, product }) => {
       setQuantity(prevQuantity => prevQuantity - 1);
     }
   };
+  
   const handleAddToCart = async () => {
     if (!selectedColor || !selectedSize) {
       toast.error("Vui lòng chọn màu và kích thước sản phẩm!");
       return;
     }
-
+  
     if (!selectedVariant) {
       toast.error("Vui lòng chọn biến thể sản phẩm!");
       return;
     }
-
+  
+    // Kiểm tra số lượng hiện có trong giỏ hàng cho sản phẩm và biến thể này
+    const existingCartQuantity = (localCart || []).reduce((total, item) => {
+      return item.id_productVariant === selectedVariant.id ? total + item.quantity : total;
+    }, 0);
+  
+    // Tổng số lượng dự kiến sau khi thêm vào giỏ hàng
+    const totalQuantity = existingCartQuantity + quantity;
+  
+    // Kiểm tra nếu tổng số lượng muốn thêm vượt quá số lượng tồn kho
+    if (totalQuantity > selectedVariant.quantity) {
+      toast.error(`Chỉ còn ${selectedVariant.quantity - existingCartQuantity} sản phẩm trong kho!`);
+      return;
+    }
+  
+    // Tạo đối tượng sản phẩm để thêm vào giỏ hàng
     const cartItem = { 
       id_productVariant: selectedVariant.id,
       productId: product.id,
@@ -73,10 +89,11 @@ const QuickViewModal = ({ show, onClose, product }) => {
       size: selectedSize,
       price: selectedVariant.price,
       image: selectedVariant.images,
+      stock: selectedVariant.quantity,
       productName: product.name,
       quantity
     };
-
+  
     try {
       const id_productVariant = selectedVariant.id;
       if (localStorage.getItem('token')) {
@@ -91,13 +108,41 @@ const QuickViewModal = ({ show, onClose, product }) => {
             'Authorization': `Bearer ${token}`
           }
         });
-
+  
         if (response.status === 200) {
           toast.success("Sản phẩm đã được thêm vào giỏ hàng!");
+  
+          // Cập nhật giỏ hàng từ dữ liệu API và lưu lại trong localStorage
           dispatch(addCart(response.data.cart_item));
+  
+          // Đồng bộ giỏ hàng từ server về localStorage
+          const updatedCart = (localCart || []).map(item => 
+            item.id_productVariant === id_productVariant 
+              ? { ...item, quantity: item.quantity + quantity } 
+              : item
+          );
+          if (!updatedCart.some(item => item.id_productVariant === id_productVariant)) {
+            updatedCart.push(cartItem);
+          }
+  
+          // Lưu tất cả dữ liệu vào localStorage
+          localStorage.setItem("cart", JSON.stringify(updatedCart));
+          setLocalCart(updatedCart); // Cập nhật lại state giỏ hàng từ localStorage
         }
       } else {
-        const updatedCart = [...localCart, cartItem];
+        // Người dùng chưa đăng nhập: cập nhật giỏ hàng trong localStorage
+        const updatedCart = localCart.map(item => 
+          item.id_productVariant === selectedVariant.id 
+            ? { ...item, quantity: item.quantity + quantity } 
+            : item
+        );
+  
+        // Nếu sản phẩm chưa có trong giỏ hàng, thêm vào giỏ hàng
+        if (!updatedCart.some(item => item.id_productVariant === selectedVariant.id)) {
+          updatedCart.push(cartItem);
+        }
+  
+        // Cập nhật lại giỏ hàng vào localStorage
         setLocalCart(updatedCart);
         localStorage.setItem("cart", JSON.stringify(updatedCart));
         toast.success("Sản phẩm đã được thêm vào giỏ hàng!");
@@ -108,7 +153,10 @@ const QuickViewModal = ({ show, onClose, product }) => {
     }
   };
   
-  
+
+
+
+
 
   // Chọn màu
   const handleColorSelect = (color) => {
@@ -152,25 +200,30 @@ const QuickViewModal = ({ show, onClose, product }) => {
           </div>
 
           {/* Chọn kích thước */}
+          {/* Chọn kích thước */}
           <div className="size-selection">
             <h4>Chọn Kích Thước</h4>
             <div className="size-options">
-              {variants.filter(variant => variant.color === selectedColor).map((variant) => (
-                <button
-                  key={variant.id}
-                  className={`size-option ${variant.size === selectedSize ? 'selected' : ''}`}
-                  onClick={() => handleSizeSelect(variant.size)}
-                >
-                  {variant.size}
-                </button>
-              ))}
+              {variants
+                .filter((variant) => variant.color === selectedColor)
+                .map((variant) => (
+                  <button
+                    key={variant.id}
+                    className={`size-option ${variant.size === selectedSize ? 'selected' : ''}`}
+                    onClick={() => handleSizeSelect(variant.size)}
+                    disabled={variant.quantity <= 0} // Vô hiệu hóa nếu số lượng không còn
+                  >
+                    {variant.size} {variant.quantity <= 0 && "(Hết hàng)"}
+                  </button>
+                ))}
             </div>
           </div>
 
+
           {/* Hiển thị giá */}
-          <p className="quickview-product-price">
+          <span className="quickview-product-price">
             Giá: {selectedVariant ? `${selectedVariant.price} VND` : 'Vui lòng chọn màu và kích thước'}
-          </p>
+          </span>
 
           {/* Chọn số lượng */}
           <div className="quantity-selection">
@@ -183,7 +236,10 @@ const QuickViewModal = ({ show, onClose, product }) => {
           </div>
 
           {/* Trạng thái có sẵn */}
-          <p>{availabilityMessage}</p>
+          <div className="availability">
+            <i className="fa fa-check-circle"></i>
+            <span>{selectedVariant?.quantity} in stock</span>
+          </div>
 
           {/* Thêm vào giỏ hàng */}
           <div className="action_link">
