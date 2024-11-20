@@ -144,6 +144,15 @@ class ProductController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
+    public function show($productId)
+    {
+        // Lấy thông tin của sản phẩm cùng với các biến thể (variants)
+        $product = Product::with(['variants' => function ($query) {
+            $query->orderBy('id', 'desc');
+        }, 'variants.images'])->findOrFail($productId);
+        return view('admin.products.show_all',compact('product'));
+    }
+
     public function edit(string $id)
     {
         $product = Product::findOrFail($id);
