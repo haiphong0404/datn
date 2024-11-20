@@ -54,7 +54,7 @@ const Details = () => {
         if (selectedVariant) {
             setSelectedQuantity(1);
             setAvailabilityMessage(selectedVariant.quantity > 0 ? '' : 'Hết hàng');
-            setSelectedPrice(selectedVariant.quantity > 0 ? selectedVariant.price : null);
+            setSelectedPrice(selectedVariant.quantity > 0 ? selectedVariant.price.toLocaleString() : null);
         } else {
             setAvailabilityMessage('Vui lòng chọn màu và kích thước.');
             setSelectedPrice(null);
@@ -236,7 +236,7 @@ const Details = () => {
                         <p className="text-sm">{availabilityMessage}</p>
 
                         <div className="price-box">
-                            <span className="price-regular">{selectedPrice !== null ? selectedPrice : product.price} Vnd</span>
+                            <span className="price-regular">{selectedPrice !== null ? selectedPrice : product.price.toLocaleString()} VND</span>
                         </div>
 
                         <h6 className="option-title">Số lượng:</h6>

@@ -36,6 +36,7 @@ import Product_details from "./pages/Product_Detail/Product_details";
 
 
 
+
 const queryClient = new QueryClient();
 
 const routeConfig = [
@@ -56,6 +57,7 @@ const routeConfig = [
       { path: "register", element: <Register /> },
       { path: "*", element: <NotFoundPage /> },
       { path: "faqs", element: <FAQs /> },
+    
       
       { path: "checkout/bill", element: <Bill /> },
     ],
