@@ -27,47 +27,63 @@ const Checkout = () => {
   const [voucherDiscount, setVoucherDiscount] = useState(0); // Giá trị giảm giá của voucher
   const [voucherType, setVoucherType] = useState(""); // Loại voucher
   const [isVoucherApplied, setIsVoucherApplied] = useState(false); // Trạng thái áp dụng voucher
-
+  const [appliedVoucherId, setAppliedVoucherId] = useState(null); 
   // Handle applying voucher
   const handleApplyVoucher = async () => {
     if (!voucherCode.trim()) {
       toast.error("Vui lòng nhập mã giảm giá!");
       return;
     }
-
+  
     try {
       const appliedVoucher = await applyVoucher(voucherCode);
-      console.log("Voucher trả về:", appliedVoucher);  // Kiểm tra giá trị trả về
-
+      console.log("Voucher trả về:", appliedVoucher); // Kiểm tra giá trị trả về
+  
       if (appliedVoucher) {
-        const { discount_value, discount_percentage, min_order_value, max_discount_value } = appliedVoucher.voucher;  // Lấy voucher từ response
-
+        const {
+          id, // Lấy id của voucher
+          discount_value,
+          discount_percentage,
+          min_order_value,
+          max_discount_value,
+        } = appliedVoucher.voucher;
+  
+        console.log("ID của voucher:", id); // Log id của voucher để kiểm tra
+  
+        // Lưu id vào state
+        setAppliedVoucherId(id);
+  
         // Kiểm tra xem đơn hàng có đủ điều kiện min_order_value không
-        const subtotal = selectedProducts.reduce((acc, item) => acc + item.price * item.quantity, 0);
-        console.log("Subtotal:", subtotal);  // Kiểm tra giá trị subtotal
+        const subtotal = selectedProducts.reduce(
+          (acc, item) => acc + item.price * item.quantity,
+          0
+        );
+        console.log("Subtotal:", subtotal); // Kiểm tra giá trị subtotal
         if (subtotal < min_order_value) {
-          toast.error(`Đơn hàng của bạn chưa đủ giá trị tối thiểu (${min_order_value.toLocaleString()} VND) để áp dụng mã giảm giá.`);
+          toast.error(
+            `Đơn hàng của bạn chưa đủ giá trị tối thiểu (${min_order_value.toLocaleString()} VND) để áp dụng mã giảm giá.`
+          );
           return;
         }
-
+  
         // Kiểm tra discount_percentage trước, nếu có thì áp dụng
         if (discount_percentage !== null) {
           let discountAmount = (subtotal * discount_percentage) / 100;
-
+  
           // Kiểm tra nếu discountAmount vượt quá max_discount_value
           if (max_discount_value !== null && discountAmount > max_discount_value) {
             discountAmount = max_discount_value; // Nếu vượt quá max_discount_value thì gán lại giá trị tối đa
           }
-
-          setVoucherDiscount(discountAmount);  // Cập nhật giá trị discount
+  
+          setVoucherDiscount(discountAmount); // Cập nhật giá trị discount
           setVoucherType("percentage");
         }
         // Nếu không có discount_percentage, kiểm tra discount_value
         else if (discount_value !== null) {
-          setVoucherDiscount(parseFloat(discount_value));  // Chuyển discount_value sang số
+          setVoucherDiscount(parseFloat(discount_value)); // Chuyển discount_value sang số
           setVoucherType("fixed");
         }
-
+  
         setIsVoucherApplied(true);
         toast.success("Mã giảm giá đã được áp dụng!");
       } else {
@@ -78,7 +94,7 @@ const Checkout = () => {
       toast.error("Lỗi khi áp dụng mã giảm giá.");
     }
   };
-
+  
   // Get token from localStorage or any state where it's saved
   const token = localStorage.getItem('token'); // or use some global state management
 
@@ -180,7 +196,12 @@ const Checkout = () => {
 
   const handleSubmitOrder = async () => {
     // Check if shipping is selected
+    if (selectedProducts.length === 0) {
+      toast.error("Vui lòng chọn sản phẩm trước khi đặt hàng!");  // Show error if no products are selected
+      return;
+    }
   
+    // Check if shipping is selected
     if (!isShippingSelected) {
       toast.error("Vui lòng chọn vận chuyển trước khi đặt hàng!");  // Show error if shipping is not selected
       return;
@@ -209,7 +230,8 @@ const Checkout = () => {
         quantity: item.quantity,
         price: item.price,
       })),
-      voucher_code: voucherCode, 
+      voucher_code: voucherCode,
+      ...(appliedVoucherId && { id: appliedVoucherId }), // Chỉ thêm voucher_id nếu có
     };
   
     console.log(orderData);
