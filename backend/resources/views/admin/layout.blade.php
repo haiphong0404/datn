@@ -321,7 +321,7 @@
                 <!-- sidebar menu start-->
                 <ul class="sidebar-menu" id="nav-accordion">
                     <li>
-                        <a class="active" href="{{ route('dashboard') }}">
+                        <a class="active" href="">
                             <i class="fa fa-dashboard"></i>
                             <span>Dashboard</span>
                         </a>
