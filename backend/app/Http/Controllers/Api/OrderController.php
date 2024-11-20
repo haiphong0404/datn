@@ -7,6 +7,7 @@ use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\Product;
 use App\Models\ProductVariant;
+use App\Models\Voucher;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -63,7 +64,11 @@ class OrderController extends Controller
              }
      
              // Kiểm tra phương thức thanh toán và đặt giá trị payment_status
-             $paymentStatus = $request->input('payment_method') === 'online' ? 'paid' : 'unpaid';
+             if ($request->input('payment_method') === 'paypal') {
+                $paymentStatus = 'paid';
+            } else {
+                $paymentStatus = 'unpaid';
+            }
              $orderDate = Carbon::parse($request->input('order_date'))->format('Y-m-d H:i:s');
      
              $orderData = [
@@ -100,7 +105,40 @@ class OrderController extends Controller
                          throw new \Exception('Số lượng sản phẩm không đủ.');
                      }
                  }
+                 if ($request->has('id')) {
+                    $voucherId = $request->input('id');
+                    // Tìm kiếm voucher theo mã voucher
+                    $voucher = Voucher::where('id', $voucherId)->first();
+                    
+                    if (!$voucher) {
+                        throw new \Exception('Voucher không hợp lệ.');
+                    }
+                
+                    // Kiểm tra số lượng và ngày hết hạn
+                    if ($voucher->quantity <= 0) {
+                        throw new \Exception('Voucher đã hết.');
+                    }
+                
+                    if (!$voucher->start_date || !$voucher->expiration_date) {
+                        throw new \Exception('Ngày bắt đầu hoặc ngày hết hạn không hợp lệ.');
+                    }
+                
+                    if (Carbon::now()->lt($voucher->start_date) || Carbon::now()->gt($voucher->expiration_date)) {
+                        throw new \Exception('Voucher không nằm trong thời gian hợp lệ.');
+                    }
+                
+                    // Trừ số lượng voucher
+                    $voucher->quantity -= 1;
+                
+                    try {
+                        $voucher->save();
+                    } catch (\Exception $e) {
+                        throw new \Exception('Lỗi khi lưu voucher: ' . $e->getMessage());
+                    }
+                }
+        
              }
+             
      
              DB::commit();
      
