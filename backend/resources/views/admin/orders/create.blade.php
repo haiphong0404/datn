@@ -77,6 +77,13 @@
                         <option value="paid">Đã thanh toán</option>
                     </select>
                 </div>
+                <div class="form-group">
+                    <label for="voucher_code">Mã giảm giá</label>
+                    <input type="text" id="voucher_code" name="voucher_code" class="form-control" autocomplete="voucher_code" required value="{{ old('voucher_code') }}">
+                    @error('voucher_code')
+                    <div class="alert alert-danger">{{ $message }}</div>
+                    @enderror
+                </div>
             </div>
         </div>
 
