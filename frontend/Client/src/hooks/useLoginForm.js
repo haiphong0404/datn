@@ -26,7 +26,7 @@ export const useLoginForm = (isDisplay) => {
   const [success, setSuccess] = useState("");
   const [userInfo, setUserInfo] = useState(null);
   const navigate = useNavigate();
-  
+
 
   // Lấy thông tin người dùng từ localStorage nếu có
   useEffect(() => {
@@ -60,7 +60,7 @@ export const useLoginForm = (isDisplay) => {
         if (role === "admin") {
           window.location.href = "http://127.0.0.1:8000/admin";
         } else {
-          navigate("/my_account");
+          navigate("/");
         }
       } else {
         throw new Error("Không tìm thấy thông tin vai trò người dùng.");
@@ -85,12 +85,12 @@ export const useLoginForm = (isDisplay) => {
     setUserInfo(null);
     localStorage.removeItem("userInfo");
     localStorage.removeItem("token");
-  
+
     // Chuyển hướng đến trang đăng nhập và bắt buộc tải lại trang
-    
+
     navigate("/login");
   };
-  
+
 
 
   const updateUserInfo = async (id, updatedInfo) => {

@@ -16,5 +16,7 @@ class VerifyCsrfToken extends Middleware
         'login',  // Bỏ qua CSRF cho route đăng nhập
         'logout', // Bỏ qua CSRF cho route đăng xuất
         'register', // Bỏ qua CSRF cho route đăng ký
+        'password/reset-link', // Bỏ qua CSRF cho route gửi email đặt lại mật khẩu
+        'change-password', // Bỏ qua CSRF cho route đặt lại mật khẩu
     ];
 }
