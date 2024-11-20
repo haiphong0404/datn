@@ -70,6 +70,7 @@ Route::group(
         Route::post('/orders', [OrderController::class, 'store'])->name('orders.store'); // Lưu thông tin order
         Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
         Route::put('/orders/{order}/updateStatus', [OrderController::class, 'updateStatus'])->name('orders.updateStatus');
+        Route::put('/orders/{order}/updatePaymentStatus', [OrderController::class, 'updatePaymentStatus'])->name('orders.updatePaymentStatus');
         Route::get('/orders/{order}/details', [OrderController::class, 'show'])->name('orders.show');
         // Route để lấy danh sách biến thể của sản phẩm
         Route::get('/get-variants/{productId}', [OrderController::class, 'getVariants'])->name('products.variants');

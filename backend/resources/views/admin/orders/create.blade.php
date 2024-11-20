@@ -63,6 +63,20 @@
                     <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
                 </div>
+                <div class="form-group">
+                    <label for="">Phương thức thanh toán</label>
+                    <select name="payment_method" class="form-select">
+                        <option value="cash" selected>Thanh toán offline</option>
+                        <option value="online">Thanh toán online</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="payment_status">Trạng thái thanh toán</label>
+                    <select name="payment_status" class="form-select">
+                        <option value="unpaid" selected>Chưa thanh toán</option>
+                        <option value="paid">Đã thanh toán</option>
+                    </select>
+                </div>
             </div>
         </div>
 

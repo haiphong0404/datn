@@ -320,6 +320,12 @@
                 <!-- sidebar menu start-->
                 <ul class="sidebar-menu" id="nav-accordion">
                     <li>
+                        <a class="active" href="">
+                            <i class="fa fa-dashboard"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
                         <a href="{{ route('admin.articles.index') }}">
                             <i class="bi bi-newspaper"></i>
                             <span>Article</span>
