@@ -12,36 +12,50 @@ use Illuminate\View\View;
 
 class AuthenticatedSessionController extends Controller
 {
-    /**
-     * Display the login view.
-     */
-    public function create(): View
-    {
-      // return redirect()->route('admin.admin');
-      return view('auth.login');
+  /**
+   * Display the login view.
+   */
+  public function create(): View
+  {
+    return view('auth.login');
+  }
+
+  /**
+   * Handle an incoming authentication request.
+   */
+  public function store(LoginRequest $request): RedirectResponse
+  {
+    // Xác thực thông tin đăng nhập
+    $request->authenticate();
+
+    // Lấy thông tin người dùng
+    $user = $request->user();
+
+    // Kiểm tra nếu người dùng không phải là admin
+    if ($user->role !== 'admin') {
+      // Đăng xuất người dùng và thông báo lỗi
+      Auth::logout();
+      return redirect()->route('login')->withErrors(['status' => 'Bạn không có quyền truy cập vào trang quản trị.']);
     }
 
-    /**
-     * Handle an incoming authentication request.
-     */
-    public function store(LoginRequest $request): RedirectResponse
-    {
-        $request->authenticate();
+    // Nếu là admin, tái tạo session
+    $request->session()->regenerate();
 
-        $request->session()->regenerate();
-
-        return redirect()->route('/');
-    }
+    // Chuyển hướng đến trang quản trị
+    return redirect()->route('admin.index');
+  }
 
 
-    public function postlogin(Request $req)
-    {
 
-      $validate = $req->validate([
+  public function postlogin(Request $req)
+  {
+
+    $validate = $req->validate(
+      [
         'email' => 'required|email',
         'password' => 'required|min:6',
-    ],
-    [
+      ],
+      [
         'email.required' => 'Vui lòng nhập email',
         'email.email' => 'Email không đúng định dạng',
         'password.required' => 'Vui lòng nhập mật khẩu',
@@ -68,21 +82,21 @@ class AuthenticatedSessionController extends Controller
            'message'=>'Email hoặc Mật khẩu không đúng vui lòng nhập lại !!'
         ]);
       }
-    }
+  }
 
 
 
-    /**
-     * Destroy an authenticated session.
-     */
-    public function destroy(Request $request): RedirectResponse
-    {
-        Auth::guard('web')->logout();
+  /**
+   * Destroy an authenticated session.
+   */
+  public function destroy(Request $request): RedirectResponse
+  {
+    Auth::guard('web')->logout();
 
-        $request->session()->invalidate();
+    $request->session()->invalidate();
 
-        $request->session()->regenerateToken();
+    $request->session()->regenerateToken();
 
-        return redirect('/');
-    }
+    return redirect('/login');
+  }
 }

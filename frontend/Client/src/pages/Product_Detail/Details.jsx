@@ -101,7 +101,7 @@ const Details = () => {
     
         // Kiểm tra nếu tổng số lượng muốn thêm vượt quá số lượng tồn kho
         if (totalQuantity > selectedVariant.quantity) {
-            toast.error(`Chỉ còn ${selectedVariant.quantity - existingCartQuantity} sản phẩm trong kho!`);
+            toast.error(`không thêm được quá số lượng trong kho`);
             return;
         }
     

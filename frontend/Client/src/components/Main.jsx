@@ -155,7 +155,7 @@ const Main = () => {
                 <div className="section-title text-center">
                   <h3 className="title">Sản Phẩm Mới Về</h3>
                   <h4 className="sub-title">
-                    Các cuộc điều tra đã chứng minh rằng người đọc dễ dàng đọc tôi hơn vì họ đọc thường xuyên hơn; sự rõ ràng cũng là một quá trình động, tiếp tục sự thay đổi.
+                  Cập nhật những mẫu giày mới nhất, thời trang và phong cách dành riêng cho bạn. Đừng bỏ lỡ cơ hội sở hữu những sản phẩm đang được săn đón!
                   </h4>
                 </div>
               </div>

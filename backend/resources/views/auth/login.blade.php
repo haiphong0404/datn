@@ -25,23 +25,29 @@
         </div>
 
         <!-- Remember Me -->
-        <div class="block mt-4">
+        <div class="block mt-4 flex items-center justify-between">
             <label for="remember_me" class="inline-flex items-center">
                 <input id="remember_me" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="remember">
                 <span class="ms-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
             </label>
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
+        
             @if (Route::has('password.request'))
                 <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('password.request') }}">
                     {{ __('Forgot your password?') }}
                 </a>
             @endif
+        </div>
 
+        <div class="flex items-center justify-between mt-4">      
             <x-primary-button class="ms-3">
                 {{ __('Log in') }}
             </x-primary-button>
+            <a href="http://localhost:3000" class="ms-3 inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                {{ __('Back to Client') }}
+            </a>
+            
+        
         </div>
+        
     </form>
 </x-guest-layout>

@@ -84,14 +84,14 @@ const Checkout = () => {
   
     const orderDate = new Date().toISOString();
     const orderData = {
-      order_date: orderDate,
+      // order_date: orderDate,
       status: "pending",
       total_amount: totalAmount,
       name: userDetails.username,
       phone: userDetails.phone,
       address: userDetails.address,
-      infor: userDetails.info,
-      payment_status: paymentMethod,
+      // infor: userDetails.info,
+      payment_method: paymentMethod,
       user_id: userInfo?.id,
       products: selectedProducts.map((item) => ({
         product_variant_id: item.id_productVariant,
@@ -102,24 +102,72 @@ const Checkout = () => {
       })),
     };
   
-    console.log('Dữ liệu đơn hàng:', orderData);
+    console.log("Dữ liệu đơn hàng:", orderData);
   
     if (userInfo?.id) {
       try {
-        // Gửi dữ liệu đơn hàng
-        await postOrder(userInfo.id, orderData);
-        toast.success("Đặt hàng thành công!");
+        // Kiểm tra phương thức thanh toán
+        if (paymentMethod === "online") {
+          // Thanh toán online - gọi API VNPay
+          // const response = await fetch("http://127.0.0.1:8000/api/create-payment", {
+          //   method: "POST",
+          //   headers: {
+          //     "Authorization": `Bearer ${token}`,
+          //     "Content-Type": "application/json",
+          //   },
+          //   body: JSON.stringify({
+          //     order_id: orderData.order_id,
+          //     total_amount: totalAmount,
+          //   }),
+          // });
+          
+          // const data = await response.json();
+          // if (data.payment_url) {
+          //   // Chuyển hướng người dùng đến VNPay
+          //   window.location.href = data.payment_url;
+          // } else {
+          //   throw new Error("Không thể tạo URL thanh toán.");
+          // }
+          const response = await fetch('http://127.0.0.1:8000/api/create-payment', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              order_id: orderData.order_id,
+              order_info: orderData.order_info,
+              total_amount: orderData.total_amount,
+              user_id: orderData.user_id,
+            }),
+          });
+      
+          const data = await response.json();
+      
+          if (data.status === 'success') {
+            // Nếu thanh toán thành công, chuyển hướng người dùng đến trang thanh toán
+            window.location.href = data.data.payment_url;
+          } else {
+            // Nếu có lỗi, hiển thị thông báo lỗi
+            alert(data.message);
+          }
+        } else if (paymentMethod === "cash") {
+          // Thanh toán offline - tạo đơn hàng trực tiếp
+          await postOrder(userInfo.id, orderData);
+          toast.success("Đặt hàng thành công! Bạn sẽ thanh toán khi nhận hàng.");
+          
+          // Xóa sản phẩm khỏi giỏ hàng sau khi tạo đơn hàng
+          for (const item of selectedProducts) {
+            await deleteProductFromCart(item.id_productVariant);
+          }
   
-        // Xóa sản phẩm khỏi giỏ hàng trong cơ sở dữ liệu
-        for (const item of selectedProducts) {
-          await deleteProductFromCart(item.id_productVariant);
+          // Xóa giỏ hàng trong localStorage
+          localStorage.removeItem("selectedProducts");
+          localStorage.removeItem("cart");
+          setSelectedProducts([]);
+          setTotalAmount(0);
+        } else {
+          throw new Error("Phương thức thanh toán không hợp lệ.");
         }
-  
-        // Xóa giỏ hàng trong localStorage
-        localStorage.removeItem('selectedProducts');
-        localStorage.removeItem('cart');
-        setSelectedProducts([]);
-        setTotalAmount(0);
       } catch (error) {
         toast.error(`Đặt hàng thất bại: ${error.message}`);
       }
@@ -128,6 +176,25 @@ const Checkout = () => {
     }
   };
   
+
+  // Component xác nhận thanh toán sau khi quay về từ VNPay
+// useEffect(() => {
+//   const searchParams = new URLSearchParams(window.location.search);
+//   const transactionStatus = searchParams.get('vnp_TransactionStatus');
+//   const orderId = searchParams.get('vnp_TxnRef');
+
+//   if (transactionStatus === '00') {
+//     // Thanh toán thành công
+//     toast.success("Thanh toán thành công!");
+    
+//     // Cập nhật trạng thái đơn hàng trong Laravel
+//     updateOrderStatus(orderId, "paid");
+//   } else {
+//     // Thanh toán thất bại
+//     toast.error("Thanh toán thất bại!");
+//   }
+// }, []);
+
 
   return (
     <div>
@@ -267,15 +334,14 @@ const Checkout = () => {
                               </td>
                               <td>{product.color}</td>
                               <td>{product.size}</td> {/* Hiển thị kích cỡ */}
-                              <td>{new Intl.NumberFormat('vi-VN').format(product.price * product.quantity)} Vnd</td>
+                              <td>{(product.price * product.quantity)}</td>
                             </tr>
                           ))}
                         </tbody>
                         <tfoot>
                           <tr>
                             <th className="text-right" colSpan={3}>Tổng cộng</th>
-                            <td><p>{new Intl.NumberFormat('vi-VN').format(totalAmount)}</p>
-                            Vnd</td>
+                            <td>{totalAmount}</td>
                           </tr>
                         </tfoot>
                       </table>
@@ -310,13 +376,13 @@ const Checkout = () => {
                               type="radio"
                               id="directbank"
                               name="paymentmethod"
-                              value="bank"
+                              value="online"
                               className="custom-control-input"
-                              checked={paymentMethod === 'bank'}
+                              checked={paymentMethod === 'online'}
                               onChange={handlePaymentMethodChange}
                             />
                             <label className="custom-control-label" htmlFor="directbank">
-                              Thanh toán online qua Ví điện tử MoMo
+                              Thanh toán online qua Ví điện tử vnpaay
                             </label>
                           </div>
                         </div>

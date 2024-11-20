@@ -4284,7 +4284,7 @@ only screen and (max-width: 767.98px) {
 }
 
 .product-thumb img {
-  width: 100%;
+  width: 295px;
 }
 
 .product-content {
@@ -5937,7 +5937,8 @@ only screen and (max-width: 767.98px) {
 
 
 .product-thumb {
-  flex: 0 0 100px;
+  /* flex: 0 0 100px; */
+  height: 200px;
   /* Kích thước hình ảnh */
   margin-right: 20px;
   /* Khoảng cách giữa hình ảnh và nội dung sản phẩm */
@@ -7769,7 +7770,7 @@ only screen and (max-width: 767.98px) {
 /* Đảm bảo hình ảnh sản phẩm co giãn theo kích thước khung */
 .product-thumb img {
   width: 100%;
-  height: auto;
+  height: 100%;
   object-fit: cover;
 }
 
