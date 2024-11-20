@@ -3,11 +3,11 @@ import { useLoginForm } from '../../hooks/useLoginForm.js';
 
 const Account_info = () => {
     const { userInfo } = useLoginForm();
-    const [profileImage, setProfileImage] = useState('');
+    const [avatar_img, setAvatarImg] = useState('');
 
     useEffect(() => {
         if (userInfo) {
-            setProfileImage(userInfo.profileImage || '');
+            setAvatarImg(userInfo.avatar_img || '');
         }
     }, [userInfo]);
 
@@ -23,9 +23,9 @@ const Account_info = () => {
                     {/* Hiển thị ảnh đại diện */}
                     <div className="profile-image-section">
                         <h6>Ảnh đại diện</h6>
-                        {profileImage ? (
+                        {avatar_img ? (
                             <img
-                                src={profileImage}
+                                src={avatar_img}
                                 alt="Avatar"
                                 style={{
                                     width: '150px',

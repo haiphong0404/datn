@@ -9,16 +9,16 @@ export const useChangePassword = () => {
     const [passwordError, setPasswordError] = useState('');
     const [passwordConfirmationError, setPasswordConfirmationError] = useState('');
 
-    const validate = (oldPassword, password, password_confirmation) => {
+    const validate = (oldpassword, password, password_confirmation) => {
         let isValid = true;
         setOldPasswordError('');
         setPasswordError('');
         setPasswordConfirmationError('');
 
-        if (!oldPassword) {
+        if (!oldpassword) {
             setOldPasswordError('Mật khẩu cũ không được để trống.');
             isValid = false;
-        } else if (oldPassword.length < 8) {
+        } else if (oldpassword.length < 8) {
             setOldPasswordError('Mật khẩu cũ phải có ít nhất 8 ký tự.');
             isValid = false;
         }
@@ -29,7 +29,7 @@ export const useChangePassword = () => {
         } else if (password.length < 8) {
             setPasswordError('Mật khẩu mới phải có ít nhất 8 ký tự.');
             isValid = false;
-        } else if (oldPassword === password) {
+        } else if (oldpassword === password) {
             setPasswordError('Mật khẩu mới phải khác mật khẩu cũ.');
             isValid = false;
         }
@@ -46,15 +46,15 @@ export const useChangePassword = () => {
     };
 
 
-    const handleChangePassword = async (oldPassword, password, password_confirmation) => {
-        if (!validate(oldPassword, password, password_confirmation)) return;
+    const handleChangePassword = async (oldpassword, password, password_confirmation) => {
+        if (!validate(oldpassword, password, password_confirmation)) return;
 
         setLoading(true);
         setMessage('');
         setError(null);
 
         try {
-            const res = await changePassword({ oldPassword, password, password_confirmation });
+            const res = await changePassword({ oldpassword, password, password_confirmation });
             setMessage(res.message || 'Đổi mật khẩu thành công');
         } catch (error) {
             const errorMsg = error.response?.data?.message || 'Đổi mật khẩu thất bại';

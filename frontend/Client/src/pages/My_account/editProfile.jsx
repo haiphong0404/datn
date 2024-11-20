@@ -11,7 +11,7 @@ const EditProfile = () => {
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
     const [address, setAddress] = useState('');
-    const [profileImage, setProfileImage] = useState(null); // State để lưu ảnh
+    const [avatar_img, setAvatarImg] = useState(null); // State để lưu ảnh
     const [previewImage, setPreviewImage] = useState(''); // State để hiển thị ảnh xem trước
 
     useEffect(() => {
@@ -20,7 +20,7 @@ const EditProfile = () => {
             setEmail(userInfo.email || '');
             setPhone(userInfo.phone || '');
             setAddress(userInfo.address || '');
-            setPreviewImage(userInfo.profileImage || ''); // Hiển thị ảnh từ server nếu có
+            setPreviewImage(userInfo.avatar_img || ''); // Hiển thị ảnh từ server nếu có
         }
     }, [userInfo]);
 
@@ -46,7 +46,7 @@ const EditProfile = () => {
         updatedInfo.append('email', email);
         updatedInfo.append('phone', phone);
         updatedInfo.append('address', address);
-        if (profileImage) updatedInfo.append('profileImage', profileImage); // Đính kèm file ảnh
+        if (avatar_img) updatedInfo.append('avatar_img', avatar_img); // Đính kèm file ảnh
 
         try {
             await editUserById(userInfo.id, updatedInfo);
@@ -61,7 +61,7 @@ const EditProfile = () => {
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         if (file) {
-            setProfileImage(file); // Lưu file ảnh
+            setAvatarImg(file); // Lưu file ảnh
             const reader = new FileReader();
             reader.onloadend = () => {
                 setPreviewImage(reader.result); // Hiển thị ảnh xem trước
