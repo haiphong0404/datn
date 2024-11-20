@@ -3,9 +3,9 @@ import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { useLoginForm } from '../../hooks/useLoginForm';
 const MyAccount = () => {
   const navigate = useNavigate();
-  
 
-  const {  handleLogout  } = useLoginForm();
+
+  const { handleLogout } = useLoginForm();
 
   return (
     <div>
@@ -60,17 +60,13 @@ const MyAccount = () => {
                             <i className="fa fa-cart-arrow-down" />
                             Đơn Hàng
                           </Link>
-                          <Link to="/my_account/downloads">
-                            <i className="fa fa-cloud-download" />
-                            Tải Xuống
+                          <Link to="/my_account/editProfile">
+                            <i className="fa fa-cog" />
+                            Chỉnh Sửa Thông Tin
                           </Link>
-                          <Link to="/my_account/payment_method">
-                            <i className="fa fa-credit-card" />
-                            Phương Thức Thanh Toán
-                          </Link>
-                          <Link to="/my_account/address_edit">
-                            <i className="fa fa-map-marker" />
-                            Địa Chỉ
+                          <Link to="/my_account/changePassword">
+                            <i className="fa fa-lock"></i>
+                            Đổi mật khẩu
                           </Link>
                           <Link to="/my_account/account_info">
                             <i className="fa fa-user" /> Chi Tiết Tài Khoản

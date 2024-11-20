@@ -13,7 +13,7 @@ const useForgotPassword = () => {
         setSuccess(null);
 
         try {
-            const response = await axios.post("/password/email", { email });
+            const response = await axios.post("password/reset-link", { email });
             console.log("Phản hồi từ server:", response);
 
             setSuccess(response.data.message);
