@@ -108,13 +108,13 @@ const Order_detail = () => {
                                                         {item.size?.name || 'Kích thước không có'}
                                                     </td>
                                                     <td className="pro-price">
-                                                        <span>{parseFloat(item.price).toFixed(0)}₫</span>
+                                                        <span>{parseFloat(item.price).toLocaleString()} VND</span>
                                                     </td>
                                                     <td className="pro-quantity">
                                                         <span>{item.quantity}</span>
                                                     </td>
                                                     <td className="pro-subtotal">
-                                                        <span>{(parseFloat(item.price) * item.quantity).toFixed(0)}₫</span>
+                                                        <span>{(parseFloat(item.price) * item.quantity).toLocaleString()} VND</span>
                                                     </td>
 
                                                 </tr>
@@ -122,9 +122,9 @@ const Order_detail = () => {
                                             ))}
 
                                             <tr className="total-amount-row">
-                                                <th colSpan="5" style={{ textAlign: 'center' }}>Tổng Tiền:</th>
+                                                <th colSpan="6" style={{ textAlign: 'center' }}>Tổng Tiền:</th>
                                                 <th style={{ fontWeight: 'bold', color: '#e63946' }}>
-                                                    {parseFloat(orderDetail.total_amount).toFixed(0)}₫
+                                                    {parseFloat(orderDetail.total_amount).toLocaleString()} VND
                                                 </th>
                                             </tr>
 
