@@ -220,7 +220,7 @@ const Checkout = () => {
       phone: userDetails.phone,
       address: userDetails.address,
       infor: userDetails.info,
-      payment_status: paymentMethod,
+      payment_method: paymentMethod,
       user_id: userInfo?.id,
       products: selectedProducts.map((item) => ({
         product_variant_id: item.id_productVariant,

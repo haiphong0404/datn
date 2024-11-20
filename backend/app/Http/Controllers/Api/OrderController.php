@@ -64,25 +64,28 @@ class OrderController extends Controller
              }
      
              // Kiểm tra phương thức thanh toán và đặt giá trị payment_status
-             if ($request->input('payment_method') === 'paypal') {
+             if ($request->input('payment_method') === 'online') {
                 $paymentStatus = 'paid';
             } else {
                 $paymentStatus = 'unpaid';
             }
-             $orderDate = Carbon::parse($request->input('order_date'))->format('Y-m-d H:i:s');
-     
-             $orderData = [
-                 'user_id' => $userId,
-                 'order_date' => $orderDate,
-                 'status' => $request->input('status'),
-                 'total_amount' => $request->input('total_amount'),
-                 'name' => $request->input('name'),
-                 'phone' => $request->input('phone'),
-                 'email' => $request->input('email'),
-                 'address' => $request->input('address'),
-                 'infor' => $request->input('infor'),
-                 'payment_status' => $paymentStatus,
-             ];
+            
+            $orderDate = Carbon::parse($request->input('order_date'))->format('Y-m-d H:i:s');
+            
+            $orderData = [
+                'user_id' => $userId,
+                'order_date' => $orderDate,
+                'status' => $request->input('status'),
+                'total_amount' => $request->input('total_amount'),
+                'name' => $request->input('name'),
+                'phone' => $request->input('phone'),
+                'email' => $request->input('email'),
+                'address' => $request->input('address'),
+                'infor' => $request->input('infor'),
+                'payment_method' => $request->input('payment_method'),
+                'payment_status' => $paymentStatus, // Added the payment status separately
+            ];
+            
      
              $order = Order::create($orderData);
      
