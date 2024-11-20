@@ -23,27 +23,32 @@ class AuthenticatedSessionController extends Controller
   /**
    * Handle an incoming authentication request.
    */
-  public function store(LoginRequest $request): RedirectResponse
-  {
-    // Xác thực thông tin đăng nhập
-    $request->authenticate();
+    public function store(LoginRequest $request): RedirectResponse
+    {
+        // Xác thực thông tin đăng nhập
+        $request->authenticate();
 
-    // Lấy thông tin người dùng
-    $user = $request->user();
+        // Lấy thông tin người dùng
+        $user = $request->user();
 
-    // Kiểm tra nếu người dùng không phải là admin
-    if ($user->role !== 'admin') {
-      // Đăng xuất người dùng và thông báo lỗi
-      Auth::logout();
-      return redirect()->route('login')->withErrors(['status' => 'Bạn không có quyền truy cập vào trang quản trị.']);
+        // Kiểm tra vai trò của người dùng
+        if ($user->role === 'admin') {
+            // Nếu là admin, tái tạo session và chuyển hướng đến admin
+            $request->session()->regenerate();
+            return redirect()->route('admin.index');
+        } elseif ($user->role === 'staff') {
+            // Nếu là staff, tái tạo session và chuyển hướng đến staff
+            $request->session()->regenerate();
+            return redirect()->route('staff.index');
+        }
+
+        // Nếu vai trò không hợp lệ, đăng xuất và thông báo lỗi
+        Auth::logout();
+        return redirect()->route('login')->withErrors([
+            'status' => 'Bạn không có quyền truy cập vào hệ thống.',
+        ]);
     }
 
-    // Nếu là admin, tái tạo session
-    $request->session()->regenerate();
-
-    // Chuyển hướng đến trang quản trị
-    return redirect()->route('admin.index');
-  }
 
 
 
