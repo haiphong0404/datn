@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\Voucher;
 use App\Models\ProductVariant;
 use App\Models\OrderDetail;
 use Illuminate\Http\Request;
@@ -130,8 +131,69 @@ class OrderService
             // Xử lý chi tiết đơn hàng
             list($totalAmount, $originalQuantities,$arrProduct_id) = $this->createOrderDetails($order, $request->input('products'));
 
-            // Cập nhật tổng tiền đơn hàng
-            $order->total_amount = $totalAmount;
+            // Áp dụng mã giảm giá
+            $voucherCode = $request->input('voucher_code');
+            $discount = 0; // Lưu giá trị giảm giá cuối cùng
+
+            if ($voucherCode) {
+                $voucher = Voucher::where('code', $voucherCode)
+                    ->where('quantity', '>', 0) // Chỉ chọn mã còn khả dụng
+                    ->where(DB::raw('DATE(start_date)'), '<=', now()->toDateString()) // Kiểm tra mã đã bắt đầu có hiệu lực
+                    ->where(DB::raw('DATE(expiration_date)'), '>=', now()->toDateString()) // Kiểm tra mã vẫn còn trong thời gian sử dụng
+                    ->first();
+
+                if (!$voucher) {
+                    throw new \Exception('Mã giảm giá không hợp lệ hoặc đã hết.');
+                }
+
+                // Tính giảm giá dựa trên loại voucher
+                switch ($voucher->type) {
+                    case 'percentage':
+                        // Giảm giá theo phần trăm, tối đa không vượt quá `max_discount_value`
+                        $discount = min(
+                            ($totalAmount * $voucher->discount_percentage) / 100,
+                            $voucher->max_discount_value
+                        );
+                        break;
+
+                    case 'fixed':
+                        // Giảm giá cố định nếu đạt giá trị tối thiểu của đơn hàng
+                        if ($totalAmount >= $voucher->min_order_value) {
+                            $discount = $voucher->discount_value;
+                        }
+                        break;
+
+                    case 'category_discount':
+                        // Giảm giá theo danh mục
+                        $products = $request->input('products');
+                        foreach ($products as $product) {
+                            $variant = ProductVariant::find($product['variant_id']);
+                            if ($variant && $variant->product && $variant->product->category_id == $voucher->category_id) {
+                                $discount += ($variant->price * $product['quantity'] * $voucher->discount_percentage) / 100;
+                            }
+                        }
+                        break;
+    
+                    case 'first_order':
+                        // Giảm giá cố định cho đơn hàng đầu tiên nếu đạt giá trị tối thiểu
+                        if ($totalAmount >= $voucher->min_order_value) {
+                            $discount = $voucher->discount_value;
+                        }
+                        break;
+    
+                    default:
+                        throw new \Exception('Loại mã giảm giá không hợp lệ.');
+                }
+
+                // Cập nhật số lượng mã giảm giá
+                if ($discount > 0) {
+                    $voucher->quantity -= 1;
+                    $voucher->save();
+                }
+            }
+
+            // Cập nhật tổng tiền đơn hàng sau giảm giá
+            $order->total_amount = $totalAmount - $discount;
             $order->save();
 
             // Commit transaction
