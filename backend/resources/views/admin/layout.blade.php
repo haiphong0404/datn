@@ -319,12 +319,12 @@
             <div id="sidebar" class="nav-collapse ">
                 <!-- sidebar menu start-->
                 <ul class="sidebar-menu" id="nav-accordion">
-                    <li>
+                    {{-- <li>
                         <a class="active" href="{{ route('dashboard') }}">
                             <i class="fa fa-dashboard"></i>
                             <span>Dashboard</span>
                         </a>
-                    </li>
+                    </li> --}}
                     <li>
                         <a href="{{ route('admin.articles.index') }}">
                             <i class="bi bi-newspaper"></i>
