@@ -319,7 +319,7 @@
                 <!-- sidebar menu start-->
                 <ul class="sidebar-menu" id="nav-accordion">
                     <li>
-                        <a href="index.html">
+                        <a href="#">
                             <i class="fa fa-dashboard"></i>
                             <span>Dashboard</span>
                         </a>

@@ -14,6 +14,7 @@ class CommentController extends Controller
     public function index(Request $request)
     {
         $search = $request->input('search');
+        $perPage = $request->input('per_page', 10); // Mặc định 10 bản ghi
 
         $comments = Comment::withTrashed()
             ->with('user', 'product')
@@ -28,9 +29,9 @@ class CommentController extends Controller
                         });
                 });
             })
-            ->get();
-
-        $noResults = $comments->isEmpty();
+            ->orderBy('id', 'desc') // Sắp xếp giảm dần theo cột 'id'
+            ->paginate($perPage);
+            $noResults = $comments->isEmpty();
 
         return view('admin.comment.list', compact('comments', 'noResults'));
     }

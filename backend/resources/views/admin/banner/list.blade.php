@@ -50,13 +50,21 @@
                             <div class="row-fluid">
                                 <div class="span6">
                                     <div id="hidden-table-info_length" class="dataTables_length">
-                                        <label><select class="form-control" size="1" name="hidden-table-info_length"
-                                                aria-controls="hidden-table-info">
-                                                <option value="10" selected="selected">10</option>
-                                                <option value="25">25</option>
-                                                <option value="50">50</option>
-                                                <option value="100">100</option>
-                                            </select> records per page</label>
+                                        <form action="{{ route('admin.banners.index') }}" method="GET">
+                                            <label>Xem
+                                                <select class="form-control-sm ml-1 custom-select-small" name="per_page"
+                                                    onchange="this.form.submit()">
+                                                    <option value="10"
+                                                        {{ request('per_page') == 10 ? 'selected' : '' }}>10</option>
+                                                    <option value="25"
+                                                        {{ request('per_page') == 25 ? 'selected' : '' }}>25</option>
+                                                    <option value="50"
+                                                        {{ request('per_page') == 50 ? 'selected' : '' }}>50</option>
+                                                    <option value="100"
+                                                        {{ request('per_page') == 100 ? 'selected' : '' }}>100</option>
+                                                </select><span style="margin-left:-5px;">mục</span>
+                                            </label>
+                                        </form>
                                     </div>
                                 </div>
                                 <div class="span6">
@@ -123,23 +131,28 @@
                             </table>
                             <div class="row-fluid">
                                 <div class="span6">
-                                    <div class="dataTables_info" id="hidden-table-info_info">Showing 11 to 20 of 57
-                                        entries</div>
+                                    <div class="dataTables_info" id="hidden-table-info_info">
+                                        Hiển thị từ {{ $banners->firstItem() }} đến {{ $banners->lastItem() }} của tổng cộng {{ $banners->total() }} mục
+                                    </div>
                                 </div>
                                 <div class="span6">
                                     <div class="dataTables_paginate paging_bootstrap pagination">
-                                        <ul>
-                                            <li class="prev"><a href="#">← Previous</a></li>
-                                            <li><a href="#">1</a></li>
-                                            <li class="active"><a href="#">2</a></li>
-                                            <li><a href="#">3</a></li>
-                                            <li><a href="#">4</a></li>
-                                            <li><a href="#">5</a></li>
-                                            <li class="next"><a href="#">Next → </a></li>
+                                        <ul class="pagination">
+                                            <li class="prev">
+                                                <a href="{{ $banners->previousPageUrl() }}" aria-label="Previous">← Previous</a>
+                                            </li>
+                                            @foreach ($banners->getUrlRange(1, $banners->lastPage()) as $page => $url)
+                                                <li class="{{ $page == $banners->currentPage() ? 'active' : '' }}">
+                                                    <a href="{{ $url }}">{{ $page }}</a>
+                                                </li>
+                                            @endforeach
+                                            <li class="next">
+                                                <a href="{{ $banners->nextPageUrl() }}" aria-label="Next">Next →</a>
+                                            </li>
                                         </ul>
                                     </div>
                                 </div>
-                            </div>
+                            </div>                        
                         </div>
                     </div>
                 </div>
