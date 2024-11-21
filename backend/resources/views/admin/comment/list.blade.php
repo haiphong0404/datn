@@ -26,6 +26,16 @@
             text-overflow: ellipsis;
             /* Hiển thị dấu "..." khi văn bản bị cắt */
         }
+        .custom-select-small {
+            font-size: 0.70rem;
+            /* Giảm kích thước font */
+            height: 20px;
+            /* Giảm chiều cao */
+            padding: 2px 6px;
+            /* Giảm padding trong dropdown */
+            width: auto;
+            /* Điều chỉnh tự động theo nội dung */
+        }
     </style>
     <div id="list" class="row">
         <div class="col-sm-12">
