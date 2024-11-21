@@ -167,7 +167,7 @@ const Cart = () => {
                 <div className="variant-quantity">
                   <label>Số lượng:</label>
                   <span className="quantity-display">{variant.quantity}</span>
-                  <p className="variant-price">Giá: {variant.price} VND</p>
+                  <p className="variant-price">Giá: {variant.price.toLocaleString()} VND</p>
                 </div>
 
                 <div className="variant-actions">
@@ -185,7 +185,7 @@ const Cart = () => {
 
       <div className="total-calculation">
         <h5>Tổng: {totalQuantity} sản phẩm</h5>
-        <h5>Tổng tiền: {totalPrice} VND</h5>
+        <h5>Tổng tiền: {totalPrice.toLocaleString()} VND</h5>
         <button onClick={handleCheckout}>Thanh toán</button>
       </div>
     </div>

@@ -1,6 +1,20 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import fetchCategories from '../api/categories.js'
+import fetchBlog from '../api/blog.js'
+import { Pagination } from '@mui/material';
 const Blog = () => {
+  // const [page, setPage] = useState(1);
+  // const [selectedBrandId, setSelectedBrandId] = useState(null);
+  // const [selectedCategoryId, setSelectedCategoryId] = useState(null);
+  // const [article, setArticle] = useState(null);
+  // const { id } = useParams(); // Get the article ID from the URL
+  // const itemsPerPage = 6;
+
+
+
+
+  if (!article) return <div>Loading...</div>;
   return (
     <div>
       <main>
@@ -212,223 +226,11 @@ const Blog = () => {
                       </div>
                       {/* blog post item end */}
                     </div>
-                    <div className="col-md-6">
-                      {/* blog post item start */}
-                      <div className="blog-post-item d-block mb-30">
-                        <div className="blog-thumb w-100">
-                          <div className="blog-carousel-2 slick-row-5 slick-dot-style">
-                            <div className="blog-single-slide">
-                              <Link to="blog_detail">
-                                <img src="assets/img/blog/blog-2.jpg" alt="blog image" />
-                              </Link>
-                            </div>
-                            <div className="blog-single-slide">
-                              <Link to="blog_detail">
-                                <img
-                                  src="assets/img/blog/blog-3.jpg"
-                                  alt="blog image"
-                                />
-                              </Link>
-                            </div>
-                            <div className="blog-single-slide">
-                              <Link to="blog_detail">
-                                <img
-                                  src="assets/img/blog/blog-4.jpg"
-                                  alt="blog image"
-                                />
-                              </Link>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="blog-content w-100 pl-0 mt-20">
-                          <h6 className="blog-title">
-                            <a href="blog-details.html">
-                              This is Second Post XipBlog
-                            </a>
-                          </h6>
-                          <div className="blog-meta">
-                            <span>
-                              <i className="fa fa-calendar" />
-                              May 10, 2021
-                            </span>
-                            <span>
-                              <i className="fa fa-user" />
-                              Admin
-                            </span>
-                          </div>
-                          <p className="blog-desc">
-                            Lorem Ipsum is simply dummy text of the printing and
-                            typesetting industry. ...
-                          </p>
-                          <a className="btn read-more" href="blog-details.html">
-                            Read More
-                          </a>
-                        </div>
-                      </div>
-                      {/* blog post item end */}
-                    </div>
-                    <div className="col-md-6">
-                      {/* blog post item start */}
-                      <div className="blog-post-item d-block mb-30">
-                        <div className="blog-thumb ratio ratio-16x9 w-100">
-                          <iframe src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/501298839&color=%23ff5500&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=true&visual=true" />
-                        </div>
-                        <div className="blog-content w-100 pl-0 mt-20">
-                          <h6 className="blog-title">
-                            <a href="blog-details.html">This is Third Post XipBlog</a>
-                          </h6>
-                          <div className="blog-meta">
-                            <span>
-                              <i className="fa fa-calendar" />
-                              Aug 05, 2021
-                            </span>
-                            <span>
-                              <i className="fa fa-user" />
-                              Admin
-                            </span>
-                          </div>
-                          <p className="blog-desc">
-                            Lorem Ipsum is simply dummy text of the printing and
-                            typesetting industry. ...
-                          </p>
-                          <a className="btn read-more" href="blog-details.html">
-                            Read More
-                          </a>
-                        </div>
-                      </div>
-                      {/* blog post item end */}
-                    </div>
-                    <div className="col-md-6">
-                      {/* blog post item start */}
-                      <div className="blog-post-item d-block mb-30">
-                        <div className="blog-thumb ratio ratio-16x9 w-100">
-                          <iframe
-                            src="https://www.youtube.com/embed/WeA7edXsU40"
-                            allow="autoplay; encrypted-media"
-                            allowFullScreen=""
-                          />
-                        </div>
-                        <div className="blog-content w-100 pl-0 mt-20">
-                          <h6 className="blog-title">
-                            <a href="blog-details.html">
-                              This is Fourth Post XipBlog
-                            </a>
-                          </h6>
-                          <div className="blog-meta">
-                            <span>
-                              <i className="fa fa-calendar" />
-                              Aug 05, 2021
-                            </span>
-                            <span>
-                              <i className="fa fa-user" />
-                              Admin
-                            </span>
-                          </div>
-                          <p className="blog-desc">
-                            Lorem Ipsum is simply dummy text of the printing and
-                            typesetting industry. ...
-                          </p>
-                          <a className="btn read-more" href="blog-details.html">
-                            Read More
-                          </a>
-                        </div>
-                      </div>
-                      {/* blog post item end */}
-                    </div>
-                    <div className="col-md-6">
-                      {/* blog post item start */}
-                      <div className="blog-post-item d-block mb-30">
-                        <div className="blog-thumb w-100">
-                          <a href="blog-details.html">
-                            <img src="assets/img/blog/blog-3.jpg" alt="blog thumb" />
-                          </a>
-                        </div>
-                        <div className="blog-content w-100 pl-0 mt-20">
-                          <h6 className="blog-title">
-                            <a href="blog-details.html">This is fifth Post XipBlog</a>
-                          </h6>
-                          <div className="blog-meta">
-                            <span>
-                              <i className="fa fa-calendar" />
-                              Aug 05, 2021
-                            </span>
-                            <span>
-                              <i className="fa fa-user" />
-                              Admin
-                            </span>
-                          </div>
-                          <p className="blog-desc">
-                            Lorem Ipsum is simply dummy text of the printing and
-                            typesetting industry. ...
-                          </p>
-                          <a className="btn read-more" href="blog-details.html">
-                            Read More
-                          </a>
-                        </div>
-                      </div>
-                      {/* blog post item end */}
-                    </div>
-                    <div className="col-md-6">
-                      {/* blog post item start */}
-                      <div className="blog-post-item d-block mb-30">
-                        <div className="blog-thumb w-100">
-                          <a href="blog-details.html">
-                            <img src="assets/img/blog/blog-4.jpg" alt="blog thumb" />
-                          </a>
-                        </div>
-                        <div className="blog-content w-100 pl-0 mt-20">
-                          <h6 className="blog-title">
-                            <a href="blog-details.html">
-                              This is Seventh Post XipBlog
-                            </a>
-                          </h6>
-                          <div className="blog-meta">
-                            <span>
-                              <i className="fa fa-calendar" />
-                              Aug 05, 2021
-                            </span>
-                            <span>
-                              <i className="fa fa-user" />
-                              Admin
-                            </span>
-                          </div>
-                          <p className="blog-desc">
-                            Lorem Ipsum is simply dummy text of the printing and
-                            typesetting industry. ...
-                          </p>
-                          <a className="btn read-more" href="blog-details.html">
-                            Read More
-                          </a>
-                        </div>
-                      </div>
-                      {/* blog post item end */}
-                    </div>
+                 
                   </div>
                   {/* blog item wrapper end */}
                   {/* start pagination area */}
-                  <div className="paginatoin-area shadow-bg text-center">
-                    <ul className="pagination-box">
-                      <li>
-                        <a className="previous" href="#">
-                          <i className="fa fa-angle-left" />
-                        </a>
-                      </li>
-                      <li className="active">
-                        <a href="#">1</a>
-                      </li>
-                      <li>
-                        <a href="#">2</a>
-                      </li>
-                      <li>
-                        <a href="#">3</a>
-                      </li>
-                      <li>
-                        <a className="next" href="#">
-                          <i className="fa fa-angle-right" />
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
+           
                   {/* end pagination area */}
                 </div>
               </div>

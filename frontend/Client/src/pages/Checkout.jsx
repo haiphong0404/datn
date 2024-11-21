@@ -244,6 +244,8 @@ const Checkout = () => {
       order_date: orderDate,
       status: "pending",
       total_amount: totalAmount,
+      shipping_fee: selectedShippingFee,  
+      voucher_discount: voucherDiscount,  
       name: userDetails.username,
       email: userDetails.email,
       phone: userDetails.phone,
