@@ -26,7 +26,7 @@ export const useLoginForm = (isDisplay) => {
   const [success, setSuccess] = useState("");
   const [userInfo, setUserInfo] = useState(null);
   const navigate = useNavigate();
-  
+
 
   // Lấy thông tin người dùng từ localStorage nếu có
   useEffect(() => {
@@ -85,12 +85,12 @@ export const useLoginForm = (isDisplay) => {
     setUserInfo(null);
     localStorage.removeItem("userInfo");
     localStorage.removeItem("token");
-  
+
     // Chuyển hướng đến trang đăng nhập và bắt buộc tải lại trang
-    
+
     navigate("/login");
   };
-  
+
 
 
   const updateUserInfo = async (id, updatedInfo) => {

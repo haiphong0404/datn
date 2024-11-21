@@ -273,41 +273,56 @@
                     </li>
                     <!-- user login dropdown start-->
                     @auth
-                    <li class="dropdown">
+                    <<<<<<< HEAD <li class="dropdown">
                         <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                             <img src="{{ optional(Auth::user()->avatar_img) ? Storage::url(Auth::user()->avatar_img) : asset('default-avatar.png') }}"
                                 alt="{{ optional(Auth::user())->username }}" width="30px">
                             <span class="username">{{ optional(Auth::user())->username }}</span>
                             <b class="caret"></b>
                         </a>
+                        =======
+                        <li class="dropdown">
+                            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                                <img src="{{ optional(Auth::user()->avatar_img) ? Storage::url(Auth::user()->avatar_img) : asset('default-avatar.png') }}"
+                                    width="30px">
+                                <span class="username">{{ optional(Auth::user())->username }}</span>
+                                <b class="caret"></b>
+                            </a>
+                            >>>>>>> dev
 
-                        <ul class="dropdown-menu dropdown-menu-right">
-                            <li>
-                                <a href="{{ route('admin.profile') }}" class="dropdown-item">
-                                    <i class="fa fa-suitcase"></i> Profile
-                                </a>
-                            </li>
-                            <li>
-                                <form action="{{ route('logout') }}" method="POST" style="display: inline;">
-                                    @csrf
-                                    <button type="submit" class="btn btn-link dropdown-item"><i class="fa fa-key"></i>
-                                        Logout</button>
-                                </form>
-                            </li>
-                        </ul>
-                    </li>
-                    @else
-                    <li>
-                        <a href="{{ route('login') }}" class="dropdown-item">Đăng nhập</a>
-                    </li>
-                    @endauth
-                    <li class="sb-toggle-right">
+                            <ul class="dropdown-menu dropdown-menu-right">
+                                <li>
+                                    <a href="{{ route('admin.profile') }}" class="dropdown-item">
+                                        <i class="fa fa-suitcase"></i> Profile
+                                    </a>
+                                </li>
+                                <li>
+                                    <form action="{{ route('logout') }}" method="POST" style="display: inline;">
+                                        @csrf
+                                        <button type="submit" class="btn btn-link dropdown-item"><i
+                                                class="fa fa-key"></i>
+                                            Logout</button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </li>
+                        @else
+                        <li>
+                            <a href="{{ route('login') }}" class="dropdown-item">Đăng nhập</a>
+                        </li>
+                        @endauth
+                        {{-- <li class="sb-toggle-right">
                         <a href="http://localhost:3000/" target="_blank" rel="noopener noreferrer">
                             <i class="fa fa-sign-in mr-2"></i>Website
                         </a>
+<<<<<<< HEAD
                     </li>
 
-                    <!-- user login dropdown end -->
+=======
+                    </li> --}}
+
+                        >>>>>>> dev
+                        <!-- user login dropdown end -->
                 </ul>
                 <!--search & user info end-->
             </div>
@@ -318,67 +333,73 @@
             <div id="sidebar" class="nav-collapse ">
                 <!-- sidebar menu start-->
                 <ul class="sidebar-menu" id="nav-accordion">
-
-                    <li>
-                        <a href="{{ route('admin.articles.index') }}">
-                            <i class="bi bi-newspaper"></i>
-                            <span>Article</span>
+                    <<<<<<< HEAD=======<li>
+                        <a class="active" href="{{ route('admin.index') }}">
+                            <i class="fa fa-dashboard"></i>
+                            <span>Dashboard</span>
                         </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('admin.banners.index') }}">
-                            <i class="bi bi-card-image"></i>
-                            <span>Banner</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('admin.brands.index') }}">
-                            <i class="bi bi-badge-tm-fill"></i>
-                            <span>Brand</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('admin.categories.index') }}">
-                            <i class="bi bi-tags-fill"></i>
-                            <span>Category</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('admin.contacts.index') }}">
-                            <i class="bi bi-person-rolodex"></i>
-                            <span>Contact</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('admin.comments.index') }}">
-                            <i class="bi bi-chat-square-dots-fill"></i>
-                            <span>Comment</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('admin.orders.index') }}">
-                            <i class="bi bi-receipt"></i>
-                            <span>Order</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('admin.user.index') }}">
-                            <i class="fa fa-user"></i>
-                            <span>User</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('admin.products.index') }}">
-                            <i class="bi bi-shop"></i>
-                            <span>Product</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('admin.vouchers.index') }}">
-                            <i class="fas fa-ticket-alt"></i>
-                            <span> Voucher</span>
-                        </a>
-                    </li>
+                        </li>
+                        >>>>>>> dev
+                        <li>
+                            <a href="{{ route('admin.articles.index') }}">
+                                <i class="bi bi-newspaper"></i>
+                                <span>Article</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('admin.banners.index') }}">
+                                <i class="bi bi-card-image"></i>
+                                <span>Banner</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('admin.brands.index') }}">
+                                <i class="bi bi-badge-tm-fill"></i>
+                                <span>Brand</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('admin.categories.index') }}">
+                                <i class="bi bi-tags-fill"></i>
+                                <span>Category</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('admin.contacts.index') }}">
+                                <i class="bi bi-person-rolodex"></i>
+                                <span>Contact</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('admin.comments.index') }}">
+                                <i class="bi bi-chat-square-dots-fill"></i>
+                                <span>Comment</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('admin.orders.index') }}">
+                                <i class="bi bi-receipt"></i>
+                                <span>Order</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('admin.user.index') }}">
+                                <i class="fa fa-user"></i>
+                                <span>User</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('admin.products.index') }}">
+                                <i class="bi bi-shop"></i>
+                                <span>Product</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('admin.vouchers.index') }}">
+                                <i class="fas fa-ticket-alt"></i>
+                                <span> Voucher</span>
+                            </a>
+                        </li>
 
                 </ul>
                 <!-- sidebar menu end-->
@@ -425,7 +446,6 @@
     <!--script for this page-->
     <script src="{{ asset('assets') }}/admin/js/sparkline-chart.js"></script>
     <script src="{{ asset('assets') }}/admin/js/easy-pie-chart.js"></script>
-    <script src="{{ asset('assets') }}/admin/js/count.js"></script>
 
     <script>
     //owl carousel
