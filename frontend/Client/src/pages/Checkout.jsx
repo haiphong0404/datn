@@ -31,6 +31,7 @@ const Checkout = () => {
   const [isVoucherApplied, setIsVoucherApplied] = useState(false); // Trạng thái áp dụng voucher
   const [appliedVoucherId, setAppliedVoucherId] = useState(null);
 
+ 
   // Handle applying voucher
   const handleApplyVoucher = async () => {
     if (!voucherCode.trim()) {
@@ -40,7 +41,6 @@ const Checkout = () => {
 
     try {
       const appliedVoucher = await applyVoucher(voucherCode);
-      console.log("Voucher trả về:", appliedVoucher); // Kiểm tra giá trị trả về
 
       if (appliedVoucher) {
         const {
@@ -51,7 +51,7 @@ const Checkout = () => {
           max_discount_value,
         } = appliedVoucher.voucher;
 
-        console.log("ID của voucher:", id); // Log id của voucher để kiểm tra
+       
 
         // Lưu id vào state
         setAppliedVoucherId(id);
@@ -61,7 +61,7 @@ const Checkout = () => {
           (acc, item) => acc + item.price * item.quantity,
           0
         );
-        console.log("Subtotal:", subtotal); // Kiểm tra giá trị subtotal
+       
         if (subtotal < min_order_value) {
           toast.error(
             `Đơn hàng của bạn chưa đủ giá trị tối thiểu (${min_order_value.toLocaleString()} VND) để áp dụng mã giảm giá.`
@@ -255,13 +255,13 @@ const Checkout = () => {
       user_id: userInfo?.id,
       products: selectedProducts.map((item) => ({
         product_variant_id: item.id_productVariant,
+        product_id: item.productId, 
         image: item.image,
         color: item.color,
         size: item.size,
         quantity: item.quantity,
         price: item.price,
       })),
-      voucher_code: voucherCode,
       ...(appliedVoucherId && { id: appliedVoucherId }), // Chỉ thêm voucher_id nếu có
     };
 
