@@ -56,7 +56,7 @@ const HeroSlider = () => {
               <div className="row">
                 <div className="col-md-12">
                   <div className="hero-slider-content slide-1">
-                    <h1 className="slide-title">mới nhất</h1>
+                    <h1 className="slide-title">Mới nhất</h1>
                     <h2 className="slide-subtitle">
                       Giày thể thao chạy bộ <span>Đàn ông thích</span>
                     </h2>

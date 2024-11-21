@@ -63,6 +63,27 @@
                     <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
                 </div>
+                <div class="form-group">
+                    <label for="">Phương thức thanh toán</label>
+                    <select name="payment_method" class="form-select">
+                        <option value="cash" selected>Thanh toán offline</option>
+                        <option value="online">Thanh toán online</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="payment_status">Trạng thái thanh toán</label>
+                    <select name="payment_status" class="form-select">
+                        <option value="unpaid" selected>Chưa thanh toán</option>
+                        <option value="paid">Đã thanh toán</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="voucher_code">Mã giảm giá</label>
+                    <input type="text" id="voucher_code" name="voucher_code" class="form-control" autocomplete="voucher_code" required value="{{ old('voucher_code') }}">
+                    @error('voucher_code')
+                    <div class="alert alert-danger">{{ $message }}</div>
+                    @enderror
+                </div>
             </div>
         </div>
 

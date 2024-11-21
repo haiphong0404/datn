@@ -79,7 +79,7 @@ export const forgotPassword = async (email) => {
     console.log(email);
 
     try {
-        const response = await axios.post("/password/email", null, { params: { email } });
+        const response = await axios.post("/password/reset-link", null, { params: { email } });
         return response.data;
     } catch (error) {
         throw error.response?.data || error.message;
@@ -87,11 +87,16 @@ export const forgotPassword = async (email) => {
 };
 
 // Đặt lại mật khẩu
-export const resetPassword = async (data) => {
+export const changePassword = async (data) => {
     try {
-        const response = await axios.post("/password/reset/store", data);
+        const response = await axios.post("/change-password", data, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
         return response.data;
     } catch (error) {
         throw error.response?.data || error.message;
     }
 };
+

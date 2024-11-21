@@ -57,9 +57,6 @@ const Login = () => {
                                                     className="custom-control-input"
                                                     id="rememberMe"
                                                 />
-                                                <label className="custom-control-label" htmlFor="rememberMe">
-                                                    Nhớ mật khẩu
-                                                </label>
                                             </div>
                                         </div>
                                         <a href="#" className="forget-pwd" onClick={handlePasswordChange}>

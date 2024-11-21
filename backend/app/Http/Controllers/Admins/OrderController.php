@@ -99,6 +99,28 @@ class OrderController extends Controller
         return redirect()->back()->with('success', 'Trạng thái đơn hàng đã được cập nhật thành công.');
     }
     
+    public function updatePaymentStatus(Request $request, Order $order)
+    {
+        $validatedData = $request->validate([
+            'payment_status' => 'required|in:unpaid,paid',
+        ]);
+
+        // Kiểm tra kết quả
+        if ($validatedData === $order->payment_status) {
+            return redirect()->route('admin.orders.index')
+                ->with('info', 'Trạng thái đơn hàng đã là '.$validatedData.'. Không có thay đổi nào được thực hiện.');
+        }
+
+        $order->payment_status = $validatedData['payment_status'];
+
+        if ($order->save()) {
+            // Trả về kết quả thành công nếu trạng thái thanh toán được cập nhật
+            return redirect()->back()->with('success', 'Trạng thái thanh toán của đơn hàng đã được cập nhật thành công.');
+        }
+
+        return redirect()->route('admin.orders.index')->with('error', 'Chuyển trạng thái thanh toán không hợp lệ.');
+    }
+
     public function search(Request $request)
     {
         $search = $request->get('q');

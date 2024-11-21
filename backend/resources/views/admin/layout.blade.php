@@ -320,7 +320,7 @@
                 <!-- sidebar menu start-->
                 <ul class="sidebar-menu" id="nav-accordion">
                     <li>
-                        <a href="#">
+                        <a class="active" href="{{ route('admin.index') }}">
                             <i class="fa fa-dashboard"></i>
                             <span>Dashboard</span>
                         </a>
@@ -431,7 +431,6 @@
     <!--script for this page-->
     <script src="{{ asset('assets') }}/admin/js/sparkline-chart.js"></script>
     <script src="{{ asset('assets') }}/admin/js/easy-pie-chart.js"></script>
-    <script src="{{ asset('assets') }}/admin/js/count.js"></script>
 
     <script>
         //owl carousel
