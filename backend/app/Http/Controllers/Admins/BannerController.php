@@ -17,15 +17,16 @@ class BannerController extends Controller
     public function index(Request $request)
     {
         $search = $request->input('search');
+        $perPage = $request->input('per_page', 10); // Mặc định 10 bản ghi
 
         // Sử dụng withTrashed để lấy cả các banner đã xóa mềm
         $banners = Banner::withTrashed()
             ->when($search, function ($query, $search) {
                 return $query->where('title', 'LIKE', "%{$search}%");
             })
-            ->get();
-
-        $noResults = $banners->isEmpty();
+            ->orderBy('id', 'desc') // Sắp xếp giảm dần theo cột 'id'
+            ->paginate($perPage);
+            $noResults = $banners->isEmpty();
 
         return view('admin.banner.list', compact('banners', 'noResults'));
     }
