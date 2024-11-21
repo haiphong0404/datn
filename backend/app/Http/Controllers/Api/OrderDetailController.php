@@ -44,7 +44,7 @@ class OrderDetailController extends Controller
     {
         // Lấy thông tin đơn hàng từ database theo order_id
         $order = Order::find($order_id);
-
+    
         if (!$order) {
             // Nếu không tìm thấy đơn hàng, trả về lỗi 404
             return response()->json([
@@ -52,7 +52,7 @@ class OrderDetailController extends Controller
                 'message' => 'Đơn hàng không tồn tại.',
             ], 404);
         }
-
+    
         // Lấy trạng thái mới từ request body
         $newStatus = $request->input('newStatus');
         if (!$newStatus) {
@@ -62,10 +62,10 @@ class OrderDetailController extends Controller
                 'message' => 'Trạng thái mới không được cung cấp.',
             ], 400);
         }
-
+    
         $currentStatus = $order->status;
         $allowedTransitions = $this->getAllowedTransitions();
-
+    
         // Kiểm tra trạng thái mới có hợp lệ không
         if (!isset($allowedTransitions[$currentStatus]) || !in_array($newStatus, $allowedTransitions[$currentStatus])) {
             return response()->json([
@@ -73,26 +73,38 @@ class OrderDetailController extends Controller
                 'message' => 'Trạng thái chuyển đổi không hợp lệ.',
             ], 400);
         }
-
+    
         // Nếu trạng thái mới là "cancelled"
         if ($newStatus === 'cancelled') {
             // Khôi phục số lượng sản phẩm từ các chi tiết đơn hàng
             foreach ($order->orderDetails as $orderDetail) {
-                $variant = ProductVariant::find($orderDetail->product_variant_id);
-                if ($variant) {
-                    $variant->quantity += $orderDetail->quantity;
-                    $variant->save();
+                $productVariant = ProductVariant::find($orderDetail->product_variant_id);
+                if ($productVariant) {
+                    try {
+                        if ($productVariant->quantity >= $orderDetail->quantity) {
+                            $productVariant->quantity += $orderDetail->quantity;
+                            $productVariant->save();
+                        } else {
+                            throw new \Exception('Số lượng sản phẩm không đủ.');
+                        }
+                    } catch (\Exception $e) {
+                        Log::error("Lỗi cập nhật số lượng sản phẩm: {$e->getMessage()}");
+                        return response()->json([
+                            'success' => false,
+                            'message' => 'Lỗi khi khôi phục số lượng sản phẩm.',
+                        ], 500);
+                    }
                 } else {
                     // Nếu không tìm thấy sản phẩm, ghi log hoặc báo lỗi
                     Log::warning("Không tìm thấy biến thể sản phẩm với ID: {$orderDetail->product_variant_id}");
                 }
             }
         }
-
+    
         // Cập nhật trạng thái đơn hàng
         $order->status = $newStatus;
         $order->save();
-
+    
         // Trả về phản hồi thành công với thông tin đơn hàng đã được cập nhật
         return response()->json([
             'success' => true,
@@ -100,6 +112,7 @@ class OrderDetailController extends Controller
             'order' => $order,
         ]);
     }
+    
 
     /**
      * Lấy thông tin chi tiết đơn hàng
