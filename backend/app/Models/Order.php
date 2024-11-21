@@ -18,7 +18,9 @@ class Order extends Model
         'name',
         'phone',
         'address',
-        'infor'
+        'infor',
+        'payment_status',
+        'payment_method'
     ];
 
     protected $datas = ['deleted_at'];

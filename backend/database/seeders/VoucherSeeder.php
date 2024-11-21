@@ -16,6 +16,9 @@ class VoucherSeeder extends Seeder
      */
     public function run()
     {
+        // Xóa dữ liệu cũ trong bảng vouchers trước khi fake lại dữ liệu mới
+        Voucher::truncate(); // Hoặc DB::table('vouchers')->delete(); nếu bạn muốn xóa qua DB facade
+
         $faker = Faker::create();
 
         // Lấy danh sách category_id từ bảng categories
@@ -48,18 +51,6 @@ class VoucherSeeder extends Seeder
                 'start_date' => Carbon::now(),
                 'expiration_date' => Carbon::now()->addMonth(),
                 'quantity' => $faker->numberBetween(20, 100),
-                'user_id' => $faker->randomElement($eligibleUserIds)
-            ]);
-        }
-
-        // Seeder nhiều voucher cho loại shipping
-        foreach (range(1, 3) as $index) {
-            Voucher::create([
-                'code' => 'SHIP' . $faker->unique()->numberBetween(100, 999),
-                'type' => 'shipping',
-                'start_date' => Carbon::now(),
-                'expiration_date' => Carbon::now()->addMonth(),
-                'quantity' => $faker->numberBetween(10, 50),
                 'user_id' => $faker->randomElement($eligibleUserIds)
             ]);
         }

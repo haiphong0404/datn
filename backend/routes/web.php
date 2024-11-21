@@ -74,6 +74,7 @@ Route::group(
         Route::get('/get-variants/{productId}', [OrderController::class, 'getVariants'])->name('products.variants');
         // Route để tìm kiếm sản phẩm
         Route::get('/search-products', [OrderController::class, 'search'])->name('products.search');
+        Route::resource('admin/vouchers', VoucherController::class);
     }
 );
 
@@ -81,13 +82,32 @@ Route::group(
     [
         'prefix' => 'staff',
         'as' => 'staff.',
-        'middleware' => 'staff'
+//        'middleware' => 'staff'
     ],
     function () {
         Route::get('Admin', [AdminTestController::class, 'index'])->name('Admin');
+        Route::resource('brands', BrandController::class); // Route cho thương hiệu
+        Route::post('categories/{id}/restore', [CategoryController::class, 'restore'])->name('categories.restore');
+        Route::post('products/{id}/restore', [ProductController::class, 'restore'])->name('products.restore');
+        Route::post('comments/{id}/restore', [CommentController::class, 'restore'])->name('comments.restore');
+        Route::resource('categories', CategoryController::class); // Route cho thể loại
+        Route::resource('products', ProductController::class);   // Route cho sản phẩm
+        Route::resource('products.variants', ProductVariantController::class); // Route cho biến thể sản phẩm
+        Route::resource('user', \App\Http\Controllers\Staff\UserController::class);  // Route cho người dùng
+        Route::resource('comments', CommentController::class);  // Route cho bình luận
+        Route::resource('contacts', ContactController::class);
+        Route::resource('articles', ArticlesController::class);// Route cho bài viết
+        Route::resource('banners',BannerController::class);// Route cho banner
+        Route::post('banners/{id}/restore', [BannerController::class, 'restore'])->name('banners.restore');
+        Route::get('/orders/create', [OrderController::class, 'create'])->name('orders.create'); // Hiển thị form tạo order
+        Route::post('/orders', [OrderController::class, 'store'])->name('orders.store'); // Lưu thông tin order
+        Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+        Route::put('/orders/{order}/updateStatus', [OrderController::class, 'updateStatus'])->name('orders.updateStatus');
+        Route::get('/orders/{order}/details', [OrderController::class, 'show'])->name('orders.show');
+        Route::get('/get-variants/{productId}', [OrderController::class, 'getVariants'])->name('products.variants');
+        Route::get('/search-products', [OrderController::class, 'search'])->name('products.search');
     }
 );
-
 // Route::middleware(['auth', 'checkRole:admin,staff'])->group(function () {
 //     Route::resource('admin/vouchers', VoucherController::class);
 // });

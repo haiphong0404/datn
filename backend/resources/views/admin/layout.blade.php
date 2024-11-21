@@ -38,6 +38,7 @@
 
     <link href="{{ asset('assets') }}/admin/css/style.css" rel="stylesheet">
     <link href="{{ asset('assets') }}/admin/css/style-responsive.css" rel="stylesheet" />
+
     @yield('css')
 </head>
 

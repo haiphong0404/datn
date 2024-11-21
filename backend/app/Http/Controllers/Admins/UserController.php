@@ -16,6 +16,7 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
+        
         $search = $request->input('search');
         $perPage = $request->input('per_page', 10); // Mặc định 10 bản ghi
         
