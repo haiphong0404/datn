@@ -3,96 +3,108 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
+use App\Models\Order;
+use Carbon\Carbon;
 
 class PaymentController extends Controller
 {
-    // API tạo URL thanh toán VnPay
     public function createPayment(Request $request)
     {
-        // Thông tin cần thiết để tạo URL thanh toán
-        $vnp_TmnCode = "A5JJU49U"; // Mã TmnCode của bạn
-        $vnp_HashSecret = "7QW7TKM4UHHKY82XMYCHY64IU34JAZGA"; // Chuỗi bí mật để mã hóa
-        $vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html"; // URL VnPay
-        $vnp_Returnurl = route('payment.return'); // URL trả về sau khi thanh toán
+        date_default_timezone_set('Asia/Ho_Chi_Minh');
 
-        // Các thông tin thanh toán
-        $vnp_TxnRef = "100000"; // Mã giao dịch (mỗi giao dịch là duy nhất)
-        $vnp_OrderInfo = "Thanh toán đơn hàng";
-        $vnp_OrderType = "billpayment";
-        $vnp_Amount = $request->amount * 100; // Lưu ý: nhân với 100 để đúng với yêu cầu của VnPay
-        $vnp_Locale = "vn";
-        $vnp_IpAddr = $request->ip();
+        // Cấu hình VNPay
+        $vnp_TmnCode = "JWCI3U3R"; // Mã định danh merchant (Terminal ID)
+        $vnp_HashSecret = "CIKSVTCXXGPZIQXKNSYWRMXZRNAWMLUA"; // Secret key
+        $vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html"; // URL sandbox
+        $vnp_Returnurl = "http://localhost:3000/my_account/orders"; // URL callback sau khi thanh toán
 
-        $inputData = array(
+        // Lấy mã ngân hàng từ request
+        $vnp_BankCode = $request->input('bank_code', 'NCB'); // Mặc định là NCB
+
+        // Danh sách ngân hàng được hỗ trợ
+        $supportedBanks = [
+            'NCB',         // Ngân hàng TMCP Quốc Dân
+            'VCB',         // Vietcombank
+            'BIDV',        // BIDV
+            'VietinBank',  // VietinBank
+            'SACOMBANK'    // Sacombank
+        ];
+
+        // Kiểm tra xem mã ngân hàng có hợp lệ không
+        if (!in_array($vnp_BankCode, $supportedBanks)) {
+            return response()->json([
+                'message' => 'Ngân hàng thanh toán không được hỗ trợ. Vui lòng chọn ngân hàng khác.',
+                'supported_banks' => $supportedBanks
+            ], 400);
+        }
+
+        // Tạo đơn hàng
+        $orderData = [
+            'user_id' => $request->input('user_id'),
+            'order_date' => Carbon::now()->format('Y-m-d H:i:s'),
+            'status' => $request->input('status', 'pending'),
+            'total_amount' => $request->input('total_amount'),
+            'name' => $request->input('name'),
+            'phone' => $request->input('phone'),
+            'address' => $request->input('address'),
+            'infor' => $request->input('infor', 'ACB'),
+            'payment_method' => 'vnpay',
+            'payment_status' => 'unpaid',
+        ];
+
+        $order = Order::create($orderData);
+
+        // Các tham số gửi đến VNPay
+        $vnp_TxnRef = $order->id; // Mã giao dịch thanh toán
+        $vnp_OrderInfo = "Thanh toán đơn hàng #" . $order->id; // Nội dung giao dịch
+        $vnp_Amount = intval($order->total_amount * 100); // Tổng số tiền tính bằng VND * 100
+        $vnp_IpAddr = $request->ip(); // Địa chỉ IP của khách hàng
+        $vnp_CreateDate = date('YmdHis'); // Thời gian tạo giao dịch
+        $vnp_ExpireDate = Carbon::now()->addMinutes(30)->format('YmdHis'); // Hạn thanh toán
+
+        $inputData = [
             "vnp_Version" => "2.1.0",
             "vnp_TmnCode" => $vnp_TmnCode,
             "vnp_Amount" => $vnp_Amount,
             "vnp_Command" => "pay",
-            "vnp_CreateDate" => date('YmdHis'),
+            "vnp_CreateDate" => $vnp_CreateDate,
             "vnp_CurrCode" => "VND",
             "vnp_IpAddr" => $vnp_IpAddr,
-            "vnp_Locale" => $vnp_Locale,
+            "vnp_Locale" => "vn",
             "vnp_OrderInfo" => $vnp_OrderInfo,
-            "vnp_OrderType" => $vnp_OrderType,
+            "vnp_OrderType" => "billpayment",
             "vnp_ReturnUrl" => $vnp_Returnurl,
             "vnp_TxnRef" => $vnp_TxnRef,
-        );
+            "vnp_ExpireDate" => $vnp_ExpireDate,
+        ];
 
-        // Sắp xếp các tham số theo thứ tự abc
+        // Thêm mã ngân hàng nếu có
+        $inputData['vnp_BankCode'] = $vnp_BankCode;
+
+        // Sắp xếp tham số theo thứ tự
         ksort($inputData);
         $query = "";
         $hashdata = "";
-
         foreach ($inputData as $key => $value) {
-            $query .= urlencode($key) . "=" . urlencode($value) . '&';
-            $hashdata .= $key . "=" . $value . '&';
+            $hashdata .= urlencode($key) . "=" . urlencode($value) . "&";
+            $query .= urlencode($key) . "=" . urlencode($value) . "&";
         }
 
-        $query = rtrim($query, '&');
-        $hashdata = rtrim($hashdata, '&');
-        $vnp_Url = $vnp_Url . "?" . $query;
+        // Loại bỏ ký tự `&` cuối cùng
+        $hashdata = rtrim($hashdata, "&");
+        $query = rtrim($query, "&");
 
-        // Tạo chữ ký cho URL
-        if (isset($vnp_HashSecret)) {
-            $vnpSecureHash = hash_hmac('sha512', $hashdata, $vnp_HashSecret);
-            $vnp_Url .= '&vnp_SecureHash=' . $vnpSecureHash;
-        }
+        // Tạo chữ ký bảo mật
+        $vnpSecureHash = hash_hmac('sha512', $hashdata, $vnp_HashSecret);
 
-        return response()->json(['url' => $vnp_Url]);
-    }
+        // Tạo URL thanh toán
+        $vnp_Url = $vnp_Url . "?" . $query . "&vnp_SecureHash=" . $vnpSecureHash;
 
-    // API xử lý sau khi thanh toán
-    public function returnPayment(Request $request)
-    {
-        // Kiểm tra tham số trả về từ VnPay
-        $vnp_SecureHash = $request->vnp_SecureHash;
-        $inputData = $request->except('vnp_SecureHash', 'vnp_SecureHashType');
-        ksort($inputData);
-
-        $hashData = "";
-        foreach ($inputData as $key => $value) {
-            $hashData .= $key . "=" . $value . '&';
-        }
-
-        $hashData = rtrim($hashData, '&');
-        $vnp_HashSecret = "YOUR_VNPAY_HASH_SECRET"; // Chuỗi bí mật để mã hóa
-
-        // Tạo hash để kiểm tra tính hợp lệ
-        $secureHash = hash_hmac('sha512', $hashData, $vnp_HashSecret);
-
-        // Kiểm tra tính hợp lệ của giao dịch
-        if ($secureHash === $vnp_SecureHash) {
-            if ($request->vnp_ResponseCode == "00") {
-                // Thanh toán thành công
-                return response()->json(['status' => 'success', 'message' => 'Giao dịch thành công']);
-            } else {
-                // Thanh toán thất bại
-                return response()->json(['status' => 'fail', 'message' => 'Giao dịch không thành công']);
-            }
-        } else {
-            // Chữ ký không hợp lệ
-            return response()->json(['status' => 'error', 'message' => 'Chữ ký không hợp lệ']);
-        }
+        // Trả về kết quả
+        return response()->json([
+            'message' => 'Đơn hàng đã được tạo thành công!',
+            'order' => $order,
+            'payment_url' => $vnp_Url,
+        ], 201);
     }
 }

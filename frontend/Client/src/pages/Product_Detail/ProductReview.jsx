@@ -1,29 +1,29 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import useProductvariants from '../../hooks/useProductVariants';
 import useProductById from '../../hooks/useProductById';
+import { useComments } from '../../hooks/useComments';
 
 const ProductReview = ({ initialTab = "tab_one" }) => {
   const [activeTab, setActiveTab] = useState(initialTab);
   const { productId } = useParams();
   const { product, loading: productLoading, error: productError } = useProductById(productId);
-  const { variants, isLoading: variantsLoading, error: variantsError } = useProductvariants(productId);
+  const { comments, isLoading: commentsLoading, error: commentsError } = useComments(productId);
 
   const handleTabChange = (tabId) => {
     setActiveTab(tabId);
   };
 
-  if (productLoading || variantsLoading) {
+  if (productLoading || commentsLoading) {
     return <div>Loading...</div>;
   }
 
-  if (productError || variantsError) {
-    return <div>Error loading product data.</div>;
+  if (productError || commentsError) {
+    return <div>Error loading product or comments data.</div>;
   }
 
-  // Extracting colors and sizes from variants
-  const colors = [...new Set(variants.map(variant => variant.color))];
-  const sizes = [...new Set(variants.map(variant => variant.size))];
+  // Extract colors and sizes from product variants if needed
+  const colors = product.variants ? [...new Set(product.variants.map(variant => variant.color))] : [];
+  const sizes = product.variants ? [...new Set(product.variants.map(variant => variant.size))] : [];
 
   return (
     <div className="product-review-info">
@@ -33,7 +33,7 @@ const ProductReview = ({ initialTab = "tab_one" }) => {
             className={activeTab === "tab_one" ? "active" : ""}
             onClick={() => handleTabChange("tab_one")}
           >
-            description
+            Description
           </a>
         </li>
         <li>
@@ -41,7 +41,7 @@ const ProductReview = ({ initialTab = "tab_one" }) => {
             className={activeTab === "tab_two" ? "active" : ""}
             onClick={() => handleTabChange("tab_two")}
           >
-            information
+            Information
           </a>
         </li>
         <li>
@@ -49,7 +49,7 @@ const ProductReview = ({ initialTab = "tab_one" }) => {
             className={activeTab === "tab_three" ? "active" : ""}
             onClick={() => handleTabChange("tab_three")}
           >
-            reviews (1) {/* Keeping this label unchanged */}
+            Reviews ({comments?.length || 0})
           </a>
         </li>
       </ul>
@@ -64,97 +64,62 @@ const ProductReview = ({ initialTab = "tab_one" }) => {
             <tbody>
               <tr>
                 <td>Color</td>
-                <td>
-                  {colors.length > 0 ? colors.join(', ') : "No colors available."}
-                </td>
+                <td>{colors.length > 0 ? colors.join(', ') : "No colors available."}</td>
               </tr>
               <tr>
                 <td>Size</td>
-                <td>
-                  {sizes.length > 0 ? sizes.join(', ') : "No sizes available."}
-                </td>
+                <td>{sizes.length > 0 ? sizes.join(', ') : "No sizes available."}</td>
               </tr>
             </tbody>
           </table>
         </div>
+
         <div className={`tab-pane fade ${activeTab === "tab_three" ? "show active" : ""}`} id="tab_three">
-          <form action="#" className="review-form">
-            <h5>
-              1 review for <span>{product.name}</span> {/* Assuming product has a name */}
-            </h5>
-            <div className="total-reviews">
-              <div className="rev-avatar">
-                <img src="assets/img/about/avatar.jpg" alt="" />
-              </div>
-              <div className="review-box">
-                <div className="ratings">
-                  <span className="good"><i className="fa fa-star" /></span>
-                  <span className="good"><i className="fa fa-star" /></span>
-                  <span className="good"><i className="fa fa-star" /></span>
-                  <span className="good"><i className="fa fa-star" /></span>
-                  <span><i className="fa fa-star" /></span>
-                </div>
-                <div className="post-author">
-                  <p>
-                    <span>admin -</span> 30 Mar, 2021
-                  </p>
-                </div>
-                <p>
-                  Aliquam fringilla euismod risus ac bibendum. Sed sit amet sem varius ante feugiat lacinia. Nunc ipsum nulla, vulputate ut venenatis vitae, malesuada ut mi. Quisque iaculis, dui congue placerat pretium, augue erat accumsan lacus.
-                </p>
-              </div>
-            </div>
-            <div className="form-group row">
-              <div className="col">
-                <label className="col-form-label">
-                  <span className="text-danger">*</span> Your Name
-                </label>
-                <input type="text" className="form-control" required />
-              </div>
-            </div>
-            <div className="form-group row">
-              <div className="col">
-                <label className="col-form-label">
-                  <span className="text-danger">*</span> Your Email
-                </label>
-                <input type="email" className="form-control" required />
-              </div>
-            </div>
-            <div className="form-group row">
-              <div className="col">
-                <label className="col-form-label">
-                  <span className="text-danger">*</span> Your Review
-                </label>
-                <textarea className="form-control" required defaultValue={""} />
-                <div className="help-block pt-10">
-                  <span className="text-danger">Note:</span> HTML is not translated!
-                </div>
-              </div>
-            </div>
-            <div className="form-group row">
-              <div className="col">
-                <label className="col-form-label">
-                  <span className="text-danger">*</span> Rating
-                </label>
-                &nbsp;&nbsp;&nbsp; Bad&nbsp;
-                <input type="radio" defaultValue={1} name="rating" />
-                &nbsp;
-                <input type="radio" defaultValue={2} name="rating" />
-                &nbsp;
-                <input type="radio" defaultValue={3} name="rating" />
-                &nbsp;
-                <input type="radio" defaultValue={4} name="rating" />
-                &nbsp;
-                <input type="radio" defaultValue={5} name="rating" defaultChecked />
-                &nbsp;Good
-              </div>
-            </div>
-            <div className="buttons">
-              <button className="btn btn-sqr" type="submit">
-                Continue
-              </button>
-            </div>
-          </form>
+          <div className="reviews">
+            {Array.isArray(comments) && comments.length > 0 ? (
+              comments.map((comment) => {
+                // Log giá trị của comment.star_rating để kiểm tra
+               
+                // Chuyển đổi `star_rating` sang số và kiểm tra tính hợp lệ
+                const rating = parseInt(comment.star_rating, 10);
+          
+                const isValidRating = !isNaN(rating) && rating >= 1 && rating <= 5;
+              
+                return (
+                  <div key={comment.id} className="review-box">
+                    {/* Hiển thị Rating */}
+                    <div className="ratings">
+                      {isValidRating ? (
+                        <>
+                          {/* Hiển thị số sao vàng theo `star_rating` */}
+                          {[...Array(rating)].map((_, idx) => (
+                            <span key={idx} className="good">
+                              <i className="fa fa-star" />
+                            </span>
+                          ))}
+                          {/* Hiển thị các sao chưa được đánh giá (sao đen) */}
+                          {[...Array(5 - rating)].map((_, idx) => (
+                            <span key={idx} className="bad">
+                              <i className="fa fa-star" />
+                            </span>
+                          ))}
+                        </>
+                      ) : (
+                        <p>Không có đánh giá hợp lệ</p>
+                      )}
+                    </div>
+
+                    {/* Hiển thị thông tin bình luận */}
+                    <p><strong>Người đánh giá:</strong> {comment.user_name}</p>
+                    <p><strong>Sản phẩm:</strong> {comment.product_name}</p>
+                    <p><strong>Bình luận:</strong> {comment.comment}</p>
+                  </div>
+                );
+              })
+            ) : (
+              <p>Chưa có đánh giá nào.</p>
+            )}
+          </div>
         </div>
       </div>
     </div>

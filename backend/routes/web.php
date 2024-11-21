@@ -11,6 +11,7 @@ use App\Http\Controllers\Admins\ProductController;
 use App\Http\Controllers\Admins\ProductVariantController;
 use App\Http\Controllers\Admins\UserController;
 use App\Http\Controllers\AdminTestController;
+use App\Http\Controllers\Admins\ProfileControllers;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admins\VoucherController;
@@ -21,21 +22,21 @@ use App\Http\Controllers\Admins\VoucherController;
 |--------------------------------------------------------------------------
 | Route cho Web, dành cho phần admin và người dùng
 */
-
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('login');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
 
 // Route profile
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/admin', [AdminTestController::class, 'index'])->name('admin.index');
+    Route::get('profile', [ProfileControllers::class, 'index'])->name('admin.profile');
+    Route::get('/profile/edit', [ProfileControllers::class, 'edit'])->name('admin.profile.edit');
+    Route::put('/profile', [ProfileControllers::class, 'update'])->name('admin.profile.update');
+    Route::delete('/profile', [ProfileControllers::class, 'destroy'])->name('admin.profile.destroy');
 });
+
+            // Route::post('/admin/logout', [ProfileControllers::class, 'logout'])->name('logout');
 
 // Đảm bảo route '/' không trùng lặp
 require __DIR__ . '/auth.php';
@@ -48,7 +49,6 @@ Route::group(
         // 'middleware' => ['auth', 'admin'] // Nếu cần middleware xác thực
     ],
     function () {
-        Route::get('/', [AdminTestController::class, 'index'])->name('dashboard'); // Route dashboard admin
         Route::resource('brands', BrandController::class); // Route cho thương hiệu
         Route::post('categories/{id}/restore', [CategoryController::class, 'restore'])->name('categories.restore');
         Route::post('products/{id}/restore', [ProductController::class, 'restore'])->name('products.restore');
@@ -59,9 +59,10 @@ Route::group(
         Route::resource('user', UserController::class);  // Route cho người dùng
         Route::resource('comments', CommentController::class);  // Route cho bình luận
         Route::resource('contacts', ContactController::class);
-        Route::resource('articles', ArticlesController::class);// Route cho bài viết
-        Route::resource('banners',BannerController::class);// Route cho banner
+        Route::resource('articles', ArticlesController::class); // Route cho bài viết
+        Route::resource('banners', BannerController::class); // Route cho banner
         Route::post('banners/{id}/restore', [BannerController::class, 'restore'])->name('banners.restore');
+        Route::resource('/vouchers', VoucherController::class);
 
         // Route chức năng order và order detail
         Route::get('/orders/create', [OrderController::class, 'create'])->name('orders.create'); // Hiển thị form tạo order
@@ -73,6 +74,7 @@ Route::group(
         Route::get('/get-variants/{productId}', [OrderController::class, 'getVariants'])->name('products.variants');
         // Route để tìm kiếm sản phẩm
         Route::get('/search-products', [OrderController::class, 'search'])->name('products.search');
+        Route::resource('admin/vouchers', VoucherController::class);
     }
 );
 
@@ -104,11 +106,8 @@ Route::group(
         Route::get('/orders/{order}/details', [OrderController::class, 'show'])->name('orders.show');
         Route::get('/get-variants/{productId}', [OrderController::class, 'getVariants'])->name('products.variants');
         Route::get('/search-products', [OrderController::class, 'search'])->name('products.search');
-
     }
 );
-
-Route::resource('admin/vouchers', VoucherController::class);
 // Route::middleware(['auth', 'checkRole:admin,staff'])->group(function () {
 //     Route::resource('admin/vouchers', VoucherController::class);
 // });

@@ -8685,3 +8685,93 @@ only screen and (max-width: 767.98px) {
   width: 40px;
   text-align: center;
 }
+.total-amount-row {
+  background-color: #f8f9fa; /* Light gray background for emphasis */
+  border-top: 2px solid #dee2e6; /* Thicker top border */
+  font-size: 18px; /* Larger font for visibility */
+}
+
+.total-amount-row th {
+  padding: 15px;
+}
+
+.total-amount-row th:last-child {
+  text-align: center;
+  
+  font-size: 18px; /* Larger font for the total amount */
+  color: #e63946; /* Highlight color for the total amount */
+  font-weight: bold;
+}
+.good i {
+  color: black; /* Màu vàng */
+}
+
+/* Đặt màu xám cho sao chưa được đánh giá (class "bad") */
+.bad i {
+  color: #d3d3d3; /* Màu xám */
+}
+/* Style for the review section */
+.reviews {
+  margin-top: 30px;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Review box styling */
+.review-box {
+  padding: 15px;
+  margin-bottom: 20px;
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* User name styling */
+.review-box p strong {
+  color: #333;
+  font-weight: bold;
+}
+
+/* Rating stars */
+.ratings {
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+}
+
+
+
+
+/* Styling for the rating message */
+.review-box p {
+  font-size: 14px;
+  color: #666;
+}
+
+/* User review comment styling */
+.review-box p.comment {
+  font-style: italic;
+  color: #444;
+}
+
+/* Add padding and spacing around the reviews */
+.review-box + .review-box {
+  margin-top: 20px;
+}
+
+/* Add hover effect on reviews */
+.review-box:hover {
+  background-color: #f1f1f1;
+  border-color: #ddd;
+}
+
+/* Styling for "No review available" message */
+.reviews p {
+  font-size: 16px;
+  font-weight: 500;
+  color: #888;
+}
+

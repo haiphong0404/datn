@@ -43,14 +43,19 @@ const Orders = () => {
                                                     year: 'numeric', // Năm
                                                     month: 'long', // Tháng
                                                     day: 'numeric', // Ngày
-                                                    hour: '2-digit', // Giờ
-                                                    minute: '2-digit', // Phút
-                                                    second: '2-digit', // Giây
                                                     hour12: true, // Hiển thị AM/PM
                                                 })}
                                             </td>
-                                            <td>{order.status}</td>
-                                            <td>${order.total_amount}</td>
+                                            <td>
+                                                {
+                                                    {
+                                                        pending: 'Đang Xử Lý',
+                                                        completed: 'Hoàn Thành',
+                                                        cancelled: 'Đã Hủy'
+                                                    }[order.status] || 'Trạng Thái Không Xác Định'
+                                                }
+                                            </td>
+                                            <td>{parseFloat(order.total_amount).toLocaleString()} VND</td>
                                             <td>
                                                 <Link to={`/my_account/Order_detail/${order.id}`} className="btn btn-sqr">
                                                     Xem

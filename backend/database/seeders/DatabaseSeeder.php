@@ -32,8 +32,7 @@ class DatabaseSeeder extends Seeder
         OrderSeeder::class,
         OrderDetailSeeder::class,
         CommentSeeder::class,
-        ImageSeeder::class,
-        PaymentSeeder::class
+        ImageSeeder::class
        ]);
     }
 }

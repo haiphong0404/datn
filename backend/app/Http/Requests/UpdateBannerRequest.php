@@ -22,10 +22,10 @@ class UpdateBannerRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'image_url' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'title' => 'required|string|max:255',
-            'sub_title' => 'required|string|max:255',
-            'span_title' => 'required|string|max:255',    
+             'image_url' => 'required|image|mimes:jpeg,png,jpg,gif',
+            'title' => 'nullable|string|max:255',
+            'sub_title' => 'nullable|string|max:255',
+            'span_title' => 'nullable|string|max:255',      
         ];
     }
 
@@ -41,13 +41,13 @@ class UpdateBannerRequest extends FormRequest
             'image_url.image' => 'File tải lên phải là định dạng hình ảnh.',
             'image_url.mimes' => 'Hình ảnh phải có định dạng: jpeg, png, jpg, hoặc gif.',
             'image_url.max' => 'Hình ảnh không được vượt quá 2MB.',
-            'title.required' => 'Tiêu đề không được để trống.',
+            // 'title.required' => 'Tiêu đề không được để trống.',
             'title.string' => 'Tiêu đề phải là chuỗi ký tự.',
             'title.max' => 'Tiêu đề không được vượt quá 255 ký tự.',
-            'sub_title.required' => 'Subtitle đề không được để trống.',
+            // 'sub_title.required' => 'Subtitle đề không được để trống.',
             'sub_title.string' => 'Subtitle đề phải là chuỗi ký tự.',
             'sub_title.max' => 'Subtitle đề không được vượt quá 255 ký tự.',
-            'span_title.required' => 'Spantitle đề không được để trống.',
+            // 'span_title.required' => 'Spantitle đề không được để trống.',
             'span_title.string' => 'Spantitle đề phải là chuỗi ký tự.',
             'span_title.max' => 'Spantitle đề không được vượt quá 255 ký tự.',
 
