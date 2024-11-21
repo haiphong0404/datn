@@ -110,7 +110,7 @@ const CancelOrderButton = ({ orderId, refetch }) => {
             <button
                 onClick={() => setShowConfirmation(true)}
                 disabled={loading}
-                className="btn btn-sqr2"
+                className="btn btn-sqr3"
             >
                 {loading ? 'Đang hủy đơn hàng...' : 'Hủy Đơn Hàng'}
             </button>

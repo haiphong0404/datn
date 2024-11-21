@@ -10,12 +10,7 @@ const Order_detail = () => {
     const [orderItems, setOrderItems] = useState([]);
     const [orderStatus, setOrderStatus] = useState(null); // Trạng thái hiện tại của đơn hàng
 
-    // Log the data to check
-    useEffect(() => {
-        console.log('Loading:', loading);
-        console.log('Error:', error);
-        console.log('Order Detail:', orderDetail);
-    }, [loading, error, orderDetail]);
+   
 
     // Cập nhật orderItems và orderStatus khi orderDetail thay đổi
     useEffect(() => {

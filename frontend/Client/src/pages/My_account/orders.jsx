@@ -57,7 +57,7 @@ const Orders = () => {
                                             </td>
                                             <td>{parseFloat(order.total_amount).toLocaleString()} VND</td>
                                             <td>
-                                                <Link to={`/my_account/Order_detail/${order.id}`} className="btn btn-sqr2">
+                                                <Link to={`/my_account/Order_detail/${order.id}`} className="btn btn-sqr3">
                                                     Xem
                                                 </Link>
                                             </td>

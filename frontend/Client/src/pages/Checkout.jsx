@@ -530,7 +530,7 @@ const Checkout = () => {
                           onChange={(e) => setVoucherCode(e.target.value)} // Cập nhật giá trị voucherCode
                         />
                         <button
-                          className="btn btn-sqr2"
+                          className="btn btn-sqr3"
                           type="button"
                           onClick={handleApplyVoucher} // Gọi hàm applyVoucher khi nhấn nút
                           disabled={loading} // Vô hiệu hóa nút khi đang loading

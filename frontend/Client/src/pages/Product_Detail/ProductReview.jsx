@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import useProductById from '../../hooks/useProductById';
 import { useComments } from '../../hooks/useComments';
-
+import useProductAttributes from '../../hooks/useProductAtrib';
 const ProductReview = ({ initialTab = "tab_one" }) => {
   const [activeTab, setActiveTab] = useState(initialTab);
   const { productId } = useParams();
   const { product, loading: productLoading, error: productError } = useProductById(productId);
   const { comments, isLoading: commentsLoading, error: commentsError } = useComments(productId);
-
+  const { colors, sizes } = useProductAttributes(productId);
   const handleTabChange = (tabId) => {
     setActiveTab(tabId);
   };
@@ -22,9 +22,12 @@ const ProductReview = ({ initialTab = "tab_one" }) => {
   }
 
   // Extract colors and sizes from product variants if needed
-  const colors = product.variants ? [...new Set(product.variants.map(variant => variant.color))] : [];
-  const sizes = product.variants ? [...new Set(product.variants.map(variant => variant.size))] : [];
+  const colorNames = Array.isArray(colors) ? colors.map(color => color.name).join(', ') : "No colors available.";
 
+  const sizeNames = Array.isArray(sizes) ? sizes.map(size => size.name).join(', ') : "No sizes available.";
+ 
+
+ 
   return (
     <div className="product-review-info">
       <ul className="nav review-tab">
@@ -62,13 +65,13 @@ const ProductReview = ({ initialTab = "tab_one" }) => {
         <div className={`tab-pane fade ${activeTab === "tab_two" ? "show active" : ""}`} id="tab_two">
           <table className="table table-bordered">
             <tbody>
-              <tr>
+            <tr>
                 <td>Color</td>
-                <td>{colors.length > 0 ? colors.join(', ') : "No colors available."}</td>
+                <td>{colorNames}</td>
               </tr>
               <tr>
                 <td>Size</td>
-                <td>{sizes.length > 0 ? sizes.join(', ') : "No sizes available."}</td>
+                <td>{sizeNames}</td>
               </tr>
             </tbody>
           </table>
