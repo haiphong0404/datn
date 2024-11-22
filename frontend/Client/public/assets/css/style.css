@@ -2424,8 +2424,8 @@ only screen and (max-width: 767.98px) {
 }
 
 .mobile-logo {
-  max-width: 140px;
-  width: 100%;
+  max-width: 100%;
+  height: auto;
 }
 
 .mobile-main-header {
@@ -8775,3 +8775,180 @@ only screen and (max-width: 767.98px) {
   color: #888;
 }
 
+.row-online {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+/* Container chính */
+.checkout-details-form {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  width: 40%;
+}
+
+/* Mỗi phần input item */
+.checkout-input-item {
+  margin-bottom: 15px;
+}
+
+.checkout-input-item label {
+  display: block;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.checkout-input-item p {
+  font-size: 16px;
+  color: #555;
+  margin: 0;
+}
+
+/* Cải tiến cho phần "required" */
+.required::after {
+  color: red;
+  margin-left: 5px;
+}
+
+/* Đảm bảo phần tử được căn chỉnh đều và phù hợp với chiều rộng */
+.checkout-details-form .checkout-input-item {
+  width: 100%;
+}
+
+/* Thêm style cho các trường thông tin */
+.checkout-details-form .checkout-input-item p {
+  padding: 8px;
+
+}
+
+.checkout-details-form .checkout-input-item p.empty {
+  color: #bbb;
+}
+
+/* Responsive: Điều chỉnh khi màn hình nhỏ */
+@media (max-width: 768px) {
+  .checkout-details-form {
+    padding: 15px;
+  }
+
+  .checkout-input-item p {
+    font-size: 14px;
+  }
+}
+
+/* Bố cục cho container chính */
+.payment-actions {
+  display: flex;
+  justify-content: center;
+  gap: 20px; /* Khoảng cách giữa hai div */
+  margin-top: 20px; /* Khoảng cách phía trên */
+}
+
+/* Container của nút Hủy Thanh Toán */
+.cancel-payment {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Container của nút Xác Nhận Thanh Toán */
+.confirm-payment {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Nút chung */
+button {
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* Nút Hủy Thanh Toán */
+.remove-button {
+  background-color: #ff4d4f;
+  color: white;
+}
+
+.remove-button:hover {
+  background-color: #e04143;
+  transform: scale(1.05);
+}
+
+/* Nút Xác Nhận Thanh Toán */
+.btn-sqr {
+  background-color: #4caf50;
+  color: white;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 10px 10px;
+}
+
+.btn-sqr:hover {
+  background-color: #45a049;
+  transform: scale(1.05);
+}
+/* Container chính */
+.checkout-contact-info {
+  background-color: #f9f9f9;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  text-align: center; /* Căn giữa nội dung */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Tiêu đề */
+.checkout-contact-info .contact-title {
+  font-size: 22px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+}
+
+/* Danh sách thông tin */
+.checkout-contact-info ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Mỗi mục trong danh sách */
+.checkout-contact-info ul li {
+  font-size: 16px;
+  color: #555;
+  margin: 10px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.checkout-contact-info ul li i {
+  margin-right: 10px;
+  color: #4caf50;
+}
+
+/* QR Code */
+.checkout-contact-info img {
+  margin-bottom: 15px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.checkout-contact-info img:hover {
+  transform: scale(1.05); /* Hiệu ứng phóng to khi hover */
+}

@@ -91,8 +91,11 @@ const Details = () => {
             return;
         }
     
+        // Ensure localCart is an array, even if it's null or undefined
+        const cart = Array.isArray(localCart) ? localCart : [];
+    
         // Kiểm tra số lượng hiện có trong giỏ hàng cho sản phẩm và biến thể này
-        const existingCartQuantity = (localCart || []).reduce((total, item) => {
+        const existingCartQuantity = cart.reduce((total, item) => {
             return item.id_productVariant === selectedVariant.id ? total + item.quantity : total;
         }, 0);
     
@@ -140,7 +143,7 @@ const Details = () => {
                     dispatch(addCart(response.data.cart_item));
     
                     // Đồng bộ giỏ hàng từ server về localStorage
-                    const updatedCart = (localCart || []).map(item => 
+                    const updatedCart = cart.map(item => 
                         item.id_productVariant === id_productVariant 
                             ? { ...item, quantity: item.quantity + quantity } 
                             : item
@@ -155,7 +158,7 @@ const Details = () => {
                 }
             } else {
                 // Người dùng chưa đăng nhập: cập nhật giỏ hàng trong localStorage
-                const updatedCart = localCart.map(item => 
+                const updatedCart = cart.map(item => 
                     item.id_productVariant === selectedVariant.id 
                         ? { ...item, quantity: item.quantity + quantity } 
                         : item
@@ -176,6 +179,7 @@ const Details = () => {
             toast.error("Đã có lỗi xảy ra, vui lòng thử lại");
         }
     };
+    
     
 
 

@@ -4,6 +4,7 @@ import { useLoginForm } from '../hooks/useLoginForm';
 import usePostOrder from '../hooks/usePostOrder';
 import useApplyVoucher from '../hooks/useApplyVoucher';
 import axios from 'axios';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 const Checkout = () => {
   const { userInfo } = useLoginForm();
@@ -16,7 +17,7 @@ const Checkout = () => {
     phone: '',
     info: ''
   });
-
+  const navigate = useNavigate();
   const [paymentMethod, setPaymentMethod] = useState('cash');
   const [voucherError, setVoucherError] = useState(""); // Để lưu thông báo lỗi
   const [voucherCode, setVoucherCode] = useState(""); // Mã giảm giá nhập vào
@@ -221,9 +222,8 @@ const Checkout = () => {
       address: userDetails.address,
       infor: userDetails.info,
       payment_method: paymentMethod,
-      bank_code:"VCB",
       user_id: userInfo?.id,
-      products: selectedProducts.map((item) => ({ 
+      products: selectedProducts.map((item) => ({
         product_variant_id: item.id_productVariant,
         image: item.image,
         color: item.color,
@@ -240,7 +240,7 @@ const Checkout = () => {
     if (userInfo?.id) {
       try {
         if (paymentMethod === "online") {
-          const response = await fetch('http://127.0.0.1:8000/api/create-payment', {
+          const response = await fetch('http://127.0.0.1:8000/api/payment/create', {
             method: 'POST',
             headers: {
               "Authorization": `Bearer ${token}`,
@@ -248,37 +248,47 @@ const Checkout = () => {
             },
             body: JSON.stringify(orderData),
           });
-      
+
           const data = await response.json();
+          console.log(data);
+          const orderId = data.order_id; // Make sure that your API returns `order_id`
 
-if (data.message === 'Đơn hàng đã được tạo thành công!') {
-    // Chuyển hướng đến URL thanh toán VNPay
-    window.location.href = data.payment_url;
-} else {
-    // Hiển thị thông báo lỗi nếu có vấn đề
-    alert(data.message);
-}
-        }else if (paymentMethod === "cash") {
-
-        // Send the order data
-        await postOrder(userInfo.id, orderData);
-        toast.success("Đặt hàng thành công!");
-
-        // Remove selected products from the cart in the database
-        for (const item of selectedProducts) {
-          await deleteProductFromCart(item.id_productVariant);
+        // Check if orderId is returned in the response
+        if (!orderId) {
+            toast.error("Không thể tạo đơn hàng. Vui lòng thử lại.");
+            return;
         }
-
-        // Remove cart from localStorage
         localStorage.removeItem('selectedProducts');
-        localStorage.removeItem('cart');
-        setSelectedProducts([]);
-        setTotalAmount(0);
+          localStorage.removeItem('cart');
+          setSelectedProducts([]);
+          setTotalAmount(0);
 
-        // Reset shipping status after order
-        setIsShippingSelected(false);  // This resets the shipping status to false
-        setIsVoucherApplied(false);
-      }
+          // Reset shipping status after order
+          setIsShippingSelected(false);  // This resets the shipping status to false
+          setIsVoucherApplied(false);
+          navigate(`/checkout-detail/${orderId}`);
+
+        } else if (paymentMethod === "cash") {
+
+          // Send the order data
+          await postOrder(userInfo.id, orderData);
+          toast.success("Đặt hàng thành công!");
+
+          // Remove selected products from the cart in the database
+          for (const item of selectedProducts) {
+            await deleteProductFromCart(item.id_productVariant);
+          }
+
+          // Remove cart from localStorage
+          localStorage.removeItem('selectedProducts');
+          localStorage.removeItem('cart');
+          setSelectedProducts([]);
+          setTotalAmount(0);
+
+          // Reset shipping status after order
+          setIsShippingSelected(false);  // This resets the shipping status to false
+          setIsVoucherApplied(false);
+        }
       } catch (error) {
         toast.error(`Đặt hàng thất bại: sản phẩm trong kho hiện không đủ`);
       }
@@ -287,7 +297,7 @@ if (data.message === 'Đơn hàng đã được tạo thành công!') {
     }
   };
 
-  
+
 
 
   return (
@@ -551,7 +561,7 @@ if (data.message === 'Đơn hàng đã được tạo thành công!') {
                             onChange={handlePaymentMethodChange}
                           />
                           <label className="custom-control-label" htmlFor="directbank">
-                            Thanh toán online qua Ví điện tử Vnpay
+                            Thanh toán online
                           </label>
                         </div>
                       </div>
