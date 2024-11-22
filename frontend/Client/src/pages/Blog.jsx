@@ -1,20 +1,57 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import fetchCategories from '../api/categories.js'
-import fetchBlog from '../api/blog.js'
+import useGetAllBlogs from '../hooks/useGetAllBlogs ';
 import { Pagination } from '@mui/material';
+
 const Blog = () => {
-  // const [page, setPage] = useState(1);
-  // const [selectedBrandId, setSelectedBrandId] = useState(null);
-  // const [selectedCategoryId, setSelectedCategoryId] = useState(null);
-  // const [article, setArticle] = useState(null);
-  // const { id } = useParams(); // Get the article ID from the URL
-  // const itemsPerPage = 6;
+  const { blogs, loading, error } = useGetAllBlogs();
+  const itemsPerPage = 6; // Số bài viết mỗi trang
+  const [page, setPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredBlogs, setFilteredBlogs] = useState(blogs);
 
+  useEffect(() => {
+    // Khi blogs thay đổi, reset lại filteredBlogs
+    setFilteredBlogs(blogs);
+  }, [blogs]);
 
+  if (loading) return <div>Đang tải...</div>;
+  if (error) return <div>{error}</div>;
 
+  // Tính tổng số trang dựa trên filteredBlogs
+  const totalPages = Math.ceil(filteredBlogs.length / itemsPerPage);
 
-  if (!article) return <div>Loading...</div>;
+  // Xác định bài viết của trang hiện tại
+  const displayedBlogs = filteredBlogs.slice(
+    (page - 1) * itemsPerPage,
+    page * itemsPerPage
+  );
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Tháng bắt đầu từ 0
+    const year = date.getFullYear();
+    return `${day}-${month}-${year}`;
+  };
+
+  // Hàm thay đổi trang
+  const handleChange = (event, value) => {
+    setPage(value);
+  };
+
+  // Hàm tìm kiếm khi nhập
+  const handleSearch = (event) => {
+    const lowerCaseTerm = event.target.value.toLowerCase();
+    setSearchTerm(lowerCaseTerm);
+    const filtered = blogs.filter((blog) =>
+      blog.title.toLowerCase().includes(lowerCaseTerm) ||
+      blog.content.toLowerCase().includes(lowerCaseTerm)
+    );
+    setFilteredBlogs(filtered);
+    setPage(1); // Reset về trang đầu tiên sau khi tìm kiếm
+  };
+
   return (
     <div>
       <main>
@@ -48,121 +85,60 @@ const Blog = () => {
           </div>
         </div>
         {/* breadcrumb area end */}
+
         {/* blog main wrapper start */}
         <div className="blog-main-wrapper section-padding">
           <div className="container">
             <div className="row">
+              {/* Sidebar */}
               <div className="col-lg-3 order-2 order-lg-1">
                 <aside className="blog-sidebar-wrapper">
                   <div className="blog-sidebar">
-                    <h5 className="title">search</h5>
+                    <h5 className="title">Search</h5>
                     <div className="sidebar-serch-form">
-                      <form action="#">
-                        <input
-                          type="text"
-                          className="search-field"
-                          placeholder="search here"
-                        />
+                      <input
+                        type="text"
+                        className="search-field"
+                        placeholder="Search here"
+                        value={searchTerm}
+                        onChange={handleSearch} // Cập nhật tìm kiếm mỗi khi gõ
+                      />
+                        
                         <button type="submit" className="search-btn">
                           <i className="fa fa-search" />
                         </button>
-                      </form>
                     </div>
-                  </div>{" "}
-                  {/* single sidebar end */}
-                  <div className="blog-sidebar">
-                    <h5 className="title">categories</h5>
-                    <ul className="blog-archive blog-category">
-                      <li>
-                        <a href="#">Shoes (10)</a>
-                      </li>
-                      <li>
-                        <a href="#">fashion (08)</a>
-                      </li>
-                      <li>
-                        <a href="#">handbag (07)</a>
-                      </li>
-                      <li>
-                        <a href="#">Jewelry (14)</a>
-                      </li>
-                      <li>
-                        <a href="#">Kids (10)</a>
-                      </li>
-                    </ul>
-                  </div>{" "}
-                  {/* single sidebar end */}
-                  <div className="blog-sidebar">
-                    <h5 className="title">Blog Archives</h5>
-                    <ul className="blog-archive">
-                      <li>
-                        <a href="#">January (10)</a>
-                      </li>
-                      <li>
-                        <a href="#">February (08)</a>
-                      </li>
-                      <li>
-                        <a href="#">March (07)</a>
-                      </li>
-                      <li>
-                        <a href="#">April (14)</a>
-                      </li>
-                      <li>
-                        <a href="#">May (10)</a>
-                      </li>
-                    </ul>
-                  </div>{" "}
-                  {/* single sidebar end */}
+                  </div>
+
                   <div className="blog-sidebar">
                     <h5 className="title">recent post</h5>
                     <div className="recent-post">
-                      <div className="recent-post-item">
-                        <figure className="product-thumb">
-                          <Link to="/blog_detail">
-                            <img src="assets/img/blog/blog-1.jpg" alt="blog image" />
-                          </Link>
-                        </figure>
-                        <div className="recent-post-description">
-                          <div className="product-name">
-                            <h6>
-                              <Link to="/blog_detail">Auctor gravida enim</Link>
-                            </h6>
-                            <p>Mar 10 2021</p>
+                      {blogs.slice(0, 3).map((blog) => {
+                        const limitedTitle = blog.title?.length > 30
+                          ? `${blog.title.substring(0, 30)}...` // Giới hạn tiêu đề dài hơn 30 ký tự
+                          : blog.title || 'No Title';
+
+                        return (
+                          <div key={blog.id} className="recent-post-item">
+                            <figure className="product-thumb">
+                              <Link to={`/blog_detail/${blog.id}`}>
+                                <img src={blog.image || 'assets/img/blog/default.jpg'} alt="Blog Image" />
+                              </Link>
+                            </figure>
+                            <div className="recent-post-description">
+                              <div className="product-name">
+                                <h6>
+                                  <Link to={`/blog_detail/${blog.id}`}>{limitedTitle}</Link>
+                                </h6>
+                                <p>{new Date(blog.created_at).toLocaleDateString('en-GB')}</p> {/* Định dạng ngày dd/mm/yyyy */}
+                              </div>
+                            </div>
                           </div>
-                        </div>
-                      </div>
-                      <div className="recent-post-item">
-                        <figure className="product-thumb">
-                          <Link to="/blog_detail">
-                            <img src="assets/img/blog/blog-2.jpg" alt="blog image" />
-                          </Link>
-                        </figure>
-                        <div className="recent-post-description">
-                          <div className="product-name">
-                            <h6>
-                              <Link to="/blog_detail">gravida auctor dnim</Link>
-                            </h6>
-                            <p>Apr 18 2021</p>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="recent-post-item">
-                        <figure className="product-thumb">
-                          <Link to="blog_detail">
-                            <img src="assets/img/blog/blog-3.jpg" alt="blog image" />
-                          </Link>
-                        </figure>
-                        <div className="recent-post-description">
-                          <div className="product-name">
-                            <h6>
-                              <Link to="blog_detail">enim auctor gravida</Link>
-                            </h6>
-                            <p>Jun 14 2021</p>
-                          </div>
-                        </div>
-                      </div>
+                        );
+                      })}
                     </div>
-                  </div>{" "}
-                  {/* single sidebar end */}
+                  </div>
+
                   <div className="blog-sidebar">
                     <h5 className="title">Tags</h5>
                     <ul className="blog-tags">
@@ -178,70 +154,83 @@ const Blog = () => {
                       <li>
                         <a href="#">Watch</a>
                       </li>
-                      <li>
-                        <a href="#">Phone</a>
-                      </li>
-                      <li>
-                        <a href="#">Kids</a>
-                      </li>
                     </ul>
-                  </div>{" "}
-                  {/* single sidebar end */}
+                  </div>
                 </aside>
               </div>
+
+              {/* Blog Content */}
               <div className="col-lg-9 order-1 order-lg-2">
                 <div className="blog-item-wrapper">
-                  {/* blog item wrapper end */}
                   <div className="row mbn-30">
-                    <div className="col-md-6">
-                      {/* blog post item start */}
-                      <div className="blog-post-item d-block mb-30">
-                        <div className="blog-thumb w-100">
-                          <Link to="blog_detail">
-                            <img src="assets/img/blog/blog-1.jpg" alt="blog thumb" />
-                          </Link>
-                        </div>
-                        <div className="blog-content w-100 pl-0 mt-20">
-                          <h6 className="blog-title">
-                            <Link to="blog_detail">This is First Post XipBlog</Link>
-                          </h6>
-                          <div className="blog-meta">
-                            <span>
-                              <i className="fa fa-calendar" />
-                              Aug 05, 2021
-                            </span>
-                            <span>
-                              <i className="fa fa-user" />
-                              Admin
-                            </span>
+                    {filteredBlogs.length > 0 ? (
+                      displayedBlogs.map((blog) => (
+                        <div key={blog.id} className="col-md-6">
+                          <div className="blog-post-item d-block mb-30">
+                            <div className="blog-thumb w-100">
+                              <Link to={`/blog_detail/${blog.id}`}>
+                                <img
+                                  src={blog.image || "assets/img/blog/default.jpg"}
+                                  alt={blog.name}
+                                />
+                              </Link>
+                            </div>
+                            <div className="blog-content w-100 pl-0 mt-20">
+                              <h6 className="blog-title">
+                                <Link to={`/blog_detail/${blog.id}`}>
+                                  {blog.title}
+                                </Link>
+                              </h6>
+                              <div className="blog-meta">
+                                <span>
+                                  <i className="fa fa-calendar" /> {formatDate(blog.created_at)}
+                                </span>
+                                <span>
+                                  <i className="fa fa-user" />{" "}
+                                  {blog.name || "Unknown"}
+                                </span>
+                              </div>
+                              <p className="blog-desc">
+                                {blog.content || "No description available."}
+                              </p>
+                              <Link
+                                className="btn read-more"
+                                to={`/blog_detail/${blog.id}`}
+                              >
+                                Read More
+                              </Link>
+                            </div>
                           </div>
-                          <p className="blog-desc">
-                            Lorem Ipsum is simply dummy text of the printing and
-                            typesetting industry. ...
-                          </p>
-                          <a className="btn read-more" href="blog-details.html">
-                            Read More
-                          </a>
                         </div>
-                      </div>
-                      {/* blog post item end */}
-                    </div>
-                 
+                      ))
+                    ) : (
+                      <p>Không có bài viết nào phù hợp với kết quả tìm kiếm.</p>
+                    )}
                   </div>
-                  {/* blog item wrapper end */}
-                  {/* start pagination area */}
-           
-                  {/* end pagination area */}
                 </div>
+
+                {/* Pagination */}
+                {filteredBlogs.length > 0 && (
+                  <Pagination
+                    count={totalPages}
+                    page={page}
+                    onChange={handleChange}
+                    className="pagination"
+                    sx={{
+                      display: "flex",
+                      justifyContent: "center",
+                      mt: 4,
+                    }}
+                  />
+                )}
               </div>
             </div>
           </div>
         </div>
         {/* blog main wrapper end */}
       </main>
-
     </div>
-
   );
 };
+
 export default Blog;

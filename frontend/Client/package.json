@@ -24,6 +24,7 @@
     "axios": "^1.7.2",
     "bootstrap-icons": "^1.11.3",
     "crypto-js": "^4.2.0",
+    "date-fns": "^4.1.0",
     "jquery": "^3.7.1",
     "jquery-countdown": "^2.2.0",
     "jquery-zoom": "^1.7.21",
