@@ -98,5 +98,6 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 Route::get('orders', [OrderController::class, 'abc']);
 Route::post('/apply-voucher', [VoucherController::class, 'applyVoucher']);
-Route::post('/create-payment', [PaymentController::class, 'createPayment']);
-Route::get('/api/vnpay/return', [VnpayController::class, 'handleReturn'])->name('vnpay.return');
+Route::post('/payment/create', [PaymentController::class, 'createPayment']);
+Route::post('/payment/success/{order_id}', [PaymentController::class, 'paymentSuccess']);
+Route::post('/payment/cancel/{order_id}', [PaymentController::class, 'paymentCancel']);

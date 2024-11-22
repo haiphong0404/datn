@@ -33,6 +33,8 @@ import Payment_method from "./pages/My_account/payment_method";
 import Address_edit from "./pages/My_account/address_edit";
 import Account_info from "./pages/My_account/account_info";
 import Product_details from "./pages/Product_Detail/Product_details";
+import CheckoutDetail from "./pages/CheckoutDetail";
+
 
 
 
@@ -56,8 +58,10 @@ const routeConfig = [
       { path: "register", element: <Register /> },
       { path: "*", element: <NotFoundPage /> },
       { path: "faqs", element: <FAQs /> },
+    
       
       { path: "checkout/bill", element: <Bill /> },
+      { path: "/checkout-detail/:orderId", element: <CheckoutDetail /> },
     ],
   },
   {
