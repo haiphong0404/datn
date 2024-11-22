@@ -47,7 +47,7 @@ Route::group(
     [
         'prefix' => 'admin',
         'as' => 'admin.',
-        // 'middleware' => ['auth', 'admin'] // Nếu cần middleware xác thực
+        'middleware' => ['auth', 'admin'] // Nếu cần middleware xác thực
     ],
     function () {
         Route::resource('brands', BrandController::class); // Route cho thương hiệu
