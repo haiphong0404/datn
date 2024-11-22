@@ -9,42 +9,7 @@ const Footer = () => {
 
       <footer className="black-bg">
         {/* newsletter area start */}
-        <section className="newsletter-area">
-          <div className="container">
-            <div className="row">
-              <div className="col-12">
-                <div className="newsletter-wrapper text-center">
-                  <h3 className="title text-white">THAM GIA BẢN TIN CỦA CHÚNG TÔI</h3>
-                  <form className="newsletter-inner" id="mc-form">
-                    <input
-                      type="email"
-                      className="news-field"
-                      id="mc-email"
-                      autoComplete="off"
-                      placeholder="Nhập địa chỉ email của bạn"
-                    />
-                    <button className="news-btn text-nowrap" id="mc-submit">
-                      Đặt mua
-                    </button>
-                  </form>
-                  <h6 className="newsletter-subtitle">
-                    Để nhận được tin tức mới nhất từ chúng tôi, vui lòng đăng kí email của bạn.
-                  </h6>
-                  {/* mailchimp-alerts Start */}
-                  <div className="mailchimp-alerts">
-                    <div className="mailchimp-submitting" />
-                    {/* mailchimp-submitting end */}
-                    <div className="mailchimp-success" />
-                    {/* mailchimp-success end */}
-                    <div className="mailchimp-error" />
-                    {/* mailchimp-error end */}
-                  </div>
-                  {/* mailchimp-alerts end */}
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+        
         {/* newsletter area end */}
         <div className="footer-widget-area">
           <div className="container">

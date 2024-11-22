@@ -9,7 +9,7 @@ const ProductList = ({ product }) => {
                     <img src={product.image} alt={product.name} />
                 </Link>
                 <div className="button-group">
-                  
+
                     <a
                         href="#"
                         data-bs-toggle="modal"
@@ -23,7 +23,7 @@ const ProductList = ({ product }) => {
                 <div className="product-label">
                     <span>NEW</span>
                 </div>
-                
+
             </div>
             <div className="product-content-list">
                 <h4 className="product-name">
@@ -39,8 +39,11 @@ const ProductList = ({ product }) => {
                     <span><i className="fa fa-star"></i></span>
                 </div> */}
                 <div className="price-box">
-                    
-                    <span className="price-regular">{product.price}₫</span>
+
+                    <span className="price-regular">
+                        {parseFloat(product.price).toLocaleString()} VND
+                    </span>
+
                 </div>
                 <p>
                     {product.description}

@@ -9,6 +9,8 @@ use App\Http\Controllers\Api\ContactController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\ProductVariantController;
 use App\Http\Controllers\Api\SizeController;
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\VnpayController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\BrandController;
@@ -62,7 +64,8 @@ Route::get('logout', [AuthenticatedSessionController::class, 'destroy'])->name('
 //post logout
 Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 Route::apiResource('Apibrands', BrandController::class);
-Route::apiResource('Apiarticle', ArticlesController::class); // bài viết
+Route::apiResource('Apiarticles', ArticlesController::class); // bài viết
+Route::get('/Apiarticle/{id}', [ArticlesController::class, 'hieungu']);
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
@@ -76,6 +79,12 @@ Route::get('order-details/{order_id}', [OrderDetailController::class, 'getOrderD
 Route::apiResource('order-details', OrderDetailController::class);
 
 Route::middleware('auth:sanctum')->group(function () {
+
+
+    //comments
+    Route::post('comments/{product_id}', [CommentController::class, 'store']);
+    Route::put('comments/{id}', [CommentController::class, 'update']);
+    Route::delete('comments/{id}', [CommentController::class, 'destroy']);
     Route::get('/cart', [CartController::class, 'index']);
     Route::post('/cart/add', [CartController::class, 'addToCart']);
     Route::put('/cart/update', [CartController::class, 'updateCart']);
@@ -85,17 +94,29 @@ Route::middleware('auth:sanctum')->group(function () {
     
 
 });
+Route::get('comments/{product_id}', [CommentController::class, 'index']);
+
 Route::get('products/{productId}/variants', [ProductVariantController::class, 'index']);
 Route::get('/variants/{id}', [ProductVariantController::class, 'show']);
 Route::get('/sizes', [SizeController::class, 'index']);
 Route::get('/colors', [ColorController::class, 'index']);
 Route::get('/colors', [ColorController::class, 'index']);
-Route::get('/comments', [CommentController::class, 'index']);
-Route::delete('/comments/{id}', [CommentController::class, 'softDelete']);
+// Route::get('/comments', [CommentController::class, 'index']);
+// Route::delete('/comments/{id}', [CommentController::class, 'softDelete']);
 Route::get('contacts', [ContactController::class, 'index']); // Lấy danh sách tất cả contacts
 Route::get('contacts/{id}', [ContactController::class, 'show']); // Lấy contact theo ID
 Route::get('/banners', [BannerController::class, 'index']);
-
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/cart', [CartController::class, 'index']);
+    Route::put('/cart/update/{id_cart_item}', [CartController::class, 'updateCart']);
+    Route::delete('/cart/remove/{product_variant_id}', [CartController::class, 'removeFromCart']);
+    Route::apiResource('order', OrderController::class);
+    Route::post('/cart/add', [CartController::class, 'addToCart']);
+    Route::post('/cart/sync', [CartController::class, 'syncCart']);
+});
 Route::get('orders', [OrderController::class, 'abc']);
 Route::post('/apply-voucher', [VoucherController::class, 'applyVoucher']);
+Route::post('/payment/create', [PaymentController::class, 'createPayment']);
+Route::post('/payment/success/{order_id}', [PaymentController::class, 'paymentSuccess']);
+Route::post('/payment/cancel/{order_id}', [PaymentController::class, 'paymentCancel']);
 Route::post('order/{order_id}/status', [OrderDetailController::class, 'updateOrderStatus']);

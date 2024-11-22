@@ -13,6 +13,7 @@ use App\Http\Controllers\Admins\UserController;
 use App\Http\Controllers\AdminTestController;
 use App\Http\Controllers\Admins\ProfileControllers;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\VnpayController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admins\VoucherController;
 use App\Http\Controllers\StatisticsController;
@@ -47,7 +48,7 @@ Route::group(
     [
         'prefix' => 'admin',
         'as' => 'admin.',
-        // 'middleware' => ['auth', 'admin'] // Nếu cần middleware xác thực
+        'middleware' => ['auth', 'admin'] // Nếu cần middleware xác thực
     ],
     function () {
         Route::resource('brands', BrandController::class); // Route cho thương hiệu

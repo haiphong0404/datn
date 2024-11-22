@@ -2440,8 +2440,8 @@ only screen and (max-width: 767.98px) {
 }
 
 .mobile-logo {
-  max-width: 140px;
-  width: 100%;
+  max-width: 100%;
+  height: auto;
 }
 
 .mobile-main-header {
@@ -4300,7 +4300,7 @@ only screen and (max-width: 767.98px) {
 }
 
 .product-thumb img {
-  width: 100%;
+  width: 295px;
 }
 
 .product-content {
@@ -5953,7 +5953,8 @@ only screen and (max-width: 767.98px) {
 
 
 .product-thumb {
-  flex: 0 0 100px;
+  /* flex: 0 0 100px; */
+  height: 200px;
   /* Kích thước hình ảnh */
   margin-right: 20px;
   /* Khoảng cách giữa hình ảnh và nội dung sản phẩm */
@@ -7786,7 +7787,7 @@ only screen and (max-width: 767.98px) {
 /* Đảm bảo hình ảnh sản phẩm co giãn theo kích thước khung */
 .product-thumb img {
   width: 100%;
-  height: auto;
+  height: 100%;
   object-fit: cover;
 }
 
@@ -8165,6 +8166,7 @@ only screen and (max-width: 767.98px) {
   padding: 30px;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin-top: 10px;
 }
 
 .contact-info ul {
@@ -8469,6 +8471,7 @@ only screen and (max-width: 767.98px) {
 }
 
 .quickview-product-price {
+  color: red;
   font-size: 18px;
   font-weight: bold;
 }
@@ -8577,6 +8580,7 @@ only screen and (max-width: 767.98px) {
     font-size: 14px;
   }
 }
+
 .cart-container {
   display: flex;
   justify-content: space-between;
@@ -8585,7 +8589,7 @@ only screen and (max-width: 767.98px) {
 }
 
 .cart-variants {
-  flex: 6; /* Phần giỏ hàng chiếm 6 phần */
+  flex: 7; /* Phần giỏ hàng chiếm 6 phần */
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -8644,7 +8648,7 @@ only screen and (max-width: 767.98px) {
 }
 
 .total-calculation {
-  flex: 4; /* Phần tính tổng chiếm 4 phần */
+  flex: 3; /* Phần tính tổng chiếm 4 phần */
   border: 1px solid #ddd;
   border-radius: 8px;
   background-color: #f9f9f9;
@@ -8667,6 +8671,37 @@ only screen and (max-width: 767.98px) {
 
 .total-calculation button:hover {
   background-color: #2ecc71;
+}
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Khoảng cách giữa các phần tử */
+}
+
+.quantity-btn {
+  background-color: #87b106;
+  border: 1px solid #87b106;  
+  padding: 5px 10px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.quantity-btn:hover {
+  background-color: #ddd; /* Chế độ hover cho nút */
+  transform: scale(1.1); /* Hiệu ứng phóng to nút khi hover */
+}
+
+.quantity-btn:disabled {
+  background-color: #e0e0e0;
+  cursor: not-allowed;
+}
+
+.quantity-display {
+  font-size: 18px;
+  font-weight: bold;
+  width: 40px;
+  text-align: center;
 }
 .total-amount-row {
   background-color: #f8f9fa; /* Light gray background for emphasis */
@@ -8758,6 +8793,183 @@ only screen and (max-width: 767.98px) {
   color: #888;
 }
 
+.row-online {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+/* Container chính */
+.checkout-details-form {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  width: 40%;
+}
+
+/* Mỗi phần input item */
+.checkout-input-item {
+  margin-bottom: 15px;
+}
+
+.checkout-input-item label {
+  display: block;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.checkout-input-item p {
+  font-size: 16px;
+  color: #555;
+  margin: 0;
+}
+
+/* Cải tiến cho phần "required" */
+.required::after {
+  color: red;
+  margin-left: 5px;
+}
+
+/* Đảm bảo phần tử được căn chỉnh đều và phù hợp với chiều rộng */
+.checkout-details-form .checkout-input-item {
+  width: 100%;
+}
+
+/* Thêm style cho các trường thông tin */
+.checkout-details-form .checkout-input-item p {
+  padding: 8px;
+
+}
+
+.checkout-details-form .checkout-input-item p.empty {
+  color: #bbb;
+}
+
+/* Responsive: Điều chỉnh khi màn hình nhỏ */
+@media (max-width: 768px) {
+  .checkout-details-form {
+    padding: 15px;
+  }
+
+  .checkout-input-item p {
+    font-size: 14px;
+  }
+}
+
+/* Bố cục cho container chính */
+.payment-actions {
+  display: flex;
+  justify-content: center;
+  gap: 20px; /* Khoảng cách giữa hai div */
+  margin-top: 20px; /* Khoảng cách phía trên */
+}
+
+/* Container của nút Hủy Thanh Toán */
+.cancel-payment {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Container của nút Xác Nhận Thanh Toán */
+.confirm-payment {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Nút chung */
+button {
+  /* padding: 12px 24px; */
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* Nút Hủy Thanh Toán */
+.remove-button {
+  background-color: #ff4d4f;
+  color: white;
+}
+
+.remove-button:hover {
+  background-color: #e04143;
+  transform: scale(1.05);
+}
+
+/* Nút Xác Nhận Thanh Toán */
+.btn-sqr {
+  background-color: #4caf50;
+  color: white;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 10px 10px;
+}
+
+.btn-sqr:hover {
+  background-color: #45a049;
+  transform: scale(1.05);
+}
+/* Container chính */
+.checkout-contact-info {
+  background-color: #f9f9f9;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  text-align: center; /* Căn giữa nội dung */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Tiêu đề */
+.checkout-contact-info .contact-title {
+  font-size: 22px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+}
+
+/* Danh sách thông tin */
+.checkout-contact-info ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Mỗi mục trong danh sách */
+.checkout-contact-info ul li {
+  font-size: 16px;
+  color: #555;
+  margin: 10px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.checkout-contact-info ul li i {
+  margin-right: 10px;
+  color: #4caf50;
+}
+
+/* QR Code */
+.checkout-contact-info img {
+  margin-bottom: 15px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.checkout-contact-info img:hover {
+  transform: scale(1.05); /* Hiệu ứng phóng to khi hover */
+}
 .checkout-btn {
   margin-top:  3% ;
  

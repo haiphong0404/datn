@@ -30,9 +30,10 @@ import Dashboard from "./pages/My_account/dashboard";
 import Orders from "./pages/My_account/orders";
 import Account_info from "./pages/My_account/account_info";
 import Product_details from "./pages/Product_Detail/Product_details";
+import CheckoutDetail from "./pages/CheckoutDetail";
+
 import ChangePassword from "./pages/My_account/changePass";
 import EditProfile from "./pages/My_account/editProfile";
-
 
 
 
@@ -57,6 +58,7 @@ const routeConfig = [
       { path: "*", element: <NotFoundPage /> },
       { path: "faqs", element: <FAQs /> },
       { path: "checkout/bill", element: <Bill /> },
+      { path: "/checkout-detail/:orderId", element: <CheckoutDetail /> },
     ],
   },
   {

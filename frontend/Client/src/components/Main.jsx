@@ -55,16 +55,18 @@ const Main = () => {
               </div>
               <div className="col-lg-3 col-sm-6">
                 <div className="policy-block text-center">
+                  <a href="/blog">
                   <div className="policy-icon">
                     <i className="fa fa-truck" />
                   </div>
                   <div className="policy-text">
                     <h4 className="policy-title">
-                      Miễn phí giao hàng</h4>
+                    Nhận mã giảm giá</h4>
                     <p className="policy-desc">
-                      Tất cả đơn hàng trên 500.000 VNĐ sẽ được miễn phí giao hàng, giúp bạn tiết kiệm chi phí khi mua sắm.
+                    Đối với khách hàng , mã giảm giá là lời cảm ơn từ thương hiệu, giúp duy trì mối quan hệ lâu dài .
                     </p>
                   </div>
+                  </a>
                 </div>
               </div>
               <div className="col-lg-3 col-sm-6">
@@ -112,7 +114,7 @@ const Main = () => {
                 >
                   <img
                     className="w-100"
-                    src="assets/img/about/about.jpg"
+                    src="assets/img/about/gioithieu.webp"
                     alt="about thumb"
                   />
                 </div>
@@ -121,8 +123,7 @@ const Main = () => {
                 <div className="about-content">
                   <h2 className="about-title">Giới thiệu về THOR</h2>
                   <h3 className="about-subtitle">
-                    Nghiên cứu đã chỉ ra rằng độc giả đọc tôi.
-                  </h3>
+                  Chào mừng đến với Giày Thor – Nơi Đam Mê Chất Lượng Tỏa Sáng!                  </h3>
                   <p>
                     Chào mừng bạn đến với Giày Thor - thiên đường cho những tín đồ yêu thích giày độc đáo và mạnh mẽ! Chúng tôi chuyên cung cấp các mẫu giày Thor ấn tượng, phù hợp với mọi lứa tuổi và phong cách.
                   </p>
@@ -154,7 +155,7 @@ const Main = () => {
                 <div className="section-title text-center">
                   <h3 className="title">Sản Phẩm Mới Về</h3>
                   <h4 className="sub-title">
-                    Các cuộc điều tra đã chứng minh rằng người đọc dễ dàng đọc tôi hơn vì họ đọc thường xuyên hơn; sự rõ ràng cũng là một quá trình động, tiếp tục sự thay đổi.
+                  Cập nhật những mẫu giày mới nhất, thời trang và phong cách dành riêng cho bạn. Đừng bỏ lỡ cơ hội sở hữu những sản phẩm đang được săn đón!
                   </h4>
                 </div>
               </div>

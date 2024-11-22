@@ -4,6 +4,7 @@ import { useLoginForm } from '../hooks/useLoginForm';
 import usePostOrder from '../hooks/usePostOrder';
 import useApplyVoucher from '../hooks/useApplyVoucher';
 import axios from 'axios';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 const Checkout = () => {
   const { userInfo } = useLoginForm();
@@ -16,7 +17,7 @@ const Checkout = () => {
     phone: '',
     info: ''
   });
-
+  const navigate = useNavigate();
   const [paymentMethod, setPaymentMethod] = useState('cash');
   const [voucherError, setVoucherError] = useState(""); // Để lưu thông báo lỗi
   const [voucherCode, setVoucherCode] = useState(""); // Mã giảm giá nhập vào
@@ -241,7 +242,7 @@ const Checkout = () => {
 
     const orderDate = new Date().toISOString();
     const orderData = {
-      order_date: orderDate,
+      // order_date: orderDate,
       status: "pending",
       total_amount: totalAmount,
       shipping_fee: selectedShippingFee,  
@@ -269,24 +270,56 @@ const Checkout = () => {
 
     if (userInfo?.id) {
       try {
-        // Send the order data
-        await postOrder(userInfo.id, orderData);
-        toast.success("Đặt hàng thành công!");
+        if (paymentMethod === "online") {
+          const response = await fetch('http://127.0.0.1:8000/api/payment/create', {
+            method: 'POST',
+            headers: {
+              "Authorization": `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(orderData),
+          });
 
-        // Remove selected products from the cart in the database
-        for (const item of selectedProducts) {
-          await deleteProductFromCart(item.id_productVariant);
+          const data = await response.json();
+          console.log(data);
+          const orderId = data.order_id; // Make sure that your API returns `order_id`
+
+        // Check if orderId is returned in the response
+        if (!orderId) {
+            toast.error("Không thể tạo đơn hàng. Vui lòng thử lại.");
+            return;
         }
-
-        // Remove cart from localStorage
         localStorage.removeItem('selectedProducts');
-        localStorage.removeItem('cart');
-        setSelectedProducts([]);
-        setTotalAmount(0);
+          localStorage.removeItem('cart');
+          setSelectedProducts([]);
+          setTotalAmount(0);
 
-        // Reset shipping status after order
-        setIsShippingSelected(false);  // This resets the shipping status to false
-        setIsVoucherApplied(false);
+          // Reset shipping status after order
+          setIsShippingSelected(false);  // This resets the shipping status to false
+          setIsVoucherApplied(false);
+          navigate(`/checkout-detail/${orderId}`);
+
+        } else if (paymentMethod === "cash") {
+
+          // Send the order data
+          await postOrder(userInfo.id, orderData);
+          toast.success("Đặt hàng thành công!");
+
+          // Remove selected products from the cart in the database
+          for (const item of selectedProducts) {
+            await deleteProductFromCart(item.id_productVariant);
+          }
+
+          // Remove cart from localStorage
+          localStorage.removeItem('selectedProducts');
+          localStorage.removeItem('cart');
+          setSelectedProducts([]);
+          setTotalAmount(0);
+
+          // Reset shipping status after order
+          setIsShippingSelected(false);  // This resets the shipping status to false
+          setIsVoucherApplied(false);
+        }
       } catch (error) {
         toast.error(`Đặt hàng thất bại: sản phẩm trong kho hiện không đủ`);
       }
@@ -296,6 +329,25 @@ const Checkout = () => {
   };
 
 
+
+
+  // Component xác nhận thanh toán sau khi quay về từ VNPay
+// useEffect(() => {
+//   const searchParams = new URLSearchParams(window.location.search);
+//   const transactionStatus = searchParams.get('vnp_TransactionStatus');
+//   const orderId = searchParams.get('vnp_TxnRef');
+
+//   if (transactionStatus === '00') {
+//     // Thanh toán thành công
+//     toast.success("Thanh toán thành công!");
+    
+//     // Cập nhật trạng thái đơn hàng trong Laravel
+//     updateOrderStatus(orderId, "paid");
+//   } else {
+//     // Thanh toán thất bại
+//     toast.error("Thanh toán thất bại!");
+//   }
+// }, []);
 
 
   return (
@@ -572,40 +624,22 @@ const Checkout = () => {
                             type="radio"
                             id="directbank"
                             name="paymentmethod"
-                            value="bank"
+                            value="online"
                             className="custom-control-input"
-                            checked={paymentMethod === 'bank'}
+                            checked={paymentMethod === 'online'}
                             onChange={handlePaymentMethodChange}
                           />
                           <label className="custom-control-label" htmlFor="directbank">
-                            Thanh toán online qua Ví điện tử MoMo
+                            Thanh toán online
                           </label>
                         </div>
                       </div>
                     </div>
-                    <div className="single-payment-method">
-                      <div className="payment-method-name">
-                        <div className="custom-control custom-radio">
-                          <input
-                            type="radio"
-                            id="paypalpayment"
-                            name="paymentmethod"
-                            value="paypal"
-                            className="custom-control-input"
-                            checked={paymentMethod === 'paypal'}
-                            onChange={handlePaymentMethodChange}
-                          />
-                          <label className="custom-control-label" htmlFor="paypalpayment">
-                            Thanh toán qua PayPal
-                          </label>
-                        </div>
-                      </div>
-                    </div>
+
                   </div>
                   <div className="checkout-btn">
                     <button
                       className="btn btn-sqr"
-
                       onClick={handleSubmitOrder}
                     >
                       {loading ? 'Đang xử lý...' : 'Đặt Hàng'}

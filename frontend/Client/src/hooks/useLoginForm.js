@@ -4,6 +4,8 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigate } from "react-router-dom";
 import { login, getUserByid, forgotPassword } from "../api/user.js"; // Import getUserByid
+import axios from "axios";
+import { toast } from "react-toastify";
 
 
 export const useLoginForm = (isDisplay) => {
@@ -35,6 +37,51 @@ export const useLoginForm = (isDisplay) => {
       setUserInfo(JSON.parse(storedUserInfo));
     }
   }, []);
+  const syncCartToServer = async (userId, cartData) => {
+    if (cartData && cartData.length > 0) {
+      try {
+        // Chuẩn bị dữ liệu giỏ hàng
+        const cartDataWithDetails = cartData.map((item) => ({
+          product_variant_id: item.id_productVariant, // Đảm bảo key này tồn tại
+          quantity: item.quantity,
+          price: item.price,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        }));
+  
+        console.log("Cart data before sync:", cartDataWithDetails);
+  
+        // Gửi yêu cầu đồng bộ giỏ hàng lên server
+        const response = await axios.post(
+          "http://127.0.0.1:8000/api/cart/sync",
+          { cart: cartDataWithDetails },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`, // Token xác thực
+            },
+          }
+        );
+  
+        if (response.status === 200) {
+          // Đồng bộ giỏ hàng thành công
+          toast.success("Giỏ hàng đã được đồng bộ thành công!");
+        }
+      } catch (error) {
+        console.error(
+          "Error syncing cart to server:",
+          error.response ? error.response.data : error
+        );
+        toast.error("Có lỗi xảy ra khi đồng bộ giỏ hàng!");
+      }
+    } else {
+      console.error("Error syncing cart to server: Cart data is empty!");
+      toast.error("Dữ liệu giỏ hàng trống!");
+    }
+  };
+  
+  
+  
+  
 
   const handleLogin = async (data) => {
     // return
@@ -55,7 +102,14 @@ export const useLoginForm = (isDisplay) => {
 
         setUserInfo(userData.data);
         localStorage.setItem("userInfo", JSON.stringify(userData.data));
+        // send cart data to server
+      const cartData =  localStorage.getItem('cart')
+      if (cartData) {
+        const parsedCart = JSON.parse(cartData);
 
+        // Gửi giỏ hàng lên server
+        await syncCartToServer(userId, parsedCart); // Gọi API đồng bộ giỏ hàng
+      }
 
         if (role === "admin") {
           window.location.href = "http://127.0.0.1:8000/admin";

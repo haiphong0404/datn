@@ -21,10 +21,7 @@ const Blog = () => {
         <div className="row">
           <div className="col-12">
             <div className="section-title text-center">
-              <h3 className="title">TỪ BLOG CỦA CHÚNG TÔI</h3>
-              <h4 className="sub-title">
-                "Các cuộc điều tra đã chứng minh rằng người đọc dễ dàng đọc tôi hơn vì họ đọc thường xuyên hơn; sự rõ ràng cũng là một quá trình động, theo sau sự thay đổi."
-              </h4>
+              <h3 className="title">BÀI VIẾT CỦA CHÚNG TÔI</h3>
             </div>
           </div>
         </div>
@@ -34,7 +31,7 @@ const Blog = () => {
               <div className="blog-post-item">
                 <div className="blog-thumb">
                   <a href={`blog-details/${article.id}`}>
-                    <img src={article.image_url} alt="blog thumb" />
+                    <img src={article.image || '/path/to/placeholder.jpg'} alt="blog thumb" />
                   </a>
                 </div>
                 <div className="blog-content">

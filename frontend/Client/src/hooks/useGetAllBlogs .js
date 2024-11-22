@@ -10,7 +10,7 @@ const useGetAllBlogs = () => {
         const fetchBlogs = async () => {
             setLoading(true);
             try {
-                const response = await axios.get('/Apiarticle');
+                const response = await axios.get('/Apiarticles');
                 console.log('API trả về:', response.data); // Log phản hồi từ API
                 setBlogs(response.data);
             } catch (error) {

@@ -1,17 +1,110 @@
-import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
-import useProductById from '../../hooks/useProductById';
-import { useComments } from '../../hooks/useComments';
+import React, { useState } from "react";
+import { useParams } from "react-router-dom";
+import useProductById from "../../hooks/useProductById";
+import { useComments } from "../../hooks/useComments";
+import { addComment, editComment, deleteComment } from "../../api/commentsApi";
+import moment from "moment"; // Import moment
+import { toast } from "react-toastify";
 import useProductAttributes from '../../hooks/useProductAtrib';
+
 const ProductReview = ({ initialTab = "tab_one" }) => {
   const [activeTab, setActiveTab] = useState(initialTab);
   const { productId } = useParams();
   const { product, loading: productLoading, error: productError } = useProductById(productId);
-  const { comments, isLoading: commentsLoading, error: commentsError } = useComments(productId);
+  const { comments, isLoading: commentsLoading, error: commentsError, refetch, updateComments } = useComments(productId);
+  const [file, setFile] = useState(null);
   const { colors, sizes } = useProductAttributes(productId);
-  const handleTabChange = (tabId) => {
-    setActiveTab(tabId);
+
+
+
+  const [newComment, setNewComment] = useState("");
+  const [newRating, setNewRating] = useState(0);
+  const [editCommentId, setEditCommentId] = useState(null);
+  const [editedComment, setEditedComment] = useState("");
+  const [editedRating, setEditedRating] = useState(0);
+
+  const handleTabChange = (tabId) => setActiveTab(tabId);
+
+  const handleAddComment = async () => {
+    if (newComment.trim() && newRating > 0) {
+      const formData = new FormData();
+      formData.append("comment", newComment);
+      formData.append("star_rating", newRating);
+      if (file) formData.append("file", file);
+
+      try {
+        const response = await addComment(productId, formData);
+        if (response.status === 201) {
+          updateComments(response.data); // Cập nhật trực tiếp state với data nhận được
+          setNewComment("");
+          setNewRating(0);
+          setFile(null);
+          toast.success("Bình luận đã được thêm thành công!");
+        } else {
+          toast.error("Không thể thêm bình luận, vui lòng thử lại.");
+        }
+      } catch (error) {
+        console.error("Error adding comment:", error); // Kiểm tra chi tiết lỗi
+        toast.error("Có lỗi xảy ra khi thêm bình luận.");
+      }
+    }
   };
+
+
+
+
+
+  const handleEditComment = async () => {
+    if (editedComment.trim() && editedRating > 0) {
+      try {
+        const userComment = comments.find(comment => comment.id === editCommentId);
+
+        if (userComment.username !== "currentUser") { // Replace with actual username of logged-in user
+          toast.error("Bạn không có quyền sửa bình luận này.");
+          return;
+        }
+
+        await editComment(editCommentId, { comment: editedComment, star_rating: editedRating });
+
+        // Reset lại form chỉnh sửa
+        setEditCommentId(null);
+        setEditedComment("");
+        setEditedRating(0);
+
+        // Cập nhật lại danh sách bình luận
+        refetch();
+
+        // Hiển thị thông báo thành công
+        toast.success("Bình luận đã được sửa thành công!");
+      } catch (error) {
+        console.error("Không sửa bình luận: ", error);
+        toast.error("Có lỗi xảy ra khi sửa bình luận.");
+      }
+    }
+  };
+
+
+  const handleDeleteComment = async (id) => {
+    try {
+      const userComment = comments.find(comment => comment.id === id);
+
+      if (userComment.username !== "currentUser") { // Replace with actual username of logged-in user
+        toast.error("Bạn không có quyền xóa bình luận này.");
+        return;
+      }
+
+      await deleteComment(id);
+      // Cập nhật lại danh sách bình luận sau khi xóa
+      refetch();
+      // Hiển thị thông báo thành công
+      toast.success("Bình luận đã được xóa thành công!");
+    } catch (error) {
+      console.error("Không xóa bình luận: ", error);
+      toast.error("Có lỗi xảy ra khi xóa bình luận.");
+    }
+  };
+
+
 
   if (productLoading || commentsLoading) {
     return <div>Loading...</div>;
@@ -21,13 +114,10 @@ const ProductReview = ({ initialTab = "tab_one" }) => {
     return <div>Error loading product or comments data.</div>;
   }
 
-  // Extract colors and sizes from product variants if needed
   const colorNames = Array.isArray(colors) ? colors.map(color => color.name).join(', ') : "No colors available.";
 
   const sizeNames = Array.isArray(sizes) ? sizes.map(size => size.name).join(', ') : "No sizes available.";
- 
 
- 
   return (
     <div className="product-review-info">
       <ul className="nav review-tab">
@@ -79,49 +169,166 @@ const ProductReview = ({ initialTab = "tab_one" }) => {
 
         <div className={`tab-pane fade ${activeTab === "tab_three" ? "show active" : ""}`} id="tab_three">
           <div className="reviews">
-            {Array.isArray(comments) && comments.length > 0 ? (
-              comments.map((comment) => {
-                // Log giá trị của comment.star_rating để kiểm tra
-               
-                // Chuyển đổi `star_rating` sang số và kiểm tra tính hợp lệ
-                const rating = parseInt(comment.star_rating, 10);
-          
-                const isValidRating = !isNaN(rating) && rating >= 1 && rating <= 5;
-              
-                return (
-                  <div key={comment.id} className="review-box">
-                    {/* Hiển thị Rating */}
-                    <div className="ratings">
-                      {isValidRating ? (
-                        <>
-                          {/* Hiển thị số sao vàng theo `star_rating` */}
-                          {[...Array(rating)].map((_, idx) => (
-                            <span key={idx} className="good">
-                              <i className="fa fa-star" />
-                            </span>
-                          ))}
-                          {/* Hiển thị các sao chưa được đánh giá (sao đen) */}
-                          {[...Array(5 - rating)].map((_, idx) => (
-                            <span key={idx} className="bad">
-                              <i className="fa fa-star" />
-                            </span>
-                          ))}
-                        </>
-                      ) : (
-                        <p>Không có đánh giá hợp lệ</p>
-                      )}
-                    </div>
-
-                    {/* Hiển thị thông tin bình luận */}
-                    <p><strong>Người đánh giá:</strong> {comment.user_name}</p>
-                    <p><strong>Sản phẩm:</strong> {comment.product_name}</p>
-                    <p><strong>Bình luận:</strong> {comment.comment}</p>
+            {comments.length > 0 ? (
+              comments.map((comment) => (
+                <div key={comment.id} className="review-box mb-4">
+                  {/* Hiển thị Rating */}
+                  <div className="ratings mb-2">
+                    <strong>Mức độ hài lòng: </strong>
+                    {[...Array(5)].map((_, idx) => (
+                      <i
+                        key={idx}
+                        className={`fa fa-star ${idx < comment.star_rating ? 'text-warning' : 'text-muted'}`}
+                      />
+                    ))}
                   </div>
-                );
-              })
+
+                  <p><strong>Người đánh giá:</strong> {comment.username}</p>
+                  <p><strong>Bình luận:</strong> {comment.comment}</p>
+
+                  {/* Hiển thị ảnh nếu có và nếu ảnh là Base64 */}
+                  {comment.file && (
+                    <div className="review-image">
+                      <img src={comment.file} alt="Review" width="130" />
+                    </div>
+                  )}
+
+                  {/* Hiển thị thời gian bình luận */}
+                  <p><strong>Thời gian:</strong> {moment(comment.created_at, "YYYY-MM-DD HH:mm:ss").format('DD-MM-YYYY HH:mm:ss')}</p>
+
+
+                  <button
+                    className="btn me-2"
+                    style={{ color: "black" }}
+                    onMouseEnter={(e) => (e.target.style.color = "#ffc107")}
+                    onMouseLeave={(e) => (e.target.style.color = "black")}
+                    onClick={() => {
+                      setEditCommentId(comment.id);
+                      setEditedComment(comment.comment);
+                      setEditedRating(comment.star_rating);
+                    }}
+                  >
+                    Sửa
+                  </button>
+
+                  <button
+                    className="btn"
+                    style={{ color: "black" }}
+                    onMouseEnter={(e) => (e.target.style.color = "#dc3545")}
+                    onMouseLeave={(e) => (e.target.style.color = "black")}
+                    onClick={() => handleDeleteComment(comment.id)}
+                  >
+                    Xóa
+                  </button>
+
+                  {editCommentId === comment.id && (
+                    <div className="mt-2">
+                      <textarea
+                        value={editedComment}
+                        onChange={(e) => setEditedComment(e.target.value)}
+                        className="form-control"
+                      />
+                      <div className="rating-stars">
+                        <span>Mức độ hài lòng: </span>
+                        {[...Array(5)].map((_, idx) => (
+                          <span
+                            key={idx}
+                            className={`fa fa-star ${idx < editedRating ? "text-warning" : "text-muted"}`}
+                            onClick={() => setEditedRating(idx + 1)}
+                          />
+                        ))}
+                      </div>
+
+                      {/* Hiển thị ảnh hiện tại nếu có */}
+                      {comment.file && !file && (
+                        <div className="preview-image">
+                          <img src={comment.file} alt="Current review image" width="100" />
+                          <p>Ảnh hiện tại</p>
+                        </div>
+                      )}
+
+                      {/* Thêm form nhập ảnh khi sửa bình luận */}
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => setFile(e.target.files[0])}
+                      />
+                      {file && (
+                        <div className="preview-image">
+                          <img src={URL.createObjectURL(file)} alt="Preview" width="100" />
+                        </div>
+                      )}
+
+                      <div className="d-flex gap-2 mt-2">
+                        <button
+                          className="btn btn-success btn-sm p-3 rounded custom-btn"
+                          onClick={handleEditComment}
+                        >
+                          Lưu thay đổi
+                        </button>
+
+                        <button
+                          className="btn btn-danger btn-sm p-3 rounded custom-btn"
+                          onClick={() => {
+                            setEditCommentId(null);
+                            setEditedComment("");
+                            setEditedRating(0);
+                            setFile(null); // Reset file ảnh
+                          }}
+                        >
+                          Hủy thay đổi
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+
+
+
+
+                </div>
+              ))
             ) : (
               <p>Chưa có đánh giá nào.</p>
             )}
+
+
+
+            <div className="add-review-form">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => setFile(e.target.files[0])}
+              />
+              {file && (
+                <div className="preview-image">
+                  <img src={URL.createObjectURL(file)} alt="Preview" width="100" />
+                </div>
+              )}
+
+              <textarea
+                className="form-control"
+                value={newComment}
+                onChange={(e) => setNewComment(e.target.value)}
+                placeholder="Thêm bình luận của bạn..."
+              />
+              <div className="rating-stars">
+                <strong>Mức độ hài lòng: </strong>
+                {[...Array(5)].map((_, idx) => (
+                  <span
+                    key={idx}
+                    className={`fa fa-star ${idx < newRating ? "text-warning" : "text-muted"}`}
+                    onClick={() => setNewRating(idx + 1)}
+                  />
+                ))}
+              </div>
+              <button
+                className="btn btn-sqr mt-2"
+                onClick={handleAddComment}
+              >
+                Thêm bình luận
+              </button>
+            </div>
           </div>
         </div>
       </div>

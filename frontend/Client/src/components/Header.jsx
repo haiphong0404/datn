@@ -22,31 +22,33 @@ const Header = () => {
   };
   const fetchCartFromAPI = async () => {
     try {
-      const response = await axios.get('/cart'); // Thay đổi đường dẫn API theo cấu trúc của bạn
-      const apiCart = response.data;
-      setLocalCart(apiCart);
-      localStorage.setItem("cart", JSON.stringify(apiCart));
+      const response = await axios.get('/cart');
+      setLocalCart(response.data);
+      localStorage.setItem("cart", JSON.stringify(response.data));
     } catch (error) {
       console.error("Lỗi khi gọi API giỏ hàng:", error);
     }
   };
+
   useEffect(() => {
     const savedCart = JSON.parse(localStorage.getItem("cart"));
-
     if (cart && cart.length > 0) {
-      // Nếu giỏ hàng hiện tại có dữ liệu, lưu vào localStorage
       setLocalCart(cart);
       localStorage.setItem('cart', JSON.stringify(cart));
     } else if (Array.isArray(savedCart)) {
-      // Nếu không có dữ liệu trong `cart`, kiểm tra localStorage
       setLocalCart(savedCart);
     } else {
-      // Nếu localStorage cũng không có dữ liệu, gọi API để lấy giỏ hàng
       fetchCartFromAPI();
     }
   }, [cart]);
 
-
+  // Hàm lấy tất cả dữ liệu từ giỏ hàng
+  const handleGetAllCartData = () => {
+    console.log("Tất cả dữ liệu trong giỏ hàng:", localCart);
+    // Xử lý thêm nếu cần thiết
+  };
+  
+  
   const handleRemoveFromCart = async (id_productVariant) => {
 
     if (!id_productVariant) {
@@ -143,31 +145,18 @@ const Header = () => {
                 <div className="top-left-navigation"></div>
               </div>
               <div className="col-lg-6 d-flex justify-content-end">
-                <div className="header-social-link">
-                  <a href="#">
-                    <i className="fa fa-facebook" />
-                  </a>
-                  <a href="#">
-                    <i className="fa fa-twitter" />
-                  </a>
-                  <a href="#">
-                    <i className="fa fa-instagram" />
-                  </a>
-                  <a href="#">
-                    <i className="fa fa-pinterest" />
-                  </a>
-                </div>
+                
                 <ul className="user-info-block">
                   <li>
                     <Link to="/my_account">
                       {JSON.parse(localStorage.getItem("userInfo"))?.username || "Tài khoản"}
                     </Link>
                   </li>
-                  <li>
+                  {/* <li>
                     <Link to="/checkout">
                       <i className="fa fa-credit-card" /> Thanh Toán
                     </Link>
-                  </li>
+                  </li> */}
                   <li>
                     {JSON.parse(localStorage.getItem("userInfo")) ? (
                       // Nếu đã đăng nhập, hiển thị Đăng xuất
