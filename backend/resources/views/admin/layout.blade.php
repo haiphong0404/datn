@@ -273,7 +273,7 @@
                     </li>
                     <!-- user login dropdown start-->
                     @auth
-                    <<<<<<< HEAD <li class="dropdown">
+                    <li class="dropdown">
                         <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                             <img src="{{ Auth::user()->avatar_img ? Storage::url(Auth::user()->avatar_img) : asset('default-avatar.png') }}"
                                 alt="{{ Auth::user()->name }}" class="rounded-circle" width="30" height="30">
@@ -285,7 +285,6 @@
                             <li>
                                 <a href="{{ route('admin.profile') }}" class="dropdown-item d-flex align-items-center">
                                     <i class="fa fa-suitcase me-2"></i> Hồ sơ
-                                    =======
                                     <<<<<<< HEAD <li class="dropdown">
                                         <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                                             <img src="{{ optional(Auth::user()->avatar_img) ? Storage::url(Auth::user()->avatar_img) : asset('default-avatar.png') }}"
@@ -307,7 +306,6 @@
                                     <li>
                                         <a href="{{ route('admin.profile') }}" class="dropdown-item">
                                             <i class="fa fa-suitcase"></i> Profile
-                                            >>>>>>> duc2109
                                         </a>
                                     </li>
                                     <li>
@@ -336,15 +334,15 @@
                             <button type="submit" class="btn btn-link dropdown-item"><i class="fa fa-key"></i>
                                 Logout</button>
                             </form>
-                            </li>
-                        </ul>
-                        </li>
-                        @else
-                        <li>
-                            <a href="{{ route('login') }}" class="dropdown-item">Đăng nhập</a>
-                        </li>
-                        @endauth
-                        {{-- <li class="sb-toggle-right">
+                    </li>
+                </ul>
+                </li>
+                @else
+                <li>
+                    <a href="{{ route('login') }}" class="dropdown-item">Đăng nhập</a>
+                </li>
+                @endauth
+                {{-- <li class="sb-toggle-right">
                         <a href="http://localhost:3000/" target="_blank" rel="noopener noreferrer">
                             <i class="fa fa-sign-in mr-2"></i>Website
                         </a>
@@ -354,9 +352,9 @@
 =======
                     </li> --}}
 
-                        >>>>>>> dev
-                        <!-- user login dropdown end -->
-                        >>>>>>> duc2109
+                >>>>>>> dev
+                <!-- user login dropdown end -->
+                >>>>>>> duc2109
                 </ul>
                 <!--search & user info end-->
             </div>
