@@ -9,14 +9,14 @@ const ProductItem = ({ product }) => { // Nhận product qua props
                     <Link to={`/product_details/${product.id}`}>
                         <img src={product.image || '/path/to/placeholder.jpg'} alt={product.name} />
                     </Link>
-                    <div className="button-group">
+                    {/* <div className="button-group">
 
                         <Link to="#" data-bs-toggle="modal" data-bs-target="#quick_view">
                             <span data-bs-toggle="tooltip" title="Quick View">
                                 <i className="fa fa-eye" />
                             </span>
                         </Link>
-                    </div>
+                    </div> */}
                     <div className="product-label">
                         <span>new</span>
                     </div>

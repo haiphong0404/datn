@@ -6,7 +6,7 @@ const Blog = () => {
 
   useEffect(() => {
     // Fetch articles from the Laravel API
-    axios.get('http://127.0.0.1:8000/api/Apiarticle')
+    axios.get('http://127.0.0.1:8000/api/Apiarticles')
       .then(response => {
         setArticles(response.data); // Store the articles in state
       })

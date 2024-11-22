@@ -59,10 +59,10 @@ const ProductReview = ({ initialTab = "tab_one" }) => {
       try {
         const userComment = comments.find(comment => comment.id === editCommentId);
 
-        if (userComment.username !== "currentUser") { // Replace with actual username of logged-in user
-          toast.error("Bạn không có quyền sửa bình luận này.");
-          return;
-        }
+        // if (userComment.username !== "currentUser") { // Replace with actual username of logged-in user
+        //   toast.error("Bạn không có quyền sửa bình luận này.");
+        //   return;
+        // }
 
         await editComment(editCommentId, { comment: editedComment, star_rating: editedRating });
 
@@ -88,10 +88,10 @@ const ProductReview = ({ initialTab = "tab_one" }) => {
     try {
       const userComment = comments.find(comment => comment.id === id);
 
-      if (userComment.username !== "currentUser") { // Replace with actual username of logged-in user
-        toast.error("Bạn không có quyền xóa bình luận này.");
-        return;
-      }
+      // if (userComment.username !== "currentUser") { // Replace with actual username of logged-in user
+      //   toast.error("Bạn không có quyền xóa bình luận này.");
+      //   return;
+      // }
 
       await deleteComment(id);
       // Cập nhật lại danh sách bình luận sau khi xóa

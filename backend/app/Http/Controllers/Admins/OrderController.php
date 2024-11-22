@@ -28,7 +28,7 @@ class OrderController extends Controller
     public function index()
     {
         // Lấy tất cả orders từ cơ sở dữ liệu
-        $orders = Order::all();
+        $orders = Order::orderBy('created_at', 'desc')->get();
 
         // Quy tắc chuyển trạng thái
         $allowedTransitions = $this->orderService->getAllowedTransitions();
@@ -80,7 +80,7 @@ class OrderController extends Controller
     {
         // Lấy trạng thái mới từ request
         $newStatus = $request->status;
-    
+
         // Kiểm tra kết quả
         if ($newStatus === $order->status) {
             return redirect()->route('admin.orders.index')
@@ -89,16 +89,16 @@ class OrderController extends Controller
 
         // Sử dụng service để kiểm tra và cập nhật trạng thái
         $statusUpdated = $this->orderService->updateOrderStatus($order, $newStatus);
-    
+
         if (!$statusUpdated) {
             return redirect()->route('admin.orders.index')
                 ->with('error', 'Chuyển trạng thái không hợp lệ.');
         }
-    
+
         // Trả về kết quả thành công nếu trạng thái được cập nhật
         return redirect()->back()->with('success', 'Trạng thái đơn hàng đã được cập nhật thành công.');
     }
-    
+
     public function updatePaymentStatus(Request $request, Order $order)
     {
         $validatedData = $request->validate([

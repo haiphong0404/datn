@@ -6077,8 +6077,7 @@ only screen and (max-width: 767.98px) {
 }
 
 .product-details-des .quantity .pro-qty {
-  width: 90px;
-  height: 40px;
+
   border: 1px solid #ddd;
   padding: 0 15px;
   border-radius: 40px;

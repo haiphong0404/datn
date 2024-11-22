@@ -52,7 +52,7 @@ const AboutUs = () => {
                 >
                   <img
                     className="w-100"
-                    src="assets/img/about/about.jpg"
+                    src="assets/img/about/gioithieu.webp"
                     alt="about thumb"
                   />
                 </div>
