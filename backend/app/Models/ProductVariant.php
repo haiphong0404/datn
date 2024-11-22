@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ProductVariant extends Model
 {
-    use SoftDeletes,HasFactory;
+    use SoftDeletes, HasFactory;
     protected $fillable = [
         'product_id',
         'size_id',
@@ -24,14 +24,14 @@ class ProductVariant extends Model
     }
 
     // Quan hệ với Size
-   
+
     public function images()
     {
         return $this->hasMany(Image::class);
     }
 
 
-   
+
     // Quan hệ với bảng colors
     public function color()
     {
@@ -47,5 +47,9 @@ class ProductVariant extends Model
     public function orderDetails()
     {
         return $this->hasMany(OrderDetail::class);
+    }
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
     }
 }
