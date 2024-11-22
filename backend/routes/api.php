@@ -84,6 +84,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('comments/{product_id}', [CommentController::class, 'store']);
     Route::put('comments/{id}', [CommentController::class, 'update']);
     Route::delete('comments/{id}', [CommentController::class, 'destroy']);
+    Route::get('/cart', [CartController::class, 'index']);
+    Route::post('/cart/add', [CartController::class, 'addToCart']);
+    Route::put('/cart/update', [CartController::class, 'updateCart']);
+    Route::delete('/cart/remove', [CartController::class, 'removeFromCart']);
+    Route::delete('/cart/remove/{product_variant_id}', [CartController::class, 'removeFromCart']);
+    Route::apiResource('order', OrderController::class );
+    
+
 });
 Route::get('comments/{product_id}', [CommentController::class, 'index']);
 
@@ -110,3 +118,4 @@ Route::post('/apply-voucher', [VoucherController::class, 'applyVoucher']);
 Route::post('/payment/create', [PaymentController::class, 'createPayment']);
 Route::post('/payment/success/{order_id}', [PaymentController::class, 'paymentSuccess']);
 Route::post('/payment/cancel/{order_id}', [PaymentController::class, 'paymentCancel']);
+Route::post('order/{order_id}/status', [OrderDetailController::class, 'updateOrderStatus']);

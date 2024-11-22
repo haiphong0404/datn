@@ -57,9 +57,6 @@ const routeConfig = [
       { path: "register", element: <Register /> },
       { path: "*", element: <NotFoundPage /> },
       { path: "faqs", element: <FAQs /> },
-    
-      
-
       { path: "checkout/bill", element: <Bill /> },
       { path: "/checkout-detail/:orderId", element: <CheckoutDetail /> },
     ],

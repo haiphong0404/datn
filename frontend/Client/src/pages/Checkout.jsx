@@ -24,11 +24,15 @@ const Checkout = () => {
   const [selectedProducts, setSelectedProducts] = useState([]); // Sản phẩm đã chọn
   const [totalAmount, setTotalAmount] = useState(0); // Tổng số tiền cần thanh toán
   const [shippingFee] = useState(40000); // Phí vận chuyển mặc định
-  const [isShippingSelected, setIsShippingSelected] = useState(false); // Trạng thái chọn vận chuyển
+  const [shippingExpress] = useState(60000); // Phí vận chuyển hỏa tốc
+  const [selectedShippingFee, setSelectedShippingFee] = useState(0); // Phí vận chuyển được chọn
+  const [isShippingSelected, setIsShippingSelected] = useState(false); //
   const [voucherDiscount, setVoucherDiscount] = useState(0); // Giá trị giảm giá của voucher
   const [voucherType, setVoucherType] = useState(""); // Loại voucher
   const [isVoucherApplied, setIsVoucherApplied] = useState(false); // Trạng thái áp dụng voucher
   const [appliedVoucherId, setAppliedVoucherId] = useState(null);
+
+ 
   // Handle applying voucher
   const handleApplyVoucher = async () => {
     if (!voucherCode.trim()) {
@@ -38,7 +42,6 @@ const Checkout = () => {
 
     try {
       const appliedVoucher = await applyVoucher(voucherCode);
-      console.log("Voucher trả về:", appliedVoucher); // Kiểm tra giá trị trả về
 
       if (appliedVoucher) {
         const {
@@ -49,7 +52,7 @@ const Checkout = () => {
           max_discount_value,
         } = appliedVoucher.voucher;
 
-        console.log("ID của voucher:", id); // Log id của voucher để kiểm tra
+       
 
         // Lưu id vào state
         setAppliedVoucherId(id);
@@ -59,7 +62,7 @@ const Checkout = () => {
           (acc, item) => acc + item.price * item.quantity,
           0
         );
-        console.log("Subtotal:", subtotal); // Kiểm tra giá trị subtotal
+       
         if (subtotal < min_order_value) {
           toast.error(
             `Đơn hàng của bạn chưa đủ giá trị tối thiểu (${min_order_value.toLocaleString()} VND) để áp dụng mã giảm giá.`
@@ -129,50 +132,76 @@ const Checkout = () => {
     setTotalAmount(calculateTotalAmount(storedCart));
   }, [userInfo]);
 
-  // Hàm tính toán tổng số tiền của giỏ hàng
-  const calculateTotalAmount = (items) => {
-    const subtotal = items.reduce((acc, item) => acc + item.price * item.quantity, 0);
-
-
-    let totalWithDiscount = subtotal;
-
-    if (isVoucherApplied) {
-      if (voucherDiscount) {
-        // Nếu voucherDiscount là chuỗi, chuyển thành số (parseFloat)
-        const discountAmount = parseFloat(voucherDiscount);
-
-        // Kiểm tra nếu discount_value là số và áp dụng giảm giá cố định (fixed)
-        if (voucherDiscount && !isNaN(discountAmount)) {
-          totalWithDiscount = Math.max(0, subtotal - discountAmount);
-        }
-        // Nếu voucherDiscount là phần trăm, áp dụng giảm giá theo phần trăm
-        else if (voucherDiscount && !isNaN(discountAmount)) {
-          totalWithDiscount = subtotal * (1 - discountAmount / 100);
-        }
-      }
-    }
-
-    // Áp dụng phí vận chuyển nếu cần
-    const totalWithShipping = isShippingSelected ? totalWithDiscount + shippingFee : totalWithDiscount;
-
-    return Math.max(0, totalWithShipping);  // Trả về tổng tiền không âm
-  };
-
-  const handleShippingSelection = () => {
+  const handleShippingSelection = (event) => {
     const { username, address, phone, email } = userDetails;
+
+    // Kiểm tra xem thông tin người dùng đã đầy đủ chưa
     if (!username || !email || !address || !phone) {
       toast.error("Vui lòng điền đầy đủ thông tin trước khi chọn vận chuyển!");
       return;
     }
 
+    // Lấy phương thức vận chuyển được chọn từ radio button
+    const selectedMethod = event.target.id;
+
+    // Cập nhật phí vận chuyển tương ứng
+    if (selectedMethod === "cashon") {
+      setSelectedShippingFee(shippingFee);  // Phí vận chuyển tiêu chuẩn
+    } else if (selectedMethod === "shippingexpress") {
+      setSelectedShippingFee(shippingExpress);  // Phí vận chuyển hỏa tốc
+    }
+
+    // Đánh dấu trạng thái đã chọn phương thức vận chuyển
     setIsShippingSelected(true);
+
+    // Cập nhật lại tổng tiền khi phương thức vận chuyển thay đổi
+    const newTotal = calculateTotalAmount(selectedProducts);  // Tính lại tổng số tiền
+    setTotalAmount(newTotal); // Cập nhật lại giá trị tổng tiền
+
+    // Thông báo cho người dùng rằng phương thức vận chuyển đã được thêm
     toast.success("Vận chuyển đã được thêm!");
   };
 
+  // Hàm tính toán tổng số tiền của giỏ hàng
+  const calculateTotalAmount = (items) => {
+    // Tính toán tổng tiền từ các sản phẩm trong giỏ hàng
+    const subtotal = items.reduce((acc, item) => acc + item.price * item.quantity, 0);
+
+    let totalWithDiscount = subtotal;
+
+    // Áp dụng giảm giá nếu có
+    if (isVoucherApplied) {
+      if (voucherDiscount) {
+        const discountAmount = parseFloat(voucherDiscount);
+        if (!isNaN(discountAmount)) {
+          totalWithDiscount = Math.max(0, subtotal - discountAmount);  // Tránh giá trị âm
+        }
+      }
+    }
+
+    // Tính tổng tiền với phí vận chuyển
+    const totalWithShipping = isShippingSelected
+      ? totalWithDiscount + selectedShippingFee  // Cộng thêm phí vận chuyển đã chọn
+      : totalWithDiscount;
+
+    return Math.max(0, totalWithShipping);  // Trả về tổng tiền không âm
+  };
+
+  // Cập nhật totalAmount mỗi khi selectedShippingFee hoặc các yếu tố khác thay đổi
   useEffect(() => {
     const newTotal = calculateTotalAmount(selectedProducts);
     setTotalAmount(newTotal);
-  }, [selectedProducts, voucherDiscount, voucherType, isShippingSelected, isVoucherApplied]);
+  }, [
+    selectedShippingFee,
+    selectedProducts,
+    voucherDiscount,
+    voucherType,
+    isShippingSelected,
+    isVoucherApplied
+  ]);
+
+
+
 
   const handleInputChange = (e) => {
     const { id, value } = e.target;
@@ -216,6 +245,8 @@ const Checkout = () => {
       // order_date: orderDate,
       status: "pending",
       total_amount: totalAmount,
+      shipping_fee: selectedShippingFee,  
+      voucher_discount: voucherDiscount,  
       name: userDetails.username,
       email: userDetails.email,
       phone: userDetails.phone,
@@ -225,13 +256,13 @@ const Checkout = () => {
       user_id: userInfo?.id,
       products: selectedProducts.map((item) => ({
         product_variant_id: item.id_productVariant,
+        product_id: item.productId, 
         image: item.image,
         color: item.color,
         size: item.size,
         quantity: item.quantity,
         price: item.price,
       })),
-      voucher_code: voucherCode,
       ...(appliedVoucherId && { id: appliedVoucherId }), // Chỉ thêm voucher_id nếu có
     };
 
@@ -479,7 +510,8 @@ const Checkout = () => {
                           )}
                           <tr>
                             <th colSpan={3}>Phí vận chuyển</th>
-                            <td>{isShippingSelected ? shippingFee.toLocaleString() : "0"} VND</td>
+                            <td>{isShippingSelected ? selectedShippingFee.toLocaleString() : "0"} VND</td>
+
                           </tr>
                           <tr>
                             <th className="text-center" colSpan={3}>Tổng cộng</th>
@@ -492,7 +524,9 @@ const Checkout = () => {
                   {/* Hiển thị thông báo nếu chưa nhập đủ thông tin */}
                   {/* Hiển thị phương thức vận chuyển khi đủ thông tin */}
                   {userDetails.username && userDetails.address && userDetails.phone && userDetails.email && selectedProducts.length > 0 && (
-                    <div className="order-payment-method">
+       
+       <div className="order-payment-method">
+        <h5 className="checkout-title">Phương thức vận chuyển</h5>
                       <div className="single-payment-method show">
                         <div className="payment-method-name">
                           <div className="custom-control custom-radio">
@@ -505,15 +539,30 @@ const Checkout = () => {
                                 onChange={handleShippingSelection}
                               />
                               <label className="custom-control-label" htmlFor="cashon">
-                                Vận chuyển tận nơi
+                                Vận chuyển nhanh ( 40.000 VND)
                               </label>
                             </div>
-
-                            {isShippingSelected && (
-                              <span>Vận chuyển đã được thêm</span>
-                            )}
-
+                            </div>
                           </div>
+
+                        </div>
+                            <div className="single-payment-method show">
+                        <div className="payment-method-name">
+                          <div className="custom-control custom-radio">
+                            <div>
+                              <input
+                                type="radio"
+                                id="shippingexpress" 
+                                name="shipping"
+                                className="custom-control-input"
+                                onChange={handleShippingSelection}
+                              />
+                              <label className="custom-control-label" htmlFor="shippingexpress">
+                                Vận chuyển hỏa tốc ( 60.000 VND)
+                              </label>
+                            </div>
+                          </div>
+
                         </div>
                       </div>
                     </div>
@@ -522,8 +571,8 @@ const Checkout = () => {
 
                   <div>
                     {/* Thêm input nhập mã giảm giá */}
-                    <div className="voucher-section">
-                      <h5 className="voucher-title">Mã giảm giá</h5>
+                    <div className="order-payment-method">
+                    <h5 className="checkout-title" >Mã giảm giá</h5>
                       <div className="input-group mb-3">
                         <input
                           type="text"
@@ -533,7 +582,7 @@ const Checkout = () => {
                           onChange={(e) => setVoucherCode(e.target.value)} // Cập nhật giá trị voucherCode
                         />
                         <button
-                          className="btn btn-sqr"
+                          className="btn btn-sqr3"
                           type="button"
                           onClick={handleApplyVoucher} // Gọi hàm applyVoucher khi nhấn nút
                           disabled={loading} // Vô hiệu hóa nút khi đang loading
@@ -549,6 +598,7 @@ const Checkout = () => {
                   {/* Kết thúc input mã giảm giá */}
 
                   <div className="order-payment-method">
+                  <h5 className="checkout-title" >Phương thức thanh toán</h5>
                     <div className="single-payment-method show">
                       <div className="payment-method-name">
                         <div className="custom-control custom-radio">
@@ -590,7 +640,6 @@ const Checkout = () => {
                   <div className="checkout-btn">
                     <button
                       className="btn btn-sqr"
-                      disabled={loading}
                       onClick={handleSubmitOrder}
                     >
                       {loading ? 'Đang xử lý...' : 'Đặt Hàng'}

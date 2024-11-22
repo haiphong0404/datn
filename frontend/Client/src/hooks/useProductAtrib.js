@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { fetchColor, fetchSizes } from './api'; // Điều chỉnh đường dẫn nếu cần
+import { fetchColor, fetchSizes } from '../api/product.js'; // Điều chỉnh đường dẫn nếu cần
 
 const useProductAttributes = () => {
     const [colors, setColors] = useState([]);

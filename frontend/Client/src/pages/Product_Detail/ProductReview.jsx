@@ -1,51 +1,20 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import useProductById from "../../hooks/useProductById";
-import { useComments } from "../../hooks/useComments";
+
 import { addComment, editComment, deleteComment } from "../../api/commentsApi";
 import moment from "moment"; // Import moment
 import { toast } from "react-toastify";
-
+import { useComments } from '../../hooks/useComments';
+import useProductAttributes from '../../hooks/useProductAtrib';
 const ProductReview = ({ initialTab = "tab_one" }) => {
   const [activeTab, setActiveTab] = useState(initialTab);
   const { productId } = useParams();
   const { product, loading: productLoading, error: productError } = useProductById(productId);
-  const { comments, isLoading: commentsLoading, error: commentsError, refetch, updateComments } = useComments(productId);
-  const [file, setFile] = useState(null);
-
-
-
-  const [newComment, setNewComment] = useState("");
-  const [newRating, setNewRating] = useState(0);
-  const [editCommentId, setEditCommentId] = useState(null);
-  const [editedComment, setEditedComment] = useState("");
-  const [editedRating, setEditedRating] = useState(0);
-
-  const handleTabChange = (tabId) => setActiveTab(tabId);
-
-  const handleAddComment = async () => {
-    if (newComment.trim() && newRating > 0) {
-      const formData = new FormData();
-      formData.append("comment", newComment);
-      formData.append("star_rating", newRating);
-      if (file) formData.append("file", file);
-
-      try {
-        const response = await addComment(productId, formData);
-        if (response.status === 201) {
-          updateComments(response.data); // Cập nhật trực tiếp state với data nhận được
-          setNewComment("");
-          setNewRating(0);
-          setFile(null);
-          toast.success("Bình luận đã được thêm thành công!");
-        } else {
-          toast.error("Không thể thêm bình luận, vui lòng thử lại.");
-        }
-      } catch (error) {
-        console.error("Error adding comment:", error); // Kiểm tra chi tiết lỗi
-        toast.error("Có lỗi xảy ra khi thêm bình luận.");
-      }
-    }
+  const { comments, isLoading: commentsLoading, error: commentsError } = useComments(productId);
+  const { colors, sizes } = useProductAttributes(productId);
+  const handleTabChange = (tabId) => {
+    setActiveTab(tabId);
   };
 
 
@@ -112,6 +81,13 @@ const ProductReview = ({ initialTab = "tab_one" }) => {
     return <div>Error loading product or comments data.</div>;
   }
 
+  // Extract colors and sizes from product variants if needed
+  const colorNames = Array.isArray(colors) ? colors.map(color => color.name).join(', ') : "No colors available.";
+
+  const sizeNames = Array.isArray(sizes) ? sizes.map(size => size.name).join(', ') : "No sizes available.";
+ 
+
+ 
   return (
     <div className="product-review-info">
       <ul className="nav review-tab">
@@ -149,13 +125,13 @@ const ProductReview = ({ initialTab = "tab_one" }) => {
         <div className={`tab-pane fade ${activeTab === "tab_two" ? "show active" : ""}`} id="tab_two">
           <table className="table table-bordered">
             <tbody>
-              <tr>
+            <tr>
                 <td>Color</td>
-                <td>{product.variants ? product.variants.map(v => v.color).join(", ") : "No colors available."}</td>
+                <td>{colorNames}</td>
               </tr>
               <tr>
                 <td>Size</td>
-                <td>{product.variants ? product.variants.map(v => v.size).join(", ") : "No sizes available."}</td>
+                <td>{sizeNames}</td>
               </tr>
             </tbody>
           </table>

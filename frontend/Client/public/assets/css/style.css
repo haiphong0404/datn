@@ -2360,7 +2360,23 @@ only screen and (max-width: 767.98px) {
   font-weight: 700;
   border-radius: 0;
   background-color: #87b106;
-  padding: 13px 25px;
+  padding: 13px 251px;
+}
+.btn-sqr2 {
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  border-radius: 0;
+  background-color: #87b106;
+  padding: 13px 200px;
+}
+.btn-sqr3 {
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  border-radius: 0;
+  background-color: #87b106;
+  padding: 13px 30px;
 }
 
 .btn-sqr:hover {
@@ -6760,7 +6776,8 @@ only screen and (max-width: 767.98px) {
 
 .order-payment-method {
   background-color: #f7f7f7;
-  padding: 40px 20px 30px;
+  padding: 10px 20px 30px;
+  border-bottom: 1px solid #e5e5e5;
 }
 
 @media only screen and (min-width: 768px) and (max-width: 991.98px),
@@ -8952,4 +8969,8 @@ button {
 
 .checkout-contact-info img:hover {
   transform: scale(1.05); /* Hiệu ứng phóng to khi hover */
+}
+.checkout-btn {
+  margin-top:  3% ;
+ 
 }
