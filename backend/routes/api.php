@@ -81,14 +81,21 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/cart/update', [CartController::class, 'updateCart']);
     Route::delete('/cart/remove', [CartController::class, 'removeFromCart']);
     Route::delete('/cart/remove/{product_variant_id}', [CartController::class, 'removeFromCart']);
+
+    //comments
+    Route::post('comments/{product_id}', [CommentController::class, 'store']);
+    Route::put('comments/{id}', [CommentController::class, 'update']);
+    Route::delete('comments/{id}', [CommentController::class, 'destroy']);
 });
+Route::get('comments/{product_id}', [CommentController::class, 'index']);
+
 Route::get('products/{productId}/variants', [ProductVariantController::class, 'index']);
 Route::get('/variants/{id}', [ProductVariantController::class, 'show']);
 Route::get('/sizes', [SizeController::class, 'index']);
 Route::get('/colors', [ColorController::class, 'index']);
 Route::get('/colors', [ColorController::class, 'index']);
-Route::get('/comments', [CommentController::class, 'index']);
-Route::delete('/comments/{id}', [CommentController::class, 'softDelete']);
+// Route::get('/comments', [CommentController::class, 'index']);
+// Route::delete('/comments/{id}', [CommentController::class, 'softDelete']);
 Route::get('contacts', [ContactController::class, 'index']); // Lấy danh sách tất cả contacts
 Route::get('contacts/{id}', [ContactController::class, 'show']); // Lấy contact theo ID
 Route::get('/banners', [BannerController::class, 'index']);

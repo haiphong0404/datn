@@ -117,8 +117,7 @@
                                     </div>
                                     <div class="progress">
                                         <div class="progress-bar progress-bar-striped bg-danger" role="progressbar"
-                                            aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"
-                                            style="width: 33%">
+                                            aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 33%">
                                             <span class="sr-only">33% Complete (danger)</span>
                                         </div>
                                     </div>
@@ -132,8 +131,7 @@
                                     </div>
                                     <div class="progress">
                                         <div class="progress-bar progress-bar-striped" role="progressbar"
-                                            aria-valuenow="45" aria-valuemin="0" aria-valuemax="100"
-                                            style="width: 45%">
+                                            aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 45%">
                                             <span class="sr-only">45% Complete</span>
                                         </div>
                                     </div>
@@ -304,9 +302,9 @@
 
                         </li>
                     @else
-                        <li>
-                            <a href="{{ route('login') }}" class="dropdown-item">Đăng nhập</a>
-                        </li>
+                    <li>
+                        <a href="{{ route('login') }}" class="dropdown-item">Đăng nhập</a>
+                    </li>
                     @endauth
                     <a href="http://localhost:3000" class="fa fa-sign-in mr-2"
                     style="display: inline-flex; justify-content: center; align-items: center; text-decoration: none; font-size: 13px; padding: 5px;" 
@@ -437,29 +435,29 @@
     <script src="{{ asset('assets') }}/admin/js/easy-pie-chart.js"></script>
 
     <script>
-        //owl carousel
+    //owl carousel
 
-        $(document).ready(function() {
-            $("#owl-demo").owlCarousel({
-                navigation: true,
-                slideSpeed: 300,
-                paginationSpeed: 400,
-                singleItem: true,
-                autoPlay: true
+    $(document).ready(function() {
+        $("#owl-demo").owlCarousel({
+            navigation: true,
+            slideSpeed: 300,
+            paginationSpeed: 400,
+            singleItem: true,
+            autoPlay: true
 
-            });
         });
+    });
 
-        //custom select box
+    //custom select box
 
-        $(function() {
-            $('select.styled').customSelect();
-        });
+    $(function() {
+        $('select.styled').customSelect();
+    });
 
-        $(window).on("resize", function() {
-            var owl = $("#owl-demo").data("owlCarousel");
-            owl.reinit();
-        });
+    $(window).on("resize", function() {
+        var owl = $("#owl-demo").data("owlCarousel");
+        owl.reinit();
+    });
     </script>
 
 </body>
