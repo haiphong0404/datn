@@ -16,6 +16,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\VnpayController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admins\VoucherController;
+use App\Http\Controllers\StatisticsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,7 +31,7 @@ Route::get('/', function () {
 
 // Route profile
 Route::middleware('auth')->group(function () {
-    Route::get('/admin', [AdminTestController::class, 'index'])->name('admin.index');
+    Route::get('/admin', [StatisticsController::class, 'index'])->name('admin.index');
     Route::get('profile', [ProfileControllers::class, 'index'])->name('admin.profile');
     Route::get('/profile/edit', [ProfileControllers::class, 'edit'])->name('admin.profile.edit');
     Route::put('/profile', [ProfileControllers::class, 'update'])->name('admin.profile.update');
@@ -47,7 +48,7 @@ Route::group(
     [
         'prefix' => 'admin',
         'as' => 'admin.',
-        // 'middleware' => ['auth', 'admin'] // Nếu cần middleware xác thực
+        'middleware' => ['auth', 'admin'] // Nếu cần middleware xác thực
     ],
     function () {
         Route::resource('brands', BrandController::class); // Route cho thương hiệu
@@ -70,6 +71,7 @@ Route::group(
         Route::post('/orders', [OrderController::class, 'store'])->name('orders.store'); // Lưu thông tin order
         Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
         Route::put('/orders/{order}/updateStatus', [OrderController::class, 'updateStatus'])->name('orders.updateStatus');
+        Route::put('/orders/{order}/updatePaymentStatus', [OrderController::class, 'updatePaymentStatus'])->name('orders.updatePaymentStatus');
         Route::get('/orders/{order}/details', [OrderController::class, 'show'])->name('orders.show');
         // Route để lấy danh sách biến thể của sản phẩm
         Route::get('/get-variants/{productId}', [OrderController::class, 'getVariants'])->name('products.variants');

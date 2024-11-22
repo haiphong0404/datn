@@ -12,7 +12,7 @@
     <!-- <meta name="csrf-token" content="{{ csrf_token() }}"> -->
     <link rel="shortcut icon" href="{{ asset('assets') }}/admin/img/favicon.html">
 
-    <title>Thor-Admin Dashboard</title>
+    <title>Thor-Admin </title>
 
     <!-- Bootstrap core CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
@@ -51,7 +51,7 @@
                 <i class="fa fa-bars"></i>
             </div>
             <!--logo start-->
-            <a href="" class="logo">Admin<span>THOR</span></a>
+            <a href="{{ route('admin.index') }}" class="logo">Admin<span>THOR</span></a>
             <!--logo end-->
             <div class="nav notify-row" id="top_menu">
                 <!--  notification start -->
@@ -117,8 +117,7 @@
                                     </div>
                                     <div class="progress">
                                         <div class="progress-bar progress-bar-striped bg-danger" role="progressbar"
-                                            aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"
-                                            style="width: 33%">
+                                            aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 33%">
                                             <span class="sr-only">33% Complete (danger)</span>
                                         </div>
                                     </div>
@@ -132,8 +131,7 @@
                                     </div>
                                     <div class="progress">
                                         <div class="progress-bar progress-bar-striped" role="progressbar"
-                                            aria-valuenow="45" aria-valuemin="0" aria-valuemax="100"
-                                            style="width: 45%">
+                                            aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 45%">
                                             <span class="sr-only">45% Complete</span>
                                         </div>
                                     </div>
@@ -277,36 +275,40 @@
                     @auth
                         <li class="dropdown">
                             <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                                <img src="{{ optional(Auth::user()->avatar_img) ? Storage::url(Auth::user()->avatar_img) : asset('default-avatar.png') }}" width="30px">
+                                <img src="{{ Auth::user()->avatar_img ? Storage::url(Auth::user()->avatar_img) : asset('default-avatar.png') }}"
+                                    alt="{{ Auth::user()->name }}" class="rounded-circle" width="30"
+                                    height="30">
                                 <span class="username">{{ optional(Auth::user())->username }}</span>
                                 <b class="caret"></b>
                             </a>
 
-                            <ul class="dropdown-menu dropdown-menu-right">
+                            <ul class="dropdown-menu dropdown-menu-right shadow-sm p-2" style="min-width: 150px;">
                                 <li>
-                                    <a href="{{ route('admin.profile') }}" class="dropdown-item">
-                                        <i class="fa fa-suitcase"></i> Profile
+                                    <a href="{{ route('admin.profile') }}"
+                                        class="dropdown-item d-flex align-items-center">
+                                        <i class="fa fa-suitcase me-2"></i> Hồ sơ
                                     </a>
                                 </li>
                                 <li>
                                     <form action="{{ route('logout') }}" method="POST" style="display: inline;">
                                         @csrf
-                                        <button type="submit" class="btn btn-link dropdown-item"><i
-                                                class="fa fa-key"></i> Logout</button>
+                                        <button type="submit"
+                                            class="btn btn-link dropdown-item text-danger d-flex align-items-center">
+                                            <i class="fa fa-sign-out-alt me-2"></i> Đăng xuất
+                                        </button>
                                     </form>
                                 </li>
                             </ul>
+
                         </li>
                     @else
-                        <li>
-                            <a href="{{ route('login') }}" class="dropdown-item">Đăng nhập</a>
-                        </li>
+                    <li>
+                        <a href="{{ route('login') }}" class="dropdown-item">Đăng nhập</a>
+                    </li>
                     @endauth
-                    {{-- <li class="sb-toggle-right">
-                        <a href="http://localhost:3000/" target="_blank" rel="noopener noreferrer">
-                            <i class="fa fa-sign-in mr-2"></i>Website
-                        </a>
-                    </li> --}}
+                    <a href="http://localhost:3000" class="fa fa-sign-in mr-2"
+                    style="display: inline-flex; justify-content: center; align-items: center; text-decoration: none; font-size: 13px; padding: 5px;"
+                    target="_blank"><span>Website</span></a>
 
                     <!-- user login dropdown end -->
                 </ul>
@@ -319,11 +321,16 @@
             <div id="sidebar" class="nav-collapse ">
                 <!-- sidebar menu start-->
                 <ul class="sidebar-menu" id="nav-accordion">
-
+                    <li>
+                        <a href="{{ route('admin.index') }}">
+                            <i class="fa fa-dashboard"></i>
+                            <span>Thông kê</span>
+                        </a>
+                    </li>
                     <li>
                         <a href="{{ route('admin.articles.index') }}">
                             <i class="bi bi-newspaper"></i>
-                            <span>Article</span>
+                            <span>Bài viết</span>
                         </a>
                     </li>
                     <li>
@@ -335,49 +342,49 @@
                     <li>
                         <a href="{{ route('admin.brands.index') }}">
                             <i class="bi bi-badge-tm-fill"></i>
-                            <span>Brand</span>
+                            <span>Thương hiệu</span>
                         </a>
                     </li>
                     <li>
                         <a href="{{ route('admin.categories.index') }}">
                             <i class="bi bi-tags-fill"></i>
-                            <span>Category</span>
+                            <span>Danh mục</span>
                         </a>
                     </li>
                     <li>
                         <a href="{{ route('admin.contacts.index') }}">
                             <i class="bi bi-person-rolodex"></i>
-                            <span>Contact</span>
+                            <span>Liên hệ</span>
                         </a>
                     </li>
                     <li>
                         <a href="{{ route('admin.comments.index') }}">
                             <i class="bi bi-chat-square-dots-fill"></i>
-                            <span>Comment</span>
+                            <span>Bình luận</span>
                         </a>
                     </li>
                     <li>
                         <a href="{{ route('admin.orders.index') }}">
                             <i class="bi bi-receipt"></i>
-                            <span>Order</span>
+                            <span>Đơn hàng</span>
                         </a>
                     </li>
                     <li>
                         <a href="{{ route('admin.user.index') }}">
                             <i class="fa fa-user"></i>
-                            <span>User</span>
+                            <span>Tài khoản</span>
                         </a>
                     </li>
                     <li>
                         <a href="{{ route('admin.products.index') }}">
                             <i class="bi bi-shop"></i>
-                            <span>Product</span>
+                            <span>Shops</span>
                         </a>
                     </li>
                     <li>
                         <a href="{{ route('admin.vouchers.index') }}">
                             <i class="fas fa-ticket-alt"></i>
-                            <span> Voucher</span>
+                            <span>Voucher</span>
                         </a>
                     </li>
 
@@ -426,32 +433,31 @@
     <!--script for this page-->
     <script src="{{ asset('assets') }}/admin/js/sparkline-chart.js"></script>
     <script src="{{ asset('assets') }}/admin/js/easy-pie-chart.js"></script>
-    <script src="{{ asset('assets') }}/admin/js/count.js"></script>
 
     <script>
-        //owl carousel
+    //owl carousel
 
-        $(document).ready(function() {
-            $("#owl-demo").owlCarousel({
-                navigation: true,
-                slideSpeed: 300,
-                paginationSpeed: 400,
-                singleItem: true,
-                autoPlay: true
+    $(document).ready(function() {
+        $("#owl-demo").owlCarousel({
+            navigation: true,
+            slideSpeed: 300,
+            paginationSpeed: 400,
+            singleItem: true,
+            autoPlay: true
 
-            });
         });
+    });
 
-        //custom select box
+    //custom select box
 
-        $(function() {
-            $('select.styled').customSelect();
-        });
+    $(function() {
+        $('select.styled').customSelect();
+    });
 
-        $(window).on("resize", function() {
-            var owl = $("#owl-demo").data("owlCarousel");
-            owl.reinit();
-        });
+    $(window).on("resize", function() {
+        var owl = $("#owl-demo").data("owlCarousel");
+        owl.reinit();
+    });
     </script>
 
 </body>

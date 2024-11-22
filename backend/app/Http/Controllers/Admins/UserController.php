@@ -18,12 +18,15 @@ class UserController extends Controller
     {
         
         $search = $request->input('search');
-
+        $perPage = $request->input('per_page', 10); // Mặc định 10 bản ghi
+        
         $users = User::when($search, function ($query, $search) {
             return $query->where('username', 'LIKE', "%{$search}%")
                 ->orWhere('email', 'LIKE', "%{$search}%")
                 ->orWhere('phone', 'LIKE', "%{$search}%");
-        })->get();
+        })
+        ->orderBy('id', 'desc') // Sắp xếp giảm dần theo cột 'id'
+        ->paginate($perPage);
         $noResults = $users->isEmpty();
 
         return view('admin.user.list', compact('users', 'noResults'));

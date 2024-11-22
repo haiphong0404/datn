@@ -8,13 +8,13 @@
  <div class="bg-body-light">
   <div class="content content-full">
       <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center">
-          <h1 class="flex-grow-1 fs-3 fw-semibold my-2 my-sm-3">Thêm mới thương hiệu</h1>
+          <h1 class="flex-grow-1 fs-3 fw-semibold my-2 my-sm-3">Thêm mới Bài Viết</h1>
           <nav class="flex-shrink-0 my-2 my-sm-0 ms-sm-3" aria-label="breadcrumb">
               <ol class="breadcrumb">
                   <li class="breadcrumb-item">
                       <a href="{{ route('admin.brands.index') }}" style="color: inherit;">articles  </a>
                   </li>
-                  <li class="breadcrumb-item active" aria-current="page">Thêm mới thương hiệu</li>
+                  <li class="breadcrumb-item active" aria-current="page">Thêm mới Bài Viết</li>
               </ol>
           </nav>
       </div>
@@ -28,10 +28,10 @@
               @csrf
               <div class="row">
                   <div class="col-lg-12 col-xl-8 offset-xl-2">
-                      <!-- Tên thương hiệu -->
+                      <!-- Tên Bài Viết -->
                       <div class="mb-4">
                         <label class="form-label" for="name">Tên name</label>
-                        <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name') }}" placeholder="Nhập tên thương hiệu">
+                        <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name') }}" placeholder="Nhập tên Bài Viết">
                         @error('name')
                             <div class="text-danger mt-2" id="name-error">{{ $message }}</div>
                         @enderror
@@ -65,7 +65,7 @@
                         @enderror
                     </div>
 
-                      <button type="submit" class="btn btn-primary mb-4">Tạo thương hiệu</button>
+                      <button type="submit" class="btn btn-primary mb-4">Tạo Bài Viết</button>
                   </div>
               </div>
           </form>

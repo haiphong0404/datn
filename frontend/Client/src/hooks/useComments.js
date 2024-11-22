@@ -1,25 +1,35 @@
-import { useEffect, useState } from 'react';
-import { fetchComments } from '../api/commentsApi.js';
+// hooks/useComments.js
+import { useEffect, useState, useCallback } from "react";
+import { fetchComments } from "../api/commentsApi.js";
 
-export const useComments = () => {
+export const useComments = (productId) => {
     const [comments, setComments] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [isLoading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    useEffect(() => {
-        const getComments = async () => {
-            try {
-                const data = await fetchComments();
-                setComments(data);
-            } catch (err) {
-                setError(err.message);
-            } finally {
-                setLoading(false);
-            }
-        };
+    // Hàm refetch để gọi lại API và cập nhật danh sách bình luận
+    const refetch = useCallback(async () => {
+        if (!productId) return;
+        setLoading(true);
+        try {
+            const data = await fetchComments(productId);
+            setComments(data);
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
+    }, [productId]);
 
-        getComments();
+    // Hàm updateComments trực tiếp thay đổi state `comments` khi thêm, sửa hoặc xóa bình luận
+    const updateComments = useCallback((newComment) => {
+        setComments((prevComments) => [newComment, ...prevComments]);
     }, []);
 
-    return { comments, loading, error };
+
+    useEffect(() => {
+        refetch(); // Gọi refetch khi productId thay đổi
+    }, [productId, refetch]);
+
+    return { comments, isLoading, error, refetch, updateComments };
 };

@@ -4,7 +4,7 @@ import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import "slick-carousel/slick/slick.css"; 
+import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 
@@ -28,13 +28,12 @@ import FAQs from "./pages/FAQs";
 import Bill from "./pages/Bill";
 import Dashboard from "./pages/My_account/dashboard";
 import Orders from "./pages/My_account/orders";
-import Download from "./pages/My_account/download";
-import Payment_method from "./pages/My_account/payment_method";
-import Address_edit from "./pages/My_account/address_edit";
 import Account_info from "./pages/My_account/account_info";
 import Product_details from "./pages/Product_Detail/Product_details";
 import CheckoutDetail from "./pages/CheckoutDetail";
 
+import ChangePassword from "./pages/My_account/changePass";
+import EditProfile from "./pages/My_account/editProfile";
 
 
 
@@ -45,7 +44,7 @@ const routeConfig = [
     path: "/",
     element: <LayoutClient />,
     children: [
-      { path: "",  element: <Main /> },
+      { path: "", element: <Main /> },
       { path: "shop", element: <Shop /> },
       { path: "blog", element: <Blog /> },
       { path: "checkout", element: <Checkout /> },
@@ -60,6 +59,7 @@ const routeConfig = [
       { path: "faqs", element: <FAQs /> },
     
       
+
       { path: "checkout/bill", element: <Bill /> },
       { path: "/checkout-detail/:orderId", element: <CheckoutDetail /> },
     ],
@@ -73,12 +73,12 @@ const routeConfig = [
         path: "orders", element: <Orders />,
       },
       { path: "Order_detail/:orderId", element: <Order_detail /> },
-      { path: "downloads", element: <Download /> },
-      { path: "payment_method", element: <Payment_method /> },
-      { path: "address_edit", element: <Address_edit /> },
       { path: "account_info", element: <Account_info /> },
+      { path: "changePassword", element: <ChangePassword /> },
+      { path: "editProfile", element: <EditProfile /> },
     ],
   },
+
 
 ];
 

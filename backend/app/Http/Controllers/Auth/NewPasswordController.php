@@ -31,7 +31,7 @@ class NewPasswordController extends Controller
     {
         $validate = $request->validate([
             'email' => ['required', 'email'],
-            'password' => ['required', 'confirmed',Rules\Password::defaults()],
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'password_confirmation' => ['required'] // chỉ cần kiểm tra xem nó có giá trị không
         ], [
             'email.required' => 'Email là bắt buộc.',
@@ -63,5 +63,6 @@ class NewPasswordController extends Controller
                     ? redirect()->route('/login')->with('status', __($status))
                     : back()->withInput($request->only('email'))
                             ->withErrors(['email' => __($status)]);
+
     }
 }
