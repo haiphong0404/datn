@@ -13,6 +13,7 @@ use App\Http\Controllers\Admins\UserController;
 use App\Http\Controllers\AdminTestController;
 use App\Http\Controllers\Admins\ProfileControllers;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\VnpayController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admins\VoucherController;
 use App\Http\Controllers\StatisticsController;

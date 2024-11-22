@@ -307,9 +307,9 @@
                     </li>
                     @endauth
                     <a href="http://localhost:3000" class="fa fa-sign-in mr-2"
-                    style="display: inline-flex; justify-content: center; align-items: center; text-decoration: none; font-size: 13px; padding: 5px;" 
+                    style="display: inline-flex; justify-content: center; align-items: center; text-decoration: none; font-size: 13px; padding: 5px;"
                     target="_blank"><span>Website</span></a>
-                
+
                     <!-- user login dropdown end -->
                 </ul>
                 <!--search & user info end-->

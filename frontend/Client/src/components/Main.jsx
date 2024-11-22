@@ -1,49 +1,30 @@
 import React, { useEffect, useState } from "react";
 import { useQuery } from '@tanstack/react-query';
 import { fetchProducts } from '../api/product';
-import { useDispatch, useSelector } from "react-redux";
-import add, { loadCartFromLocalStorage } from "../actions/action"
 import axios from "axios";
 import HeroSlider from "./homes/HeroSlider";
 import Category from "./homes/Category";
 import Brand from "./homes/Brand";
-import Blog from "./homes/Blog";
-import ProductTab from "./homes/ProductTab";
 import { Link } from "react-router-dom";
-// import QuickViewModal from "./quickview/QuickView";
+import QuickViewModal from "./quickview/QuickView";
+import Blog from "./homes/Blog";
+
 
 
 
 const Main = () => {
-  // const [showQuickView, setShowQuickView] = useState(false);
-  // const [selectedProduct, setSelectedProduct] = useState(null);
+  const [showQuickView, setShowQuickView] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
 
-  // const handleQuickView = (product) => {
-  //   setSelectedProduct(product);
-  //   setShowQuickView(true);
-  // };
+  const handleQuickView = (product) => {
+    console.log('QuickView triggered for:', product); // Kiểm tra xem sản phẩm đã được truyền đúng chưa
+    setSelectedProduct(product);
+    setShowQuickView(true);
+  };
 
-  // const handleCloseQuickView = () => {
-  //   setShowQuickView(false);
-  //   setSelectedProduct(null);
-  // };
-  // const cart = useSelector(state => state.updateCart)
-  // const [localCart, setLocalCart] = useState(cart);
-  // const dispatch = useDispatch()
-  //   const handleAddToCart = (product) => {
-  //     // Thêm sản phẩm vào giỏ hàng
-  //     const updatedCart = [...localCart, product];
-  //     setLocalCart(updatedCart); // Cập nhật local state
-  //     localStorage.setItem("cart", JSON.stringify(updatedCart)); // Lưu vào localStorage
-
-  //     // Cập nhật Redux store
-  //     dispatch(add(product)); // Giả sử bạn có một action để thêm sản phẩm vào Redux store
-  // };
-  // useEffect(() => {
-  //   const savedCart = loadCartFromLocalStorage(); // Lấy giỏ hàng từ localStorage
-  //   setLocalCart(savedCart);
-  // }, [cart]);
-
+  const handleCloseQuickView = () => {
+    setShowQuickView(false);
+  };
   const { data: products = [], error: productsError } = useQuery({
     queryKey: ['Products'],
     queryFn: fetchProducts,
@@ -74,16 +55,18 @@ const Main = () => {
               </div>
               <div className="col-lg-3 col-sm-6">
                 <div className="policy-block text-center">
+                  <a href="/blog">
                   <div className="policy-icon">
                     <i className="fa fa-truck" />
                   </div>
                   <div className="policy-text">
                     <h4 className="policy-title">
-                      Miễn phí giao hàng</h4>
+                    Nhận mã giảm giá</h4>
                     <p className="policy-desc">
-                      Tất cả đơn hàng trên 500.000 VNĐ sẽ được miễn phí giao hàng, giúp bạn tiết kiệm chi phí khi mua sắm.
+                    Đối với khách hàng , mã giảm giá là lời cảm ơn từ thương hiệu, giúp duy trì mối quan hệ lâu dài .
                     </p>
                   </div>
+                  </a>
                 </div>
               </div>
               <div className="col-lg-3 col-sm-6">
@@ -131,7 +114,7 @@ const Main = () => {
                 >
                   <img
                     className="w-100"
-                    src="assets/img/about/about.jpg"
+                    src="assets/img/about/gioithieu.webp"
                     alt="about thumb"
                   />
                 </div>
@@ -140,8 +123,7 @@ const Main = () => {
                 <div className="about-content">
                   <h2 className="about-title">Giới thiệu về THOR</h2>
                   <h3 className="about-subtitle">
-                    Nghiên cứu đã chỉ ra rằng độc giả đọc tôi.
-                  </h3>
+                  Chào mừng đến với Giày Thor – Nơi Đam Mê Chất Lượng Tỏa Sáng!                  </h3>
                   <p>
                     Chào mừng bạn đến với Giày Thor - thiên đường cho những tín đồ yêu thích giày độc đáo và mạnh mẽ! Chúng tôi chuyên cung cấp các mẫu giày Thor ấn tượng, phù hợp với mọi lứa tuổi và phong cách.
                   </p>
@@ -173,7 +155,7 @@ const Main = () => {
                 <div className="section-title text-center">
                   <h3 className="title">Sản Phẩm Mới Về</h3>
                   <h4 className="sub-title">
-                    Các cuộc điều tra đã chứng minh rằng người đọc dễ dàng đọc tôi hơn vì họ đọc thường xuyên hơn; sự rõ ràng cũng là một quá trình động, tiếp tục sự thay đổi.
+                  Cập nhật những mẫu giày mới nhất, thời trang và phong cách dành riêng cho bạn. Đừng bỏ lỡ cơ hội sở hữu những sản phẩm đang được săn đón!
                   </h4>
                 </div>
               </div>
@@ -214,7 +196,7 @@ const Main = () => {
                       {/* <a className="add-to-cart" >
                         
                       </a> */}
-                      <Link className="add-to-cart" onClick={() => handleQuickView(product)} ><i className="fa fa-shopping-cart" /></Link>
+                      <button className="add-to-cart" onClick={() => handleQuickView(product)} ><i className="fa fa-shopping-cart" /></button>
                     </div>
 
                   </div>
@@ -299,16 +281,7 @@ const Main = () => {
                         alt={product.name}
                       />
                     </Link>
-                    <div className="button-group">
-
-                      <a href="#" data-bs-toggle="modal" data-bs-target="#quick_view">
-                        <span data-bs-toggle="tooltip" title="Quick View">
-                          <i className="fa fa-eye" />
-
-                        </span>
-                      </a>
-                    </div>
-
+                    
                   </div>
                   <div className="product-content">
                     <div className="product-caption">
@@ -338,7 +311,13 @@ const Main = () => {
         <Blog />
         {/* latest blog area end */}
         {/* <QuickViewModal show={showQuickView} onHide={handleCloseQuickView} product={selectedProduct} /> */}
-
+        {selectedProduct && (
+  <QuickViewModal
+    show={showQuickView}
+    onClose={handleCloseQuickView}
+    product={selectedProduct}
+  />
+)}
       </main>
     </div>
   );

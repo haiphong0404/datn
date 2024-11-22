@@ -10,6 +10,11 @@ const Orders = () => {
         return <div>Error: {error}</div>;
     }
 
+    // Hàm tạo mã ngẫu nhiên
+    const generateRandomCode = () => {
+        return 'THOR-' + Math.random().toString(36).substr(2, 9).toUpperCase(); // Tạo mã ngẫu nhiên
+    };
+
     return (
         <div>
             <div>
@@ -20,7 +25,7 @@ const Orders = () => {
                             <thead className="thead-light">
                                 <tr>
                                     <th>Đơn Hàng</th>
-                                    <th>Ngày</th>
+                                    <th>Ngày Đặt</th>
                                     <th>Trạng Thái</th>
                                     <th>Tổng Cộng</th>
                                     <th>Hành Động</th>
@@ -30,10 +35,27 @@ const Orders = () => {
                                 {orders.length > 0 ? (
                                     orders.map(order => (
                                         <tr key={order.id}>
-                                            <td>{order.id}</td>
-                                            <td>{new Date(order.order_date).toLocaleDateString('vi-VN')}</td>
-                                            <td>{order.status}</td>
-                                            <td>${order.total_amount}</td>
+                                            <td>{generateRandomCode()}</td> {/* Mã ngẫu nhiên */}
+                                            <td>
+                                                {new Date(order.order_date).toLocaleString('vi-VN', {
+                                                    timeZone: 'Asia/Ho_Chi_Minh', // Đảm bảo múi giờ Việt Nam
+                                                    weekday: 'long', // Ngày trong tuần (ví dụ: thứ Hai)
+                                                    year: 'numeric', // Năm
+                                                    month: 'long', // Tháng
+                                                    day: 'numeric', // Ngày
+                                                    hour12: true, // Hiển thị AM/PM
+                                                })}
+                                            </td>
+                                            <td>
+                                                {
+                                                    {
+                                                        pending: 'Đang Xử Lý',
+                                                        completed: 'Hoàn Thành',
+                                                        cancelled: 'Đã Hủy'
+                                                    }[order.status] || 'Trạng Thái Không Xác Định'
+                                                }
+                                            </td>
+                                            <td>{parseFloat(order.total_amount).toLocaleString()} VND</td>
                                             <td>
                                                 <Link to={`/my_account/Order_detail/${order.id}`} className="btn btn-sqr">
                                                     Xem

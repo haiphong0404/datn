@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a349383c5500fe749471b3bfb83df832",
+    "content-hash": "c850d5e2feb77005c28d46cf96a3b072",
     "packages": [
         {
             "name": "brick/math",
@@ -1883,6 +1883,63 @@
                 }
             ],
             "time": "2024-09-21T08:32:55+00:00"
+        },
+        {
+            "name": "lnpay/lnpay-php",
+            "version": "v0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/lnpay/lnpay-php.git",
+                "reference": "ed1e61c716c125ae009e2ecc637620da24ce485c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/lnpay/lnpay-php/zipball/ed1e61c716c125ae009e2ecc637620da24ce485c",
+                "reference": "ed1e61c716c125ae009e2ecc637620da24ce485c",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "ext-intl": "*",
+                "ext-json": "*",
+                "ext-mbstring": "*",
+                "guzzlehttp/guzzle": "^7.3",
+                "php": ">=7.3"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^9.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "LNPayClient\\": "src/",
+                    "LNPayClient\\Tests\\": "tests/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "LNPay and contributors",
+                    "homepage": "https://github.com/lnpay/lnpay-php"
+                }
+            ],
+            "description": "LNPay PHP Client Library",
+            "homepage": "https://www.lnpay.co",
+            "keywords": [
+                "LNPay",
+                "api",
+                "client",
+                "payment processing"
+            ],
+            "support": {
+                "email": "contact@lnpay.co",
+                "issues": "https://github.com/lnpay/lnpay-php/issues",
+                "source": "https://github.com/lnpay/lnpay-php"
+            },
+            "time": "2021-07-21T22:00:50+00:00"
         },
         {
             "name": "monolog/monolog",

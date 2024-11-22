@@ -6,7 +6,7 @@ const initialState ={
 }
  const updateCart = (state=initialState ,action)=>{
   switch (action.type) {
-    case "ADDTOCART":
+    case "ADD_TO_CART":
   const existingItemIndex = state.cart.findIndex(
     (item) => item.id === action.payload.id
   );
@@ -30,15 +30,29 @@ const initialState ={
       cart: [...state.cart, { ...action.payload, quantity: 1 }],
     };
   }
-
-
+  case 'LOAD_CART_FROM_DB':
+    return {
+        ...state,
+        cartItems: action.payload,
+    };
+    case 'LOAD_CART':
+      return { ...state, cart: action.payload };
   case "REMOVEFROMCART":
   return {
     ...state,
     cart: state.cart.filter((item) => item.id !== action.payload),
   };
   
-
+  case 'UPDATE_CART':
+    return {
+      ...state,
+      cart: action.payload,
+    };
+  case 'LOAD_CART':
+    return {
+      ...state,
+      cart: action.payload,
+    };
   default:
   return state;
 
