@@ -121,14 +121,14 @@ const Blog = () => {
                         return (
                           <div key={blog.id} className="recent-post-item">
                             <figure className="product-thumb">
-                              <Link to={`/blog_detail/${blog.id}`}>
+                              <Link to={`/blog_details/${blog.id}`}>
                                 <img src={blog.image || 'assets/img/blog/default.jpg'} alt="Blog Image" />
                               </Link>
                             </figure>
                             <div className="recent-post-description">
                               <div className="product-name">
                                 <h6>
-                                  <Link to={`/blog_detail/${blog.id}`}>{limitedTitle}</Link>
+                                  <Link to={`/blog_details/${blog.id}`}>{limitedTitle}</Link>
                                 </h6>
                                 <p>{new Date(blog.created_at).toLocaleDateString('en-GB')}</p> {/* Định dạng ngày dd/mm/yyyy */}
                               </div>
@@ -168,7 +168,7 @@ const Blog = () => {
                         <div key={blog.id} className="col-md-6">
                           <div className="blog-post-item d-block mb-30">
                             <div className="blog-thumb w-100">
-                              <Link to={`/blog_detail/${blog.id}`}>
+                              <Link to={`/blog_details/${blog.id}`}>
                                 <img
                                   src={blog.image || "assets/img/blog/default.jpg"}
                                   alt={blog.name}
@@ -177,7 +177,7 @@ const Blog = () => {
                             </div>
                             <div className="blog-content w-100 pl-0 mt-20">
                               <h6 className="blog-title">
-                                <Link to={`/blog_detail/${blog.id}`}>
+                                <Link to={`/blog_details/${blog.id}`}>
                                   {blog.title}
                                 </Link>
                               </h6>
@@ -195,7 +195,7 @@ const Blog = () => {
                               </p>
                               <Link
                                 className="btn read-more"
-                                to={`/blog_detail/${blog.id}`}
+                                to={`/blog_details/${blog.id}`}
                               >
                                 Read More
                               </Link>

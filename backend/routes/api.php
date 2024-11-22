@@ -64,7 +64,8 @@ Route::get('logout', [AuthenticatedSessionController::class, 'destroy'])->name('
 //post logout
 Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 Route::apiResource('Apibrands', BrandController::class);
-Route::apiResource('Apiarticle', ArticlesController::class); // bài viết
+Route::apiResource('Apiarticles', ArticlesController::class); // bài viết
+Route::get('/Apiarticle/{id}', [ArticlesController::class, 'hieungu']);
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });

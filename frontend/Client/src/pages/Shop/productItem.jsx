@@ -10,7 +10,7 @@ const ProductItem = ({ product }) => { // Nhận product qua props
                         <img src={product.image || '/path/to/placeholder.jpg'} alt={product.name} />
                     </Link>
                     <div className="button-group">
-                       
+
                         <Link to="#" data-bs-toggle="modal" data-bs-target="#quick_view">
                             <span data-bs-toggle="tooltip" title="Quick View">
                                 <i className="fa fa-eye" />
@@ -33,8 +33,11 @@ const ProductItem = ({ product }) => { // Nhận product qua props
                             </Link>
                         </h6>
                         <div className="price-box">
-                            
-                            <span className="price-regular">{product.price}₫</span> {/* Use actual price from API */}
+
+                            <span className="price-regular">
+                                {parseFloat(product.price).toLocaleString()} VND
+                            </span>
+                            {/* Use actual price from API */}
                         </div>
                         <Link className="add-to-cart" to={`/product_details/${product.id}`}>
                             <i className="fa fa-shopping-cart" />
