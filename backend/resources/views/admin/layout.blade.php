@@ -117,8 +117,7 @@
                                     </div>
                                     <div class="progress">
                                         <div class="progress-bar progress-bar-striped bg-danger" role="progressbar"
-                                            aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"
-                                            style="width: 33%">
+                                            aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 33%">
                                             <span class="sr-only">33% Complete (danger)</span>
                                         </div>
                                     </div>
@@ -132,8 +131,7 @@
                                     </div>
                                     <div class="progress">
                                         <div class="progress-bar progress-bar-striped" role="progressbar"
-                                            aria-valuenow="45" aria-valuemin="0" aria-valuemax="100"
-                                            style="width: 45%">
+                                            aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 45%">
                                             <span class="sr-only">45% Complete</span>
                                         </div>
                                     </div>
@@ -275,39 +273,40 @@
                     </li>
                     <!-- user login dropdown start-->
                     @auth
-                        <li class="dropdown">
-                            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                                <img src="{{ optional(Auth::user()->avatar_img) ? Storage::url(Auth::user()->avatar_img) : asset('default-avatar.png') }}" width="30px">
-                                <span class="username">{{ optional(Auth::user())->username }}</span>
-                                <b class="caret"></b>
-                            </a>
+                    <li class="dropdown">
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                            <img src="{{ optional(Auth::user()->avatar_img) ? Storage::url(Auth::user()->avatar_img) : asset('default-avatar.png') }}"
+                                width="30px">
+                            <span class="username">{{ optional(Auth::user())->username }}</span>
+                            <b class="caret"></b>
+                        </a>
 
-                            <ul class="dropdown-menu dropdown-menu-right">
-                                <li>
-                                    <a href="{{ route('admin.profile') }}" class="dropdown-item">
-                                        <i class="fa fa-suitcase"></i> Profile
-                                    </a>
-                                </li>
-                                <li>
-                                    <form action="{{ route('logout') }}" method="POST" style="display: inline;">
-                                        @csrf
-                                        <button type="submit" class="btn btn-link dropdown-item"><i
-                                                class="fa fa-key"></i> Logout</button>
-                                    </form>
-                                </li>
-                            </ul>
-                        </li>
+                        <ul class="dropdown-menu dropdown-menu-right">
+                            <li>
+                                <a href="{{ route('admin.profile') }}" class="dropdown-item">
+                                    <i class="fa fa-suitcase"></i> Profile
+                                </a>
+                            </li>
+                            <li>
+                                <form action="{{ route('logout') }}" method="POST" style="display: inline;">
+                                    @csrf
+                                    <button type="submit" class="btn btn-link dropdown-item"><i class="fa fa-key"></i>
+                                        Logout</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </li>
                     @else
-                        <li>
-                            <a href="{{ route('login') }}" class="dropdown-item">Đăng nhập</a>
-                        </li>
+                    <li>
+                        <a href="{{ route('login') }}" class="dropdown-item">Đăng nhập</a>
+                    </li>
                     @endauth
                     {{-- <li class="sb-toggle-right">
                         <a href="http://localhost:3000/" target="_blank" rel="noopener noreferrer">
                             <i class="fa fa-sign-in mr-2"></i>Website
                         </a>
                     </li> --}}
-                    
+
                     <!-- user login dropdown end -->
                 </ul>
                 <!--search & user info end-->
@@ -433,29 +432,29 @@
     <script src="{{ asset('assets') }}/admin/js/easy-pie-chart.js"></script>
 
     <script>
-        //owl carousel
+    //owl carousel
 
-        $(document).ready(function() {
-            $("#owl-demo").owlCarousel({
-                navigation: true,
-                slideSpeed: 300,
-                paginationSpeed: 400,
-                singleItem: true,
-                autoPlay: true
+    $(document).ready(function() {
+        $("#owl-demo").owlCarousel({
+            navigation: true,
+            slideSpeed: 300,
+            paginationSpeed: 400,
+            singleItem: true,
+            autoPlay: true
 
-            });
         });
+    });
 
-        //custom select box
+    //custom select box
 
-        $(function() {
-            $('select.styled').customSelect();
-        });
+    $(function() {
+        $('select.styled').customSelect();
+    });
 
-        $(window).on("resize", function() {
-            var owl = $("#owl-demo").data("owlCarousel");
-            owl.reinit();
-        });
+    $(window).on("resize", function() {
+        var owl = $("#owl-demo").data("owlCarousel");
+        owl.reinit();
+    });
     </script>
 
 </body>
