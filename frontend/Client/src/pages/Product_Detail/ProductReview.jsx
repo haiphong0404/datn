@@ -5,6 +5,7 @@ import { useComments } from "../../hooks/useComments";
 import { addComment, editComment, deleteComment } from "../../api/commentsApi";
 import moment from "moment"; // Import moment
 import { toast } from "react-toastify";
+import useProductAttributes from '../../hooks/useProductAtrib';
 
 const ProductReview = ({ initialTab = "tab_one" }) => {
   const [activeTab, setActiveTab] = useState(initialTab);
@@ -12,6 +13,7 @@ const ProductReview = ({ initialTab = "tab_one" }) => {
   const { product, loading: productLoading, error: productError } = useProductById(productId);
   const { comments, isLoading: commentsLoading, error: commentsError, refetch, updateComments } = useComments(productId);
   const [file, setFile] = useState(null);
+  const { colors, sizes } = useProductAttributes(productId);
 
 
 
@@ -112,6 +114,10 @@ const ProductReview = ({ initialTab = "tab_one" }) => {
     return <div>Error loading product or comments data.</div>;
   }
 
+  const colorNames = Array.isArray(colors) ? colors.map(color => color.name).join(', ') : "No colors available.";
+
+  const sizeNames = Array.isArray(sizes) ? sizes.map(size => size.name).join(', ') : "No sizes available.";
+
   return (
     <div className="product-review-info">
       <ul className="nav review-tab">
@@ -149,13 +155,13 @@ const ProductReview = ({ initialTab = "tab_one" }) => {
         <div className={`tab-pane fade ${activeTab === "tab_two" ? "show active" : ""}`} id="tab_two">
           <table className="table table-bordered">
             <tbody>
-              <tr>
+            <tr>
                 <td>Color</td>
-                <td>{product.variants ? product.variants.map(v => v.color).join(", ") : "No colors available."}</td>
+                <td>{colorNames}</td>
               </tr>
               <tr>
                 <td>Size</td>
-                <td>{product.variants ? product.variants.map(v => v.size).join(", ") : "No sizes available."}</td>
+                <td>{sizeNames}</td>
               </tr>
             </tbody>
           </table>
