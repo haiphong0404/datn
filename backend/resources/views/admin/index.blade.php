@@ -7,7 +7,7 @@
             <div class="col-lg-4 col-sm-6">
                 <section class="card">
                     <div class="symbol red">
-                        <i class="fa fa-cube"></i>
+                        <i class="fa fa-shopping-cart"></i>
                     </div>
                     <div class="value">
                         <h1 class="">

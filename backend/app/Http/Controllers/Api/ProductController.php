@@ -14,7 +14,11 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
-        $products = Product::with(['category', 'brand'])->get();
+        // Lấy danh sách sản phẩm chưa bị xóa mềm
+        $products = Product::with(['category', 'brand'])
+            ->whereNull('deleted_at') // Đảm bảo chỉ lấy sản phẩm chưa bị xóa mềm
+            ->get();
+
         if ($products->isEmpty()) {
             return response()->json([
                 'message' => 'Không có sản phẩm nào được tìm thấy!'
@@ -29,9 +33,9 @@ class ProductController extends Controller
                 'description' => $product->description,
                 'category' => $product->category ? $product->category->name : null,
                 'brand' => $product->brand ? $product->brand->name : null,
-                'image' => $this->getImageAsBase64($product->image),
-                'category_id' =>$product ->brand_id ,// Chuyển đổi hình ảnh sang Base64
-                'brand_id' =>$product ->category_id ,
+                'image' => $this->getImageAsBase64($product->image), // Chuyển đổi hình ảnh sang Base64
+                'category_id' => $product->category_id,
+                'brand_id' => $product->brand_id,
             ];
         }), 200);
     }
@@ -41,7 +45,17 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        $product = Product::with(['category', 'brand'])->findOrFail($id);
+        // Tìm sản phẩm chưa bị xóa mềm
+        $product = Product::with(['category', 'brand'])
+            ->where('id', $id)
+            ->whereNull('deleted_at') // Đảm bảo sản phẩm chưa bị xóa mềm
+            ->first();
+
+        if (!$product) {
+            return response()->json([
+                'message' => 'Sản phẩm không tồn tại hoặc đã bị xóa!'
+            ], 404);
+        }
 
         return response()->json([
             'id' => $product->id,
@@ -63,17 +77,12 @@ class ProductController extends Controller
         if ($imagePath && Storage::disk('public')->exists($imagePath)) {
             // Lấy nội dung hình ảnh
             $imageData = Storage::disk('public')->get($imagePath);
-            // Lấy loại mime type bằng cách sử dụng FFMpeg hoặc PHP
-            $mimeType = mime_content_type(storage_path('app/public/' . $imagePath)); // Sửa tại đây
+            // Lấy loại mime type
+            $mimeType = mime_content_type(storage_path('app/public/' . $imagePath));
             // Mã hóa hình ảnh thành Base64
             return 'data:' . $mimeType . ';base64,' . base64_encode($imageData);
         }
 
         return null; // Nếu không có hình ảnh, trả về null
     }
-
-
-    /**
-     * Show the form for editing the specified resource.
-     */
 }
