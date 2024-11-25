@@ -68,7 +68,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/cart/remove', [CartController::class, 'removeFromCart']);
     Route::delete('/cart/remove/{product_variant_id}', [CartController::class, 'removeFromCart']);
     Route::apiResource('order', OrderController::class );
-    
 
 });
 Route::get('comments/{product_id}', [CommentController::class, 'index']);

@@ -7,7 +7,7 @@ import Category from "./homes/Category";
 import Brand from "./homes/Brand";
 import { Link } from "react-router-dom";
 import QuickViewModal from "./quickview/QuickView";
-import Blog from "./homes/Blog";
+import BlogMain from "./homes/Blog";
 
 
 
@@ -308,7 +308,7 @@ const Main = () => {
         <Brand />
         {/* testimonial area end */}
         {/* latest blog area start */}
-        <Blog />
+        <BlogMain />
         {/* latest blog area end */}
         {/* <QuickViewModal show={showQuickView} onHide={handleCloseQuickView} product={selectedProduct} /> */}
         {selectedProduct && (
