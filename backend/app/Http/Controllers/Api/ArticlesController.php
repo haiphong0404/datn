@@ -4,18 +4,11 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Article;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
-
 class ArticlesController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
 
-
-     public function hieungu($id)
+     public function storeone($id)
      {
          // Tìm bài viết theo ID
          $article = Article::find($id);

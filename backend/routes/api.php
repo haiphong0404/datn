@@ -33,39 +33,25 @@ use App\Http\Controllers\Api\BannerController;
 
 Route::post('password/email', [ForgotPasswordController::class, 'sendResetLinkEmail']);
 Route::post('password/reset', [ResetPasswordController::class, 'reset']);
-// Route cho việc xác nhận mật khẩu mới
 Route::post('/password/reset/store', [NewPasswordController::class, 'store'])->name('password.update');
-
-//Route GET để lấy thông tin hướng dẫn về việc gửi yêu cầu đặt lại mật khẩu
 Route::get('/password/reset-link', [PasswordResetLinkController::class, 'store'])
     ->name('api.password.email');
-// Route để xử lý yêu cầu gửi liên kết đặt lại mật khẩu
 Route::post('/password/reset-link', [PasswordResetLinkController::class, 'store'])
     ->name('api.password.email');
-// Route để xác minh email
 Route::get('/email/verify', VerifyEmailController::class)->name('verification.verify');
 Route::middleware('auth:sanctum')->group(function () {
-    // Route to show the confirm password message
     Route::get('/confirm-password', [ConfirmablePasswordController::class, 'show']);
-
-    // Route to confirm the user's password
     Route::post('/confirm-password', [ConfirmablePasswordController::class, 'store']);
 });
-//get dang ky
 Route::get('register', [RegisteredUserController::class, 'store'])->name('register');
-//post dang ky
 Route::post('register', [RegisteredUserController::class, 'store'])->name('register');
-// getlogin
 Route::get('login', [AuthenticatedSessionController::class, 'store'])->name('login');
-// post login
 Route::post('login', [AuthenticatedSessionController::class, 'store'])->name('login');
-// get logout
 Route::get('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
-//post logout
 Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 Route::apiResource('Apibrands', BrandController::class);
 Route::apiResource('Apiarticles', ArticlesController::class); // bài viết
-Route::get('/Apiarticle/{id}', [ArticlesController::class, 'hieungu']);
+Route::get('/Apiarticle/{id}', [ArticlesController::class, 'storeone']);
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
@@ -79,9 +65,6 @@ Route::get('order-details/{order_id}', [OrderDetailController::class, 'getOrderD
 Route::apiResource('order-details', OrderDetailController::class);
 
 Route::middleware('auth:sanctum')->group(function () {
-
-
-    //comments
     Route::post('comments/{product_id}', [CommentController::class, 'store']);
     Route::put('comments/{id}', [CommentController::class, 'update']);
     Route::delete('comments/{id}', [CommentController::class, 'destroy']);
@@ -95,7 +78,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
 });
 Route::get('comments/{product_id}', [CommentController::class, 'index']);
-
 Route::get('products/{productId}/variants', [ProductVariantController::class, 'index']);
 Route::get('/variants/{id}', [ProductVariantController::class, 'show']);
 Route::get('/sizes', [SizeController::class, 'index']);
@@ -103,8 +85,8 @@ Route::get('/colors', [ColorController::class, 'index']);
 Route::get('/colors', [ColorController::class, 'index']);
 // Route::get('/comments', [CommentController::class, 'index']);
 // Route::delete('/comments/{id}', [CommentController::class, 'softDelete']);
-Route::get('contacts', [ContactController::class, 'index']); // Lấy danh sách tất cả contacts
-Route::get('contacts/{id}', [ContactController::class, 'show']); // Lấy contact theo ID
+Route::get('contacts', [ContactController::class, 'index']);
+Route::get('contacts/{id}', [ContactController::class, 'show']); 
 Route::get('/banners', [BannerController::class, 'index']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/cart', [CartController::class, 'index']);
