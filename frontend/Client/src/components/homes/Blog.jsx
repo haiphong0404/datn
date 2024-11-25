@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 const BlogMain = () => {
   const [articles, setArticles] = useState([]);
@@ -30,13 +31,13 @@ const BlogMain = () => {
             <div className="col-md-6 mb-4" key={article.id}>
               <div className="blog-post-item">
                 <div className="blog-thumb">
-                  <a href={`blog-details/${article.id}`}>
+                  <Link to={`/blog_details/${article.id}`}>
                     <img src={article.image || '/path/to/placeholder.jpg'} alt="blog thumb" />
-                  </a>
+                  </Link>
                 </div>
                 <div className="blog-content">
                   <h6 className="blog-title">
-                    <a href={`blog-details/${article.id}`}>{article.title}</a>
+                    <Link to={`/blog_details/${article.id}`}>{article.title}</Link>
                   </h6>
                   <div className="blog-meta">
                     <span><i className="fa fa-calendar" /> {new Date(article.created_at).toLocaleDateString()}</span>
@@ -45,7 +46,7 @@ const BlogMain = () => {
                   <p className="blog-desc">
                     {article.excerpt}
                   </p>
-                  <a className="btn read-more" href={`blog-details/${article.id}`}>Read More</a>
+                  <Link className="btn read-more" to={`/blog_details/${article.id}`}>Read More</Link>
                 </div>
               </div>
             </div>

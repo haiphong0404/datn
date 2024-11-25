@@ -266,50 +266,45 @@
             </div>
             <div class="top-nav ">
                 <!--search & user info start-->
+                <!--search & user info start-->
                 <ul class="nav pull-right top-menu">
                     <li>
                         @yield('search')
-                        {{-- <input type="text" class="form-control search" placeholder="Search"> --}}
                     </li>
                     <!-- user login dropdown start-->
                     @auth
-                        <li class="dropdown">
-                            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                                <img src="{{ Auth::user()->avatar_img ? Storage::url(Auth::user()->avatar_img) : asset('default-avatar.png') }}"
-                                    alt="{{ Auth::user()->name }}" class="rounded-circle" width="30"
-                                    height="30">
-                                <span class="username">{{ optional(Auth::user())->username }}</span>
-                                <b class="caret"></b>
-                            </a>
-
-                            <ul class="dropdown-menu dropdown-menu-right shadow-sm p-2" style="min-width: 150px;">
-                                <li>
-                                    <a href="{{ route('admin.profile') }}"
-                                        class="dropdown-item d-flex align-items-center">
-                                        <i class="fa fa-suitcase me-2"></i> Hồ sơ
-                                    </a>
-                                </li>
-                                <li>
-                                    <form action="{{ route('logout') }}" method="POST" style="display: inline;">
-                                        @csrf
-                                        <button type="submit"
-                                            class="btn btn-link dropdown-item text-danger d-flex align-items-center">
-                                            <i class="fa fa-sign-out-alt me-2"></i> Đăng xuất
-                                        </button>
-                                    </form>
-                                </li>
-                            </ul>
-
-                        </li>
+                    <li class="dropdown">
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                            <img src="{{ optional(Auth::user()->avatar_img) ? Storage::url(Auth::user()->avatar_img) : asset('default-avatar.png') }}"
+                                alt="{{ optional(Auth::user())->username }}" width="30px">
+                            <span class="username">{{ optional(Auth::user())->username }}</span>
+                            <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-right">
+                            <li>
+                                <a href="{{ route('admin.profile') }}" class="dropdown-item">
+                                    <i class="fa fa-suitcase"></i> Profile
+                                </a>
+                            </li>
+                            <li>
+                                <form action="{{ route('logout') }}" method="POST" style="display: inline;">
+                                    @csrf
+                                    <button type="submit"
+                                        class="btn btn-link dropdown-item text-danger d-flex align-items-center">
+                                        <i class="fa fa-sign-out-alt me-2"></i> Đăng xuất
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                    </li>
                     @else
                     <li>
                         <a href="{{ route('login') }}" class="dropdown-item">Đăng nhập</a>
                     </li>
                     @endauth
                     <a href="http://localhost:3000" class="fa fa-sign-in mr-2"
-                    style="display: inline-flex; justify-content: center; align-items: center; text-decoration: none; font-size: 13px; padding: 5px;"
-                    target="_blank"><span>Website</span></a>
-
+                        style="display: inline-flex; justify-content: center; align-items: center; text-decoration: none; font-size: 13px; padding: 5px;"
+                        target="_blank"><span>Website</span></a>
                     <!-- user login dropdown end -->
                 </ul>
                 <!--search & user info end-->
@@ -322,7 +317,7 @@
                 <!-- sidebar menu start-->
                 <ul class="sidebar-menu" id="nav-accordion">
                     <li>
-                        <a href="{{ route('admin.index') }}">
+                        <a class="active" href="{{ route('admin.index') }}">
                             <i class="fa fa-dashboard"></i>
                             <span>Thông kê</span>
                         </a>
@@ -387,7 +382,6 @@
                             <span>Voucher</span>
                         </a>
                     </li>
-
                 </ul>
                 <!-- sidebar menu end-->
             </div>

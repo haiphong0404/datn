@@ -1,28 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import useGetAllBlogs from '../hooks/useGetAllBlogs ';
 import { Pagination } from '@mui/material';
+import useGetAllArticles from '../hooks/useGetAllBlogs ';
 
 const Blog = () => {
-  const { blogs, loading, error } = useGetAllBlogs();
+  const { articles, loading, error } = useGetAllArticles();
   const itemsPerPage = 6; // Số bài viết mỗi trang
   const [page, setPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
-  const [filteredBlogs, setFilteredBlogs] = useState(blogs);
+  const [filteredArticles, setFilteredArticles] = useState(articles);
 
   useEffect(() => {
-    // Khi blogs thay đổi, reset lại filteredBlogs
-    setFilteredBlogs(blogs);
-  }, [blogs]);
+    // Khi articles thay đổi, reset lại filteredArticles
+    setFilteredArticles(articles);
+  }, [articles]);
 
   if (loading) return <div>Đang tải...</div>;
   if (error) return <div>{error}</div>;
 
-  // Tính tổng số trang dựa trên filteredBlogs
-  const totalPages = Math.ceil(filteredBlogs.length / itemsPerPage);
+  // Tính tổng số trang dựa trên filteredArticles
+  const totalPages = Math.ceil(filteredArticles.length / itemsPerPage);
 
   // Xác định bài viết của trang hiện tại
-  const displayedBlogs = filteredBlogs.slice(
+  const displayedArticles = filteredArticles.slice(
     (page - 1) * itemsPerPage,
     page * itemsPerPage
   );
@@ -44,13 +44,14 @@ const Blog = () => {
   const handleSearch = (event) => {
     const lowerCaseTerm = event.target.value.toLowerCase();
     setSearchTerm(lowerCaseTerm);
-    const filtered = blogs.filter((blog) =>
-      blog.title.toLowerCase().includes(lowerCaseTerm) ||
-      blog.content.toLowerCase().includes(lowerCaseTerm)
+    const filtered = articles.filter((article) =>
+      article.title.toLowerCase().includes(lowerCaseTerm) ||
+      article.content.toLowerCase().includes(lowerCaseTerm)
     );
-    setFilteredBlogs(filtered);
+    setFilteredArticles(filtered);
     setPage(1); // Reset về trang đầu tiên sau khi tìm kiếm
   };
+
 
   return (
     <div>
@@ -113,48 +114,30 @@ const Blog = () => {
                   <div className="blog-sidebar">
                     <h5 className="title">recent post</h5>
                     <div className="recent-post">
-                      {blogs.slice(0, 3).map((blog) => {
-                        const limitedTitle = blog.title?.length > 30
-                          ? `${blog.title.substring(0, 30)}...` // Giới hạn tiêu đề dài hơn 30 ký tự
-                          : blog.title || 'No Title';
+                      {articles.slice(0, 3).map((article) => {
+                        const limitedTitle = article.title?.length > 30
+                          ? `${article.title.substring(0, 30)}...` // Giới hạn tiêu đề dài hơn 30 ký tự
+                          : article.title || 'No Title';
 
                         return (
-                          <div key={blog.id} className="recent-post-item">
+                          <div key={article.id} className="recent-post-item">
                             <figure className="product-thumb">
-                              <Link to={`/blog_details/${blog.id}`}>
-                                <img src={blog.image || 'assets/img/blog/default.jpg'} alt="Blog Image" />
+                              <Link to={`/blog_details/${article.id}`}>
+                                <img src={article.image || 'assets/img/blog/default.jpg'} alt="Article Image" />
                               </Link>
                             </figure>
                             <div className="recent-post-description">
                               <div className="product-name">
                                 <h6>
-                                  <Link to={`/blog_details/${blog.id}`}>{limitedTitle}</Link>
+                                  <Link to={`/blog_details/${article.id}`}>{limitedTitle}</Link>
                                 </h6>
-                                <p>{new Date(blog.created_at).toLocaleDateString('en-GB')}</p> {/* Định dạng ngày dd/mm/yyyy */}
+                                <p>{new Date(article.created_at).toLocaleDateString('en-GB')}</p> {/* Định dạng ngày dd/mm/yyyy */}
                               </div>
                             </div>
                           </div>
                         );
                       })}
                     </div>
-                  </div>
-
-                  <div className="blog-sidebar">
-                    <h5 className="title">Tags</h5>
-                    <ul className="blog-tags">
-                      <li>
-                        <a href="#">Shoes</a>
-                      </li>
-                      <li>
-                        <a href="#">Fashion</a>
-                      </li>
-                      <li>
-                        <a href="#">Bags</a>
-                      </li>
-                      <li>
-                        <a href="#">Watch</a>
-                      </li>
-                    </ul>
                   </div>
                 </aside>
               </div>
@@ -163,42 +146,44 @@ const Blog = () => {
               <div className="col-lg-9 order-1 order-lg-2">
                 <div className="blog-item-wrapper">
                   <div className="row mbn-30">
-                    {filteredBlogs.length > 0 ? (
-                      displayedBlogs.map((blog) => (
-                        <div key={blog.id} className="col-md-6">
+                    {filteredArticles.length > 0 ? (
+                      displayedArticles.map((article) => (
+                        <div key={article.id} className="col-md-6">
                           <div className="blog-post-item d-block mb-30">
                             <div className="blog-thumb w-100">
-                              <Link to={`/blog_details/${blog.id}`}>
+                              <Link to={`/blog_details/${article.id}`}>
                                 <img
-                                  src={blog.image || "assets/img/blog/default.jpg"}
-                                  alt={blog.name}
+                                  src={article.image || "assets/img/blog/default.jpg"}
+                                  alt={article.name}
                                 />
                               </Link>
                             </div>
                             <div className="blog-content w-100 pl-0 mt-20">
                               <h6 className="blog-title">
-                                <Link to={`/blog_details/${blog.id}`}>
-                                  {blog.title}
+                                <Link to={`/blog_details/${article.id}`}>
+                                  {article.title}
                                 </Link>
                               </h6>
                               <div className="blog-meta">
                                 <span>
-                                  <i className="fa fa-calendar" /> {formatDate(blog.created_at)}
+                                  <i className="fa fa-calendar" /> {formatDate(article.created_at)}
                                 </span>
                                 <span>
                                   <i className="fa fa-user" />{" "}
-                                  {blog.name || "Unknown"}
+                                  {article.name || "Unknown"}
                                 </span>
                               </div>
                               <p className="blog-desc">
-                                {blog.content || "No description available."}
+                                {article.content || "No description available."}
                               </p>
                               <Link
                                 className="btn read-more"
-                                to={`/blog_details/${blog.id}`}
+                                to={`/blog_details/${article.id}`}
                               >
+                                
                                 Read More
                               </Link>
+                              
                             </div>
                           </div>
                         </div>
@@ -210,7 +195,7 @@ const Blog = () => {
                 </div>
 
                 {/* Pagination */}
-                {filteredBlogs.length > 0 && (
+                {filteredArticles.length > 0 && (
                   <Pagination
                     count={totalPages}
                     page={page}

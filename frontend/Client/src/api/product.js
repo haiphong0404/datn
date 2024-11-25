@@ -5,7 +5,7 @@ export const fetchProducts = async () => {
     try {
         const response = await axios.get('/products', {   
         });
-        console.log('API trả về:', response.data); // Log phản hồi từ API
+      
         return response.data; 
     } catch (error) {
         console.error('Lỗi khi gọi API:', error.response ? error.response.data : error.message);
@@ -43,7 +43,7 @@ export const fetchColor = async () => {
     try {
         const response = await axios.get('/colors', {   
         });
-        console.log('API trả về:', response.data); // Log phản hồi từ API
+      
         return response.data; 
     } catch (error) {
         console.error('Lỗi khi gọi API:', error.response ? error.response.data : error.message);
@@ -56,7 +56,7 @@ export const fetchSizes = async () => {
     try {
         const response = await axios.get('/sizes', {   
         });
-        console.log('API trả về:', response.data); // Log phản hồi từ API
+      
         return response.data; 
     } catch (error) {
         console.error('Lỗi khi gọi API:', error.response ? error.response.data : error.message);

@@ -2360,7 +2360,23 @@ only screen and (max-width: 767.98px) {
   font-weight: 700;
   border-radius: 0;
   background-color: #87b106;
-  padding: 13px 25px;
+  padding: 13px 251px;
+}
+.btn-sqr2 {
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  border-radius: 0;
+  background-color: #87b106;
+  padding: 13px 200px;
+}
+.btn-sqr3 {
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  border-radius: 0;
+  background-color: #87b106;
+  padding: 13px 30px;
 }
 
 .btn-sqr:hover {
@@ -6760,7 +6776,8 @@ only screen and (max-width: 767.98px) {
 
 .order-payment-method {
   background-color: #f7f7f7;
-  padding: 40px 20px 30px;
+  padding: 10px 20px 30px;
+  border-bottom: 1px solid #e5e5e5;
 }
 
 @media only screen and (min-width: 768px) and (max-width: 991.98px),
@@ -8952,4 +8969,58 @@ button {
 
 .checkout-contact-info img:hover {
   transform: scale(1.05); /* Hiệu ứng phóng to khi hover */
+}
+.checkout-btn {
+  margin-top:  3% ;
+ 
+}
+
+/* // bài viết */
+/* Căn giữa nội dung của col-12 */
+.blog-detail-area .container .row .col-12 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 20px; /* Thêm khoảng cách bên trong */
+}
+
+/* Căn giữa tiêu đề và meta */
+.blog-detail-area .section-title {
+  margin-bottom: 20px; /* Khoảng cách giữa tiêu đề và meta */
+}
+
+.blog-detail-area .section-title .title {
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 10px; /* Khoảng cách dưới tiêu đề */
+}
+
+.blog-detail-area .blog-meta {
+  font-size: 14px;
+  color: #777;
+}
+
+.blog-detail-area .blog-meta i {
+  margin-right: 5px;
+}
+
+/* Căn giữa hình ảnh và nội dung */
+.blog-detail-area .blog-content {
+  max-width: 800px; /* Giới hạn chiều rộng nội dung */
+  width: 100%; /* Chiều rộng đầy đủ */
+  margin-top: 30px;
+}
+
+.blog-detail-area .blog-content img {
+  width: 100%; /* Ảnh chiếm toàn bộ chiều rộng của container */
+  height: auto; /* Giữ tỷ lệ ảnh */
+  border-radius: 10px; /* Bo tròn góc ảnh */
+  margin-bottom: 20px; /* Khoảng cách giữa ảnh và nội dung */
+}
+
+.blog-detail-area .blog-content p {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #333;
 }

@@ -1,24 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import useOrderDetail from '../../hooks/useOderDetail';
+import CancelOrderButton from '../oder/CancelOrderButton ';
 
 const Order_detail = () => {
     const { orderId } = useParams();
-    const { orderDetail, loading, error } = useOrderDetail(orderId);
+    const { orderDetail, loading, error, refetch } = useOrderDetail(orderId);
 
-    // Log the data to check
+    const [orderItems, setOrderItems] = useState([]);
+    const [orderStatus, setOrderStatus] = useState(null); // Trạng thái hiện tại của đơn hàng
+
+
+
+    // Cập nhật orderItems và orderStatus khi orderDetail thay đổi
     useEffect(() => {
-        console.log('Loading:', loading);
-        console.log('Error:', error);
-        console.log('Order Detail:', orderDetail);
-    }, [loading, error, orderDetail]);
+        if (orderDetail?.status) {
+            setOrderItems(orderDetail.products);  // Cập nhật sản phẩm từ orderDetail
+            setOrderStatus(orderDetail.status);  // Cập nhật trạng thái của đơn hàng
+        }
+    }, [orderDetail]);  // Khi orderDetail thay đổi, cập nhật lại orderItems và orderStatus
 
+    // Hiển thị khi đang tải hoặc có lỗi
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error: {error}</div>;
-
-    // Assuming orderDetail is an array of items
-    const orderItems = orderDetail?.products || [];
-
+    console.log("refetch", orderItems)
     return (
         <div>
             <div className="myaccount-content">
@@ -50,11 +55,17 @@ const Order_detail = () => {
                         <div className="single-input-item">
                             <label htmlFor="status" className="required">Trạng Thái Đơn Hàng</label>
                             <p>
-                                {orderDetail.status === 'pending'
+                                {orderStatus === 'pending'
                                     ? 'Đang Xử Lý'
-                                    : orderDetail.status === 'completed'
+                                    : orderStatus === 'completed'
                                         ? 'Hoàn Thành'
-                                        : 'Không Xác Định'}
+                                        : orderStatus === 'cancelled'
+                                            ? 'Đã Hủy'
+                                            : orderStatus === 'processing'
+                                                ? 'Không Xác Định'
+                                                : 'Không Xác Định'}
+
+
                             </p>
                         </div>
                         <div className="single-input-item">
@@ -73,6 +84,12 @@ const Order_detail = () => {
                         </div>
                     </div>
                 )}
+                <h5 className="checkout-title"></h5>
+                {(orderDetail.status !== 'completed' && orderDetail.status !== 'cancelled') || orderDetail.status === 'processing' ? (
+                    <div className="checkout-btn" style={{ marginTop: '30px' }}>
+                        <CancelOrderButton orderId={orderId} refetch={refetch} />
+                    </div>
+                ) : null}
 
                 {/* Hiển thị sản phẩm trong đơn hàng */}
                 {orderItems.length > 0 && (
@@ -99,7 +116,11 @@ const Order_detail = () => {
                                                         {item.product?.name || 'Tên sản phẩm không có'}
                                                     </td>
                                                     <td className="pro-title">
-                                                        <img src={item.product?.image || 'Ảnh sản phẩm không có'}    style={{ width: '50px', height: '50px'  }}  />
+                                                        <img
+                                                            src={item.variant_images?.[0]?.base64_image || 'Ảnh sản phẩm không có'}
+                                                            alt="Product Image"
+                                                            style={{ width: '50px', height: '50px' }}
+                                                        />
                                                     </td>
                                                     <td className="pro-title">
                                                         {item.color?.name || 'Màu sắc không có'}
