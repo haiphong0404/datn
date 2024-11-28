@@ -112,9 +112,6 @@
                         <td class="fw-semibold">{{ $item->updated_at }}</td>
                         <td class="text-center">
                             <div class="btn-group">
-                                <a href="{{ route('admin.vouchers.show', $item) }}" class="btn btn-sm btn-info">
-                                    <i class="fas fa-eye"></i> Show
-                                </a>
                                 {{-- EDIT --}}
                                 <a href="{{ route('admin.vouchers.edit', $item) }}" type="button" class="btn btn-sm btn-alt-warning mx-2" data-bs-toggle="tooltip" title="Chỉnh sửa">
                                     <i class="fa fa-pencil-alt"></i>

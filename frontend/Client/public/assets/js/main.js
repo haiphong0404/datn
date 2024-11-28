@@ -1,8 +1,5 @@
 (function ($) {
 	"use strict";
-
-	console.log('init slider')
-
 	// Sticky menu
 	var $window = $(window);
 	$window.on('scroll', function () {

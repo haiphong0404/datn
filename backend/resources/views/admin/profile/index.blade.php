@@ -31,28 +31,28 @@
                         Chào mừng chủ nhân đã đến với trang quản trị
                     </div>
                     <div class="card-body bio-graph-info">
-                        <h1>Bio Graph</h1>
+                        <h1>Chi tiết hồ sơ</h1>
                         <div class="row">
                             <div class="bio-row">
-                                <p><span>First Name </span>: {{$user->username}}</p>
+                                <p><span>Họ và tên </span>: {{$user->username}}</p>
                             </div>
                             {{-- <div class="bio-row">
                                 <p><span>Last Name </span>: {{$user->username}}</p>
                             </div> --}}
                             <div class="bio-row">
-                                <p><span>Country </span>: {{$user->address}}</p>
+                                <p><span>Địa chị </span>: {{$user->address}}</p>
                             </div>
                             {{-- <div class="bio-row">
                                 <p><span>Birthday</span>: {{$user->username}}</p>
                             </div> --}}
                             <div class="bio-row">
-                                <p><span>Occupation </span>: {{$user->role}}</p>
+                                <p><span>Quyền quản trị </span>: {{$user->role}}</p>
                             </div>
                             <div class="bio-row">
                                 <p><span>Email </span>: {{$user->email}}</p>
                             </div>
                             <div class="bio-row">
-                                <p><span>Phone </span>: {{$user->phone}}</p>
+                                <p><span>Số điện thoại </span>: {{$user->phone}}</p>
                             </div>
                             {{-- <div class="bio-row">
                                 <p><span>Mobile </span>: 88 (02) 123456</p>

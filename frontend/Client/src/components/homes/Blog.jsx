@@ -1,119 +1,60 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { Link } from 'react-router-dom';
 
-const Blog = () => {
+const BlogMain = () => {
+  const [articles, setArticles] = useState([]);
+
+  useEffect(() => {
+    // Fetch articles from the Laravel API
+    axios.get('http://127.0.0.1:8000/api/Apiarticles')
+      .then(response => {
+        setArticles(response.data); // Store the articles in state
+      })
+      .catch(error => {
+        console.error('There was an error fetching the articles!', error);
+      });
+  }, []); // Empty dependency array means this runs once on mount
+
   return (
     <section className="latest-blog-area section-padding">
       <div className="container">
         <div className="row">
           <div className="col-12">
             <div className="section-title text-center">
-              <h3 className="title">TỪ BLOG CỦA CHÚNG TÔI</h3>
-              <h4 className="sub-title">
-                "Các cuộc điều tra đã chứng minh rằng người đọc dễ dàng đọc tôi hơn vì họ đọc thường xuyên hơn; sự rõ ràng cũng là một quá trình động, theo sau sự thay đổi."
-              </h4>
+              <h3 className="title">BÀI VIẾT CỦA CHÚNG TÔI</h3>
             </div>
           </div>
         </div>
         <div className="row">
-          {/* Blog Item 1 */}
-          <div className="col-md-6 mb-4">
-            <div className="blog-post-item">
-              <div className="blog-thumb">
-                <a href="blog-details.html">
-                  <img src="assets/img/blog/blog-1.jpg" alt="blog thumb" />
-                </a>
-              </div>
-              <div className="blog-content">
-                <h6 className="blog-title">
-                  <a href="blog-details.html">Đây là bài viết đầu tiên XipBlog</a>
-                </h6>
-                <div className="blog-meta">
-                  <span><i className="fa fa-calendar" /> Ngày 05 tháng 8 năm 2021</span>
-                  <span><i className="fa fa-user" /> Admin</span>
+          {articles.slice(0,4).map((article) => (
+            <div className="col-md-6 mb-4" key={article.id}>
+              <div className="blog-post-item">
+                <div className="blog-thumb">
+                  <Link to={`/blog_details/${article.id}`}>
+                    <img src={article.image || '/path/to/placeholder.jpg'} alt="blog thumb" />
+                  </Link>
                 </div>
-                <p className="blog-desc">
-                  Lorem Ipsum is simply dummy text of the printing and typesetting industry. ...
-                </p>
-                <a className="btn read-more" href="blog-details.html">Read More</a>
+                <div className="blog-content">
+                  <h6 className="blog-title">
+                    <Link to={`/blog_details/${article.id}`}>{article.title}</Link>
+                  </h6>
+                  <div className="blog-meta">
+                    <span><i className="fa fa-calendar" /> {new Date(article.created_at).toLocaleDateString()}</span>
+                    {/* <span><i className="fa fa-user" /> {article.author}</span> */}
+                  </div>
+                  <p className="blog-desc">
+                    {article.excerpt}
+                  </p>
+                  <Link className="btn read-more" to={`/blog_details/${article.id}`}>Read More</Link>
+                </div>
               </div>
             </div>
-          </div>
-          
-          {/* Blog Item 2 */}
-          <div className="col-md-6 mb-4">
-            <div className="blog-post-item">
-              <div className="blog-thumb">
-                <a href="blog-details.html">
-                  <img src="assets/img/blog/blog-2.jpg" alt="blog thumb" />
-                </a>
-              </div>
-              <div className="blog-content">
-                <h6 className="blog-title">
-                  <a href="blog-details.html">Đây là bài viết thứ hai XipBlog</a>
-                </h6>
-                <div className="blog-meta">
-                  <span><i className="fa fa-calendar" /> Jun 05, 2021</span>
-                  <span><i className="fa fa-user" /> Admin</span>
-                </div>
-                <p className="blog-desc">
-                  Lorem Ipsum is simply dummy text of the printing and typesetting industry. ...
-                </p>
-                <a className="btn read-more" href="blog-details.html">Read More</a>
-              </div>
-            </div>
-          </div>
-
-          {/* Blog Item 3 */}
-          <div className="col-md-6 mb-4">
-            <div className="blog-post-item">
-              <div className="blog-thumb">
-                <a href="blog-details.html">
-                  <img src="assets/img/blog/blog-3.jpg" alt="blog thumb" />
-                </a>
-              </div>
-              <div className="blog-content">
-                <h6 className="blog-title">
-                  <a href="blog-details.html">Đây là bài viết thứ ba XipBlog</a>
-                </h6>
-                <div className="blog-meta">
-                  <span><i className="fa fa-calendar" /> May 05, 2021</span>
-                  <span><i className="fa fa-user" /> Admin</span>
-                </div>
-                <p className="blog-desc">
-                  Lorem Ipsum is simply dummy text of the printing and typesetting industry. ...
-                </p>
-                <a className="btn read-more" href="blog-details.html">Read More</a>
-              </div>
-            </div>
-          </div>
-
-          {/* Blog Item 4 */}
-          <div className="col-md-6 mb-4">
-            <div className="blog-post-item">
-              <div className="blog-thumb">
-                <a href="blog-details.html">
-                  <img src="assets/img/blog/blog-4.jpg" alt="blog thumb" />
-                </a>
-              </div>
-              <div className="blog-content">
-                <h6 className="blog-title">
-                  <a href="blog-details.html">Đây là bài viết thứ tư XipBlog</a>
-                </h6>
-                <div className="blog-meta">
-                  <span><i className="fa fa-calendar" /> Jan 08, 2021</span>
-                  <span><i className="fa fa-user" /> Admin</span>
-                </div>
-                <p className="blog-desc">
-                  Lorem Ipsum is simply dummy text of the printing and typesetting industry. ...
-                </p>
-                <a className="btn read-more" href="blog-details.html">Read More</a>
-              </div>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
     </section>
   );
 };
 
-export default Blog;
+export default BlogMain;

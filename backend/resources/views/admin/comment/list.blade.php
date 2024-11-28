@@ -1,4 +1,13 @@
 @extends('admin.layout')
+@section('search')
+    <form action="{{ route('admin.comments.index') }}" method="GET">
+        <div class="input-group mt-1">
+            <input type="text" name="search" class="form-control" placeholder="Tìm kiếm comment"
+                value="{{ request()->input('search') }}">
+            <button class="btn btn-outline-secondary" type="submit"><i class="bi bi-search"></i></button>
+        </div>
+    </form>
+@endsection
 @section('content')
     @if (session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -16,6 +25,16 @@
             /* Ẩn phần văn bản vượt quá */
             text-overflow: ellipsis;
             /* Hiển thị dấu "..." khi văn bản bị cắt */
+        }
+        .custom-select-small {
+            font-size: 0.70rem;
+            /* Giảm kích thước font */
+            height: 20px;
+            /* Giảm chiều cao */
+            padding: 2px 6px;
+            /* Giảm padding trong dropdown */
+            width: auto;
+            /* Điều chỉnh tự động theo nội dung */
         }
     </style>
     <div id="list" class="row">
@@ -40,21 +59,20 @@
                             <div class="row-fluid">
                                 <div class="span6">
                                     <div id="hidden-table-info_length" class="dataTables_length">
-                                        <label><select class="form-control" size="1" name="hidden-table-info_length"
-                                                aria-controls="hidden-table-info">
-                                                <option value="10" selected="selected">10</option>
-                                                <option value="25">25</option>
-                                                <option value="50">50</option>
-                                                <option value="100">100</option>
-                                            </select> records per page</label>
-                                    </div>
-                                </div>
-                                <div class="span6">
-                                    <div class="dataTables_filter" id="hidden-table-info_filter">
                                         <form action="{{ route('admin.comments.index') }}" method="GET">
-                                            <input type="text" name="search" class="form-control"
-                                                placeholder="Tìm kiếm bình luận" value="{{ request()->input('search') }}">
-                                            <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+                                            <label>Xem
+                                                <select class="form-control-sm ml-1 custom-select-small" name="per_page"
+                                                    onchange="this.form.submit()">
+                                                    <option value="10"
+                                                        {{ request('per_page') == 10 ? 'selected' : '' }}>10</option>
+                                                    <option value="25"
+                                                        {{ request('per_page') == 25 ? 'selected' : '' }}>25</option>
+                                                    <option value="50"
+                                                        {{ request('per_page') == 50 ? 'selected' : '' }}>50</option>
+                                                    <option value="100"
+                                                        {{ request('per_page') == 100 ? 'selected' : '' }}>100</option>
+                                                </select><span style="margin-left:-5px;">mục</span>
+                                            </label>
                                         </form>
                                     </div>
                                 </div>
@@ -123,19 +141,26 @@
                             </table>
                             <div class="row-fluid">
                                 <div class="span6">
-                                    <div class="dataTables_info" id="hidden-table-info_info">Showing 11 to 20 of 57 entries
+                                    <div class="dataTables_info" id="hidden-table-info_info">
+                                        Hiển thị từ {{ $comments->firstItem() }} đến {{ $comments->lastItem() }} của tổng
+                                        cộng {{ $comments->total() }} mục
                                     </div>
                                 </div>
                                 <div class="span6">
                                     <div class="dataTables_paginate paging_bootstrap pagination">
-                                        <ul>
-                                            <li class="prev"><a href="#">← Previous</a></li>
-                                            <li><a href="#">1</a></li>
-                                            <li class="active"><a href="#">2</a></li>
-                                            <li><a href="#">3</a></li>
-                                            <li><a href="#">4</a></li>
-                                            <li><a href="#">5</a></li>
-                                            <li class="next"><a href="#">Next → </a></li>
+                                        <ul class="pagination">
+                                            <li class="prev">
+                                                <a href="{{ $comments->previousPageUrl() }}" aria-label="Previous">←
+                                                    Previous</a>
+                                            </li>
+                                            @foreach ($comments->getUrlRange(1, $comments->lastPage()) as $page => $url)
+                                                <li class="{{ $page == $comments->currentPage() ? 'active' : '' }}">
+                                                    <a href="{{ $url }}">{{ $page }}</a>
+                                                </li>
+                                            @endforeach
+                                            <li class="next">
+                                                <a href="{{ $comments->nextPageUrl() }}" aria-label="Next">Next →</a>
+                                            </li>
                                         </ul>
                                     </div>
                                 </div>
