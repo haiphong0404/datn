@@ -33,7 +33,7 @@ const Header = () => {
     return localCart.reduce((total, item) => total + item.price * item.quantity, 0);
   };
 
-  const { userInfo , handleLogout  } = useLoginForm();
+  const { userInfo, handleLogout } = useLoginForm();
   console.log("Thông tin người dùng trong Account_info:", userInfo);
 
   const products = useSelector((state) => state.product?.products || []);
@@ -76,7 +76,7 @@ const Header = () => {
                     </Link>
                   </li>
                   <li>
-                  {JSON.parse(localStorage.getItem("userInfo")) ? (
+                    {JSON.parse(localStorage.getItem("userInfo")) ? (
                       // Nếu đã đăng nhập, hiển thị Đăng xuất
                       <a href="#" onClick={handleLogout}>
                         <i className="fa fa-sign-out" /> Đăng xuất
@@ -127,6 +127,11 @@ const Header = () => {
                         <li>
                           <Link to="/blog">
                             Tin tức</Link>
+                        </li>
+                        <li>
+                          <Link to="/brands">
+                            Khám Phá
+                          </Link>
                         </li>
                         <li>
                           <Link to="/contact_us">

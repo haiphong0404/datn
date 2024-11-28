@@ -26,6 +26,7 @@ use App\Http\Controllers\Api\VoucherController;
 use App\Models\Cart;
 use App\Http\Controllers\Api\Auth\NewPasswordController;
 use App\Http\Controllers\Api\Auth\ForgotPasswordController;
+use App\Http\Controllers\Api\Auth\ProfileController;
 use App\Http\Controllers\Api\Auth\ResetPasswordController;
 use App\Http\Controllers\Api\BannerController;
 
@@ -100,6 +101,10 @@ Route::get('contacts', [ContactController::class, 'index']); // Lấy danh sách
 Route::get('contacts/{id}', [ContactController::class, 'show']); // Lấy contact theo ID
 Route::get('/banners', [BannerController::class, 'index']);
 
-Route::apiResource('order', OrderController::class );
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/change-password', [ProfileController::class, 'changePassword']);
+});
+
+Route::apiResource('order', OrderController::class);
 Route::get('orders', [OrderController::class, 'abc']);
 Route::post('/apply-voucher', [VoucherController::class, 'applyVoucher']);

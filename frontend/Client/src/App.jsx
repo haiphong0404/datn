@@ -32,6 +32,8 @@ import Account_info from "./pages/My_account/account_info";
 import Product_details from "./pages/Product_Detail/Product_details";
 import ChangePassword from "./pages/My_account/changePass";
 import EditProfile from "./pages/My_account/editProfile";
+import Brands from "./pages/Brands";
+import BrandDetail from "./pages/BrandDetail";
 
 
 
@@ -55,8 +57,11 @@ const routeConfig = [
       { path: "register", element: <Register /> },
       { path: "*", element: <NotFoundPage /> },
       { path: "faqs", element: <FAQs /> },
-
       { path: "checkout/bill", element: <Bill /> },
+      { path: "brands", element: <Brands /> },
+      { path: "brand_detail/:id", element: <BrandDetail /> },
+
+
     ],
   },
   {
