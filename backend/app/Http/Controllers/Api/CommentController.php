@@ -55,7 +55,7 @@ class CommentController extends Controller
     {
         try {
             // Lấy người dùng hiện tại
-            $user = Auth::user();
+            $user = $request->user();
 
             // Kiểm tra nếu người dùng đã mua sản phẩm (dựa trên product_variant_id và product_id)
             $hasPurchased = Order::where('user_id', $user->id)
