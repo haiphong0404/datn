@@ -12,35 +12,55 @@ use Illuminate\View\View;
 
 class AuthenticatedSessionController extends Controller
 {
-    /**
-     * Display the login view.
-     */
-    public function create(): View
-    {
-      return view('auth.login');
-    }
+  /**
+   * Display the login view.
+   */
+  public function create(): View
+  {
+    return view('auth.login');
+  }
 
-    /**
-     * Handle an incoming authentication request.
-     */
+  /**
+   * Handle an incoming authentication request.
+   */
     public function store(LoginRequest $request): RedirectResponse
     {
+        // Xác thực thông tin đăng nhập
         $request->authenticate();
 
-        $request->session()->regenerate();
+        // Lấy thông tin người dùng
+        $user = $request->user();
 
-        return redirect()->route('admin.index');
+        // Kiểm tra vai trò của người dùng
+        if ($user->role === 'admin') {
+            // Nếu là admin, tái tạo session và chuyển hướng đến admin
+            $request->session()->regenerate();
+            return redirect()->route('admin.index');
+        } elseif ($user->role === 'staff') {
+            // Nếu là staff, tái tạo session và chuyển hướng đến staff
+            $request->session()->regenerate();
+            return redirect()->route('staff.index');
+        }
+
+        // Nếu vai trò không hợp lệ, đăng xuất và thông báo lỗi
+        Auth::logout();
+        return redirect()->route('login')->withErrors([
+            'status' => 'Bạn không có quyền truy cập vào hệ thống.',
+        ]);
     }
 
 
-    public function postlogin(Request $req)
-    {
 
-      $validate = $req->validate([
+
+  public function postlogin(Request $req)
+  {
+
+    $validate = $req->validate(
+      [
         'email' => 'required|email',
         'password' => 'required|min:6',
-    ],
-    [
+      ],
+      [
         'email.required' => 'Vui lòng nhập email',
         'email.email' => 'Email không đúng định dạng',
         'password.required' => 'Vui lòng nhập mật khẩu',
@@ -55,9 +75,9 @@ class AuthenticatedSessionController extends Controller
         if(Auth::user()->role=='admin'){
             return redirect()->route('admin.admin');
             // return redirect()->route('/');
-        }else  if(Auth::user()->role=='2'){
+        }else  if(Auth::user()->role=='staff'){
           // return redirect()->route('nhanvien.nhanvien');
-          return redirect()->route('/');
+          return redirect()->route('staff.staff');
       }else{
           return redirect()->route('/');
         }
@@ -67,21 +87,21 @@ class AuthenticatedSessionController extends Controller
            'message'=>'Email hoặc Mật khẩu không đúng vui lòng nhập lại !!'
         ]);
       }
-    }
+  }
 
 
 
-    /**
-     * Destroy an authenticated session.
-     */
-    public function destroy(Request $request): RedirectResponse
-    {
-        Auth::guard('web')->logout();
+  /**
+   * Destroy an authenticated session.
+   */
+  public function destroy(Request $request): RedirectResponse
+  {
+    Auth::guard('web')->logout();
 
-        $request->session()->invalidate();
+    $request->session()->invalidate();
 
-        $request->session()->regenerateToken();
+    $request->session()->regenerateToken();
 
-        return redirect('/login');
-    }
+    return redirect('/login');
+  }
 }

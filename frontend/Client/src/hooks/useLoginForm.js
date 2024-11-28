@@ -52,13 +52,20 @@ export const useLoginForm = (isDisplay) => {
   
         console.log("Cart data before sync:", cartDataWithDetails);
   
+        // Kiểm tra xem token có hợp lệ không
+        const token = localStorage.getItem('token');
+        if (!token) {
+          toast.error("Vui lòng đăng nhập để đồng bộ giỏ hàng.");
+          return;
+        }
+  
         // Gửi yêu cầu đồng bộ giỏ hàng lên server
         const response = await axios.post(
           '/cart/sync', // URL endpoint của server
           { cart: cartDataWithDetails }, // Gửi dữ liệu giỏ hàng đã được chuẩn bị
           { 
             headers: {
-              Authorization: `Bearer ${localStorage.getItem('token')}` // Token xác thực
+              Authorization: `Bearer ${token}` // Token xác thực
             }
           }
         );
@@ -67,20 +74,25 @@ export const useLoginForm = (isDisplay) => {
         console.log("Sync response:", response);
   
         if (response.status === 200) {
-          // Đồng bộ giỏ hàng thành công
-          setLocalCart(response.data.cart); // Cập nhật giỏ hàng từ server vào state
-          localStorage.setItem('cart', JSON.stringify(response.data.cart)); // Lưu giỏ hàng đồng bộ vào localStorage
           toast.success("Giỏ hàng đã được đồng bộ thành công!");
+        } else {
+          toast.error("Đã có lỗi xảy ra khi đồng bộ giỏ hàng!");
         }
       } catch (error) {
+        // Xử lý lỗi từ server hoặc kết nối mạng
         console.error("Error syncing cart to server:", error.response ? error.response.data : error);
-        toast.error("Có lỗi xảy ra khi đồng bộ giỏ hàng!");
+        if (error.response && error.response.data) {
+          toast.error(`Lỗi: ${error.response.data.message || "Không xác định"}`);
+        } else {
+          toast.error("Có lỗi xảy ra khi kết nối với server!");
+        }
       }
     } else {
       console.error("Error syncing cart to server: Cart data is empty!");
       toast.error("Dữ liệu giỏ hàng trống!");
     }
   };
+  
   
   
   

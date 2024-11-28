@@ -14,8 +14,8 @@ const Header = () => {
   const { cart } = useSelector((state) => state.updateCart || {});
 
   const [localCart, setLocalCart] = useState([]);
-  const [selectedItems, setSelectedItems] = useState(new Set()); 
-  
+  const [selectedItems, setSelectedItems] = useState(new Set());
+
   const handleHoverCart = () => {
     const savedCart = JSON.parse(localStorage.getItem("cart")) || [];
     setLocalCart(savedCart);
@@ -50,14 +50,14 @@ const Header = () => {
   
   
   const handleRemoveFromCart = async (id_productVariant) => {
-    console.log("id_productVariant:", id_productVariant); // Kiểm tra giá trị
+
     if (!id_productVariant) {
       console.error('Product variant ID is undefined!');
       return; // Dừng nếu ID không hợp lệ
     }
-  
+
     const token = localStorage.getItem('token'); // Kiểm tra token
-  
+
     if (token) {
       // Nếu có token, gửi yêu cầu với token để xóa sản phẩm trên server
       try {
@@ -66,7 +66,7 @@ const Header = () => {
             Authorization: `Bearer ${token}`,
           },
         });
-  
+
         if (response.status === 200) {
           // Cập nhật lại giỏ hàng sau khi xóa sản phẩm từ cơ sở dữ liệu
           setLocalCart(prevCart => {
@@ -88,22 +88,22 @@ const Header = () => {
       // Nếu không có token (chưa đăng nhập), chỉ xóa sản phẩm từ localStorage
       const cartData = localStorage.getItem('cart');
       if (!cartData) {
-        console.log('Giỏ hàng trống hoặc không có dữ liệu trong localStorage');
+
         return;
       }
-  
+
       const parsedCart = JSON.parse(cartData);
-  
+
       // Lọc bỏ sản phẩm cần xóa
       const updatedCart = parsedCart.filter(item => item.id_productVariant !== id_productVariant);
-  
+
       // Cập nhật lại giỏ hàng trong localStorage
       localStorage.setItem('cart', JSON.stringify(updatedCart));
-  
+
       // Cập nhật lại trạng thái giỏ hàng trong React
       setLocalCart(updatedCart);
       setSelectedItems(prevSelected => new Set([...prevSelected].filter(item => item !== id_productVariant)));
-  
+
       toast('Sản phẩm đã được xóa khỏi giỏ hàng.');
     }
   };
@@ -130,8 +130,8 @@ const Header = () => {
     }
   };
 
-  const { userInfo , handleLogout  } = useLoginForm();
-  console.log("Thông tin người dùng trong Account_info:", userInfo);
+  const { userInfo, handleLogout } = useLoginForm();
+
 
   return (
     <header className="header-area">
@@ -158,7 +158,7 @@ const Header = () => {
                     </Link>
                   </li> */}
                   <li>
-                  {JSON.parse(localStorage.getItem("userInfo")) ? (
+                    {JSON.parse(localStorage.getItem("userInfo")) ? (
                       // Nếu đã đăng nhập, hiển thị Đăng xuất
                       <a href="#" onClick={handleLogout}>
                         <i className="fa fa-sign-out" /> Đăng xuất
@@ -250,32 +250,33 @@ const Header = () => {
                           </Badge>
                         </Link>
                         <div className="cart-list-wrapper" onMouseEnter={handleHoverCart}>
-                        <ul className="cart-list">
-                        {Array.isArray(localCart) && localCart.length > 0 ? (
+                          <ul className="cart-list">
+                            {Array.isArray(localCart) && localCart.length > 0 ? (
                               localCart.map((variant) => (
-                              <li key={variant.id_productVariant}>
-                                <div className="cart-img">
-                                  <Link to={`/product_details/${variant.productId}`}>
-                                    <img src={variant.image} alt={variant.name} />
-                                  </Link>
-                                </div>
-                                <div className="cart-info">
-                                  <h6 className="product-name">
+                                <li key={variant.id_productVariant}>  {/* Đảm bảo id_productVariant là duy nhất */}
+                                  <div className="cart-img">
                                     <Link to={`/product_details/${variant.productId}`}>
-                                      {variant.name || variant.productName}
+                                      <img src={variant.image} alt={variant.name} />
                                     </Link>
-                                  </h6>
-                                  <span className="cart-qty">Số lượng: {variant.quantity}</span>
-                                  <span className="item-price">{(variant.price * variant.quantity).toLocaleString()} VND</span>
-                                </div>
-                                <div className="del-icon" onClick={() => handleRemoveFromCart(variant.id_productVariant)}>
-                                  <i className="fa fa-times" />
-                                </div>
-                              </li>
-                            ))
-                          ) : (
-                            <li>Giỏ hàng trống</li>
-                          )}
+                                  </div>
+                                  <div className="cart-info">
+                                    <h6 className="product-name">
+                                      <Link to={`/product_details/${variant.productId}`}>
+                                        {variant.name || variant.productName}
+                                      </Link>
+                                    </h6>
+                                    <span className="cart-qty">Số lượng: {variant.quantity}</span>
+                                    <span className="item-price">{(variant.price * variant.quantity).toLocaleString()} VND</span>
+                                  </div>
+                                  <div className="del-icon" onClick={() => handleRemoveFromCart(variant.id_productVariant)}>
+                                    <i className="fa fa-times" />
+                                  </div>
+                                </li>
+                              ))
+
+                            ) : (
+                              <li>Giỏ hàng trống</li>
+                            )}
                           </ul>
                           <ul className="minicart-pricing-box">
                             <li className="total">

@@ -32,6 +32,8 @@
                     <p><strong>Số điện thoại:</strong> {{ $order->phone }}</p>
                 </div>
                 <div class="col-md-6">
+                    <p><strong>Phương thức thanh toán:</strong> {{ ($order->payment_method == "cash") ? "Thanh toán offline" : "Thanh toán online"}}</p>
+                    <p><strong>Trạng thái thanh toán:</strong> {{ ($order->payment_status == "unpaid") ? "Chưa thanh toán" : "Đã thanh toán"}}</p>
                     <p><strong>Địa chỉ giao hàng:</strong> {{ $order->address }}</p>
                     <p><strong>Thông tin thêm:</strong> {{ $order->infor ?? 'Không có thông tin thêm' }}</p>
                 </div>

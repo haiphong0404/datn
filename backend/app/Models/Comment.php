@@ -12,7 +12,7 @@ class Comment extends Model
     protected $fillable = [
         'user_id',
         'product_id',
-        'content',
+        'comment',
         'file',
         'star_rating'
     ];
@@ -27,4 +27,8 @@ class Comment extends Model
     {
         return $this->belongsTo(Product::class);
     }
+    public function productVariant()
+{
+    return $this->belongsTo(ProductVariant::class);
+}
 }

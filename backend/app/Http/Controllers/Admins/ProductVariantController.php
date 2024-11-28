@@ -45,8 +45,7 @@ class ProductVariantController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     */
-    public function store(Request $request, $productId)
+     */public function store(Request $request, $productId)
 {
     // Xác thực dữ liệu đầu vào
     $request->validate([
@@ -113,6 +112,10 @@ class ProductVariantController extends Controller
     return redirect()->route('admin.products.variants.index', $productId)
         ->with('success', 'Biến thể đã được thêm thành công.');
 }
+
+
+
+
 
 
     /**

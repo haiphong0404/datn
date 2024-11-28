@@ -67,8 +67,10 @@ const QuickViewModal = ({ show, onClose, product }) => {
       return;
     }
   
+    const cart = Array.isArray(localCart) ? localCart : [];
+
     // Kiểm tra số lượng hiện có trong giỏ hàng cho sản phẩm và biến thể này
-    const existingCartQuantity = (localCart || []).reduce((total, item) => {
+    const existingCartQuantity = cart.reduce((total, item) => {
       return item.id_productVariant === selectedVariant.id ? total + item.quantity : total;
     }, 0);
   

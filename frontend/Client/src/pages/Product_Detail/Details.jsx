@@ -54,7 +54,7 @@ const Details = () => {
         if (selectedVariant) {
             setSelectedQuantity(1);
             setAvailabilityMessage(selectedVariant.quantity > 0 ? '' : 'Hết hàng');
-            setSelectedPrice(selectedVariant.quantity > 0 ? selectedVariant.price : null);
+            setSelectedPrice(selectedVariant.quantity > 0 ? selectedVariant.price.toLocaleString() : null);
         } else {
             setAvailabilityMessage('Vui lòng chọn màu và kích thước.');
             setSelectedPrice(null);
@@ -91,8 +91,11 @@ const Details = () => {
             return;
         }
     
+        // Ensure localCart is an array, even if it's null or undefined
+        const cart = Array.isArray(localCart) ? localCart : [];
+    
         // Kiểm tra số lượng hiện có trong giỏ hàng cho sản phẩm và biến thể này
-        const existingCartQuantity = (localCart || []).reduce((total, item) => {
+        const existingCartQuantity = cart.reduce((total, item) => {
             return item.id_productVariant === selectedVariant.id ? total + item.quantity : total;
         }, 0);
     
@@ -101,7 +104,7 @@ const Details = () => {
     
         // Kiểm tra nếu tổng số lượng muốn thêm vượt quá số lượng tồn kho
         if (totalQuantity > selectedVariant.quantity) {
-            toast.error(`Chỉ còn ${selectedVariant.quantity - existingCartQuantity} sản phẩm trong kho!`);
+            toast.error(`không thêm được quá số lượng trong kho`);
             return;
         }
     
@@ -140,7 +143,7 @@ const Details = () => {
                     dispatch(addCart(response.data.cart_item));
     
                     // Đồng bộ giỏ hàng từ server về localStorage
-                    const updatedCart = (localCart || []).map(item => 
+                    const updatedCart = cart.map(item => 
                         item.id_productVariant === id_productVariant 
                             ? { ...item, quantity: item.quantity + quantity } 
                             : item
@@ -155,7 +158,7 @@ const Details = () => {
                 }
             } else {
                 // Người dùng chưa đăng nhập: cập nhật giỏ hàng trong localStorage
-                const updatedCart = localCart.map(item => 
+                const updatedCart = cart.map(item => 
                     item.id_productVariant === selectedVariant.id 
                         ? { ...item, quantity: item.quantity + quantity } 
                         : item
@@ -176,6 +179,7 @@ const Details = () => {
             toast.error("Đã có lỗi xảy ra, vui lòng thử lại");
         }
     };
+    
     
 
 
@@ -269,7 +273,7 @@ const Details = () => {
                         <p className="text-sm">{availabilityMessage}</p>
 
                         <div className="price-box">
-                            <span className="price-regular">{selectedPrice !== null ? selectedPrice : product.price} Vnd</span>
+                            <span className="price-regular">{selectedPrice !== null ? selectedPrice : product.price.toLocaleString()} VND</span>
                         </div>
 
                         <h6 className="option-title">Số lượng:</h6>

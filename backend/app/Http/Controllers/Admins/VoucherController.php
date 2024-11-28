@@ -51,7 +51,7 @@ class VoucherController extends Controller
         $categories = $this->category->all();
         try {
             $this->voucherService->createVoucher($request->validated());
-            return redirect()->route('vouchers.index')->with('success', 'Tạo mã giảm giá thành công.');
+            return redirect()->route('admin.vouchers.index')->with('success', 'Tạo mã giảm giá thành công.');
         } catch (\InvalidArgumentException $e) {
             return redirect()->back()
                 ->withInput($request->all()) // Giữ lại dữ liệu cũ khi có lỗi
@@ -97,7 +97,7 @@ class VoucherController extends Controller
         $voucher->update($data);
         
         // Chuyển hướng về giao diện edit với thông báo thành công
-        return redirect()->route('vouchers.edit', $voucher)->with('success', 'Cập nhật thông tin mã giảm giá thành công!');
+        return redirect()->route('admin.vouchers.edit', $voucher)->with('success', 'Cập nhật thông tin mã giảm giá thành công!');
     }
 
     /**
@@ -107,6 +107,6 @@ class VoucherController extends Controller
     {
         $voucher->delete();
 
-        return redirect()->route('vouchers.index')->with('success', 'Xóa mã giảm giá thành công');
+        return redirect()->route('admin.vouchers.index')->with('success', 'Xóa mã giảm giá thành công');
     }
 }
