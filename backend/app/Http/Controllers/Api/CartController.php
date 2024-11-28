@@ -67,60 +67,77 @@ class CartController extends Controller
 
 
     public function addToCart(Request $request)
-{
-    try {
-        $productVariantId = $request->input('product_variant_id');
-        $quantity = $request->input('quantity', 1);
-
-        // Kiểm tra dữ liệu đầu vào
-        if (!$productVariantId || !is_numeric($productVariantId)) {
-            return response()->json(['message' => 'ID sản phẩm không hợp lệ'], 400);
+    {
+        try {
+            $productVariantId = $request->input('product_variant_id');
+            $quantity = $request->input('quantity', 1);
+    
+            if (!$productVariantId || !is_numeric($productVariantId)) {
+                return response()->json(['message' => 'ID sản phẩm không hợp lệ'], 400);
+            }
+            if ($quantity <= 0) {
+                return response()->json(['message' => 'Số lượng phải lớn hơn 0'], 400);
+            }
+    
+            // Sử dụng lockForUpdate để khóa sản phẩm trong kho
+            $productVariant = ProductVariant::where('id', $productVariantId)
+                ->lockForUpdate()
+                ->first();
+    
+            if (!$productVariant) {
+                return response()->json(['message' => 'Sản phẩm không tồn tại'], 404);
+            }
+    
+            // Kiểm tra số lượng tồn kho
+            if ($productVariant->quantity < $quantity) {
+                return response()->json(['message' => 'Sản phẩm không đủ số lượng trong kho'], 400);
+            }
+    
+            // Nếu chưa đăng nhập, trả về giỏ hàng tạm thời
+            if (!$request->user()) {
+                $cartData = [
+                    'product_variant_id' => $productVariantId,
+                    'quantity' => $quantity,
+                    'price' => round($productVariant->price, 2),
+                ];
+    
+                return response()->json([
+                    'message' => 'Bạn cần đăng nhập để thêm sản phẩm vào giỏ hàng. Sản phẩm đã được lưu vào giỏ hàng tạm thời.',
+                    'cart_data' => $cartData
+                ], 401);
+            }
+    
+            // Lưu giỏ hàng vào cơ sở dữ liệu cho người dùng đã đăng nhập
+            $user = $request->user();
+            $cart = Cart::firstOrCreate(['user_id' => $user->id]);
+    
+            // Kiểm tra lại tồn kho trước khi thêm sản phẩm vào giỏ hàng
+            $cartItem = CartItem::where('cart_id', $cart->id)
+                ->where('product_variant_id', $productVariantId)
+                ->first();
+    
+            if ($cartItem) {
+                if ($cartItem->quantity + $quantity > $productVariant->quantity) {
+                    return response()->json(['message' => 'Số lượng sản phẩm không đủ trong kho'], 400);
+                }
+                $cartItem->quantity += $quantity;
+                $cartItem->save();
+            } else {
+                $cartItem = CartItem::create([
+                    'cart_id' => $cart->id,
+                    'product_variant_id' => $productVariantId,
+                    'quantity' => $quantity,
+                    'price' => round($productVariant->price, 2),
+                ]);
+            }
+    
+            return response()->json(['message' => 'Sản phẩm đã được thêm vào giỏ hàng', 'cart_item' => $cartItem], 200);
+        } catch (\Exception $e) {
+            Log::error('Lỗi thêm sản phẩm vào giỏ hàng: ' . $e->getMessage());
+            return response()->json(['message' => 'Đã có lỗi xảy ra, vui lòng thử lại'], 500);
         }
-        if ($quantity <= 0) {
-            return response()->json(['message' => 'Số lượng phải lớn hơn 0'], 400);
-        }
-
-        $productVariant = ProductVariant::find($productVariantId);
-        if (!$productVariant) {
-            return response()->json(['message' => 'Sản phẩm không tồn tại'], 404);
-        }
-
-        // Nếu chưa đăng nhập, trả về dữ liệu giỏ hàng tạm thời
-        if (!$request->user()) {
-            $cartData = [
-                'product_variant_id' => $productVariantId,
-                'quantity' => $quantity,
-                'price' => round($productVariant->price, 2),
-            ];
-
-            return response()->json([
-                'message' => 'Bạn cần đăng nhập để thêm sản phẩm vào giỏ hàng. Sản phẩm đã được lưu vào giỏ hàng tạm thời.',
-                'cart_data' => $cartData
-            ], 401);
-        }
-
-        // Lưu giỏ hàng vào cơ sở dữ liệu cho người dùng đã đăng nhập
-        $user = $request->user();
-        $cart = Cart::firstOrCreate(['user_id' => $user->id]);
-
-        $cartItem = CartItem::updateOrCreate(
-            [
-                'cart_id' => $cart->id,
-                'product_variant_id' => $productVariantId,
-            ],
-            [
-                'quantity' => DB::raw('quantity + ' . $quantity),
-                'price' => round($productVariant->price, 2),
-            ]
-        );
-
-        return response()->json(['message' => 'Sản phẩm đã được thêm vào giỏ hàng', 'cart_item' => $cartItem], 200);
-    } catch (\Exception $e) {
-        Log::error('Lỗi thêm sản phẩm vào giỏ hàng: ' . $e->getMessage());
-        return response()->json(['message' => 'Đã có lỗi xảy ra, vui lòng thử lại'], 500);
     }
-}
-
+    
 public function syncCart(Request $request)
 {
     $user = Auth::user(); // Lấy người dùng đã đăng nhập
