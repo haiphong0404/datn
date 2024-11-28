@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CartItem;
 use App\Models\OrderDetail;
 use Illuminate\Http\Request;
 use App\Models\Order;
@@ -125,7 +126,11 @@ class PaymentController extends Controller
             }
 
             // Xóa giỏ hàng
-            Cart::where('user_id', $order->user_id)->delete();
+            CartItem::whereHas('cart', function ($query) use ($order) {
+                $query->where('user_id', $order->user_id);
+            })
+                ->where('product_variant_id', $productVariant->id)
+                ->delete();
 
             // Commit transaction
             DB::commit();
@@ -185,13 +190,6 @@ class PaymentController extends Controller
         } catch (\Exception $e) {
             // Rollback transaction nếu có lỗi
             DB::rollBack();
-
-            // Log lỗi
-            Log::error('Lỗi khi hủy đơn hàng:', [
-                'order_id' => $order_id,
-                'error_message' => $e->getMessage(),
-            ]);
-
             return response()->json([
                 'message' => 'Đã có lỗi xảy ra khi hủy đơn hàng. Vui lòng thử lại.',
             ], 500);
