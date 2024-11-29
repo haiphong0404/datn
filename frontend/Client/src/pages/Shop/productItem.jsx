@@ -7,7 +7,7 @@ const ProductItem = ({ product }) => { // Nhận product qua props
             <div className="product-item">
                 <div className="product-thumb">
                     <Link to={`/product_details/${product.id}`}>
-                        <img src={product.image || '/path/to/placeholder.jpg'} alt={product.name} />
+                        <img src={product.image || '/path/to/placeholder.jpg'} alt={product.name.substring(0, 30)} />
                     </Link>
                     <div className="button-group">
 
@@ -28,7 +28,7 @@ const ProductItem = ({ product }) => { // Nhận product qua props
                     <div className="product-caption">
                         <h6 className="product-name">
                             <Link to={`/product_details/${product.id}`}>
-                                {product.name}
+                                {product.name.substring(0, 20)}
 
                             </Link>
                         </h6>
