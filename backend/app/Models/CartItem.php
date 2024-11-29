@@ -20,6 +20,21 @@ class CartItem extends Model
     }
     public function productVariant()
     {
-        return $this->belongsTo(ProductVariant::class);
+        return $this->belongsTo(ProductVariant::class, 'product_variant_id');
+    }
+
+    public function product()
+    {
+        return $this->hasOneThrough(Product::class, ProductVariant::class, 'id', 'id', 'product_variant_id', 'product_id');
+    }
+
+    public function size()
+    {
+        return $this->belongsTo(Size::class); 
+    }
+
+    public function color()
+    {
+        return $this->belongsTo(Color::class); 
     }
 }
