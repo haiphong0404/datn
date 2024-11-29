@@ -31,16 +31,20 @@ const Header = () => {
   };
 
   useEffect(() => {
-    const savedCart = JSON.parse(localStorage.getItem("cart"));
-    if (cart && cart.length > 0) {
-      setLocalCart(cart);
-      localStorage.setItem('cart', JSON.stringify(cart));
-    } else if (Array.isArray(savedCart)) {
-      setLocalCart(savedCart);
-    } else {
-      fetchCartFromAPI();
-    }
+    const fetchData = async () => {
+      const savedCart = JSON.parse(localStorage.getItem('cart'));
+      if (cart?.length > 0) {
+        setLocalCart(cart);
+        localStorage.setItem('cart', JSON.stringify(cart));
+      } else if (Array.isArray(savedCart)) {
+        setLocalCart(savedCart);
+      } else {
+        await fetchCartFromAPI();
+      }
+    };
+    fetchData();
   }, [cart]);
+  
 
   // Hàm lấy tất cả dữ liệu từ giỏ hàng
   const handleGetAllCartData = () => {

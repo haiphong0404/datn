@@ -5952,13 +5952,10 @@ only screen and (max-width: 767.98px) {
 /* Đảm bảo rằng sản phẩm trong list-view hiển thị theo chiều dọc */
 
 
-.product-thumb {
-  /* flex: 0 0 100px; */
+/* .product-thumb {
   height: 200px;
-  /* Kích thước hình ảnh */
   margin-right: 20px;
-  /* Khoảng cách giữa hình ảnh và nội dung sản phẩm */
-}
+} */
 
 .product-content-list {
   flex: 1;

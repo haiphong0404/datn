@@ -195,9 +195,9 @@ class ProductController extends Controller
         $product = Product::findOrFail($id);
 
         // Xóa hình ảnh nếu có
-        if ($product->image) {
-            Storage::disk('public')->delete($product->image);
-        }
+        // if ($product->image) {
+        //     Storage::disk('public')->delete($product->image);
+        // }
 
         // Xóa mềm sản phẩm
         $product->delete();
