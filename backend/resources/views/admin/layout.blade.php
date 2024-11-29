@@ -266,10 +266,10 @@
             </div>
             <div class="top-nav ">
                 <!--search & user info start-->
+                <!--search & user info start-->
                 <ul class="nav pull-right top-menu">
                     <li>
                         @yield('search')
-                        {{-- <input type="text" class="form-control search" placeholder="Search"> --}}
                     </li>
                     <!-- user login dropdown start-->
                     @auth

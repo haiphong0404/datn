@@ -10,7 +10,7 @@ const Order_detail = () => {
     const [orderItems, setOrderItems] = useState([]);
     const [orderStatus, setOrderStatus] = useState(null); // Trạng thái hiện tại của đơn hàng
 
-   
+
 
     // Cập nhật orderItems và orderStatus khi orderDetail thay đổi
     useEffect(() => {
@@ -61,7 +61,10 @@ const Order_detail = () => {
                                         ? 'Hoàn Thành'
                                         : orderStatus === 'cancelled'
                                             ? 'Đã Hủy'
-                                            : 'Không Xác Định'}
+                                            : orderStatus === 'processing'
+                                                ? 'Không Xác Định'
+                                                : 'Không Xác Định'}
+
 
                             </p>
                         </div>
@@ -82,11 +85,12 @@ const Order_detail = () => {
                     </div>
                 )}
                 <h5 className="checkout-title"></h5>
-                {orderDetail.status !== 'completed' && orderDetail.status !== 'cancelled' && (
+                {(orderDetail.status !== 'completed' && orderDetail.status !== 'cancelled') || orderDetail.status === 'processing' ? (
                     <div className="checkout-btn" style={{ marginTop: '30px' }}>
                         <CancelOrderButton orderId={orderId} refetch={refetch} />
                     </div>
-                )}
+                ) : null}
+
                 {/* Hiển thị sản phẩm trong đơn hàng */}
                 {orderItems.length > 0 && (
                     <div className="section-bg-color" style={{ marginTop: '5%' }}>

@@ -38,11 +38,12 @@ export const useLoginForm = (isDisplay) => {
     }
   }, []);
   const syncCartToServer = async (userId, cartData) => {
-    if (cartData && cartData.length > 0) {
+    if (cartData && cartData.length > 0) { // Kiểm tra xem dữ liệu có trống không
       try {
-        // Chuẩn bị dữ liệu giỏ hàng
+        // Thêm userId và chuẩn bị dữ liệu cho cartItem
         const cartDataWithDetails = cartData.map((item) => ({
-          product_variant_id: item.id_productVariant, // Đảm bảo key này tồn tại
+          cart_id: userId, // userId hoặc cart_id (tùy vào cách bạn tổ chức)
+          product_variant_id: item.id_productVariant,
           quantity: item.quantity,
           price: item.price,
           created_at: new Date().toISOString(),
@@ -51,27 +52,40 @@ export const useLoginForm = (isDisplay) => {
   
         console.log("Cart data before sync:", cartDataWithDetails);
   
+        // Kiểm tra xem token có hợp lệ không
+        const token = localStorage.getItem('token');
+        if (!token) {
+          toast.error("Vui lòng đăng nhập để đồng bộ giỏ hàng.");
+          return;
+        }
+  
         // Gửi yêu cầu đồng bộ giỏ hàng lên server
         const response = await axios.post(
-          "http://127.0.0.1:8000/api/cart/sync",
-          { cart: cartDataWithDetails },
-          {
+          '/cart/sync', // URL endpoint của server
+          { cart: cartDataWithDetails }, // Gửi dữ liệu giỏ hàng đã được chuẩn bị
+          { 
             headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`, // Token xác thực
-            },
+              Authorization: `Bearer ${token}` // Token xác thực
+            }
           }
         );
   
+        // Kiểm tra phản hồi từ server
+        console.log("Sync response:", response);
+  
         if (response.status === 200) {
-          // Đồng bộ giỏ hàng thành công
           toast.success("Giỏ hàng đã được đồng bộ thành công!");
+        } else {
+          toast.error("Đã có lỗi xảy ra khi đồng bộ giỏ hàng!");
         }
       } catch (error) {
-        console.error(
-          "Error syncing cart to server:",
-          error.response ? error.response.data : error
-        );
-        toast.error("Có lỗi xảy ra khi đồng bộ giỏ hàng!");
+        // Xử lý lỗi từ server hoặc kết nối mạng
+        console.error("Error syncing cart to server:", error.response ? error.response.data : error);
+        if (error.response && error.response.data) {
+          toast.error(`Lỗi: ${error.response.data.message || "Không xác định"}`);
+        } else {
+          toast.error("Có lỗi xảy ra khi kết nối với server!");
+        }
       }
     } else {
       console.error("Error syncing cart to server: Cart data is empty!");

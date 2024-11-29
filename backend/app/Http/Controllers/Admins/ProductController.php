@@ -116,8 +116,9 @@ class ProductController extends Controller
                 ]);
 
                 // Xử lý hình ảnh cho biến thể
-                if ($request->hasFile('variant_images')) {
-                    foreach ($request->file('variant_images') as $image) {
+                $variantImageKey = "variant_images_{$index}"; // Lấy key tương ứng với biến thể
+                if ($request->hasFile($variantImageKey)) {
+                    foreach ($request->file($variantImageKey) as $image) {
                         $imagePath = $image->store('variant_images', 'public');
                         $variant->images()->create(['image' => $imagePath]);
                     }
@@ -129,15 +130,24 @@ class ProductController extends Controller
 
             return redirect()->route('admin.products.index')->with('success', 'Sản phẩm và biến thể đã được thêm mới thành công!');
         } catch (\Exception $e) {
-            // Rollback transaction nếu có lỗi xảy ra
+            // Rollback transaction khi có lỗi
             DB::rollback();
 
-            // Ghi lại lỗi
-            Log::error('Error storing product: ' . $e->getMessage());
+            // Ghi log lỗi chi tiết
+            Log::error('Error while storing product: ', [
+                'message' => $e->getMessage(),
+                'line' => $e->getLine(),
+                'file' => $e->getFile(),
+                'trace' => $e->getTraceAsString(),
+                'data' => $request->all(),
+            ]);
 
-            return redirect()->back()->with('error', 'Có lỗi xảy ra. Vui lòng thử lại sau.');
+            return redirect()->back()
+                ->withInput() // Giữ lại dữ liệu đã nhập
+                ->withErrors(['error' => 'Có lỗi xảy ra trong quá trình lưu sản phẩm. Vui lòng kiểm tra log để biết thêm chi tiết.']);
         }
     }
+
     /**
      * Display the specified resource.
      */
@@ -195,9 +205,9 @@ class ProductController extends Controller
         $product = Product::findOrFail($id);
 
         // Xóa hình ảnh nếu có
-        if ($product->image) {
-            Storage::disk('public')->delete($product->image);
-        }
+//        if ($product->image) {
+//            Storage::disk('public')->delete($product->image);
+//        }
 
         // Xóa mềm sản phẩm
         $product->delete();

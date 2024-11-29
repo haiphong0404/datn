@@ -6,29 +6,23 @@
 
 @section('content')
     @if (session()->has('error'))
-        <div class="alert alert-danger">
-            {{ session()->get('error') }}
-        </div>
+        <div class="alert alert-danger">{{ session()->get('error') }}</div>
     @endif
 
     @if (session()->has('success'))
-        <div class="alert alert-success">
-            {{ session()->get('success') }}
-        </div>
+        <div class="alert alert-success">{{ session()->get('success') }}</div>
     @endif
 
     <div class="row">
         <div class="col-sm-12">
             <section class="card">
-                <header class="card-header">
-                    Thêm mới sản phẩm
-                </header>
+                <header class="card-header">Thêm mới sản phẩm</header>
                 <div class="card-body">
                     <form action="{{ route('admin.products.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="form-group">
                             <label for="name">Tên sản phẩm</label>
-                            <input type="text" name="name" class="form-control" placeholder="Nhập tên sản phẩm">
+                            <input type="text" name="name" class="form-control" placeholder="Nhập tên sản phẩm" required>
                             @error('name')
                             <div class="text-danger">{{ $message }}</div>
                             @enderror
@@ -36,14 +30,14 @@
 
                         <div class="form-group">
                             <label for="description">Mô tả</label>
-                            <textarea name="description" class="form-control" placeholder="Nhập mô tả"
-                                      rows="3"></textarea>
+                            <textarea name="description" class="form-control" placeholder="Nhập mô tả" rows="3"></textarea>
                         </div>
+
                         <div class="form-group">
                             <label for="price">Giá sản phẩm</label>
-                            <input type="number" step="0.01" class="form-control" id="price" name="price"
-                                   placeholder="Nhập giá sản phẩm">
+                            <input type="number" step="0.01" class="form-control" name="price" placeholder="Nhập giá sản phẩm">
                         </div>
+
                         <div class="form-group">
                             <label for="category_id">Thể loại</label>
                             <select name="category_id" class="form-control">
@@ -69,6 +63,7 @@
                             <input type="file" name="image" class="form-control" accept="image/*">
                         </div>
 
+                        <!-- Biến thể sản phẩm -->
                         <div class="form-group">
                             <h4>Biến thể sản phẩm</h4>
                             <div class="variants">
@@ -94,18 +89,18 @@
                                     </select>
                                     <input type="text" name="new_colors[]" class="form-control mb-2"
                                            placeholder="Nhập màu sắc mới" style="display:none;">
+
                                     <label for="variant_price">Giá biến thể</label>
                                     <input type="number" name="variant_prices[]" class="form-control mb-2"
                                            placeholder="Nhập giá biến thể" step="0.01">
-                                    <div class="form-group">
-                                        <label for="quantity">Số lượng</label>
-                                        <input type="number" name="variant_quantities[]" class="form-control"
-                                               placeholder="Nhập số lượng" min="0">
-                                    </div>
-                                    <label for="variant_images">Hình ảnh biến thể</label>
-                                    <input type="file" name="variant_images[]" class="form-control mb-2"
-                                           accept="image/*" multiple>
 
+                                    <label for="variant_quantity">Số lượng</label>
+                                    <input type="number" name="variant_quantities[]" class="form-control mb-2"
+                                           placeholder="Nhập số lượng" min="0">
+
+                                    <label for="variant_images_0">Hình ảnh biến thể</label>
+                                    <input type="file" name="variant_images_0[]" class="form-control mb-2"
+                                           accept="image/*" multiple>
 
                                     <button type="button" class="btn btn-danger remove-variant">Xóa</button>
                                 </div>
@@ -124,7 +119,6 @@
     </div>
 
     <script>
-        // Hiện thị trường nhập kích thước mới hoặc màu sắc mới khi chọn
         document.addEventListener('change', function (e) {
             if (e.target.classList.contains('size-select')) {
                 const inputField = e.target.nextElementSibling;
@@ -140,6 +134,7 @@
         });
 
         document.querySelector('.add-variant').addEventListener('click', function () {
+            const variantCount = document.querySelectorAll('.variant').length;
             const variantDiv = document.createElement('div');
             variantDiv.classList.add('variant', 'mb-3');
             variantDiv.innerHTML = `
@@ -156,25 +151,24 @@
         <label for="color_id">Màu sắc</label>
         <select name="colors[]" class="form-control mb-2 color-select">
             <option value="">Chọn màu sắc</option>
-            @foreach($colors as $color)
+@foreach($colors as $color)
             <option value="{{ $color->id }}">{{ $color->name }}</option>
                     @endforeach
             <option value="new">Nhập màu sắc mới</option>
         </select>
         <input type="text" name="new_colors[]" class="form-control mb-2" placeholder="Nhập màu sắc mới" style="display:none;">
+
         <label for="variant_price">Giá biến thể</label>
         <input type="number" name="variant_prices[]" class="form-control mb-2" placeholder="Nhập giá biến thể" step="0.01">
-        <div class="form-group">
-            <label for="quantity">Số lượng</label>
-            <input type="number" name="variant_quantities[]" class="form-control" placeholder="Nhập số lượng" min="0">
-        </div>
-         <label for="variant_images">Hình ảnh biến thể</label>
-            <input type="file" name="variant_images[]" class="form-control mb-2" accept="image/*" multiple>
 
+        <label for="variant_quantity">Số lượng</label>
+        <input type="number" name="variant_quantities[]" class="form-control mb-2" placeholder="Nhập số lượng" min="0">
 
+        <label for="variant_images_${variantCount}">Hình ảnh biến thể</label>
+                <input type="file" name="variant_images_${variantCount}[]" class="form-control mb-2" accept="image/*" multiple>
 
-        <button type="button" class="btn btn-danger remove-variant">Xóa</button>
-`;
+                <button type="button" class="btn btn-danger remove-variant">Xóa</button>
+            `;
             document.querySelector('.variants').appendChild(variantDiv);
         });
 
@@ -185,4 +179,3 @@
         });
     </script>
 @endsection
-
