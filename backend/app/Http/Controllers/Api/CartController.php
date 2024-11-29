@@ -46,7 +46,8 @@ class CartController extends Controller
             'carts' => $cart->items->map(function ($item) {
                 $productVariant = $item->productVariant;
                 $image = $productVariant->images->first()->image ?? null;
-
+                // Kiểm tra số lượng tồn kho
+                $isOutOfStock = $item->quantity > $productVariant->quantity;
                 return [
                     'id_cart_item' => $item->id,
                     'id_productVariant' => $productVariant->id,
@@ -58,6 +59,7 @@ class CartController extends Controller
                     'quantity' => $item->quantity, // Số lượng trong giỏ hàng
                     'price' => round($productVariant->price, 2), // Giá tiền của biến thể sản phẩm
                     'stock' => $productVariant->quantity,
+                    'outOfStockMessage' => $isOutOfStock ? 'Sản phẩm không còn hàng hoặc đã ngừng bán' : null, // Thông báo
                 ];
             })
         ];
@@ -71,28 +73,28 @@ class CartController extends Controller
         try {
             $productVariantId = $request->input('product_variant_id');
             $quantity = $request->input('quantity', 1);
-    
+
             if (!$productVariantId || !is_numeric($productVariantId)) {
                 return response()->json(['message' => 'ID sản phẩm không hợp lệ'], 400);
             }
             if ($quantity <= 0) {
                 return response()->json(['message' => 'Số lượng phải lớn hơn 0'], 400);
             }
-    
+
             // Sử dụng lockForUpdate để khóa sản phẩm trong kho
             $productVariant = ProductVariant::where('id', $productVariantId)
                 ->lockForUpdate()
                 ->first();
-    
+
             if (!$productVariant) {
                 return response()->json(['message' => 'Sản phẩm không tồn tại'], 404);
             }
-    
+
             // Kiểm tra số lượng tồn kho
             if ($productVariant->quantity < $quantity) {
                 return response()->json(['message' => 'Sản phẩm không đủ số lượng trong kho'], 400);
             }
-    
+
             // Nếu chưa đăng nhập, trả về giỏ hàng tạm thời
             if (!$request->user()) {
                 $cartData = [
@@ -100,22 +102,22 @@ class CartController extends Controller
                     'quantity' => $quantity,
                     'price' => round($productVariant->price, 2),
                 ];
-    
+
                 return response()->json([
                     'message' => 'Bạn cần đăng nhập để thêm sản phẩm vào giỏ hàng. Sản phẩm đã được lưu vào giỏ hàng tạm thời.',
                     'cart_data' => $cartData
                 ], 401);
             }
-    
+
             // Lưu giỏ hàng vào cơ sở dữ liệu cho người dùng đã đăng nhập
             $user = $request->user();
             $cart = Cart::firstOrCreate(['user_id' => $user->id]);
-    
+
             // Kiểm tra lại tồn kho trước khi thêm sản phẩm vào giỏ hàng
             $cartItem = CartItem::where('cart_id', $cart->id)
                 ->where('product_variant_id', $productVariantId)
                 ->first();
-    
+
             if ($cartItem) {
                 if ($cartItem->quantity + $quantity > $productVariant->quantity) {
                     return response()->json(['message' => 'Số lượng sản phẩm không đủ trong kho'], 400);
@@ -130,75 +132,75 @@ class CartController extends Controller
                     'price' => round($productVariant->price, 2),
                 ]);
             }
-    
+
             return response()->json(['message' => 'Sản phẩm đã được thêm vào giỏ hàng', 'cart_item' => $cartItem], 200);
         } catch (\Exception $e) {
             Log::error('Lỗi thêm sản phẩm vào giỏ hàng: ' . $e->getMessage());
             return response()->json(['message' => 'Đã có lỗi xảy ra, vui lòng thử lại'], 500);
         }
     }
-    
-public function syncCart(Request $request)
-{
-    $user = Auth::user(); // Lấy người dùng đã đăng nhập
 
-    // Kiểm tra dữ liệu giỏ hàng
-    $cartData = $request->input('cart');
-    if (empty($cartData)) {
-        \Log::error('Cart data is empty!', $cartData); // Log nếu dữ liệu giỏ hàng trống
-        return response()->json(['message' => 'Dữ liệu giỏ hàng trống!'], 400);
-    }
+    public function syncCart(Request $request)
+    {
+        $user = Auth::user(); // Lấy người dùng đã đăng nhập
 
-    // Validate dữ liệu giỏ hàng
-    $validator = Validator::make($request->all(), [
-        'cart' => 'required|array',
-        'cart.*.product_variant_id' => 'required|exists:product_variants,id',
-        'cart.*.quantity' => 'required|integer|min:1',
-        'cart.*.price' => 'required|numeric',
-    ]);
-
-    if ($validator->fails()) {
-        \Log::error('Validation failed for cart data', $validator->errors()->toArray()); // Log lỗi validation
-        return response()->json([
-            'message' => 'Dữ liệu giỏ hàng không hợp lệ!',
-            'errors' => $validator->errors(),
-        ], 422);
-    }
-
-    // Kiểm tra và đồng bộ giỏ hàng
-    try {
-        // Tạo hoặc cập nhật giỏ hàng cho người dùng
-        $cart = Cart::updateOrCreate(
-            ['user_id' => $user->id], // Tìm giỏ hàng của người dùng
-            ['user_id' => $user->id]
-        );
-
-        // Xóa các mục giỏ hàng cũ
-        $cart->items()->delete();
-
-        // Thêm các sản phẩm mới vào giỏ hàng
-        foreach ($cartData as $item) {
-            CartItem::create([
-                'cart_id' => $cart->id,
-                'product_variant_id' => $item['product_variant_id'],
-                'quantity' => $item['quantity'],
-                'price' => $item['price'],
-            ]);
+        // Kiểm tra dữ liệu giỏ hàng
+        $cartData = $request->input('cart');
+        if (empty($cartData)) {
+            \Log::error('Cart data is empty!', $cartData); // Log nếu dữ liệu giỏ hàng trống
+            return response()->json(['message' => 'Dữ liệu giỏ hàng trống!'], 400);
         }
 
-        // Trả về giỏ hàng sau khi đồng bộ
-        return response()->json([
-            'message' => 'Giỏ hàng đã được đồng bộ thành công!',
-            'cart' => $cart->load('items'),
-        ], 200);
-    } catch (\Exception $e) {
-        \Log::error('Error syncing cart:', ['error' => $e->getMessage()]);
-        return response()->json([
-            'message' => 'Đồng bộ giỏ hàng không thành công!',
-            'error' => $e->getMessage(),
-        ], 500);
+        // Validate dữ liệu giỏ hàng
+        $validator = Validator::make($request->all(), [
+            'cart' => 'required|array',
+            'cart.*.product_variant_id' => 'required|exists:product_variants,id',
+            'cart.*.quantity' => 'required|integer|min:1',
+            'cart.*.price' => 'required|numeric',
+        ]);
+
+        if ($validator->fails()) {
+            \Log::error('Validation failed for cart data', $validator->errors()->toArray()); // Log lỗi validation
+            return response()->json([
+                'message' => 'Dữ liệu giỏ hàng không hợp lệ!',
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        // Kiểm tra và đồng bộ giỏ hàng
+        try {
+            // Tạo hoặc cập nhật giỏ hàng cho người dùng
+            $cart = Cart::updateOrCreate(
+                ['user_id' => $user->id], // Tìm giỏ hàng của người dùng
+                ['user_id' => $user->id]
+            );
+
+            // Xóa các mục giỏ hàng cũ
+            $cart->items()->delete();
+
+            // Thêm các sản phẩm mới vào giỏ hàng
+            foreach ($cartData as $item) {
+                CartItem::create([
+                    'cart_id' => $cart->id,
+                    'product_variant_id' => $item['product_variant_id'],
+                    'quantity' => $item['quantity'],
+                    'price' => $item['price'],
+                ]);
+            }
+
+            // Trả về giỏ hàng sau khi đồng bộ
+            return response()->json([
+                'message' => 'Giỏ hàng đã được đồng bộ thành công!',
+                'cart' => $cart->load('items'),
+            ], 200);
+        } catch (\Exception $e) {
+            \Log::error('Error syncing cart:', ['error' => $e->getMessage()]);
+            return response()->json([
+                'message' => 'Đồng bộ giỏ hàng không thành công!',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
-}
 
 
 
@@ -250,7 +252,6 @@ public function syncCart(Request $request)
                 'message' => 'Giỏ hàng đã được cập nhật',
                 'cart_item' => $cartItem
             ], 200);
-
         } catch (\Exception $e) {
             Log::error('Lỗi khi cập nhật giỏ hàng: ' . $e->getMessage());
             return response()->json([
