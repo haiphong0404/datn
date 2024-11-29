@@ -75,6 +75,8 @@ Route::group(
         Route::get('/get-variants/{productId}', [OrderController::class, 'getVariants'])->name('products.variants');
         Route::get('/search-products', [OrderController::class, 'search'])->name('products.search');
         Route::resource('admin/vouchers', VoucherController::class);
+        Route::patch('/user/{id}/toggle-status', [UserController::class, 'toggleStatus'])->name('user.toggleStatus');
+
     }
 );
 

@@ -77,7 +77,7 @@
                             @enderror
                         </div>
 
-                        <div class="form-group mb-3">
+                        {{-- <div class="form-group mb-3">
                             <label for="password" class="form-label">Mật khẩu (không thay đổi thì bỏ trống)</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-lock"></i></span>
@@ -86,7 +86,7 @@
                             @error('password')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
-                        </div>
+                        </div> --}}
 
                         {{-- <div class="form-group mb-3">
                             <label for="avatar_img" class="form-label">Ảnh đại diện</label>

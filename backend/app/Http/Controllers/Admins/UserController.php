@@ -77,7 +77,11 @@ class UserController extends Controller
      */
     public function edit(string $id)
     {
+        
         $user = User::findOrFail($id);
+        if (auth()->user()->role === 'admin' && $user->role === 'admin') {
+            return redirect()->route('admin.user.index')->with('error', 'Bạn không thể chỉnh sửa tài khoản admin khác.');
+        }
         return view('admin.user.edit', compact('user'));
     }
 
@@ -86,6 +90,9 @@ class UserController extends Controller
      */
     public function update(UpdateUserRequest $request, User $user)
     {
+        if (auth()->user()->role === 'admin' && $user->role === 'admin') {
+            return redirect()->route('admin.user.index')->with('error', 'Bạn không thể chỉnh sửa tài khoản admin khác.');
+        }
         $user->username = $request->username;
         $user->email = $request->email;
         if ($request->filled('password')) {
@@ -110,10 +117,26 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function toggleStatus($id)
     {
         $user = User::findOrFail($id);
-        $user->delete();
-        return redirect()->route('admin.user.index')->with('success', 'Xoa thanh cong.');
+        if (auth()->user()->role === 'admin' && $user->role === 'admin') {
+            return redirect()->route('admin.user.index')->with('error', 'Bạn không thể Xóa tài khoản admin khác.');
+        }
+        // Chuyển đổi trạng thái
+        if ($user->status === 'active') {
+            $user->status = 'inactive'; // Chuyển sang "Không hoạt động"
+        } else {
+            $user->status = 'active'; // Chuyển sang "Hoạt động"
+        }
+    
+        $user->save(); // Lưu thay đổi vào cơ sở dữ liệu
+    
+        // Quay lại trang danh sách với thông báo thành công
+        return redirect()->route('admin.user.index')->with(
+            'success',
+            'Trạng thái người dùng đã được cập nhật thành ' . ($user->status === 'active' ? 'Hoạt động' : 'Không hoạt động') . '!'
+        );
     }
+    
 }
