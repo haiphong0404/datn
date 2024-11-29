@@ -98,7 +98,7 @@ const Shop = () => {
 
         <div className="shop-main-wrapper section-padding">
           <div className="container">
-          <div className="blog-post-item">
+          {/* <div className="blog-post-item">
                 <div className="blog-thumb">
                  <img src="" alt="" />
                 </div>
@@ -114,7 +114,7 @@ const Shop = () => {
                   </p>
                   
                 </div>
-              </div>
+              </div> */}
             <div className="row">
               <div className="col-lg-3 order-2 order-lg-1">
                 <aside className="sidebar-wrapper">
