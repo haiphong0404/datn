@@ -133,7 +133,7 @@ const Cart = () => {
   
       // Lưu selectedItems vào localStorage
       localStorage.setItem('selectedItems', JSON.stringify([...selectedItems]));
-  
+      const selectedProducts = getSelectedProducts();
       // Mảng để theo dõi các sản phẩm hết hàng
       const outOfStockItems = [];
       let allInStock = true; // Flag kiểm tra tất cả sản phẩm có đủ số lượng hay không
@@ -185,7 +185,7 @@ const Cart = () => {
   
       // Chỉ chuyển đến trang checkout nếu tất cả sản phẩm đều đủ số lượng
       if (allInStock) {
-        
+        localStorage.setItem('selectedProducts', JSON.stringify(selectedProducts));
         navigate('/checkout');
       } 
     } else {
