@@ -28,7 +28,7 @@ class OrderController extends Controller
     public function index()
     {
         // Lấy tất cả orders từ cơ sở dữ liệu
-        $orders = Order::all();
+        $orders = Order::orderBy('created_at', 'desc')->get();
 
         // Quy tắc chuyển trạng thái
         $allowedTransitions = $this->orderService->getAllowedTransitions();

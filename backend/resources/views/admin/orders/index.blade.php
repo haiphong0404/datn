@@ -101,20 +101,24 @@
                                 @endif
                             </td>
                             <td>
-                                @if ($order->status === 'cancelled' || $order->status === 'completed')
+                                @if ($order->payment_method === 'online')
                                     <p class="text-success">{{ ucfirst($order->status) }}</p>
                                 @else
-                                    <form action="{{ route('admin.orders.updateStatus', $order->id) }}" method="POST">
-                                        @csrf
-                                        @method('PUT')
-                                        <select name="status" class="form-select" onchange="this.form.submit()">
-                                            @foreach($allowedTransitions[$order->status] as $status)
-                                            <option value="{{ $status }}" {{ $order->status == $status ? 'selected' : '' }}>
-                                                {{ ucfirst($status) }}
-                                            </option>
-                                            @endforeach
-                                        </select>
-                                    </form>
+                                    @if ($order->status === 'cancelled' || $order->status === 'completed')
+                                        <p class="text-success">{{ ucfirst($order->status) }}</p>
+                                    @else
+                                        <form action="{{ route('admin.orders.updateStatus', $order->id) }}" method="POST">
+                                            @csrf
+                                            @method('PUT')
+                                            <select name="status" class="form-select" onchange="this.form.submit()">
+                                                @foreach($allowedTransitions[$order->status] as $status)
+                                                <option value="{{ $status }}" {{ $order->status == $status ? 'selected' : '' }}>
+                                                    {{ ucfirst($status) }}
+                                                </option>
+                                                @endforeach
+                                            </select>
+                                        </form>
+                                    @endif
                                 @endif
                             </td>
                             <td class="text-center">
