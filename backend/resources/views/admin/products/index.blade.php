@@ -94,24 +94,24 @@ Danh sách sản phẩm
                                 <td class="center hidden-phone">
                                     <a href="{{ route('admin.products.show', $product->id) }}" class="btn btn-info btn-sm"
                                        title="Xem chi tiết">
-                                        <i class="fa fa-eye"></i> Xem
+                                        <i class="fa fa-eye"></i>
                                     </a>
                                     @if ($product->trashed())
                                     <form action="{{ route('admin.products.restore', $product->id) }}" method="POST"
                                         style="display:inline;">
                                         @csrf
                                         <button type="submit" class="btn btn-info btn-sm" title="Khôi phục">
-                                            <i class="fa fa-undo"></i> Phục hồi
+                                            <i class="fa fa-undo"></i>
                                         </button>
                                     </form>
                                     @else
                                     <a href="{{ route('admin.products.edit', $product->id) }}"
                                         class="btn btn-warning btn-sm" title="Chỉnh sửa">
-                                        <i class="fa fa-edit"></i> Sửa
+                                        <i class="fa fa-edit"></i>
                                     </a>
                                     <a href="{{ route('admin.products.variants.index', $product->id) }}"
                                         class="btn btn-secondary btn-sm" title="Xem biến thể">
-                                        <i class="fa fa-list"></i> Biến thể
+                                        <i class="fa fa-list"></i>
                                     </a>
                                     <form action="{{ route('admin.products.destroy', $product->id) }}" method="POST"
                                         style="display:inline;">
