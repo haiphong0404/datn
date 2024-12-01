@@ -7,7 +7,7 @@ use App\Models\Product;
 use App\Models\ProductVariant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-
+use Illuminate\Support\Facades\Validator;
 class ProductVariantController extends Controller
 {
     /**
@@ -41,6 +41,62 @@ class ProductVariantController extends Controller
     /**
      * Display the specified variant.
      */
+    public function checkQuantity(Request $request)
+    {
+        // Validate input data
+        $validator = Validator::make($request->all(), [
+            '*.product_variant_id' => 'required|exists:product_variants,id',
+            '*.quantity' => 'required|integer|min:1',
+        ]);
+    
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Dữ liệu không hợp lệ.',
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+    
+        $requestedVariants = $request->all();
+        $insufficientVariants = [];
+    
+        foreach ($requestedVariants as $variant) {
+            $variantId = $variant['product_variant_id'];
+            $quantityRequested = $variant['quantity'];
+    
+            // Tìm biến thể theo ID
+            $productVariant = ProductVariant::find($variantId);
+    
+            // Kiểm tra số lượng
+            $size = $productVariant->size->name ?? 'Chưa xác định';  // Lấy tên size nếu có
+        $color = $productVariant->color->name ?? 'Chưa xác định'; // Lấy tên màu nếu có
+
+        // Kiểm tra số lượng
+        if ($productVariant->quantity < $quantityRequested) {
+            $insufficientVariants[] = [
+                'product_variant_id' => $variantId,
+                'size' => $size,
+                'color' => $color,
+                'available_quantity' => $productVariant->quantity,
+                'requested_quantity' => $quantityRequested,
+                'message' => 'Số lượng không đủ.',
+            ];
+        }
+        }
+    
+        if (!empty($insufficientVariants)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Một số sản phẩm không đủ số lượng.',
+                'insufficient_variants' => $insufficientVariants,
+            ], 422);
+        }
+    
+        return response()->json([
+            'success' => true,
+            'message' => 'Tất cả sản phẩm đều đủ số lượng.',
+        ], 200);
+    }
     public function show($id)
     {
         // Tìm biến thể theo ID và kèm theo thông tin sản phẩm cha

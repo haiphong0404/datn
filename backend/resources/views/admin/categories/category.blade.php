@@ -85,8 +85,8 @@
 
                             <table class="display table table-bordered">
                                 <thead>
-                                    <tr>
-                                        <th>STT</th>
+                                    <tr class="text-center">
+                                        <th>#</th>
                                         <th>Tên thể loại</th>
                                         <th>Mô tả</th>
                                         <th>Ngày tạo</th>

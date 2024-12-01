@@ -12,8 +12,8 @@
 @endsection
 
 @section('content')
-<div class="row">
-    <div class="col-sm-12">
+    <div class="row">
+        <div class="col-sm-12">
             <div class="card shadow-sm">
                 <header class="card-header">
                     <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center">
@@ -46,12 +46,12 @@
                             Tạo mới
                         </a>
                     </div>
-                    
+
                     <!-- Danh sách biến thể -->
                     <div class="table-responsive">
                         <table class="table table-striped table-bordered">
                             <thead class="thead-light">
-                                <tr>
+                                <tr class="text-center">
                                     <th class="text-center">ID</th>
                                     <th>Kích thước</th>
                                     <th>Màu sắc</th>
@@ -65,10 +65,10 @@
                                 @forelse($product->variants as $variant)
                                     <tr>
                                         <td class="text-center">{{ $variant->id }}</td>
-                                        <td>{{ $variant->size->name ?? 'Không có' }}</td>
+                                        <td class="text-end">{{ $variant->size->name ?? 'Không có' }}</td>
                                         <td>{{ $variant->color->name ?? 'Không có' }}</td>
-                                        <td>{{ number_format($variant->price, 0, ',', '.') }} VNĐ</td>
-                                        <td>
+                                        <td class="text-end">{{ number_format($variant->price, 0, ',', '.') }} VNĐ</td>
+                                        <td class="text-center">
                                             @if ($variant->images->isNotEmpty())
                                                 <img src="{{ asset('storage/' . $variant->images->random()->image) }}"
                                                     alt="{{ $product->name }} - Biến thể {{ $variant->id }}"
@@ -77,22 +77,24 @@
                                                 <p>Không có ảnh</p>
                                             @endif
                                         </td>
-                                        <td>{{ $variant->quantity }}</td>
-                                        <td class="d-flex">
-                                            <a href="{{ route('admin.products.variants.edit', [$product->id, $variant->id]) }}"
-                                                class="btn btn-warning " title="Chỉnh sửa">
-                                                <i class="fa fa-edit"></i>
-                                            </a>
-                                            <form
-                                                action="{{ route('admin.products.variants.destroy', [$product->id, $variant->id]) }}"
-                                                method="POST" style="display: inline-block;">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-danger " title="Xóa"
-                                                    onclick="return confirm('Bạn có chắc chắn muốn xóa không?');">
-                                                    <i class="fa fa-trash"></i> 
-                                                </button>
-                                            </form>
+                                        <td class="text-end">{{ $variant->quantity }}</td>
+                                        <td>
+                                            <div class="d-flex justify-content-center">
+                                                <a href="{{ route('admin.products.variants.edit', [$product->id, $variant->id]) }}"
+                                                    class="btn btn-warning mr-2" title="Chỉnh sửa">
+                                                    <i class="fa fa-edit"></i>
+                                                </a>
+                                                <form
+                                                    action="{{ route('admin.products.variants.destroy', [$product->id, $variant->id]) }}"
+                                                    method="POST" style="display: inline-block;">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-danger " title="Xóa"
+                                                        onclick="return confirm('Bạn có chắc chắn muốn xóa không?');">
+                                                        <i class="fa fa-trash"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
                                         </td>
                                     </tr>
                                 @empty

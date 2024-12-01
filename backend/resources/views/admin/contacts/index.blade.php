@@ -90,8 +90,8 @@
                             <table class="display table table-bordered" id="hidden-table-info"
                                 aria-describedby="hidden-table-info_info">
                                 <thead>
-                                    <tr>
-                                        <th>STT</th>
+                                    <tr class="text-center">
+                                        <th>#</th>
                                         <th>Tên</th>
                                         <th>Email</th>
                                         <th>Số điện thoại</th>
@@ -109,8 +109,8 @@
                                                 <td>{{ $contact->id }}</td>
                                                 <td class="text-truncate">{{ $contact->name }}</td>
                                                 <td class="text-truncate">{{ $contact->email }}</td>
-                                                <td class="text-truncate">{{ $contact->phone }}</td>
-                                                <td>
+                                                <td class="text-truncate text-end">{{ $contact->phone }}</td>
+                                                <td class="text-center">
                                                     <a href="{{ route('admin.contacts.edit', $contact) }}"
                                                         class="btn btn-warning"><i class="fa fa-pencil-alt"></i></a>
                                                     <form action="{{ route('admin.contacts.destroy', $contact) }}" method="POST" style="display:inline;">

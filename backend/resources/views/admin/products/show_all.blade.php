@@ -75,7 +75,7 @@
                             <div class="table-responsive">
                                 <table class="table table-bordered table-hover">
                                     <thead class="thead-light">
-                                        <tr>
+                                        <tr class="text-center">
                                             <th>Hình ảnh</th>
                                             <th>Kích thước</th>
                                             <th>Màu sắc</th>
@@ -87,15 +87,15 @@
                                         @foreach ($product->variants as $variant)
                                             <tr>
                                                 <!-- Hiển thị ảnh biến thể -->
-                                                <td>
+                                                <td class="text-center">
                                                     <img src="{{ asset('storage/' . $variant->images->random()->image) }}"
                                                         alt="Biến thể {{ $variant->id }}"
                                                         style="width: 80px; height: auto; object-fit: cover;">
                                                 </td>
-                                                <td>{{ $variant->size->name ?? 'Không có' }}</td>
+                                                <td class="text-end">{{ $variant->size->name ?? 'Không có' }}</td>
                                                 <td>{{ $variant->color->name ?? 'Không có' }}</td>
-                                                <td>{{ number_format($variant->price, 0, ',', '.') }} VNĐ</td>
-                                                <td>{{ $variant->quantity }}</td>
+                                                <td class="text-end">{{ number_format($variant->price, 0, ',', '.') }} VNĐ</td>
+                                                <td class="text-end">{{ $variant->quantity }}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>

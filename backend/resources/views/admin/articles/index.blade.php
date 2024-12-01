@@ -85,8 +85,8 @@
                             <table class="display table table-bordered" id="hidden-table-info"
                                 aria-describedby="hidden-table-info_info">
                                 <thead>
-                                    <tr>
-                                        <th>STT</th>
+                                    <tr class="text-center">
+                                        <th>#</th>
                                         <th>Tên</th>
                                         <th>Tiêu đề</th>
                                         <th>Nội dung</th>
@@ -102,7 +102,7 @@
                                     @else
                                         @foreach ($articles as $item)
                                             <tr>
-                                                <td>{{ $item->id }}</td>
+                                                <td class="text-center">{{ $item->id }}</td>
                                                 <td class="text-truncate">{{ $item->name }}</td>
                                                 <td class="text-truncate">{{ $item->title }}</td>
                                                 <td class="text-truncate">{{ Str::limit($item->content, 50) }}</td>

@@ -80,7 +80,7 @@
                                             <table class="display table table-bordered "
                                                 aria-describedby="hidden-table-info_info" id="vouchersTable">
                                                 <thead>
-                                                    <tr>
+                                                    <tr class="text-center">
                                                         <th class="text-center" style="width: 50px;">#</th>
                                                         <th>Mã giảm giá</th>
                                                         <th>Ngày bắt đầu</th>
@@ -119,28 +119,28 @@
                                                             <td>{{ $item->expiration_date }}</td>
 
                                                             @if ($type == 'percentage')
-                                                                <td>
+                                                                <td class="text-end">
                                                                     {{ $item->discount_percentage }}</td>
-                                                                <td>{{ $item->max_discount_value }}
+                                                                <td class="text-end">{{ $item->max_discount_value }}
                                                                 </td>
                                                             @elseif ($type == 'fixed')
-                                                                <td>{{ $item->discount_value }}
+                                                                <td class="text-end">{{ $item->discount_value }}
                                                                 </td>
-                                                                <td>{{ $item->min_order_value }}
+                                                                <td class="text-end">{{ $item->min_order_value }}
                                                                 </td>
                                                             @elseif ($type == 'category_discount')
-                                                                <td>{{ $item->category_id }}</td>
-                                                                <td>
+                                                                <td class="text-end">{{ $item->category_id }}</td>
+                                                                <td class="text-end">
                                                                     {{ $item->discount_percentage }}</td>
                                                             @elseif ($type == 'first_order')
-                                                                <td>{{ $item->discount_value }}
+                                                                <td class="text-end">{{ $item->discount_value }}
                                                                 </td>
-                                                                <td>{{ $item->min_order_value }}
+                                                                <td class="text-end">{{ $item->min_order_value }}
                                                                 </td>
                                                             @endif
 
-                                                            <td>{{ $item->quantity }}</td>
-                                                            <td>{{ $item->user_id }}</td>
+                                                            <td class="text-end">{{ $item->quantity }}</td>
+                                                            <td class="text-end">{{ $item->user_id }}</td>
                                                             <td>{{ $item->created_at }}</td>
                                                             <td>{{ $item->updated_at }}</td>
                                                             <td class="text-center">

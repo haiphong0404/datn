@@ -13,7 +13,7 @@
                                     <i class="fa fa-shopping-cart"></i>
                                 </div>
                                 <div class="value">
-                                    <h1 class="">
+                                    <h1 class="text-truncate" style="max-width: 100%;" data-bs-toggle="tooltip" title="{{ $totalProducts }}">
                                         {{ $totalProducts }}
                                     </h1>
                                     <p>Số loại mặt hàng đang bán</p>
@@ -26,7 +26,7 @@
                                     <i class="fa fa-shopping-cart"></i>
                                 </div>
                                 <div class="value">
-                                    <h1 class="">
+                                    <h1 class="text-truncate" style="max-width: 100%;" data-bs-toggle="tooltip" title="{{ $totalOrders }}">
                                         {{ $totalOrders }}
                                     </h1>
                                     <p>Số đơn hàng trong tháng</p>
@@ -39,7 +39,7 @@
                                     <i class="fa fa-bar-chart-o"></i>
                                 </div>
                                 <div class="value">
-                                    <h1 class="">
+                                    <h1 class="text-truncate" style="max-width: 100%;" data-bs-toggle="tooltip" title="{{ $totalRevenue }}">
                                         {{ $totalRevenue }}
                                     </h1>
                                     <p>Doanh thu tháng</p>
@@ -107,6 +107,14 @@
                     }
                 }
             }
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Khởi tạo tooltip
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
         });
     </script>
 @endsection

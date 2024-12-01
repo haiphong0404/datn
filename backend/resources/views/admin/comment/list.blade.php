@@ -81,8 +81,8 @@
                             <table class="display table table-bordered" id="hidden-table-info"
                                 aria-describedby="hidden-table-info_info">
                                 <thead>
-                                    <tr role="row">
-                                        <th>Id</th>
+                                    <tr class="text-center">
+                                        <th>#</th>
                                         <th>User</th>
                                         <th>Product</th>
                                         <th>Comment</th>
@@ -111,7 +111,7 @@
                                                         Không có file
                                                     @endif
                                                 </td>
-                                                <td>{{ $item->star_rating }} / 5</td>
+                                                <td class="text-end">{{ $item->star_rating }} / 5</td>
                                                 <td>
                                                     <a href="{{ route('admin.comments.show', $item->id) }}"
                                                         class="btn btn-primary"><i class="fa fa-eye"></i></a>

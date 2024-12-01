@@ -84,13 +84,13 @@
                             <table class="display table table-bordered" id="hidden-table-info"
                                 aria-describedby="hidden-table-info_info">
                                 <thead class="">
-                                    <tr>
+                                    <tr class="text-center">
                                         <th>#</th>
                                         <th>Tên</th>
                                         <th>Số điện thoại</th>
                                         <th>PTTT</th>
                                         <th>Địa chỉ</th>
-                                        <th class="text-end">Tổng tiền</th>
+                                        <th >Tổng tiền</th>
                                         <th>Ngày tạo</th>
                                         <th>Ngày cập nhật</th>
                                         <th>Trạng Thái Thanh Toán</th>
@@ -102,11 +102,11 @@
                                     @foreach ($orders as $order)
                                         <tr>
                                             <td>{{ $order->id }}</td>
-                                            <td>{{ $order->name }}</td>
-                                            <td>{{ $order->phone }}</td>
+                                            <td style="width: 120px;">{{ $order->name }}</td>
+                                            <td class="text-end">{{ $order->phone }}</td>
                                             <td>{{ $order->payment_method }}</td>
                                             <td class="text-truncate">{{ $order->address }}</td>
-                                            <td class="text-end">{{ number_format($order->total_amount, 0, ',', '.') }} VND
+                                            <td class="text-end" >{{ number_format($order->total_amount, 0, ',', '.') }} VND
                                             </td>
                                             <td style="width: 100px;">{{ $order->order_date }}</td>
                                             <td style="width: 100px;">{{ $order->updated_at }}</td>

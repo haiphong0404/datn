@@ -76,8 +76,8 @@
                         </div>
                         <table class="display table table-bordered" id="hidden-table-info" aria-describedby="hidden-table-info_info">
                             <thead>
-                                <tr>
-                                    <th>STT</th>
+                                <tr class="text-center">
+                                    <th>#</th>
                                     <th>Tên thương hiệu</th>
                                     <th>Ảnh</th>
                                     <th>Mô tả</th>
@@ -95,7 +95,7 @@
                                 @else
                                 @foreach ($brands as $item)
                                 <tr>
-                                    <td>{{ $loop->iteration }}</td>
+                                    <td >{{ $loop->iteration }}</td>
                                     <td class="fw-semibold text-truncate">{{ $item->name }}</td>
                                     <td>
                                         @if($item->image)

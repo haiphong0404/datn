@@ -90,7 +90,7 @@
                             <table class="display table table-bordered" id="hidden-table-info"
                                 aria-describedby="hidden-table-info_info">
                                 <thead>
-                                    <tr role="row">
+                                    <tr class="text-center">
                                         <th>#</th>
                                         <th>Ảnh đại diện</th>
                                         <th>Họ tên</th>
@@ -118,7 +118,7 @@
                                                         height="100" alt="{{ $item->username }}">
                                                 </td>
                                                 <td class="text-truncate">{{ $item->username }}</td>
-                                                <td>{{ $item->phone }}</td>
+                                                <td class="text-end">{{ $item->phone }}</td>
                                                 <td class="text-truncate">{{ $item->email }}</td>
                                                 <td class="text-truncate">{{ $item->address }}</td>
                                                 <td class="text-td">{{ $item->role }}</td>

@@ -90,8 +90,8 @@
                             <table class="display table table-bordered" id="hidden-table-info"
                                 aria-describedby="hidden-table-info_info">
                                 <thead>
-                                    <tr>
-                                        <th>STT</th>
+                                    <tr class="text-center">
+                                        <th>#</th>
                                         <th>Ảnh</th>
                                         <th>Tiêu đề</th>
                                         <th>Tiêu đề phụ</th>
@@ -107,7 +107,7 @@
                                     @else
                                         @foreach ($banners as $banner)
                                             <tr>
-                                                <td>{{ $banner->id }}</td>
+                                                <td class="text-center">{{ $banner->id }}</td>
                                                 <td><img class="text-truncate "src="{{ asset('storage/' . $banner->image_url) }}"
                                                         alt="{{ $banner->title }}" width="150"></td>
                                                 <td class="text-truncate">{{ $banner->title }}</td>

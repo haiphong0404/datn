@@ -95,7 +95,7 @@
                             <table class="display table table-bordered" id="hidden-table-info"
                                 aria-describedby="hidden-table-info_info">
                                 <thead class="text-center">
-                                    <tr role="row" >
+                                    <tr class="text-center">
                                         <th>#</th>
                                         <th>Ảnh sản phẩm</th>
                                         <th>Tên sản phẩm</th>
@@ -119,11 +119,11 @@
                                             </td>
                                             <td class="text-truncate">{{ $product->name }}</td>
                                             <td class="text-truncate">{{ $product->description }}</td>
-                                            <td style="width: 120px;">{{ number_format($product->price, 0, ',', '.') }} VNĐ</td>
+                                            <td style="width: 120px;"class="text-end">{{ number_format($product->price, 0, ',', '.') }} VNĐ</td>
                                             <td>{{ $product->category->name ?? 'Không có' }}</td>
                                             <td>{{ $product->brand->name ?? 'Không có' }}</td>
-                                            <td>{{ $product->incoming_quantity }}</td>
-                                            <td>{{ $product->total_quantity_in_stock }}</td>
+                                            <td class="text-end">{{ $product->total_quantity_in_stock }}</td>
+                                            <td class="text-end">{{ $product->incoming_quantity }}</td>
                                             <td>
                                                 @if ($product->trashed())
                                                     <span class="badge badge-danger">Đã xóa</span>

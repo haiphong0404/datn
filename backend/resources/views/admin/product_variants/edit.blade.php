@@ -63,20 +63,20 @@
                         @method('PUT')
                         <div class="form-group mb-3">
                             <label for="variant_images" class="form-label">Hình ảnh biến thể</label>
-                            <div class="d-flex flex-column align-items-center">
+                            <div class="d-flex ">
                                 @if ($variant->images->isNotEmpty())
                                     @foreach ($variant->images as $image)
-                                        <div class="mb-3 text-center">
+                                        <div class="mr-3">
                                             <img src="{{ asset('storage/' . $image->image) }}" alt="Variant Image"
-                                                class="img-thumbnail" width="100" ><br>
-                                            <label class="form-label"><strong>Thay đổi hình ảnh:</strong></label>
-                                            <input type="file" name="variant_images[]" class="form-control" style="width: auto;">
+                                                width="100" ><br>
                                         </div>
                                     @endforeach
                                 @else
                                     <p class="text-muted">Chưa có hình ảnh nào cho biến thể này.</p>
                                 @endif
                             </div>
+                            <label class="form-label"><strong>Thay đổi hình ảnh:</strong></label>
+                            <input type="file" name="variant_images[]" class="form-control" >
                             @error('variant_images')
                                 <div class="text-danger">{{ $message }}</div>
                             @enderror
