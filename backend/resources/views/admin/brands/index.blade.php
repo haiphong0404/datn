@@ -1,93 +1,159 @@
 @extends('admin.layout')
 
-@section('css')
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.3/css/dataTables.bootstrap5.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-<link href="{{ asset('assets')}}/admin/css/list-brand.css" rel="stylesheet">
+@section('search')
+<form action="{{ route('admin.brands.index') }}" method="GET">
+    <div class="input-group mt-1">
+        <input type="text" name="search" class="form-control" placeholder="Tìm kiếm thương hiệu" value="{{ request()->input('search') }}">
+        <button class="btn btn-outline-secondary" type="submit">
+            <i class="bi bi-search"></i>
+        </button>
+    </div>
+</form>
 @endsection
 
 @section('content')
- <!-- Hero -->
- <div class="bg-body-light">
-    <div class="content content-full">
-        <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center">
-            <h1 class="flex-grow-1 fs-3 fw-semibold my-2 my-sm-3">Danh sách thương hiệu</h1>
-            <nav class="flex-shrink-0 my-2 my-sm-0 ms-sm-3" aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item">
-                        <a href="{{ route('admin.brands.index') }}" style="color: inherit;">Brands</a>
-                    </li>
-                    <li class="breadcrumb-item active" aria-current="page">Danh sách thương hiệu</li>
-                </ol>
-            </nav>
-        </div>
-    </div>
+@if (session('success'))
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+    {{ session('success') }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
-  <!-- END Hero -->
-<div class="content">
-    <div class="block block-rounded">
-        <div class="block-header block-header-default">
-            <div class="block-options">
-                <div class="block-options-item">
-                    <a href="{{ route('admin.brands.create') }}" class="btn btn-sm btn-alt-primary" data-bs-toggle="tooltip" title="Thêm thương hiệu"><i class="fa fa-plus"></i></a>
-                </div>
-            </div>
-        </div>
-        <div class="block-content">
-            <table class="table table-hover" id="brandsTable">
-                <thead>
-                    <tr>
-                        <th class="text-center" style="width: 50px;">#</th>
-                        <th>Tên thương hiệu</th>
-                        <th class="d-none d-sm-table-cell">Ảnh</th>
-                        <th class="d-none d-sm-table-cell">Mô tả</th>
-                        <th class="d-none d-sm-table-cell">Địa chỉ</th>
-                        <th class="d-none d-sm-table-cell">Ngày tạo</th>
-                        <th class="d-none d-sm-table-cell">Ngày cập nhật</th>
-                        <th class="text-center" style="width: 100px;">Thao tác</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($brands as $item)
-                        <tr>
-                            <td class="text-center">{{ $loop->iteration }}</td>
-                            <td class="fw-semibold">{{ $item->name }}</td>
-                            <td>
-                                @if($item->image)
-                                <img src="{{ Storage::url($item->image) }}" width="100" height="100" alt="Ảnh đại diện hiện tại" class="mt-2">
-                                @endif
-                            </td>
-                            <td class="d-none d-sm-table-cell">{{ \Str::limit($item->description, 30, '...') }}</td>
-                            <td class="d-none d-sm-table-cell">{{ \Str::limit($item->link, 30, '...') }}</td>
-                            <td class="d-none d-sm-table-cell">{{ $item->created_at }}</td>
-                            <td class="d-none d-sm-table-cell">{{ $item->updated_at }}</td>
-                            <td class="text-center">
-                                <div class="btn-group">
-                                    {{-- EDIT --}}
-                                    <a href="{{route('admin.brands.edit',$item)}}" type="button" class="btn btn-sm btn-alt-warning mx-2" data-bs-toggle="tooltip" title="Chỉnh sửa">
-                                        <i class="fa fa-pencil-alt"></i>
-                                    </a>
+@endif
 
-                                    {{-- DELETE  --}}
-                                    <form action="{{route('admin.brands.destroy',$item)}}" method="POST" class="form-delete">
-                                      @csrf
-                                      @method('DELETE')
-                                      <button type="submit" class="btn btn-sm btn-alt-danger" data-bs-toggle="tooltip" title="Xóa" >
-                                        <i class="fa fa-times"></i>
-                                      </button>
+<style>
+    .text-truncate {
+        max-width: 200px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .custom-select-small {
+        font-size: 0.70rem;
+        height: 20px;
+        padding: 2px 6px;
+        width: auto;
+    }
+</style>
+
+<div id="list" class="row">
+    <div class="col-sm-12">
+        <section class="card">
+            <header class="card-header">
+                <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center">
+                    <h1 class="flex-grow-1 fs-3 fw-semibold my-2 my-sm-3">Danh sách thương hiệu</h1>
+                    <nav class="flex-shrink-0 my-2 my-sm-0 ms-sm-3" aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a href="{{ route('admin.brands.index') }}" style="color: inherit;">Thương hiệu</a>
+                            </li>
+                            <li class="breadcrumb-item active" aria-current="page">Danh sách thương hiệu</li>
+                        </ol>
+                    </nav>
+                </div>
+            </header>
+            <div class="card-body">
+                <div class="adv-table">
+                    <div id="hidden-table-info_wrapper" class="dataTables_wrapper form-inline" role="grid">
+                        <div class="row-fluid">
+                            <div class="span6">
+                                <div id="hidden-table-info_length" class="dataTables_length">
+                                    <form action="{{ route('admin.brands.index') }}" method="GET">
+                                        <label>Xem
+                                            <select class="form-control-sm ml-1 custom-select-small" name="per_page" onchange="this.form.submit()">
+                                                <option value="10" {{ request('per_page') == 10 ? 'selected' : '' }}>10</option>
+                                                <option value="25" {{ request('per_page') == 25 ? 'selected' : '' }}>25</option>
+                                                <option value="50" {{ request('per_page') == 50 ? 'selected' : '' }}>50</option>
+                                                <option value="100" {{ request('per_page') == 100 ? 'selected' : '' }}>100</option>
+                                            </select><span style="margin-left:-5px;">mục</span>
+                                        </label>
                                     </form>
                                 </div>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-            <div class="d-flex justify-content-center mb-5">{{ $brands->links() }}</div>
-        </div>
+                            </div>
+                            <div class="span6">
+                                <div class="dataTables_filter" id="hidden-table-info_filter">
+                                    <a href="{{ route('admin.brands.create') }}" class="btn btn-success btn-sm">Tạo mới</a>
+                                </div>
+                            </div>
+                        </div>
+                        <table class="display table table-bordered" id="hidden-table-info" aria-describedby="hidden-table-info_info">
+                            <thead>
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Tên thương hiệu</th>
+                                    <th>Ảnh</th>
+                                    <th>Mô tả</th>
+                                    <th>Địa chỉ</th>
+                                    <th>Ngày tạo</th>
+                                    <th>Ngày cập nhật</th>
+                                    <th>Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if ($brands->isEmpty())
+                                <tr>
+                                    <td colspan="8" class="text-center">Không có thương hiệu nào phù hợp</td>
+                                </tr>
+                                @else
+                                @foreach ($brands as $item)
+                                <tr>
+                                    <td>{{ $loop->iteration }}</td>
+                                    <td class="fw-semibold text-truncate">{{ $item->name }}</td>
+                                    <td>
+                                        @if($item->image)
+                                        <img src="{{ Storage::url($item->image) }}" alt="Hình ảnh thương hiệu" width="150">
+                                        @endif
+                                    </td>
+                                    <td class="text-truncate">{{ \Str::limit($item->description, 50) }}</td>
+                                    <td class="text-truncate">{{ \Str::limit($item->link, 50) }}</td>
+                                    <td>{{ $item->created_at }}</td>
+                                    <td>{{ $item->updated_at }}</td>
+                                    <td class="d-flex">
+                                        <a href="{{ route('admin.brands.edit', $item->id) }}" class="btn btn-warning mx-1">
+                                            <i class="fa fa-pencil-alt"></i>
+                                        </a>
+                                        <form action="{{ route('admin.brands.destroy', $item->id) }}" method="POST" class="d-inline-block">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger" onclick="return confirm('Bạn có chắc muốn xóa thương hiệu này?')">
+                                                <i class="fa fa-trash-o"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                @endforeach
+                                @endif
+                            </tbody>
+                        </table>
+                        <div class="row-fluid">
+                            <div class="span6">
+                                <div class="dataTables_info" id="hidden-table-info_info">
+                                    Hiển thị từ {{ $brands->firstItem() }} đến {{ $brands->lastItem() }} trong tổng số {{ $brands->total() }} thương hiệu
+                                </div>
+                            </div>
+                            <div class="span6">
+                                <div class="dataTables_paginate paging_bootstrap pagination">
+                                    <ul class="pagination">
+                                        <li class="prev">
+                                            <a href="{{ $brands->previousPageUrl() }}" aria-label="Previous">← Previous</a>
+                                        </li>
+                                        @foreach ($brands->getUrlRange(1, $brands->lastPage()) as $page => $url)
+                                        <li class="{{ $page == $brands->currentPage() ? 'active' : '' }}">
+                                            <a href="{{ $url }}">{{ $page }}</a>
+                                        </li>
+                                        @endforeach
+                                        <li class="next">
+                                            <a href="{{ $brands->nextPageUrl() }}" aria-label="Next">Next →</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>                        
+                    </div>
+                </div>
+            </div>
+        </section>
     </div>
 </div>
 @endsection
-
 @section('js')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>

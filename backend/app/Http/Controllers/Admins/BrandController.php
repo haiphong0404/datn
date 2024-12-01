@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateBrandRequest;
 use App\Models\Brand;
 use App\Services\BrandService;
 use App\Traits\ImageUploadTrait;
+use Illuminate\Http\Request;
 
 class BrandController extends Controller
 {
@@ -25,12 +26,23 @@ class BrandController extends Controller
     /**
      * Hiển thị danh sách các thương hiệu.
      */
-    public function index()
-    {
-        $brands = Brand::query()->orderBy('created_at', 'desc')->paginate(5);
+    public function index(Request $request)
+{
+    $search = $request->input('search');
+    $perPage = $request->input('per_page', 5); // Mặc định 5 bản ghi mỗi trang
 
-        return view(self::PATH_VIEW.__FUNCTION__, compact('brands'));
-    }
+    $brands = Brand::when($search, function ($query, $search) {
+            return $query->where('name', 'LIKE', "%{$search}%")
+                         ->orWhere('description', 'LIKE', "%{$search}%"); // Tìm thêm ở cột 'description' nếu cần
+        })
+        ->orderBy('created_at', 'desc') // Sắp xếp giảm dần theo thời gian tạo
+        ->paginate($perPage);
+
+    $noResults = $brands->isEmpty(); // Kiểm tra nếu không có kết quả tìm kiếm
+
+    return view(self::PATH_VIEW.__FUNCTION__, compact('brands', 'noResults'));
+}
+
 
     /**
      * Hiển thị form để tạo một brand mới.

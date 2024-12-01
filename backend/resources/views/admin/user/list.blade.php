@@ -81,7 +81,7 @@
                                 <div class="span6">
                                     <div class="dataTables_filter" id="hidden-table-info_filter">
                                         <a href="{{ route('admin.user.create') }}"
-                                            class=" btn btn-success btn-sm">CREATE</a>
+                                            class=" btn btn-success btn-sm">Tạo mới</a>
 
                                     </div>
                                 </div>

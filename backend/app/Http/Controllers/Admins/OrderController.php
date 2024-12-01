@@ -25,17 +25,27 @@ class OrderController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        // Lấy tất cả orders từ cơ sở dữ liệu
-        $orders = Order::all();
+    public function index(Request $request)
+{
+    $search = $request->input('search');
+    $perPage = $request->input('per_page', 10); // Mặc định 10 bản ghi mỗi trang
 
-        // Quy tắc chuyển trạng thái
-        $allowedTransitions = $this->orderService->getAllowedTransitions();
+    // Lấy tất cả orders từ cơ sở dữ liệu với tìm kiếm
+    $orders = Order::when($search, function ($query, $search) {
+            return $query->where('order_number', 'LIKE', "%{$search}%")
+                         ->orWhere('customer_name', 'LIKE', "%{$search}%")
+                         ->orWhere('status', 'LIKE', "%{$search}%"); // Tìm kiếm trong các cột khác nếu cần
+        })
+        ->orderBy('created_at', 'desc') // Sắp xếp theo ngày tạo mới nhất
+        ->paginate($perPage);
 
-        // Truyền dữ liệu vào view
-        return view('admin.orders.index', compact('orders', 'allowedTransitions'));
-    }
+    // Quy tắc chuyển trạng thái
+    $allowedTransitions = $this->orderService->getAllowedTransitions();
+
+    // Truyền dữ liệu vào view
+    return view('admin.orders.index', compact('orders', 'allowedTransitions'));
+}
+
 
     public function show(Order $order)
     {

@@ -26,6 +26,7 @@
             text-overflow: ellipsis;
             /* Hiển thị dấu "..." khi văn bản bị cắt */
         }
+
         .custom-select-small {
             font-size: 0.70rem;
             /* Giảm kích thước font */
@@ -80,7 +81,7 @@
                                 <div class="span6">
                                     <div class="dataTables_filter" id="hidden-table-info_filter">
                                         <a href="{{ route('admin.banners.create') }}"
-                                            class=" btn btn-success btn-sm">CREATE</a>
+                                            class=" btn btn-success btn-sm">Tạo mới</a>
 
                                     </div>
                                 </div>
@@ -142,14 +143,16 @@
                             <div class="row-fluid">
                                 <div class="span6">
                                     <div class="dataTables_info" id="hidden-table-info_info">
-                                        Hiển thị từ {{ $banners->firstItem() }} đến {{ $banners->lastItem() }} của tổng cộng {{ $banners->total() }} mục
+                                        Hiển thị từ {{ $banners->firstItem() }} đến {{ $banners->lastItem() }} của tổng
+                                        cộng {{ $banners->total() }} mục
                                     </div>
                                 </div>
                                 <div class="span6">
                                     <div class="dataTables_paginate paging_bootstrap pagination">
                                         <ul class="pagination">
                                             <li class="prev">
-                                                <a href="{{ $banners->previousPageUrl() }}" aria-label="Previous">← Previous</a>
+                                                <a href="{{ $banners->previousPageUrl() }}" aria-label="Previous">←
+                                                    Previous</a>
                                             </li>
                                             @foreach ($banners->getUrlRange(1, $banners->lastPage()) as $page => $url)
                                                 <li class="{{ $page == $banners->currentPage() ? 'active' : '' }}">
@@ -162,7 +165,7 @@
                                         </ul>
                                     </div>
                                 </div>
-                            </div>                        
+                            </div>
                         </div>
                     </div>
                 </div>

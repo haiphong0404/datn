@@ -1,44 +1,98 @@
-<!-- resources/views/contacts/edit.blade.php -->
 @extends('admin.layout')
 
-@section('title')
-    Chỉnh sửa Liên hệ
+@section('search')
+    <form action="{{ route('admin.contacts.index') }}" method="GET">
+        <div class="input-group mt-1">
+            <input type="text" name="search" class="form-control" placeholder="Tìm kiếm liên hệ"
+                value="{{ request()->input('search') }}">
+            <button class="btn btn-outline-secondary" type="submit"><i class="bi bi-search"></i></button>
+        </div>
+    </form>
 @endsection
 
 @section('content')
-    <h1>Chỉnh sửa Liên hệ</h1>
+<div class="row">
+    <div class="col-sm-12">
+            <div class="card shadow-sm">
+                <header class="card-header">
+                    <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center">
+                        <h1 class="flex-grow-1 fs-3 fw-semibold my-2 my-sm-3">Chỉnh sửa Liên Hệ</h1>
+                        <nav class="flex-shrink-0 my-2 my-sm-0 ms-sm-3" aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item">
+                                    <a href="{{ route('admin.contacts.index') }}" style="color: inherit;">Liên Hệ</a>
+                                </li>
+                                <li class="breadcrumb-item active" aria-current="page">Chỉnh Sửa</li>
+                            </ol>
+                        </nav>
+                    </div>
+                </header>
 
-    @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
+                <div class="card-body">
+                    @if (session()->has('error'))
+                        <div class="alert alert-danger">
+                            {{ session()->get('error') }}
+                        </div>
+                    @endif
+
+                    @if (session()->has('success'))
+                        <div class="alert alert-success">
+                            {{ session()->get('success') }}
+                        </div>
+                    @endif
+
+                    @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
+                    <form action="{{ route('admin.contacts.update', $contact) }}" method="POST">
+                        @csrf
+                        @method('PUT')
+
+                        <div class="form-group mb-3">
+                            <label for="name" class="form-label">Tên:</label>
+                            <div class="input-group">
+                                <input type="text" name="name" id="name" class="form-control @error('name') is-invalid @enderror" placeholder="Nhập tên" value="{{ old('name', $contact->name) }}" required>
+                            </div>
+                            @error('name')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="email" class="form-label">Email:</label>
+                            <div class="input-group">
+                                <input type="email" name="email" id="email" class="form-control @error('email') is-invalid @enderror" placeholder="Nhập email" value="{{ old('email', $contact->email) }}" required>
+                            </div>
+                            @error('email')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="phone" class="form-label">Số điện thoại:</label>
+                            <div class="input-group">
+                                <input type="text" name="phone" id="phone" class="form-control @error('phone') is-invalid @enderror" placeholder="Nhập số điện thoại" value="{{ old('phone', $contact->phone) }}" required>
+                            </div>
+                            @error('phone')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        <div class="mb-3 d-flex">
+                            <a href="{{ route('admin.contacts.index') }}" class="btn btn-secondary btn-lg flex-fill me-1">Quay lại</a>
+                            <button type="reset" class="btn btn-warning btn-lg flex-fill me-1">Reset</button>
+                            <button type="submit" class="btn btn-primary btn-lg flex-fill">Cập nhật</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
-    @endif
-
-    <form action="{{ route('admin.contacts.update', $contact) }}" method="POST" class="form-horizontal">
-        @csrf
-        @method('PUT')
-
-        <div class="mb-3">
-            <label for="name" class="form-label">Tên:</label>
-            <input type="text" id="name" name="name" class="form-control" value="{{ old('name', $contact->name) }}" required>
-        </div>
-
-        <div class="mb-3">
-            <label for="email" class="form-label">Email:</label>
-            <input type="email" id="email" name="email" class="form-control" value="{{ old('email', $contact->email) }}" required>
-        </div>
-
-        <div class="mb-3">
-            <label for="phone" class="form-label">Số điện thoại:</label>
-            <input type="text" id="phone" name="phone" class="form-control" value="{{ old('phone', $contact->phone) }}" required>
-        </div>
-
-        <button type="submit" class="btn btn-primary">
-            <i class="fa fa-save"></i> Cập nhật
-        </button>
-    </form>
+    </div>
 @endsection

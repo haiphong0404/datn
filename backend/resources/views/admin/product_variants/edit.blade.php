@@ -1,99 +1,144 @@
 @extends('admin.layout')
 
-@section('title')
-    Chỉnh sửa biến thể của sản phẩm: {{ $product->name }}
+@section('search')
+    <form action="{{ route('admin.products.index') }}" method="GET">
+        <div class="input-group mt-1">
+            <input type="text" name="search" class="form-control" placeholder="Tìm kiếm sản phẩm"
+                value="{{ request()->input('search') }}">
+            <button class="btn btn-outline-secondary" type="submit"><i class="bi bi-search"></i></button>
+        </div>
+    </form>
 @endsection
 
 @section('content')
-    @if (session()->has('error'))
-        <div class="alert alert-danger">
-            {{ session()->get('error') }}
-        </div>
-    @endif
-
-    @if (session()->has('success'))
-        <div class="alert alert-success">
-            {{ session()->get('success') }}
-        </div>
-    @endif
-
-    @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-
-    <h1>
-        Chỉnh sửa biến thể của sản phẩm: {{ $product->name }}
-    </h1>
-
-    <form action="{{ route('admin.products.variants.update', [$product->id, $variant->id]) }}" method="POST" enctype="multipart/form-data">
-        @csrf
-        @method('PUT')
-
-        <div class="form-group">
-            <label for="size_id">Kích thước</label>
-            <select name="size_id" id="size_id" class="form-control" required>
-                <option value="">Chọn kích thước</option>
-                @foreach ($sizes as $size)
-                    <option value="{{ $size->id }}" {{ $variant->size_id == $size->id ? 'selected' : '' }}>
-                        {{ $size->name }}
-                    </option>
-                @endforeach
-                <option value="new">Kích thước mới</option>
-            </select>
-            <input type="text" name="new_size" class="form-control mt-2" placeholder="Nhập kích thước mới (nếu có)" style="display: none;" id="new_size_input">
-        </div>
-
-        <div class="form-group">
-            <label for="color_id">Màu sắc</label>
-            <select name="color_id" id="color_id" class="form-control" required>
-                <option value="">Chọn màu sắc</option>
-                @foreach ($colors as $color)
-                    <option value="{{ $color->id }}" {{ $variant->color_id == $color->id ? 'selected' : '' }}>
-                        {{ $color->name }}
-                    </option>
-                @endforeach
-                <option value="new">Màu sắc mới</option>
-            </select>
-            <input type="text" name="new_color" class="form-control mt-2" placeholder="Nhập màu sắc mới (nếu có)" style="display: none;" id="new_color_input">
-        </div>
-
-        <div class="form-group">
-            <label for="price">Giá</label>
-            <input type="number" name="price" class="form-control" value="{{ $variant->price }}" required>
-        </div>
-
-        <div class="form-group">
-            <label for="quantity">Số lượng</label>
-            <input type="number" name="quantity" class="form-control" value="{{ $variant->quantity }}" required>
-        </div>
-
-        <div class="form-group">
-            <label for="variant_images">Hình ảnh biến thể</label>
-            <input type="file" name="variant_images[]" class="form-control" multiple>
-
-            @if ($variant->images->isNotEmpty())
-                <div class="mt-3">
-                    <p>Hình ảnh hiện tại:</p>
-                    <div class="d-flex flex-wrap">
-                        @foreach ($variant->images as $image)
-                            <div class="me-2 mb-2">
-                                <img src="{{ asset('storage/' . $image->image) }}" alt="Variant Image" width="80">
-                            </div>
-                        @endforeach
+<div class="row">
+    <div class="col-sm-12">
+            <div class="card shadow-sm">
+                <header class="card-header">
+                    <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center">
+                        <h1 class="flex-grow-1 fs-3 fw-semibold my-2 my-sm-3">
+                            Chỉnh sửa biến thể của sản phẩm: {{ $product->name }}
+                        </h1>
+                        <nav class="flex-shrink-0 my-2 my-sm-0 ms-sm-3" aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item">
+                                    <a href="{{ route('admin.products.index') }}" style="color: inherit;">Sản phẩm</a>
+                                </li>
+                                <li class="breadcrumb-item">
+                                    <a href="{{ route('admin.products.variants.index', $product->id) }}"
+                                        style="color: inherit;">Biến thể</a>
+                                </li>
+                                <li class="breadcrumb-item active" aria-current="page">Chỉnh sửa</li>
+                            </ol>
+                        </nav>
                     </div>
-                </div>
-            @endif
-        </div>
+                </header>
 
-        <button type="submit" class="btn btn-success">Cập nhật biến thể</button>
-        <a href="{{ route('admin.products.variants.index', $product->id) }}" class="btn btn-secondary">Hủy</a>
-    </form>
+                <div class="card-body">
+                    @if (session()->has('error'))
+                        <div class="alert alert-danger">
+                            {{ session()->get('error') }}
+                        </div>
+                    @endif
+
+                    @if (session()->has('success'))
+                        <div class="alert alert-success">
+                            {{ session()->get('success') }}
+                        </div>
+                    @endif
+
+                    @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
+                    <form action="{{ route('admin.products.variants.update', [$product->id, $variant->id]) }}"
+                        method="POST" enctype="multipart/form-data">
+                        @csrf
+                        @method('PUT')
+                        <div class="form-group mb-3">
+                            <label for="variant_images" class="form-label">Hình ảnh biến thể</label>
+                            <div class="d-flex flex-column align-items-center">
+                                @if ($variant->images->isNotEmpty())
+                                    @foreach ($variant->images as $image)
+                                        <div class="mb-3 text-center">
+                                            <img src="{{ asset('storage/' . $image->image) }}" alt="Variant Image"
+                                                class="img-thumbnail" width="100" ><br>
+                                            <label class="form-label"><strong>Thay đổi hình ảnh:</strong></label>
+                                            <input type="file" name="variant_images[]" class="form-control" style="width: auto;">
+                                        </div>
+                                    @endforeach
+                                @else
+                                    <p class="text-muted">Chưa có hình ảnh nào cho biến thể này.</p>
+                                @endif
+                            </div>
+                            @error('variant_images')
+                                <div class="text-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        
+                        <div class="form-group mb-3">
+                            <label for="size_id">Kích thước</label>
+                            <select name="size_id" id="size_id" class="form-control">
+                                <option value="">Chọn kích thước</option>
+                                @foreach ($sizes as $size)
+                                    <option value="{{ $size->id }}"
+                                        {{ $variant->size_id == $size->id ? 'selected' : '' }}>
+                                        {{ $size->name }}
+                                    </option>
+                                @endforeach
+                                <option value="new">Kích thước mới</option>
+                            </select>
+                            <input type="text" name="new_size" class="form-control mt-2"
+                                placeholder="Nhập kích thước mới (nếu có)" style="display: none;" id="new_size_input">
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="color_id">Màu sắc</label>
+                            <select name="color_id" id="color_id" class="form-control">
+                                <option value="">Chọn màu sắc</option>
+                                @foreach ($colors as $color)
+                                    <option value="{{ $color->id }}"
+                                        {{ $variant->color_id == $color->id ? 'selected' : '' }}>
+                                        {{ $color->name }}
+                                    </option>
+                                @endforeach
+                                <option value="new">Màu sắc mới</option>
+                            </select>
+                            <input type="text" name="new_color" class="form-control mt-2"
+                                placeholder="Nhập màu sắc mới (nếu có)" style="display: none;" id="new_color_input">
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="price">Giá</label>
+                            <input type="number" name="price" class="form-control" value="{{ $variant->price }}"
+                                required>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="quantity">Số lượng</label>
+                            <input type="number" name="quantity" class="form-control" value="{{ $variant->quantity }}"
+                                required>
+                        </div>
+
+
+
+                        <div class="d-flex">
+                            <a href="{{ route('admin.products.variants.index', $product->id) }}"
+                                class="btn btn-secondary btn-lg flex-fill me-1">Quay lại</a>
+                            <button type="reset" class="btn btn-warning btn-lg flex-fill me-1">Reset</button>
+                            <button type="submit" class="btn btn-primary btn-lg flex-fill">Cập nhật biến thể</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script>
         // Hiển thị input cho kích thước mới

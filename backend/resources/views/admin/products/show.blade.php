@@ -1,104 +1,115 @@
 @extends('admin.layout')
 
-@section('title')
-    Biến thể của sản phẩm: {{ $product->name }}
+@section('title', "Biến thể của sản phẩm: $product->name")
+@section('search')
+    <form action="{{ route('admin.products.index') }}" method="GET">
+        <div class="input-group mt-1">
+            <input type="text" name="search" class="form-control" placeholder="Tìm kiếm sản phẩm"
+                value="{{ request()->input('search') }}">
+            <button class="btn btn-outline-secondary" type="submit"><i class="bi bi-search"></i></button>
+        </div>
+    </form>
 @endsection
 
 @section('content')
-    @if (session()->has('error'))
-        <div class="alert alert-danger">
-            {{ session()->get('error') }}
-        </div>
-    @endif
-
-    @if (session()->has('success'))
-        <div class="alert alert-success">
-            {{ session()->get('success') }}
-        </div>
-    @endif
-
-    <h1>
-        <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" width="200"
-             style="margin-right: 10px;">
-        Biến thể của sản phẩm: {{ $product->name }}
-    </h1>
-
-    <div class="mb-3">
-        <a href="{{ route('admin.products.variants.create', $product->id) }}" class="btn btn-primary"><i
-                class="fa fa-plus"></i> Thêm mới biến thể</a>
-    </div>
-
-    <div class="row">
-        <div class="col-sm-12">
-            <section class="card">
+<div class="row">
+    <div class="col-sm-12">
+            <div class="card shadow-sm">
                 <header class="card-header">
-                    Danh sách biến thể
-                    <span class="tools pull-right">
-                        <a href="javascript:;" class="fa fa-chevron-down"></a>
-                        <a href="javascript:;" class="fa fa-times"></a>
-                    </span>
+                    <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center">
+                        <h1 class="flex-grow-1 fs-3 fw-semibold my-2 my-sm-3">Biến thể của sản phẩm
+                        </h1>
+                        <nav class="flex-shrink-0 my-2 my-sm-0 ms-sm-3" aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item">
+                                    <a href="{{ route('admin.products.index') }}" style="color: inherit;">Sản phẩm</a>
+                                </li>
+                                <li class="breadcrumb-item active" aria-current="page">Biến thể</li>
+                            </ol>
+                        </nav>
+                    </div>
                 </header>
+
+                <!-- Ảnh sản phẩm và nút thêm biến thể -->
                 <div class="card-body">
-                    <div class="adv-table">
+                    <div class="row mb-4">
+                        <div class=" text-center d-flex">
+                            <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}"
+                                class="img-thumbnail" style="max-width: 200px;">
+                            <h1 class="flex-grow-1 fs-3 fw-semibold my-2 my-sm-3">Biến thể của sản phẩm:
+                                {{ $product->name }}</h1>
+                        </div>
+
+                    </div>
+                    <div class="d-flex justify-content-end align-items-center mb-2">
+                        <a href="{{ route('admin.products.variants.create', $product->id) }}" class="btn btn-success">
+                            Tạo mới
+                        </a>
+                    </div>
+                    
+                    <!-- Danh sách biến thể -->
+                    <div class="table-responsive">
                         <table class="table table-striped table-bordered">
-                            <thead>
-                            <tr>
-                                <th class="center">ID</th>
-                                <th>Kích thước</th>
-                                <th>Màu sắc</th>
-                                <th>Giá</th>
-                                <th>Ảnh</th>
-                                <th>Số lượng</th>
-                                <th class="center hidden-phone">Hành động</th>
-                            </tr>
+                            <thead class="thead-light">
+                                <tr>
+                                    <th class="text-center">ID</th>
+                                    <th>Kích thước</th>
+                                    <th>Màu sắc</th>
+                                    <th>Giá</th>
+                                    <th>Ảnh</th>
+                                    <th>Số lượng</th>
+                                    <th class="text-center">Hành động</th>
+                                </tr>
                             </thead>
                             <tbody>
-                            @foreach($product->variants as $index => $variant)
-                                <tr class="gradeA">
-                                    <td class="center">{{ $variant->id }}</td>
-                                    <td>{{ $variant->size->name ?? 'Không có' }}</td>
-                                    <td>{{ $variant->color->name ?? 'Không có' }}</td>
-                                    <td>{{ number_format($variant->price, 0, ',', '.') }} VNĐ</td>
-                                    <td>
-                                        @if($variant->images->isNotEmpty())
-                                            @foreach($variant->images as $image)
-                                                <img src="{{ asset('storage/' . $image->image) }}"
-                                                     alt="{{ $product->name }} - Biến thể {{ $variant->id }}" width="100" style="margin: 5px;">
-                                            @endforeach
-                                        @else
-                                            <p>No images available for this variant.</p>
-                                        @endif
-                                    </td>
-
-                                    <td>{{ $variant->quantity }}</td>
-                                    <td class="center hidden-phone">
-                                        <a href="{{ route('admin.products.variants.edit', [$product->id, $variant->id]) }}"
-                                           class="btn btn-warning btn-sm" title="Chỉnh sửa">
-                                            <i class="fa fa-edit"></i> Sửa
-                                        </a>
-                                        <form
-                                            action="{{ route('admin.products.variants.destroy', [$product->id, $variant->id]) }}"
-                                            method="POST" style="display:inline;">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger btn-sm" title="Xóa"
+                                @forelse($product->variants as $variant)
+                                    <tr>
+                                        <td class="text-center">{{ $variant->id }}</td>
+                                        <td>{{ $variant->size->name ?? 'Không có' }}</td>
+                                        <td>{{ $variant->color->name ?? 'Không có' }}</td>
+                                        <td>{{ number_format($variant->price, 0, ',', '.') }} VNĐ</td>
+                                        <td>
+                                            @if ($variant->images->isNotEmpty())
+                                                <img src="{{ asset('storage/' . $variant->images->random()->image) }}"
+                                                    alt="{{ $product->name }} - Biến thể {{ $variant->id }}"
+                                                    class="img-thumbnail" style="width: 100px; height: auto;">
+                                            @else
+                                                <p>Không có ảnh</p>
+                                            @endif
+                                        </td>
+                                        <td>{{ $variant->quantity }}</td>
+                                        <td class="d-flex">
+                                            <a href="{{ route('admin.products.variants.edit', [$product->id, $variant->id]) }}"
+                                                class="btn btn-warning " title="Chỉnh sửa">
+                                                <i class="fa fa-edit"></i>
+                                            </a>
+                                            <form
+                                                action="{{ route('admin.products.variants.destroy', [$product->id, $variant->id]) }}"
+                                                method="POST" style="display: inline-block;">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-danger " title="Xóa"
                                                     onclick="return confirm('Bạn có chắc chắn muốn xóa không?');">
-                                                <i class="fa fa-trash"></i> Xóa
-                                            </button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            @endforeach
+                                                    <i class="fa fa-trash"></i> 
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="7" class="text-center">Chưa có biến thể nào.</td>
+                                    </tr>
+                                @endforelse
                             </tbody>
                         </table>
-                        <div class="form-group">
-                            <a href="{{ route('admin.products.index') }}" class="btn btn-secondary">Quay lại</a>
-                        </div>
+                    </div>
+
+                    <!-- Nút quay lại -->
+                    <div class="d-flex mt-4">
+                        <a href="{{ route('admin.products.index') }}" class="btn btn-secondary flex-fill">Quay lại</a>
                     </div>
                 </div>
-            </section>
+            </div>
         </div>
     </div>
 @endsection
-
-
