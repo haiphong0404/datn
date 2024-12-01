@@ -129,7 +129,7 @@
                                                         <span class="badge bg-danger">Không hoạt động</span>
                                                     @endif
                                                 </td>
-                                                <td>
+                                                <td class="text-center">
                                                     @if ($item->role !== 'admin')
                                                         <form action="{{ route('admin.user.toggleStatus', $item->id) }}" method="POST" class="d-inline-block">
                                                             @csrf
