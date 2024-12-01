@@ -131,6 +131,7 @@ const Header = () => {
   };
 
   const { userInfo, handleLogout } = useLoginForm();
+  console.log("Thông tin người dùng trong Account_info:", userInfo);
 
   return (
     <header className="header-area">

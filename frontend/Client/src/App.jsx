@@ -60,6 +60,10 @@ const routeConfig = [
       { path: "*", element: <NotFoundPage /> },
       { path: "faqs", element: <FAQs /> },
       { path: "checkout/bill", element: <Bill /> },
+      { path: "brands", element: <Brands /> },
+      { path: "brand_detail/:id", element: <BrandDetail /> },
+
+
       { path: "/checkout-detail/:orderId", element: <CheckoutDetail /> },
       { path: "brands", element: <Brands /> },
       { path: "brand_detail/:id", element: <BrandDetail /> },
