@@ -9,6 +9,7 @@ use App\Models\Category;
 use App\Services\VoucherService;
 use App\Http\Requests\StoreVoucherRequest;
 use App\Http\Requests\UpdateVoucherRequest;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
 
 class VoucherController extends Controller
@@ -27,12 +28,47 @@ class VoucherController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        // Lấy danh sách voucher và nhóm theo loại
-        $vouchers = $this->voucher->all()->groupBy('type'); // Sử dụng $this->voucher
-        return view('admin.vouchers.index', compact('vouchers'));
+   public function index(Request $request)
+{
+    $search = $request->input('search');
+    $perPage = $request->input('per_page', 2); // Mặc định là 2 bản ghi mỗi trang
+
+    // Truy vấn và lọc các voucher
+    $vouchers = $this->voucher->when($search, function ($query, $search) {
+        return $query->where('code', 'LIKE', "%{$search}%")
+                     ->orWhere('type', 'LIKE', "%{$search}%")
+                     ->orWhere('user_id', 'LIKE', "%{$search}%");
+    })
+    ->orderBy('id', 'desc') // Sắp xếp theo ID giảm dần
+    ->get(); // Lấy tất cả dữ liệu không phân trang ở đây để nhóm theo type
+
+    // Nhóm các voucher theo 'type'
+    $groupedVouchers = $vouchers->groupBy('type');
+
+    // Phân trang cho từng nhóm
+    foreach ($groupedVouchers as $type => $items) {
+        // Lấy trang hiện tại cho nhóm cụ thể từ query string
+        $currentPage = $request->input("page_{$type}", 1); // Mỗi nhóm có trang riêng, mặc định là 1 nếu không có tham số
+
+        // Tạo phân trang cho nhóm 'type'
+        $itemsForCurrentPage = $items->slice(($currentPage - 1) * $perPage, $perPage); // Lấy các bản ghi của trang hiện tại
+
+        $groupedVouchers[$type] = new \Illuminate\Pagination\LengthAwarePaginator(
+            $itemsForCurrentPage, // Các bản ghi cho trang hiện tại
+            $items->count(), // Tổng số bản ghi trong nhóm
+            $perPage, // Số bản ghi trên mỗi trang
+            $currentPage, // Trang hiện tại
+            ['path' => url()->current(), 'query' => array_merge($request->query(), ["page_{$type}" => $currentPage])] // Thêm tham số trang riêng biệt cho từng nhóm
+        );
     }
+
+    // Kiểm tra xem có kết quả hay không
+    $noResults = $vouchers->isEmpty();
+
+    return view('admin.vouchers.index', compact('groupedVouchers', 'noResults'));
+}
+
+
 
     /**
      * Show the form for creating a new resource.

@@ -117,7 +117,8 @@
                                     </div>
                                     <div class="progress">
                                         <div class="progress-bar progress-bar-striped bg-danger" role="progressbar"
-                                            aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 33%">
+                                            aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"
+                                            style="width: 33%">
                                             <span class="sr-only">33% Complete (danger)</span>
                                         </div>
                                     </div>
@@ -131,7 +132,8 @@
                                     </div>
                                     <div class="progress">
                                         <div class="progress-bar progress-bar-striped" role="progressbar"
-                                            aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 45%">
+                                            aria-valuenow="45" aria-valuemin="0" aria-valuemax="100"
+                                            style="width: 45%">
                                             <span class="sr-only">45% Complete</span>
                                         </div>
                                     </div>
@@ -273,38 +275,38 @@
                     </li>
                     <!-- user login dropdown start-->
                     @auth
-                    <li class="dropdown">
-                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                            <img src="{{ optional(Auth::user()->avatar_img) ? Storage::url(Auth::user()->avatar_img) : asset('default-avatar.png') }}"
-                                alt="{{ optional(Auth::user())->username }}" width="30px">
-                            <span class="username">{{ optional(Auth::user())->username }}</span>
-                            <b class="caret"></b>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-right">
-                            <li>
-                                <a href="{{ route('admin.profile') }}" class="dropdown-item">
-                                    <i class="fa fa-suitcase"></i> Profile
-                                </a>
-                            </li>
-                            <li>
-                                <form action="{{ route('logout') }}" method="POST" style="display: inline;">
-                                    @csrf
-                                    <button type="submit"
-                                        class="btn btn-link dropdown-item text-danger d-flex align-items-center">
-                                        <i class="fa fa-sign-out-alt me-2"></i> Đăng xuất
-                                    </button>
-                                </form>
-                            </li>
-                        </ul>
-                    </li>
+                        <li class="dropdown">
+                            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                                <img src="{{ optional(Auth::user()->avatar_img) ? Storage::url(Auth::user()->avatar_img) : asset('default-avatar.png') }}"
+                                    alt="{{ optional(Auth::user())->username }}" width="30px">
+                                <span class="username">{{ optional(Auth::user())->username }}</span>
+                                <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-right">
+                                <li>
+                                    <a href="{{ route('admin.profile') }}" class="dropdown-item">
+                                        <i class="fa fa-suitcase"></i> Profile
+                                    </a>
+                                </li>
+                                <li>
+                                    <form action="{{ route('logout') }}" method="POST" style="display: inline;">
+                                        @csrf
+                                        <button type="submit"
+                                            class="btn btn-link dropdown-item text-danger d-flex align-items-center">
+                                            <i class="fa fa-sign-out-alt me-2"></i> Đăng xuất
+                                        </button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </li>
                     @else
-                    <li>
-                        <a href="{{ route('login') }}" class="dropdown-item">Đăng nhập</a>
-                    </li>
+                        <li>
+                            <a href="{{ route('login') }}" class="dropdown-item">Đăng nhập</a>
+                        </li>
                     @endauth
-                    <a href="http://localhost:3000" class="fa fa-sign-in mr-2"
-                        style="display: inline-flex; justify-content: center; align-items: center; text-decoration: none; font-size: 13px; padding: 5px;"
-                        target="_blank"><span>Website</span></a>
+                    <a href="http://localhost:3000"
+                        style="display: inline-flex; justify-content: center; align-items: center; text-decoration: none; font-size: 15px; padding: 5px;"
+                        target="_blank"><i class="fa fa-sign-in mr-2"></i><span>Website</span></a>
                     <!-- user login dropdown end -->
                 </ul>
                 <!--search & user info end-->
@@ -317,7 +319,7 @@
                 <!-- sidebar menu start-->
                 <ul class="sidebar-menu" id="nav-accordion">
                     <li>
-                        <a class="active" href="{{ route('admin.index') }}">
+                        <a href="{{ route('admin.index') }}">
                             <i class="fa fa-dashboard"></i>
                             <span>Thông kê</span>
                         </a>
@@ -390,11 +392,7 @@
         <!--main content start-->
         <section id="main-content">
             <section class="wrapper">
-
-                <div class="container">
-                    @yield('content')
-                </div>
-
+                @yield('content')
             </section>
         </section>
     </section>
@@ -429,29 +427,29 @@
     <script src="{{ asset('assets') }}/admin/js/easy-pie-chart.js"></script>
 
     <script>
-    //owl carousel
+        //owl carousel
 
-    $(document).ready(function() {
-        $("#owl-demo").owlCarousel({
-            navigation: true,
-            slideSpeed: 300,
-            paginationSpeed: 400,
-            singleItem: true,
-            autoPlay: true
+        $(document).ready(function() {
+            $("#owl-demo").owlCarousel({
+                navigation: true,
+                slideSpeed: 300,
+                paginationSpeed: 400,
+                singleItem: true,
+                autoPlay: true
 
+            });
         });
-    });
 
-    //custom select box
+        //custom select box
 
-    $(function() {
-        $('select.styled').customSelect();
-    });
+        $(function() {
+            $('select.styled').customSelect();
+        });
 
-    $(window).on("resize", function() {
-        var owl = $("#owl-demo").data("owlCarousel");
-        owl.reinit();
-    });
+        $(window).on("resize", function() {
+            var owl = $("#owl-demo").data("owlCarousel");
+            owl.reinit();
+        });
     </script>
 
 </body>

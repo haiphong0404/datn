@@ -10,8 +10,8 @@
 @endsection
 
 @section('content')
-    <div class="container">
-        <div class="row ">
+<div class="row">
+    <div class="col-sm-12">
             <div class="card shadow-sm">
                 <header class="card-header">
                     <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center">
@@ -71,10 +71,13 @@
 
                         <div class="d-flex">
                             <a href="{{ route('admin.user.index') }}" class="btn btn-secondary flex-fill me-1">Quay lại</a>
-                            <a href="{{ route('admin.user.edit', $user->id) }}"
-                                class="btn btn-warning flex-fill me-1">Chỉnh
-                                sửa</a>
+                            
+                            {{-- Kiểm tra nếu tài khoản đăng nhập không phải admin hoặc người dùng hiện tại không phải admin --}}
+                            @if (!(auth()->user()->role === 'admin' && $user->role === 'admin'))
+                                <a href="{{ route('admin.user.edit', $user->id) }}" class="btn btn-warning flex-fill me-1">Chỉnh sửa</a>
+                            @endif
                         </div>
+                        
                     </form>
                 </div>
             </div>

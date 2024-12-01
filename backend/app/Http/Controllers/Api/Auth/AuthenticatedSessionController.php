@@ -17,6 +17,13 @@ class AuthenticatedSessionController extends Controller
         // Attempt to authenticate the user
         if (Auth::attempt($request->only('email', 'password'), $request->filled('remember'))) {
             $user = Auth::user();
+            if ($user->status !== 'active') { // Giả sử trạng thái lưu trong cột 'status'
+                Auth::logout(); // Đăng xuất nếu trạng thái không hợp lệ
+
+                return response()->json([
+                    'message' => 'Tài khoản của bạn hiện đang không hoạt động. Vui lòng liên hệ quản trị viên.'
+                ], 403); // Forbidden
+            }
             // Optionally generate a token if you're using token-based authentication
            $token = $user->createToken('YourAppName')->plainTextToken;
 
