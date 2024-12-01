@@ -93,3 +93,5 @@ Route::post('/payment/create', [PaymentController::class, 'createPayment']);
 Route::post('/payment/success/{order_id}', [PaymentController::class, 'paymentSuccess']);
 Route::post('/payment/cancel/{order_id}', [PaymentController::class, 'paymentCancel']);
 Route::post('order/{order_id}/status', [OrderDetailController::class, 'updateOrderStatus']);
+
+Route::post('/product-variants/check-quantity', [ProductVariantController::class, 'checkQuantity']);

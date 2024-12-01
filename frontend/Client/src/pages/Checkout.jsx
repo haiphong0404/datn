@@ -225,108 +225,156 @@ const Checkout = () => {
   };
 
   const handleSubmitOrder = async () => {
-    // Check if shipping is selected
+    // Kiểm tra xem người dùng đã chọn sản phẩm chưa
     if (selectedProducts.length === 0) {
-      toast.error("Vui lòng chọn sản phẩm trước khi đặt hàng!");  // Show error if no products are selected
-      return;
+        toast.error("Vui lòng chọn sản phẩm trước khi đặt hàng!");  // Hiển thị thông báo lỗi nếu chưa chọn sản phẩm
+        return;
     }
 
-    // Check if shipping is selected
+    // Kiểm tra xem người dùng đã chọn phương thức vận chuyển chưa
     if (!isShippingSelected) {
-      toast.error("Vui lòng chọn vận chuyển trước khi đặt hàng!");  // Show error if shipping is not selected
-      return;
+        toast.error("Vui lòng chọn vận chuyển trước khi đặt hàng!");  // Hiển thị thông báo lỗi nếu chưa chọn vận chuyển
+        return;
     }
 
-    // Validate the form data (if necessary)
+    // Kiểm tra và validate form dữ liệu
     if (!validateForm()) return;
 
-    const orderDate = new Date().toISOString();
-    const orderData = {
-      // order_date: orderDate,
-      status: "pending",
-      total_amount: totalAmount,
-      shipping_fee: selectedShippingFee,  
-      voucher_discount: voucherDiscount,  
-      name: userDetails.username,
-      email: userDetails.email,
-      phone: userDetails.phone,
-      address: userDetails.address,
-      infor: userDetails.info,
-      payment_method: paymentMethod,
-      user_id: userInfo?.id,
-      products: selectedProducts.map((item) => ({
-        product_variant_id: item.id_productVariant,
-        product_id: item.productId, 
-        image: item.image,
-        color: item.color,
-        size: item.size,
-        quantity: item.quantity,
-        price: item.price,
-      })),
-      ...(appliedVoucherId && { id: appliedVoucherId }), // Chỉ thêm voucher_id nếu có
-    };
-
-    console.log(orderData);
-
-    if (userInfo?.id) {
-      try {
-        if (paymentMethod === "online") {
-          const response = await fetch('http://127.0.0.1:8000/api/payment/create', {
-            method: 'POST',
-            headers: {
-              "Authorization": `Bearer ${token}`,
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(orderData),
-          });
-
-          const data = await response.json();
-          console.log(data);
-          const orderId = data.order_id; // Make sure that your API returns `order_id`
-
-        // Check if orderId is returned in the response
-        if (!orderId) {
-            toast.error("Không thể tạo đơn hàng. Vui lòng thử lại.");
-            return;
-        }
-        localStorage.removeItem('selectedProducts');
-          localStorage.removeItem('cart');
-          setSelectedProducts([]);
-          setTotalAmount(0);
-
-          // Reset shipping status after order
-          setIsShippingSelected(false);  // This resets the shipping status to false
-          setIsVoucherApplied(false);
-          navigate(`/checkout-detail/${orderId}`);
-
-        } else if (paymentMethod === "cash") {
-
-          // Send the order data
-          await postOrder(userInfo.id, orderData);
-          toast.success("Đặt hàng thành công!");
-
-          // Remove selected products from the cart in the database
-          for (const item of selectedProducts) {
-            await deleteProductFromCart(item.id_productVariant);
+    try {
+      // Gửi yêu cầu kiểm tra số lượng sản phẩm còn trong kho
+      const response = await axios.post(
+          'http://127.0.0.1:8000/api/product-variants/check-quantity',
+          selectedProducts.map(item => ({
+              product_variant_id: item.id_productVariant,
+              quantity: item.quantity,
+          })),
+          {
+              headers: {
+                  "Authorization": `Bearer ${token}`,
+                  'Content-Type': 'application/json',
+              },
           }
+      );
+      const data = response.data;
 
-          // Remove cart from localStorage
-          localStorage.removeItem('selectedProducts');
-          localStorage.removeItem('cart');
-          setSelectedProducts([]);
-          setTotalAmount(0);
-
-          // Reset shipping status after order
-          setIsShippingSelected(false);  // This resets the shipping status to false
-          setIsVoucherApplied(false);
-        }
-      } catch (error) {
-        toast.error(`Đặt hàng thất bại: sản phẩm trong kho hiện không đủ`);
+     
+  
+      // Tiếp tục xử lý đơn hàng khi không có lỗi
+      const orderDate = new Date().toISOString();
+      const orderData = {
+          status: "pending",
+          total_amount: totalAmount,
+          shipping_fee: selectedShippingFee,
+          voucher_discount: voucherDiscount,
+          name: userDetails.username,
+          email: userDetails.email,
+          phone: userDetails.phone,
+          address: userDetails.address,
+          infor: userDetails.info,
+          payment_method: paymentMethod,
+          user_id: userInfo?.id,
+          products: selectedProducts.map((item) => ({
+              product_variant_id: item.id_productVariant,
+              product_id: item.productId,
+              image: item.image,
+              color: item.color,
+              size: item.size,
+              quantity: item.quantity,
+              price: item.price,
+          })),
+          ...(appliedVoucherId && { id: appliedVoucherId }), // Chỉ thêm voucher_id nếu có
+      };
+  
+      console.log(orderData);
+  
+      // Kiểm tra nếu người dùng đã đăng nhập
+      if (userInfo?.id) {
+          try {
+              // Nếu phương thức thanh toán là online
+              if (paymentMethod === "online") {
+                  const response = await fetch('http://127.0.0.1:8000/api/payment/create', {
+                      method: 'POST',
+                      headers: {
+                          "Authorization": `Bearer ${token}`,
+                          'Content-Type': 'application/json',
+                      },
+                      body: JSON.stringify(orderData),
+                  });
+  
+                  const data = await response.json();
+                  const orderId = data.order_id;  // Lấy order_id từ phản hồi
+  
+                  // Kiểm tra nếu không có orderId
+                  if (!orderId) {
+                      toast.error("Không thể tạo đơn hàng. Vui lòng thử lại.");
+                      return;
+                  }
+  
+                  // Xóa thông tin trong localStorage và làm mới các giá trị
+                  localStorage.removeItem('selectedProducts');
+                  localStorage.removeItem('cart');
+                  setSelectedProducts([]);
+                  setTotalAmount(0);
+  
+                  // Đặt lại trạng thái vận chuyển và voucher
+                  setIsShippingSelected(false);
+                  setIsVoucherApplied(false);
+  
+                  // Điều hướng đến trang chi tiết đơn hàng
+                  navigate(`/checkout-detail/${orderId}`);
+  
+              } else if (paymentMethod === "cash") {
+  
+                  // Gửi đơn hàng và thanh toán nếu là thanh toán tiền mặt
+                  await postOrder(userInfo.id, orderData);
+                  toast.success("Đặt hàng thành công!");
+  
+                  // Xóa sản phẩm đã chọn khỏi giỏ hàng trong cơ sở dữ liệu
+                  for (const item of selectedProducts) {
+                      await deleteProductFromCart(item.id_productVariant);
+                  }
+  
+                  // Xóa giỏ hàng khỏi localStorage
+                  localStorage.removeItem('selectedProducts');
+                  localStorage.removeItem('cart');
+                  setSelectedProducts([]);
+                  setTotalAmount(0);
+  
+                  // Đặt lại trạng thái vận chuyển và voucher
+                  setIsShippingSelected(false);
+                  setIsVoucherApplied(false);
+              }
+          } catch (error) {
+              toast.error("Đặt hàng thất bại: sản phẩm trong kho hiện không đủ");
+          }
+      } else {
+          toast.error("Xin vui lòng đăng nhập!");
       }
+  } catch (error) {
+    console.error("Lỗi khi xử lý đơn hàng: ", error);
+
+    if (error.response) {
+        console.error('API error response:', error.response);
+        // Kiểm tra lỗi API trả về trong trường hợp 422 hoặc các lỗi khác
+        if (error.response.data && error.response.data.insufficient_variants) {
+            const insufficientVariants = error.response.data.insufficient_variants;
+            const insufficientMessages = insufficientVariants.map(variant => {
+                return `Sản phẩm : Kích thước: ${variant.size}  Màu sắc: ${variant.color} đã hết`;
+            });
+            toast.error(`\n${insufficientMessages.join('\n')}`);
+        } else {
+            toast.error(`Lỗi từ server: ${error.response.data.message || "Có lỗi xảy ra."}`);
+        }
+    } else if (error.request) {
+        toast.error("Không nhận được phản hồi từ server. Vui lòng thử lại.");
     } else {
-      toast.error("Xin vui lòng đăng nhập!");
+        toast.error("Có lỗi xảy ra. Vui lòng thử lại!");
     }
-  };
+
+  }
+}
+
+
 
 
 

@@ -176,8 +176,10 @@
         </div>
     </div>
     <script>
+
         // Hiện thị trường nhập kích thước mới hoặc màu sắc mới khi chọn
         document.addEventListener('change', function(e) {
+
             if (e.target.classList.contains('size-select')) {
                 const inputField = e.target.nextElementSibling;
                 inputField.style.display = e.target.value === 'new' ? 'block' : 'none';
