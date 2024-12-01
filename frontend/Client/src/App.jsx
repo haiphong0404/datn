@@ -34,6 +34,8 @@ import CheckoutDetail from "./pages/CheckoutDetail";
 
 import ChangePassword from "./pages/My_account/changePass";
 import EditProfile from "./pages/My_account/editProfile";
+import Brands from "./pages/Brands";
+import BrandDetail from "./pages/BrandDetail";
 
 
 
@@ -59,6 +61,10 @@ const routeConfig = [
       { path: "faqs", element: <FAQs /> },
       { path: "checkout/bill", element: <Bill /> },
       { path: "/checkout-detail/:orderId", element: <CheckoutDetail /> },
+      { path: "brands", element: <Brands /> },
+      { path: "brand_detail/:id", element: <BrandDetail /> },
+
+
     ],
   },
   {
