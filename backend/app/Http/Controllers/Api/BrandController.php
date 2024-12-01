@@ -29,18 +29,18 @@ class BrandController extends Controller
     {
         // Lấy danh sách tất cả các brands
         $brands = Brand::all();
-    
+
         // Tạo một mảng để chứa dữ liệu các brand kèm ảnh Base64
         $brandsData = [];
-    
+
         // Lặp qua từng brand để thêm dữ liệu vào mảng
         foreach ($brands as $brand) {
             // Lấy đường dẫn ảnh từ database
             $imagePath = $brand->image;
-    
+
             // Gọi function để chuyển ảnh thành Base64
             $imageBase64 = $this->getImageAsBase64($imagePath);
-    
+
             // Thêm thông tin brand và ảnh vào mảng
             $brandsData[] = [
                 'id' => $brand->id,
@@ -50,11 +50,11 @@ class BrandController extends Controller
                 'link' => $brand->link,
             ];
         }
-    
+
         // Trả về dữ liệu danh sách brands dưới dạng JSON
         return response()->json($brandsData);
     }
-    
+
     /**
      * Store a newly created brand in the database.
      */
@@ -68,9 +68,19 @@ class BrandController extends Controller
     /**
      * Display the specified brand.
      */
-    public function show(Brand $brand): JsonResponse
+    public function show($id)
     {
-        return response()->json($brand);
+        // Tìm bài viết theo ID
+        $Brand = Brand::find($id);
+
+        if (!$Brand) {
+            return response()->json(['message' => 'lỗi'], 404);
+        }
+
+        // Chuyển đổi ảnh sang dạng Base64
+        $Brand->image = $this->getImageAsBase64($Brand->image);
+
+        return response()->json($Brand);
     }
 
     /**
@@ -92,7 +102,7 @@ class BrandController extends Controller
 
         return response()->json(['message' => 'Brand deleted successfully.']);
     }
-    
+
     private function getImageAsBase64($imagePath)
     {
         // Kiểm tra nếu hình ảnh tồn tại trong thư mục public
