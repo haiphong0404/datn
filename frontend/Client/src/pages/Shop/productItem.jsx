@@ -10,9 +10,7 @@ const ProductItem = ({ product }) => { // Nhận product qua props
                         <img src={product.image || '/path/to/placeholder.jpg'} alt={product.name} />
                     </Link>
                     <div className="button-group">
-                        <Link to="/wishlist" data-bs-toggle="tooltip" title="Add to Wishlist">
-                            <i className="fa fa-heart-o" />
-                        </Link>
+
                         <Link to="#" data-bs-toggle="modal" data-bs-target="#quick_view">
                             <span data-bs-toggle="tooltip" title="Quick View">
                                 <i className="fa fa-eye" />
@@ -22,9 +20,9 @@ const ProductItem = ({ product }) => { // Nhận product qua props
                     <div className="product-label">
                         <span>new</span>
                     </div>
-                    <div className="discount-label">
+                    {/* <div className="discount-label">
                         <span>-10% Off</span>
-                    </div>
+                    </div> */}
                 </div>
                 <div className="product-content">
                     <div className="product-caption">
@@ -35,22 +33,23 @@ const ProductItem = ({ product }) => { // Nhận product qua props
                             </Link>
                         </h6>
                         <div className="price-box">
-                            <span className="price-old">
-                                <del>${90.00}</del> {/* Use actual old price if available */}
+
+                            <span className="price-regular">
+                                {parseFloat(product.price).toLocaleString()} VND
                             </span>
-                            <span className="price-regular">${70.00}</span> {/* Use actual price from API */}
+                            {/* Use actual price from API */}
                         </div>
-                        <Link className="add-to-cart" to="/cart">
+                        <Link className="add-to-cart" to={`/product_details/${product.id}`}>
                             <i className="fa fa-shopping-cart" />
                         </Link>
                     </div>
-                    <div className="ratings">
+                    {/* <div className="ratings">
                         <span><i className="fa fa-star"></i></span>
                         <span><i className="fa fa-star"></i></span>
                         <span><i className="fa fa-star"></i></span>
                         <span><i className="fa fa-star"></i></span>
                         <span><i className="fa fa-star"></i></span>
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </div>

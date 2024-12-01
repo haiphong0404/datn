@@ -30,6 +30,8 @@ import Dashboard from "./pages/My_account/dashboard";
 import Orders from "./pages/My_account/orders";
 import Account_info from "./pages/My_account/account_info";
 import Product_details from "./pages/Product_Detail/Product_details";
+import CheckoutDetail from "./pages/CheckoutDetail";
+
 import ChangePassword from "./pages/My_account/changePass";
 import EditProfile from "./pages/My_account/editProfile";
 import Brands from "./pages/Brands";
@@ -48,7 +50,7 @@ const routeConfig = [
       { path: "shop", element: <Shop /> },
       { path: "blog", element: <Blog /> },
       { path: "checkout", element: <Checkout /> },
-      { path: "blog/blog_detail", element: <Blog_detail /> },
+      { path: "/blog_details/:id", element: <Blog_detail /> },
       { path: "contact_us", element: <Contact_us /> },
       { path: "product_details/:productId", element: <Product_details /> },
       { path: "cart", element: <Cart /> },
@@ -62,6 +64,7 @@ const routeConfig = [
       { path: "brand_detail/:id", element: <BrandDetail /> },
 
 
+      { path: "/checkout-detail/:orderId", element: <CheckoutDetail /> },
     ],
   },
   {

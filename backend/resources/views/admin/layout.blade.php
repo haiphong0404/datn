@@ -12,7 +12,7 @@
     <!-- <meta name="csrf-token" content="{{ csrf_token() }}"> -->
     <link rel="shortcut icon" href="{{ asset('assets') }}/admin/img/favicon.html">
 
-    <title>Thor-Admin Dashboard</title>
+    <title>Thor-Admin </title>
 
     <!-- Bootstrap core CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
@@ -51,7 +51,7 @@
                 <i class="fa fa-bars"></i>
             </div>
             <!--logo start-->
-            <a href="" class="logo">Admin<span>THOR</span></a>
+            <a href="{{ route('admin.index') }}" class="logo">Admin<span>THOR</span></a>
             <!--logo end-->
             <div class="nav notify-row" id="top_menu">
                 <!--  notification start -->
@@ -266,21 +266,20 @@
             </div>
             <div class="top-nav ">
                 <!--search & user info start-->
+                <!--search & user info start-->
                 <ul class="nav pull-right top-menu">
                     <li>
                         @yield('search')
-                        {{-- <input type="text" class="form-control search" placeholder="Search"> --}}
                     </li>
                     <!-- user login dropdown start-->
                     @auth
                     <li class="dropdown">
                         <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                             <img src="{{ optional(Auth::user()->avatar_img) ? Storage::url(Auth::user()->avatar_img) : asset('default-avatar.png') }}"
-                                width="30px">
+                                alt="{{ optional(Auth::user())->username }}" width="30px">
                             <span class="username">{{ optional(Auth::user())->username }}</span>
                             <b class="caret"></b>
                         </a>
-
                         <ul class="dropdown-menu dropdown-menu-right">
                             <li>
                                 <a href="{{ route('admin.profile') }}" class="dropdown-item">
@@ -290,8 +289,10 @@
                             <li>
                                 <form action="{{ route('logout') }}" method="POST" style="display: inline;">
                                     @csrf
-                                    <button type="submit" class="btn btn-link dropdown-item"><i class="fa fa-key"></i>
-                                        Logout</button>
+                                    <button type="submit"
+                                        class="btn btn-link dropdown-item text-danger d-flex align-items-center">
+                                        <i class="fa fa-sign-out-alt me-2"></i> Đăng xuất
+                                    </button>
                                 </form>
                             </li>
                         </ul>
@@ -301,12 +302,9 @@
                         <a href="{{ route('login') }}" class="dropdown-item">Đăng nhập</a>
                     </li>
                     @endauth
-                    {{-- <li class="sb-toggle-right">
-                        <a href="http://localhost:3000/" target="_blank" rel="noopener noreferrer">
-                            <i class="fa fa-sign-in mr-2"></i>Website
-                        </a>
-                    </li> --}}
-
+                    <a href="http://localhost:3000" class="fa fa-sign-in mr-2"
+                        style="display: inline-flex; justify-content: center; align-items: center; text-decoration: none; font-size: 13px; padding: 5px;"
+                        target="_blank"><span>Website</span></a>
                     <!-- user login dropdown end -->
                 </ul>
                 <!--search & user info end-->
@@ -321,13 +319,13 @@
                     <li>
                         <a class="active" href="{{ route('admin.index') }}">
                             <i class="fa fa-dashboard"></i>
-                            <span>Dashboard</span>
+                            <span>Thông kê</span>
                         </a>
                     </li>
                     <li>
                         <a href="{{ route('admin.articles.index') }}">
                             <i class="bi bi-newspaper"></i>
-                            <span>Article</span>
+                            <span>Bài viết</span>
                         </a>
                     </li>
                     <li>
@@ -339,52 +337,51 @@
                     <li>
                         <a href="{{ route('admin.brands.index') }}">
                             <i class="bi bi-badge-tm-fill"></i>
-                            <span>Brand</span>
+                            <span>Thương hiệu</span>
                         </a>
                     </li>
                     <li>
                         <a href="{{ route('admin.categories.index') }}">
                             <i class="bi bi-tags-fill"></i>
-                            <span>Category</span>
+                            <span>Danh mục</span>
                         </a>
                     </li>
                     <li>
                         <a href="{{ route('admin.contacts.index') }}">
                             <i class="bi bi-person-rolodex"></i>
-                            <span>Contact</span>
+                            <span>Liên hệ</span>
                         </a>
                     </li>
                     <li>
                         <a href="{{ route('admin.comments.index') }}">
                             <i class="bi bi-chat-square-dots-fill"></i>
-                            <span>Comment</span>
+                            <span>Bình luận</span>
                         </a>
                     </li>
                     <li>
                         <a href="{{ route('admin.orders.index') }}">
                             <i class="bi bi-receipt"></i>
-                            <span>Order</span>
+                            <span>Đơn hàng</span>
                         </a>
                     </li>
                     <li>
                         <a href="{{ route('admin.user.index') }}">
                             <i class="fa fa-user"></i>
-                            <span>User</span>
+                            <span>Tài khoản</span>
                         </a>
                     </li>
                     <li>
                         <a href="{{ route('admin.products.index') }}">
                             <i class="bi bi-shop"></i>
-                            <span>Product</span>
+                            <span>Shops</span>
                         </a>
                     </li>
                     <li>
                         <a href="{{ route('admin.vouchers.index') }}">
                             <i class="fas fa-ticket-alt"></i>
-                            <span> Voucher</span>
+                            <span>Voucher</span>
                         </a>
                     </li>
-
                 </ul>
                 <!-- sidebar menu end-->
             </div>

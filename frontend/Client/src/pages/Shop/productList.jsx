@@ -9,13 +9,7 @@ const ProductList = ({ product }) => {
                     <img src={product.image} alt={product.name} />
                 </Link>
                 <div className="button-group">
-                    <a
-                        href="wishlist.html"
-                        data-bs-toggle="tooltip"
-                        title="Add to Wishlist"
-                    >
-                        <i className="fa fa-heart-o" />
-                    </a>
+
                     <a
                         href="#"
                         data-bs-toggle="modal"
@@ -29,9 +23,7 @@ const ProductList = ({ product }) => {
                 <div className="product-label">
                     <span>NEW</span>
                 </div>
-                <div className="discount-label">
-                    <span>-10% Off</span>
-                </div>
+
             </div>
             <div className="product-content-list">
                 <h4 className="product-name">
@@ -39,24 +31,25 @@ const ProductList = ({ product }) => {
                         {product.name}
                     </Link>
                 </h4>
-                <div className="ratings">
+                {/* <div className="ratings">
                     <span><i className="fa fa-star"></i></span>
                     <span><i className="fa fa-star"></i></span>
                     <span><i className="fa fa-star"></i></span>
                     <span><i className="fa fa-star"></i></span>
                     <span><i className="fa fa-star"></i></span>
-                </div>
+                </div> */}
                 <div className="price-box">
-                    <span className="price-old">
-                        <del>$90.00</del>
+
+                    <span className="price-regular">
+                        {parseFloat(product.price).toLocaleString()} VND
                     </span>
-                    <span className="price-regular">$90.00</span>
+
                 </div>
                 <p>
                     {product.description}
                 </p>
-                <Link to="/cart" className="btn btn-large hover-color">
-                    Add To Cart
+                <Link to={`/product_details/${product.id}`} className="btn btn-large hover-color">
+                    XEM CHI TIẾT
                 </Link>
             </div>
         </div>
