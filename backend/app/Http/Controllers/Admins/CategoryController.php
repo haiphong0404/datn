@@ -16,18 +16,20 @@ class CategoryController extends Controller
     public function index(Request $request)
     {
         $search = $request->input('search');
-
-        // Lấy tất cả các thể loại, bao gồm cả đã xóa
-        if ($search) {
-            $categories = Category::withTrashed()
-                ->where('name', 'LIKE', "%{$search}%")
-                ->get();
-        } else {
-            $categories = Category::withTrashed()->get();
-        }
-
-        return view('admin.categories.category', compact('categories'));
+        $perPage = $request->input('per_page', 10); // Số bản ghi mỗi trang (mặc định 10)
+    
+        // Truy vấn danh sách thể loại với tìm kiếm và phân trang
+        $categories = Category::withTrashed()
+            ->when($search, function ($query, $search) {
+                $query->where('name', 'LIKE', "%{$search}%");
+            })
+            ->orderBy('created_at', 'desc') // Sắp xếp giảm dần theo ngày tạo
+            ->paginate($perPage);
+    
+        // Trả về view với dữ liệu đã xử lý
+        return view('admin.categories.category', compact('categories', 'search'));
     }
+    
 
 
     /**

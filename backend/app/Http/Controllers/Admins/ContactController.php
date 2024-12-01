@@ -10,11 +10,24 @@ use Illuminate\Http\Request;
 
 class ContactController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $contacts = Contact::all();
-        return view('admin.contacts.index', compact('contacts'));
-    }
+        $search = $request->input('search');
+        $perPage = $request->input('per_page', 10); // Mặc định 10 bản ghi mỗi trang
+    
+        $contacts = Contact::when($search, function ($query, $search) {
+                return $query->where('name','LIKE', "%{$search}%")
+                         ->orWhere('email', 'LIKE', "%{$search}%")
+                         ->orWhere('phone', 'LIKE', "%{$search}%");
+        })
+        ->orderBy('created_at', 'desc') // Sắp xếp theo thời gian tạo mới nhất
+        ->paginate($perPage);
+
+    $noResults = $contacts->isEmpty(); // Kiểm tra nếu không có kết quả
+
+    return view('admin.contacts.index', compact('contacts', 'noResults'));
+}
+    
 
     public function create()
     {

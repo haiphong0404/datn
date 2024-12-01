@@ -17,7 +17,7 @@
     @endif
     <style>
         .text-truncate {
-            max-width: 200px;
+            max-width: 150px;
             /* Đặt độ rộng cố định cho cột */
             white-space: nowrap;
             /* Không cho phép xuống dòng */
@@ -81,7 +81,7 @@
                                 <div class="span6">
                                     <div class="dataTables_filter" id="hidden-table-info_filter">
                                         <a href="{{ route('admin.user.create') }}"
-                                            class=" btn btn-success btn-sm">CREATE</a>
+                                            class=" btn btn-success btn-sm">Tạo mới</a>
 
                                     </div>
                                 </div>
@@ -90,49 +90,59 @@
                             <table class="display table table-bordered" id="hidden-table-info"
                                 aria-describedby="hidden-table-info_info">
                                 <thead>
-                                    <tr role="row">
-                                        <th>Id</th>
-                                        <th>Avatar</th>
-                                        <th>Name</th>
-                                        <th>Phone</th>
+                                    <tr class="text-center">
+                                        <th>#</th>
+                                        <th>Ảnh đại diện</th>
+                                        <th>Họ tên</th>
+                                        <th>Số điện thoại</th>
                                         <th>Email</th>
-                                        <th>Address</th>
-                                        <th>Role</th>
-                                        <th>Active</th>
+                                        <th>Địa chỉ</th>
+                                        <th>Quyền</th>
+                                        <th>Trạng thái</th> <!-- Thêm cột Trạng thái -->
+                                        <th>Hành động</th>
                                     </tr>
                                 </thead>
                                 <tbody role="alert" aria-live="polite" aria-relevant="all">
                                     @if ($noResults)
                                         <tr>
-                                            <td colspan="7" class="text-center">Không có người dùng phù hợp</td>
+                                            <td colspan="8" class="text-center">Không có người dùng phù hợp</td>
+                                            <!-- Cập nhật colspan -->
                                         </tr>
                                     @else
+                                        @php $stt = 1; @endphp
                                         @foreach ($users as $item)
                                             <tr>
-                                                <td>{{ $item->id }}</td>
-                                                <td style="width: 100px;"> <img src="{{ Storage::url($item->avatar_img) }}"
-                                                        width="100" height="100" alt="{{ $item->username }}"></td>
+                                                <td>{{ $stt++ }}</td>
+                                                <td style="width: 100px;">
+                                                    <img src="{{ Storage::url($item->avatar_img) }}" width="100"
+                                                        height="100" alt="{{ $item->username }}">
+                                                </td>
                                                 <td class="text-truncate">{{ $item->username }}</td>
-                                                <td>{{ $item->phone }}</td>
+                                                <td class="text-end">{{ $item->phone }}</td>
                                                 <td class="text-truncate">{{ $item->email }}</td>
                                                 <td class="text-truncate">{{ $item->address }}</td>
                                                 <td class="text-td">{{ $item->role }}</td>
                                                 <td>
-                                                    <a href="{{ route('admin.user.show', $item->id) }}"
-                                                        class="btn btn-primary"><i class="fa fa-eye"></i></a>
+                                                    @if ($item->status === 'active')
+                                                        <span class="badge bg-success">Hoạt động</span>
+                                                    @else
+                                                        <span class="badge bg-danger">Không hoạt động</span>
+                                                    @endif
+                                                </td>
+                                                <td>
                                                     @if ($item->role !== 'admin')
-                                                        <form action="{{ route('admin.user.destroy', $item->id) }}"
-                                                            method="POST" class="d-inline-block">
+                                                        <form action="{{ route('admin.user.toggleStatus', $item->id) }}" method="POST" class="d-inline-block">
                                                             @csrf
-                                                            @method('DELETE')
-                                                            <button type="submit" class="btn btn-danger"
-                                                                onclick="return confirm('Bạn có chắc muốn xóa người dùng này?')">
-                                                                <i class="fa fa-trash-o"></i>
+                                                            @method('PATCH')
+                                                            <button type="submit" class="btn {{ $item->status === 'active' ? 'btn-warning' : 'btn-success' }}">
+                                                                <i class="bi {{ $item->status === 'active' ? 'bi-toggle-on' : 'bi-toggle-off' }}"></i>
                                                             </button>
                                                         </form>
                                                     @endif
-                                                </td>
-
+                                                    <a href="{{ route('admin.user.show', $item->id) }}" class="btn btn-primary">
+                                                        <i class="fa fa-eye"></i>
+                                                    </a>
+                                                </td>                                                
                                             </tr>
                                         @endforeach
                                     @endif
