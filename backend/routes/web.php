@@ -74,6 +74,7 @@ Route::group(
         Route::get('/search-products', [OrderController::class, 'search'])->name('products.search');
         Route::resource('admin/vouchers', VoucherController::class);
         Route::patch('/user/{id}/toggle-status', [UserController::class, 'toggleStatus'])->name('user.toggleStatus');
+        Route::post('/brands/{id}/restore', [BrandController::class, 'restore'])->name('brands.restore');
 
     }
 );

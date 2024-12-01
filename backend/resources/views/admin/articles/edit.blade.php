@@ -32,14 +32,14 @@
                     <form action="{{ route('admin.articles.update', $articles->id) }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
-                        <div class="mb-3 text-center">
-                            <label for="image" class="form-label"><strong>Image articles:</strong></label>
+                        <div class="mb-3 ">
+                            <label for="image" class="form-label"><strong>Ảnh đại diện:</strong></label>
 
                             <div class="d-flex flex-column align-items-center">
                                 @if ($articles->image)
                                     <div class="d-flex justify-content-center">
                                         <img src="{{ Storage::url($articles->image) }}" alt="{{ $articles->title }}"
-                                            class="img-thumbnail" style="max-width: 800px; margin-bottom: 10px;">
+                                            class="img-thumbnail" style="max-width: 400px; margin-bottom: 10px;">
                                     </div>
                                 @else
                                     <div class="alert alert-warning" role="alert" style="margin-bottom: 10px;">
@@ -83,24 +83,6 @@
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
-
-                        {{-- <!-- Ảnh đại diện -->
-                        <div class="form-group mb-3">
-                            <label class="form-label" for="image"><strong>Ảnh đại diện:</strong></label>
-                            @if ($articles->image)
-                                <div class="d-flex justify-content-center">
-                                    <img src="{{ Storage::url($articles->image) }}" alt="Ảnh đại diện hiện tại" class="img-thumbnail" style="max-width: 800px;">
-                                </div>
-                            @else
-                                <div class="alert alert-warning" role="alert" style="margin-bottom: 10px;">
-                                    Chưa có ảnh đại diện.
-                                </div>
-                            @endif
-                            <input type="file" class="form-control @error('image') is-invalid @enderror" id="image" name="image" accept="image/*">
-                            @error('image')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div> --}}
 
                         <!-- Các nút điều hướng -->
                         <div class="mb-3 d-flex">

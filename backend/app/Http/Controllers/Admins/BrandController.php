@@ -27,21 +27,21 @@ class BrandController extends Controller
      * Hiển thị danh sách các thương hiệu.
      */
     public function index(Request $request)
-{
-    $search = $request->input('search');
-    $perPage = $request->input('per_page', 5); // Mặc định 5 bản ghi mỗi trang
+    {
+        $search = $request->input('search');
+        $perPage = $request->input('per_page', 5); // Mặc định 5 bản ghi mỗi trang
 
-    $brands = Brand::when($search, function ($query, $search) {
+        $brands = Brand::withTrashed()->when($search, function ($query, $search) {
             return $query->where('name', 'LIKE', "%{$search}%")
-                         ->orWhere('description', 'LIKE', "%{$search}%"); // Tìm thêm ở cột 'description' nếu cần
+                ->orWhere('description', 'LIKE', "%{$search}%"); // Tìm thêm ở cột 'description' nếu cần
         })
-        ->orderBy('created_at', 'desc') // Sắp xếp giảm dần theo thời gian tạo
-        ->paginate($perPage);
+            ->orderBy('created_at', 'desc') // Sắp xếp giảm dần theo thời gian tạo
+            ->paginate($perPage);
 
-    $noResults = $brands->isEmpty(); // Kiểm tra nếu không có kết quả tìm kiếm
+        $noResults = $brands->isEmpty(); // Kiểm tra nếu không có kết quả tìm kiếm
 
-    return view(self::PATH_VIEW.__FUNCTION__, compact('brands', 'noResults'));
-}
+        return view(self::PATH_VIEW . __FUNCTION__, compact('brands', 'noResults'));
+    }
 
 
     /**
@@ -49,7 +49,7 @@ class BrandController extends Controller
      */
     public function create()
     {
-        return view(self::PATH_VIEW.__FUNCTION__);
+        return view(self::PATH_VIEW . __FUNCTION__);
     }
 
     /**
@@ -68,7 +68,7 @@ class BrandController extends Controller
      */
     public function edit(Brand $brand)
     {
-        return view(self::PATH_VIEW.__FUNCTION__, compact('brand'));
+        return view(self::PATH_VIEW . __FUNCTION__, compact('brand'));
     }
 
     /**
@@ -91,5 +91,15 @@ class BrandController extends Controller
         $this->brandService->deleteBrand($brand);
 
         return back()->with('success', 'Xóa thương hiệu thành công');
+    }
+    public function restore($id)
+    {
+        // Tìm thương hiệu đã bị xóa mềm
+        $brand = Brand::withTrashed()->findOrFail($id);
+
+        // Thực hiện khôi phục
+        $brand->restore();
+
+        return back()->with('success', 'Khôi phục thương hiệu thành công');
     }
 }

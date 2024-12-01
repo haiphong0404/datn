@@ -108,7 +108,7 @@
                                                     <span class="badge bg-success">Còn</span>
                                                 @endif
                                             </td>
-                                            <td>
+                                            <td class="text-center">
                                                 <a href="{{ route('admin.categories.edit', $category->id) }}"
                                                     class="btn btn-warning ">
                                                     <i class="fa fa-edit"></i>

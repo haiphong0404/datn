@@ -111,8 +111,10 @@
                                                 <td class="text-truncate">{{ $contact->email }}</td>
                                                 <td class="text-truncate text-end">{{ $contact->phone }}</td>
                                                 <td class="text-center">
-                                                    <a href="{{ route('admin.contacts.edit', $contact) }}"
-                                                        class="btn btn-warning"><i class="fa fa-pencil-alt"></i></a>
+                                                    <a href="{{ route('admin.contacts.edit', $contact->id) }}"
+                                                        class="btn btn-warning mx-1">
+                                                        <i class="fa fa-edit"></i>
+                                                    </a>
                                                     <form action="{{ route('admin.contacts.destroy', $contact) }}" method="POST" style="display:inline;">
                                                         @csrf
                                                         @method('DELETE')

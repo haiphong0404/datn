@@ -279,13 +279,12 @@
                             <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                                 <img src="{{ optional(Auth::user()->avatar_img) ? Storage::url(Auth::user()->avatar_img) : asset('default-avatar.png') }}"
                                     alt="{{ optional(Auth::user())->username }}" width="30px">
-                                <span class="username">{{ optional(Auth::user())->username }}</span>
                                 <b class="caret"></b>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-right">
                                 <li>
                                     <a href="{{ route('admin.profile') }}" class="dropdown-item">
-                                        <i class="fa fa-suitcase"></i> Profile
+                                        <i class="fa fa-suitcase"></i> Hồ sơ
                                     </a>
                                 </li>
                                 <li>

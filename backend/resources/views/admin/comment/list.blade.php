@@ -83,12 +83,12 @@
                                 <thead>
                                     <tr class="text-center">
                                         <th>#</th>
-                                        <th>User</th>
-                                        <th>Product</th>
-                                        <th>Comment</th>
-                                        <th>File</th>
-                                        <th>Rating</th>
-                                        <th>Actions</th>
+                                        <th>Người dùng</th>
+                                        <th>Sản phẩm</th>
+                                        <th>Nội dung bình luận</th>
+                                        <th>Ảnh bình luận</th>
+                                        <th>Số sao</th>
+                                        <th>Hành động</th>
                                     </tr>
                                 </thead>
                                 <tbody role="alert" aria-live="polite" aria-relevant="all">
@@ -112,10 +112,11 @@
                                                     @endif
                                                 </td>
                                                 <td class="text-end">{{ $item->star_rating }} / 5</td>
-                                                <td>
+                                                <td class="text-center">
+                                                    @if (!$item->deleted_at)
                                                     <a href="{{ route('admin.comments.show', $item->id) }}"
                                                         class="btn btn-primary"><i class="fa fa-eye"></i></a>
-
+                                                    @endif
                                                     @if ($item->deleted_at)
                                                         <form action="{{ route('admin.comments.restore', $item->id) }}"
                                                             method="POST" style="display:inline;">
