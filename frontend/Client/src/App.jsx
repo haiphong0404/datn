@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link, Route, Router, Routes, useRoutes } from "react-router-dom";
 import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -34,6 +34,7 @@ import CheckoutDetail from "./pages/CheckoutDetail";
 
 import ChangePassword from "./pages/My_account/changePass";
 import EditProfile from "./pages/My_account/editProfile";
+import LoadingSpinner from "./loading/LoadingSpinner"; 
 
 
 
@@ -86,6 +87,20 @@ function AppRoutes() {
 const theme = createTheme({});
 
 function App() {
+  const [loading, setLoading] = useState(true);
+
+  
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setLoading(false); 
+    }, 2000);
+
+    return () => clearTimeout(timeout);
+  }, []);
+
+  if (loading) {
+    return <LoadingSpinner />;
+  }
 
   return (
     <QueryClientProvider client={queryClient}>
