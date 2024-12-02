@@ -204,8 +204,7 @@ const Details = () => {
                                     setSelectedSize('');
                                 }}>
                                     <img
-                                        src={variant.images} 
-                                        alt={`Product ${index + 1}`}
+                                        src={variant.images}                                 
                                         className={`w-full h-auto cursor-pointer ${selectedImage === variant.images ? 'selected-image' : ''}`}
                                     />
                                 </div>

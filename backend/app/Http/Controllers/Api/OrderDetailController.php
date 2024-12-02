@@ -167,6 +167,8 @@ class OrderDetailController extends Controller
 
         return response()->json([
             "order_date" => $order->order_date,
+            "shipping_fee" => $order->shipping_fee,
+            "voucher_discount" => $order->voucher_discount,
             "status" => $order->status,
             "user_id" => $order->user_id,
             "total_amount" => $order->total_amount,
