@@ -25,7 +25,6 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         $search = $request->input('search');
-
         $products = Product::withTrashed() // Lấy cả sản phẩm đã xóa mềm
         ->with(['category' => function ($query) {
             $query->withTrashed(); // Lấy cả category đã bị xóa mềm
@@ -46,6 +45,13 @@ class ProductController extends Controller
             })
             ->orderBy('id', 'desc') // Sắp xếp theo ID mới nhất
             ->paginate(10); // Phân trang với 6 sản phẩm mỗi trang
+        $lowStockProducts = $products->filter(function ($product) {
+            return $product->total_quantity_in_stock < 5;
+        });
+
+        // Lưu thông tin các sản phẩm có số lượng dưới 5 vào session
+        session()->put('low_stock_products', $lowStockProducts);
+
 
         return view('admin.products.index', compact('products'));
     }
@@ -195,6 +201,46 @@ class ProductController extends Controller
 
         return redirect()->route('admin.products.index')->with('success', 'Sản phẩm đã được cập nhật thành công!');
     }
+    public function updateVariants(Request $request, Product $product)
+    {
+        $validated = $request->validate([
+            'selected_variants' => 'required|array',
+            'selected_variants.*' => 'exists:product_variants,id',
+            'additional_quantities' => 'required|array',
+            'additional_quantities.*' => 'integer|min:0',
+        ]);
+
+        // Biến để tính tổng số lượng cho sản phẩm
+        $totalAddedQuantity = 0;
+
+        foreach ($validated['selected_variants'] as $variantId) {
+            $additionalQuantity = $validated['additional_quantities'][$variantId] ?? 0;
+
+            if ($additionalQuantity > 0) {
+                // Tìm biến thể và cập nhật số lượng
+                $variant = $product->variants()->find($variantId);
+                if ($variant) {
+                    $variant->update([
+                        'quantity' => $variant->quantity + $additionalQuantity,
+                    ]);
+
+                    // Thêm số lượng đã cập nhật vào tổng số lượng
+                    $totalAddedQuantity += $additionalQuantity;
+                }
+            }
+        }
+
+        // Cập nhật lại tổng số lượng trong kho và số lượng nhập vào cho sản phẩm cha
+        $product->update([
+            'total_quantity_in_stock' => $product->variants->sum('quantity'),
+            'incoming_quantity' => $product->variants->where('quantity', '>', 0)->sum('quantity'),
+        ]);
+
+        return redirect()->route('admin.products.show', $product->id)
+            ->with('success', 'Số lượng các biến thể và thông tin sản phẩm đã được cập nhật thành công.');
+    }
+
+
 
     /**
      * Remove the specified resource from storage.
