@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useLoginForm } from '../../hooks/useLoginForm.js';
-import useForgotPassword from "../../hooks/useForgotPass";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { Link } from "react-router-dom";
 
 const Login = () => {
@@ -9,21 +10,17 @@ const Login = () => {
         register,
         handleSubmit,
         errors,
-        error,
-        success,
         handleLogin,
-        handleForgotPasswordSubmit
+        handleForgotPasswordSubmit,
     } = useLoginForm(isDisplay);
-
-    const { forgotPassword, loading, error: forgotError, success: forgotSuccess } = useForgotPassword();
 
     const handlePasswordChange = () => {
         setIsDisplay(!isDisplay);
-
     };
 
     return (
         <div className="container mt-5 mb-5">
+            <ToastContainer />
             <div className="col-lg-12">
                 <div className="login-reg-form-wrap">
                     <h4>{isDisplay ? "Quên mật khẩu" : "Đăng nhập"}</h4>
@@ -66,14 +63,19 @@ const Login = () => {
                                 )}
                             </div>
                         </div>
-                        {error && <div className="alert alert-danger">{error}</div>}
-                        {success && <div className="alert alert-success">{success}</div>}
-                        {forgotError && <div className="alert alert-danger">{forgotError}</div>}
-                        {forgotSuccess && <div className="alert alert-success">{forgotSuccess}</div>}
                         <div className="single-input-item">
-                            <button type="submit" className="btn btn-sqr" disabled={loading}>
-                                {isDisplay ? (loading ? "Đang gửi..." : "Lấy lại mật khẩu") : "Đăng nhập"}
+                            <button type="submit" className="btn btn-sqr">
+                                {isDisplay ? "Lấy lại mật khẩu" : "Đăng nhập"}
                             </button>
+                            {isDisplay && (
+                                <button
+                                    type="button"
+                                    className="forget-pwd pt-4"
+                                    onClick={() => setIsDisplay(false)}
+                                >
+                                    Quay lại đăng nhập
+                                </button>
+                            )}
                             {!isDisplay && (
                                 <Link to="/register">
                                     <h3 className="forget-pwd pt-4">Tôi chưa có tài khoản!</h3>

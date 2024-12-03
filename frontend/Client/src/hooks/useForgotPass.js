@@ -1,31 +1,27 @@
 import { useState } from "react";
-import axios from "axios";
+import { toast } from "react-toastify";
 
 const useForgotPassword = () => {
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
-    const [success, setSuccess] = useState(null);
 
     const forgotPassword = async (email) => {
         console.log("Gửi yêu cầu quên mật khẩu với email:", email);
         setLoading(true);
-        setError(null);
-        setSuccess(null);
 
         try {
-            const response = await axios.post("password/reset-link", { email });
+            const response = await axios.post("/password/reset-link", { email });
             console.log("Phản hồi từ server:", response);
-
-            setSuccess(response.data.message);
+            toast.success("Lấy lại mật khẩu thành công, vui lòng kiểm tra email!");
         } catch (error) {
-            setError(error.response?.data || error.message);
+            console.error("Chi tiết lỗi:", error);
+            const errorMsg = error.response?.data || "Lỗi không xác định!";
+            toast.error(`Lấy lại mật khẩu không thành công: ${errorMsg}`);
         } finally {
             setLoading(false);
         }
     };
 
-    return { forgotPassword, loading, error, success };
+    return { forgotPassword, loading };
 };
 
 export default useForgotPassword;
-

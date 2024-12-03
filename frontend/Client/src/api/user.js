@@ -74,17 +74,18 @@ export const editUserById = async (id) => {
 
 };
 
-// quên mật khẩu moi
+// quên mật khẩu 
 export const forgotPassword = async (email) => {
     console.log(email);
-
     try {
-        const response = await axios.post("/password/reset-link", null, { params: { email } });
+        const response = await axios.post("/password/reset-link", { email });
         return response.data;
     } catch (error) {
-        throw error.response?.data || error.message;
+        console.error("API error:", error);
+        throw error.response?.data || JSON.stringify(error.message);
     }
 };
+
 
 // Đặt lại mật khẩu
 export const changePassword = async (data) => {

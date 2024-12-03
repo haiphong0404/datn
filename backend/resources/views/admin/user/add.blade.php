@@ -10,8 +10,8 @@
 @endsection
 
 @section('content')
-    <div class="container">
-        <div class="row ">
+<div class="row">
+    <div class="col-sm-12">
             <div class="card shadow-sm">
                 <header class="card-header">
                     <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center">

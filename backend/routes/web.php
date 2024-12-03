@@ -12,8 +12,6 @@ use App\Http\Controllers\Admins\ProductVariantController;
 use App\Http\Controllers\Admins\UserController;
 use App\Http\Controllers\AdminTestController;
 use App\Http\Controllers\Admins\ProfileControllers;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\VnpayController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admins\VoucherController;
 use App\Http\Controllers\StatisticsController;
@@ -75,6 +73,9 @@ Route::group(
         Route::get('/get-variants/{productId}', [OrderController::class, 'getVariants'])->name('products.variants');
         Route::get('/search-products', [OrderController::class, 'search'])->name('products.search');
         Route::resource('admin/vouchers', VoucherController::class);
+        Route::patch('/user/{id}/toggle-status', [UserController::class, 'toggleStatus'])->name('user.toggleStatus');
+        Route::post('/brands/{id}/restore', [BrandController::class, 'restore'])->name('brands.restore');
+
     }
 );
 

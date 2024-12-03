@@ -4,142 +4,153 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 <link href="{{ asset('assets')}}/admin/css/edit-voucher.css" rel="stylesheet">
 @endsection
-
+@section('search')
+    <form action="{{ route('admin.vouchers.index') }}" method="GET">
+        <div class="input-group mt-1">
+            <input type="text" name="search" class="form-control" placeholder="Tìm kiếm mã giảm giá"
+                value="{{ request()->input('search') }}">
+            <button class="btn btn-outline-secondary" type="submit"><i class="bi bi-search"></i></button>
+        </div>
+    </form>
+@endsection
 @section('content')
-<!-- Hero -->
-<div class="bg-body-light">
-    <div class="content content-full">
-        <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center">
-            <h1 class="flex-grow-1 fs-3 fw-semibold my-2 my-sm-3">Chỉnh sửa mã giảm giá</h1>
-            <nav class="flex-shrink-0 my-2 my-sm-0 ms-sm-3" aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item">
-                        <a href="{{ route('admin.vouchers.index') }}" style="color: inherit;">Vouchers</a>
-                    </li>
-                    <li class="breadcrumb-item active" aria-current="page">Chỉnh sửa mã giảm giá</li>
-                </ol>
-            </nav>
-        </div>
-    </div>
-</div>
-<!-- END Hero -->
-
-@if (session('success'))
-<div class="alert alert-success">
-    {{ session('success') }}
-</div>
-@endif
-
-@if (session('error'))
-<div class="alert alert-danger">
-    {{ session('error') }}
-</div>
-@endif
-
-<div class="content">
-    <div class="block block-rounded mb-4">
-        <div class="block-header block-header-default">
-            <h4 class="block-title">Thông tin mã giảm giá</h4>
-        </div>
-        <div class="block-content">
-            <form action="{{ route('admin.vouchers.update', $voucher->id) }}" method="POST">
-                @csrf
-                @method('PUT') <!-- Sử dụng phương thức PUT cho cập nhật -->
-
-                <div class="mb-3">
-                    <label for="code" class="form-label">Mã giảm giá</label>
-                    <input type="text" class="form-control" id="code" name="code" value="{{ old('code', $voucher->code) }}" required>
-                    @error('code')
-                    <div class="text-danger">{{ $message }}</div>
-                    @enderror
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card shadow-sm">
+            <header class="card-header">
+                <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center">
+                    <h1 class="flex-grow-1 fs-3 fw-semibold my-2 my-sm-3">Chỉnh sửa mã giảm giá</h1>
+                    <nav class="flex-shrink-0 my-2 my-sm-0 ms-sm-3" aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a href="{{ route('admin.vouchers.index') }}" style="color: inherit;">Vouchers</a>
+                            </li>
+                            <li class="breadcrumb-item active" aria-current="page">Chỉnh sửa mã giảm giá</li>
+                        </ol>
+                    </nav>
                 </div>
+            </header>
 
-                <div class="mb-3">
-                    <label for="start_date" class="form-label">Ngày bắt đầu</label>
-                    <input type="date" class="form-control" id="start_date" name="start_date" value="{{ old('start_date', $voucher->start_date) }}" required>
-                    @error('start_date')
-                    <div class="text-danger">{{ $message }}</div>
-                    @enderror
-                </div>
+            <div class="card-body">
+                @if (session('success'))
+                    <div class="alert alert-success">{{ session('success') }}</div>
+                @endif
+                @if (session('error'))
+                    <div class="alert alert-danger">{{ session('error') }}</div>
+                @endif
 
-                <div class="mb-3">
-                    <label for="expiration_date" class="form-label">Ngày hết hạn</label>
-                    <input type="date" class="form-control" id="expiration_date" name="expiration_date" value="{{ old('expiration_date', $voucher->expiration_date) }}" required>
-                    @error('expiration_date')
-                    <div class="text-danger">{{ $message }}</div>
-                    @enderror
-                </div>
+                <form action="{{ route('admin.vouchers.update', $voucher->id) }}" method="POST">
+                    @csrf
+                    @method('PUT')
 
-                <div class="mb-3">
-                    <label for="type" class="form-label">Loại mã giảm giá</label>
-                    <select class="form-select" id="type" name="type" required>
-                        <option value="">Chọn loại mã giảm giá</option>
-                        <option value="percentage" {{ old('type', $voucher->type) == 'percentage' ? 'selected' : '' }}>Giảm giá theo phần trăm</option>
-                        <option value="fixed" {{ old('type', $voucher->type) == 'fixed' ? 'selected' : '' }}>Giảm giá cố định</option>
-                        <option value="category_discount" {{ old('type', $voucher->type) == 'category_discount' ? 'selected' : '' }}>Giảm giá theo danh mục</option>
-                        <option value="first_order" {{ old('type', $voucher->type) == 'first_order' ? 'selected' : '' }}>Giảm giá cho đơn hàng đầu tiên</option>
-                    </select>
-                    @error('type')
-                    <div class="text-danger">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                <div id="discount-details" class="mb-3" style="display:none;">
-                    <div class="mb-3" id="discount_value_group" style="display:none;">
-                        <label for="discount_value" class="form-label">Giá trị giảm</label>
-                        <input type="number" class="form-control" id="discount_value" name="discount_value" value="{{ old('discount_value', $voucher->discount_value) }}">
-                        @error('discount_value')
-                        <div class="text-danger">{{ $message }}</div>
+                    <div class="form-group mb-3">
+                        <label for="code" class="form-label">Mã giảm giá</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-tag"></i></span>
+                            <input type="text" class="form-control" id="code" name="code" value="{{ old('code', $voucher->code) }}" required>
+                        </div>
+                        @error('code')
+                            <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
 
-                    <div class="mb-3" id="min_order_value_group" style="display:none;">
-                        <label for="min_order_value" class="form-label">Giá trị tối thiểu của đơn hàng</label>
-                        <input type="number" class="form-control" id="min_order_value" name="min_order_value" value="{{ old('min_order_value', $voucher->min_order_value) }}">
-                        @error('min_order_value')
-                        <div class="text-danger">{{ $message }}</div>
+                    <div class="form-group mb-3">
+                        <label for="start_date" class="form-label">Ngày bắt đầu</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                            <input type="date" class="form-control" id="start_date" name="start_date" value="{{ old('start_date', $voucher->start_date) }}" required>
+                        </div>
+                        @error('start_date')
+                            <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
 
-                    <div class="mb-3" id="discount_percentage_group" style="display:none;">
-                        <label for="discount_percentage" class="form-label">Phần trăm chiết khấu</label>
-                        <input type="number" class="form-control" id="discount_percentage" name="discount_percentage" value="{{ old('discount_percentage', $voucher->discount_percentage) }}">
-                        @error('discount_percentage')
-                        <div class="text-danger">{{ $message }}</div>
+                    <div class="form-group mb-3">
+                        <label for="expiration_date" class="form-label">Ngày hết hạn</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-calendar-times"></i></span>
+                            <input type="date" class="form-control" id="expiration_date" name="expiration_date" value="{{ old('expiration_date', $voucher->expiration_date) }}" required>
+                        </div>
+                        @error('expiration_date')
+                            <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
 
-                    <div class="mb-3" id="max_discount_value_group" style="display:none;">
-                        <label for="max_discount_value" class="form-label">Giá trị chiết khấu tối đa</label>
-                        <input type="number" class="form-control" id="max_discount_value" name="max_discount_value" value="{{ old('max_discount_value', $voucher->max_discount_value) }}">
-                        @error('max_discount_value')
-                        <div class="text-danger">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="mb-3" id="category_id_group" style="display:none;">
-                        <label for="category_id" class="form-label">Danh mục áp dụng</label>
-                        <select class="form-select" id="category_id" name="category_id">
-                            @foreach($categories as $category)
-                            <option value="{{ $category->id }}" {{ old('category_id', $voucher->category_id) == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
-                            @endforeach
+                    <div class="form-group mb-3">
+                        <label for="type" class="form-label">Loại mã giảm giá</label>
+                        <select class="form-select" id="type" name="type" required>
+                            <option value="">Chọn loại mã giảm giá</option>
+                            <option value="percentage" {{ old('type', $voucher->type) == 'percentage' ? 'selected' : '' }}>Giảm giá theo phần trăm</option>
+                            <option value="fixed" {{ old('type', $voucher->type) == 'fixed' ? 'selected' : '' }}>Giảm giá cố định</option>
+                            <option value="category_discount" {{ old('type', $voucher->type) == 'category_discount' ? 'selected' : '' }}>Giảm giá theo danh mục</option>
+                            <option value="first_order" {{ old('type', $voucher->type) == 'first_order' ? 'selected' : '' }}>Giảm giá cho đơn hàng đầu tiên</option>
                         </select>
-                        @error('category_id')
-                        <div class="text-danger">{{ $message }}</div>
+                        @error('type')
+                            <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
-                </div>
 
-                <div class="mb-3">
-                    <label for="quantity" class="form-label">Số lượng</label>
-                    <input type="number" class="form-control" id="quantity" name="quantity" value="{{ old('quantity', $voucher->quantity) }}" required>
-                    @error('quantity')
-                    <div class="text-danger">{{ $message }}</div>
-                    @enderror
-                </div>
+                    <div id="discount-details" class="mb-3" style="display:none;">
+                        <div class="form-group mb-3" id="discount_value_group" style="display:none;">
+                            <label for="discount_value" class="form-label">Giá trị giảm</label>
+                            <input type="number" class="form-control" id="discount_value" name="discount_value" value="{{ old('discount_value', $voucher->discount_value) }}">
+                            @error('discount_value')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
 
-                <button type="submit" class="btn btn-primary">Cập nhật mã giảm giá</button>
-            </form>
+                        <div class="form-group mb-3" id="min_order_value_group" style="display:none;">
+                            <label for="min_order_value" class="form-label">Giá trị tối thiểu của đơn hàng</label>
+                            <input type="number" class="form-control" id="min_order_value" name="min_order_value" value="{{ old('min_order_value', $voucher->min_order_value) }}">
+                            @error('min_order_value')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        <div class="form-group mb-3" id="discount_percentage_group" style="display:none;">
+                            <label for="discount_percentage" class="form-label">Phần trăm chiết khấu</label>
+                            <input type="number" class="form-control" id="discount_percentage" name="discount_percentage" value="{{ old('discount_percentage', $voucher->discount_percentage) }}">
+                            @error('discount_percentage')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        <div class="form-group mb-3" id="max_discount_value_group" style="display:none;">
+                            <label for="max_discount_value" class="form-label">Giá trị chiết khấu tối đa</label>
+                            <input type="number" class="form-control" id="max_discount_value" name="max_discount_value" value="{{ old('max_discount_value', $voucher->max_discount_value) }}">
+                            @error('max_discount_value')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        <div class="form-group mb-3" id="category_id_group" style="display:none;">
+                            <label for="category_id" class="form-label">Danh mục áp dụng</label>
+                            <select class="form-select" id="category_id" name="category_id">
+                                @foreach($categories as $category)
+                                <option value="{{ $category->id }}" {{ old('category_id', $voucher->category_id) == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
+                                @endforeach
+                            </select>
+                            @error('category_id')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="quantity" class="form-label">Số lượng</label>
+                        <input type="number" class="form-control" id="quantity" name="quantity" value="{{ old('quantity', $voucher->quantity) }}" required>
+                        @error('quantity')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    <div class="mb-3 d-flex">
+                        <a href="{{ route('admin.vouchers.index') }}" class="btn btn-secondary btn-lg flex-fill me-1">Quay lại</a>
+                        <button type="reset" class="btn btn-warning btn-lg flex-fill me-1">Reset</button>
+                        <button type="submit" class="btn btn-primary btn-lg flex-fill">Cập nhật</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>

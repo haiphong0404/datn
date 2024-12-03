@@ -1,13 +1,11 @@
 import React from "react";
-import { useRegisterForm } from '../../hooks/useRegisterForm.js';
+import { useRegisterForm } from "../../hooks/useRegisterForm.js";
 
 const Register = () => {
     const {
         register,
         handleSubmit,
         errors,
-        error,
-        success,
         handleRegister
     } = useRegisterForm();
 
@@ -21,17 +19,21 @@ const Register = () => {
                             <input
                                 type="text"
                                 placeholder="Họ Tên"
-                                {...register('username')} // Đảm bảo có trường username
+                                {...register("username")}
                             />
-                            {errors.username && <span className="text-danger">{errors.username.message}</span>}
+                            {errors.username && (
+                                <span className="text-danger">{errors.username.message}</span>
+                            )}
                         </div>
                         <div className="single-input-item">
                             <input
                                 type="email"
                                 placeholder="Nhập địa chỉ email"
-                                {...register('email')}
+                                {...register("email")}
                             />
-                            {errors.email && <span className="text-danger">{errors.email.message}</span>}
+                            {errors.email && (
+                                <span className="text-danger">{errors.email.message}</span>
+                            )}
                         </div>
                         <div className="row">
                             <div className="col-lg-6">
@@ -39,9 +41,11 @@ const Register = () => {
                                     <input
                                         type="password"
                                         placeholder="Nhập mật khẩu"
-                                        {...register('password')}
+                                        {...register("password")}
                                     />
-                                    {errors.password && <span className="text-danger">{errors.password.message}</span>}
+                                    {errors.password && (
+                                        <span className="text-danger">{errors.password.message}</span>
+                                    )}
                                 </div>
                             </div>
                             <div className="col-lg-6">
@@ -49,25 +53,24 @@ const Register = () => {
                                     <input
                                         type="password"
                                         placeholder="Nhập lại mật khẩu"
-                                        {...register('password_confirmation')}
+                                        {...register("password_confirmation")}
                                     />
-                                    {errors.confirmPassword && <span className="text-danger">{errors.confirmPassword.message}</span>}
-                                </div>
-                            </div>
-                            <div className="col-lg-6">
-                                <div className="single-input-item">
-                                    <input
-                                        type="number"
-                                        placeholder="Nhập số điện thoại"
-                                        {...register('phone')}
-                                    />
-                                    {errors.confirmPassword && <span className="text-danger">{errors.confirmPassword.message}</span>}
+                                    {errors.password_confirmation && (
+                                        <span className="text-danger">{errors.password_confirmation.message}</span>
+                                    )}
                                 </div>
                             </div>
                         </div>
-
-                        {error && <div className="alert alert-danger">{error}</div>}
-                        {success && <div className="alert alert-success">{success}</div>}
+                        <div className="single-input-item">
+                            <input
+                                type="number"
+                                placeholder="Nhập số điện thoại"
+                                {...register("phone")}
+                            />
+                            {errors.phone && (
+                                <span className="text-danger">{errors.phone.message}</span>
+                            )}
+                        </div>
                         <div className="single-input-item">
                             <button type="submit" className="btn btn-sqr">Đăng ký</button>
                         </div>
@@ -75,7 +78,7 @@ const Register = () => {
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};
 
 export default Register;

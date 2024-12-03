@@ -26,7 +26,7 @@ class BannerController extends Controller
             })
             ->orderBy('id', 'desc') // Sắp xếp giảm dần theo cột 'id'
             ->paginate($perPage);
-            $noResults = $banners->isEmpty();
+        $noResults = $banners->isEmpty();
 
         return view('admin.banner.list', compact('banners', 'noResults'));
     }
@@ -58,9 +58,9 @@ class BannerController extends Controller
         // Tạo banner mới
         Banner::create([
             'image_url' => $file,
-            'title' => $request->title,
-            'sub_title' => $request->sub_title,
-            'span_title' => $request->span_title,
+            'title' => $request->title ?? null,
+            'sub_title' => $request->sub_title ?? null,
+            'span_title' => $request->span_title ?? null,
         ]);
 
         return redirect()->route('admin.banners.index')->with('success', 'Banner đã được thêm thành công!');

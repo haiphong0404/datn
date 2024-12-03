@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLoginForm } from '../../hooks/useLoginForm.js';
 import { useEditUser } from '../../hooks/useEditUser';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 const EditProfile = () => {
     const { userInfo, setUserInfo } = useLoginForm();
@@ -11,8 +12,8 @@ const EditProfile = () => {
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
     const [address, setAddress] = useState('');
-    const [avatar_img, setAvatarImg] = useState(null); // State để lưu ảnh
-    const [previewImage, setPreviewImage] = useState(''); // State để hiển thị ảnh xem trước
+    const [avatar_img, setAvatarImg] = useState(null);
+    const [previewImage, setPreviewImage] = useState('');
 
     useEffect(() => {
         if (userInfo) {
@@ -20,7 +21,7 @@ const EditProfile = () => {
             setEmail(userInfo.email || '');
             setPhone(userInfo.phone || '');
             setAddress(userInfo.address || '');
-            setPreviewImage(userInfo.avatar_img || ''); // Hiển thị ảnh từ server nếu có
+            setPreviewImage(userInfo.avatar_img || '');
         }
     }, [userInfo]);
 
@@ -34,37 +35,36 @@ const EditProfile = () => {
             });
             setUserInfo(response.data);
         } catch (error) {
-            console.error('Không thể lấy thông tin người dùng:', error.message);
+            toast.error('Không thể lấy thông tin người dùng!');
         }
     };
 
     const handleSaveChanges = async (e) => {
         e.preventDefault();
 
-        const updatedInfo = new FormData(); // Sử dụng FormData để gửi dữ liệu bao gồm file
+        const updatedInfo = new FormData();
         updatedInfo.append('username', username);
         updatedInfo.append('email', email);
         updatedInfo.append('phone', phone);
         updatedInfo.append('address', address);
-        if (avatar_img) updatedInfo.append('avatar_img', avatar_img); // Đính kèm file ảnh
+        if (avatar_img) updatedInfo.append('avatar_img', avatar_img);
 
         try {
             await editUserById(userInfo.id, updatedInfo);
-            alert('Cập nhật thông tin thành công!');
+            toast.success('Cập nhật thông tin thành công!');
             await fetchUserInfo(userInfo.id);
         } catch (error) {
-            console.error(error.message);
-            alert('Cập nhật thông tin không thành công: ' + error.message);
+            toast.error('Cập nhật thông tin không thành công: ' + error.message);
         }
     };
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         if (file) {
-            setAvatarImg(file); // Lưu file ảnh
+            setAvatarImg(file);
             const reader = new FileReader();
             reader.onloadend = () => {
-                setPreviewImage(reader.result); // Hiển thị ảnh xem trước
+                setPreviewImage(reader.result);
             };
             reader.readAsDataURL(file);
         }
@@ -80,7 +80,6 @@ const EditProfile = () => {
                 <h5>Chỉnh sửa thông tin</h5>
                 <div className="account-details-form">
                     <form onSubmit={handleSaveChanges}>
-                        {/* Phần tải lên ảnh */}
                         <div className="single-input-item">
                             <label htmlFor="profile-image">Ảnh đại diện</label>
                             {previewImage && (
@@ -102,7 +101,6 @@ const EditProfile = () => {
                                 onChange={handleImageChange}
                             />
                         </div>
-                        {/* Phần tên hiển thị */}
                         <div className="single-input-item">
                             <label htmlFor="display-name" className="required">Tên Hiển Thị</label>
                             <input
@@ -148,7 +146,6 @@ const EditProfile = () => {
                                 {loading ? 'Đang lưu...' : 'Lưu Thay Đổi'}
                             </button>
                         </div>
-                        {error && <p className="error-message">{error}</p>}
                     </form>
                 </div>
             </div>
