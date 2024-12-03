@@ -47,11 +47,6 @@ class BrandService
         // Xóa sản phẩm liên quan khi xóa thương hiệu
         $brand->products()->delete(); // Xóa mềm tất cả sản phẩm thuộc thương hiệu
 
-        // Xóa ảnh khi xóa thương hiệu (nếu có)
-        if ($brand->image && Storage::exists('public/'.$brand->image)) {
-            Storage::delete('public/'.$brand->image);
-        }
-
         return $brand->delete(); // Xóa mềm thương hiệu
     }
 }

@@ -1,12 +1,12 @@
 import axios from 'axios';
 
 // Lấy danh sách sản phẩm
- const fetchCategories = async () => {
+const fetchCategories = async () => {
     try {
-        const response = await axios.get('/categories', {   
+        const response = await axios.get('/categories', {
         });
         console.log('API trả về:', response.data); // Log phản hồi từ API
-        return response.data; 
+        return response.data;
     } catch (error) {
         console.error('Lỗi khi gọi API:', error.response ? error.response.data : error.message);
         // Giả sử bạn có một hàm setError để thông báo lỗi

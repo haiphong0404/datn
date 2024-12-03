@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useLoginForm } from '../../hooks/useLoginForm.js';
 
 const Account_info = () => {
+
     const { userInfo } = useLoginForm();
-    const [avatar_img, setAvatarImg] = useState('');
+    const [avatarImg, setAvatarImg] = useState('');
 
     useEffect(() => {
         if (userInfo) {
@@ -23,9 +24,9 @@ const Account_info = () => {
                     {/* Hiển thị ảnh đại diện */}
                     <div className="profile-image-section">
                         <h6>Ảnh đại diện</h6>
-                        {avatar_img ? (
+                        {avatarImg ? (
                             <img
-                                src={avatar_img}
+                                src={avatarImg}
                                 alt="Avatar"
                                 style={{
                                     width: '150px',
@@ -40,7 +41,7 @@ const Account_info = () => {
                         )}
                     </div>
 
-                    {/* Form thông tin */}
+
                     <form>
                         <div className="single-input-item">
                             <label htmlFor="display-name" className="required">Tên Hiển Thị</label>
@@ -48,7 +49,7 @@ const Account_info = () => {
                                 type="text"
                                 id="display-name"
                                 placeholder="Tên Hiển Thị"
-                                value={userInfo.username || ''}
+                                value={userInfo?.username || ''}
                                 readOnly
                             />
                         </div>
@@ -58,7 +59,7 @@ const Account_info = () => {
                                 type="email"
                                 id="email"
                                 placeholder="Địa Chỉ Email"
-                                value={userInfo.email || ''}
+                                value={userInfo?.email || ''}
                                 readOnly
                             />
                         </div>
@@ -68,7 +69,7 @@ const Account_info = () => {
                                 type="text"
                                 id="phone"
                                 placeholder="Số điện thoại"
-                                value={userInfo.phone || ''}
+                                value={userInfo?.phone || ''}
                                 readOnly
                             />
                         </div>
@@ -78,7 +79,7 @@ const Account_info = () => {
                                 type="text"
                                 id="address"
                                 placeholder="Địa Chỉ"
-                                value={userInfo.address || ''}
+                                value={userInfo?.address || ''}
                                 readOnly
                             />
                         </div>

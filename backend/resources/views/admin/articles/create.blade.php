@@ -1,82 +1,97 @@
 @extends('admin.layout')
 
-@section('css')
+@section('search')
+    <form action="{{ route('admin.articles.index') }}" method="GET">
+        <div class="input-group mt-1">
+            <input type="text" name="search" class="form-control" placeholder="Tìm kiếm"
+                value="{{ request()->input('search') }}">
+            <button class="btn btn-outline-secondary" type="submit">
+                <i class="bi bi-search"></i>
+            </button>
+        </div>
+    </form>
 @endsection
 
 @section('content')
- <!-- Hero -->
- <div class="bg-body-light">
-  <div class="content content-full">
-      <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center">
-          <h1 class="flex-grow-1 fs-3 fw-semibold my-2 my-sm-3">Thêm mới Bài Viết</h1>
-          <nav class="flex-shrink-0 my-2 my-sm-0 ms-sm-3" aria-label="breadcrumb">
-              <ol class="breadcrumb">
-                  <li class="breadcrumb-item">
-                      <a href="{{ route('admin.brands.index') }}" style="color: inherit;">articles  </a>
-                  </li>
-                  <li class="breadcrumb-item active" aria-current="page">Thêm mới Bài Viết</li>
-              </ol>
-          </nav>
-      </div>
-  </div>
-</div>
-<!-- END Hero -->
-<div class="content">
-  <div class="block block-rounded">
-      <div class="block-content">
-          <form action="{{ route('admin.articles.store') }}" method="POST" enctype="multipart/form-data">
-              @csrf
-              <div class="row">
-                  <div class="col-lg-12 col-xl-8 offset-xl-2">
-                      <!-- Tên Bài Viết -->
-                      <div class="mb-4">
-                        <label class="form-label" for="name">Tên name</label>
-                        <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name') }}" placeholder="Nhập tên Bài Viết">
-                        @error('name')
-                            <div class="text-danger mt-2" id="name-error">{{ $message }}</div>
-                        @enderror
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card shadow-sm">
+                <header class="card-header">
+                    <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center">
+                        <h1 class="flex-grow-1 fs-3 fw-semibold my-2 my-sm-3">Thêm Mới Bài Viết</h1>
+                        <nav class="flex-shrink-0 my-2 my-sm-0 ms-sm-3" aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item">
+                                    <a href="{{ route('admin.articles.index') }}" style="color: inherit;">Bài Viết</a>
+                                </li>
+                                <li class="breadcrumb-item active" aria-current="page">Thêm Mới Bài Viết</li>
+                            </ol>
+                        </nav>
                     </div>
-                      <div class="mb-4">
-                        <label class="form-label" for="title">tiêu đề</label>
-                        <input type="text" class="form-control @error('title') is-invalid @enderror" id="title" name="title" value="{{ old('title') }}" placeholder="Nhập đường dẫn Google Maps">
-                        @error('title')
-                            <div class="text-danger mt-2" id="title-error">{{ $message }}</div>
-                        @enderror
-                    </div>
+                </header>
 
-                    <!-- Mô tả -->
-                    <div class="mb-4">
-                        <label class="form-label" for="content">Mô tả</label>
-                        <textarea class="form-control @error('content') is-invalid @enderror" id="content" name="content" rows="4" placeholder="Nhập mô tả mô tả">{{ old('content') }}</textarea>
-                        @error('content')
-                            <div class="text-danger mt-2" id="content-error">{{ $message }}</div>
-                        @enderror
-                    </div>
+                <div class="card-body">
+                    <form action="{{ route('admin.articles.store') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
 
-       
-                  
+                        <!-- Tên Bài Viết -->
+                        <div class="form-group mb-3">
+                            <label for="name" class="form-label">Tên Bài Viết:</label>
+                            <div class="input-group">
+                                <input type="text" name="name" id="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name') }}" placeholder="Nhập tên Bài Viết">
+                            </div>
+                            @error('name')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
 
-                    <!-- Ảnh đại diện -->
-                    <div class="mb-4">
-                        <label class="form-label" for="image">Ảnh đại diện</label>
-                        <input type="file" class="form-control @error('image') is-invalid @enderror" id="image" name="image" accept="image/*">
-                        @error('image')
-                            <div class="text-danger mt-2" id="image-error">{{ $message }}</div>
-                        @enderror
-                    </div>
+                        <!-- Tiêu Đề -->
+                        <div class="form-group mb-3">
+                            <label for="title" class="form-label">Tiêu Đề:</label>
+                            <div class="input-group">
+                                <input type="text" name="title" id="title" class="form-control @error('title') is-invalid @enderror" value="{{ old('title') }}" placeholder="Nhập tiêu đề">
+                            </div>
+                            @error('title')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
 
-                      <button type="submit" class="btn btn-primary mb-4">Tạo Bài Viết</button>
-                  </div>
-              </div>
-          </form>
-      </div>
-  </div>
-</div>
+                        <!-- Mô Tả -->
+                        <div class="form-group mb-3">
+                            <label for="content" class="form-label">Mô Tả:</label>
+                            <div class="input-group">
+                                <textarea name="content" id="content" class="form-control @error('content') is-invalid @enderror" rows="4" placeholder="Nhập mô tả">{{ old('content') }}</textarea>
+                            </div>
+                            @error('content')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
 
+                        <!-- Ảnh Đại Diện -->
+                        <div class="form-group mb-3">
+                            <label for="image" class="form-label">Ảnh Đại Diện:</label>
+                            <div class="input-group">
+                                <input type="file" name="image" id="image" class="form-control @error('image') is-invalid @enderror" accept="image/*">
+                            </div>
+                            @error('image')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        <div class="mb-3 d-flex">
+                            <a href="{{ route('admin.articles.index') }}" class="btn btn-secondary btn-lg flex-fill me-1">Quay lại</a>
+                            <button type="reset" class="btn btn-warning btn-lg flex-fill me-1">Reset</button>
+                            <button type="submit" class="btn btn-primary btn-lg flex-fill">Tạo Bài Viết</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('js')
-<script >
+<script>
 document.addEventListener('DOMContentLoaded', function () {
     const fields = ['name', 'content', 'title', 'image'];
 
@@ -91,7 +106,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     inputElement.classList.remove('is-invalid');
                 }
 
-                
                 if (errorElement) {
                     errorElement.style.display = 'none';
                 }

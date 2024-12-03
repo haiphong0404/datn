@@ -47,24 +47,24 @@ Route::group(
     [
         'prefix' => 'admin',
         'as' => 'admin.',
-        'middleware' => ['auth', 'admin'] 
+        'middleware' => ['auth', 'admin']
     ],
     function () {
         Route::resource('brands', BrandController::class);
         Route::post('categories/{id}/restore', [CategoryController::class, 'restore'])->name('categories.restore');
         Route::post('products/{id}/restore', [ProductController::class, 'restore'])->name('products.restore');
         Route::post('comments/{id}/restore', [CommentController::class, 'restore'])->name('comments.restore');
-        Route::resource('categories', CategoryController::class); 
-        Route::resource('products', ProductController::class);   
-        Route::resource('products.variants', ProductVariantController::class); 
-        Route::resource('user', UserController::class); 
-        Route::resource('comments', CommentController::class);  
+        Route::resource('categories', CategoryController::class);
+        Route::resource('products', ProductController::class);
+        Route::resource('products.variants', ProductVariantController::class);
+        Route::resource('user', UserController::class);
+        Route::resource('comments', CommentController::class);
         Route::resource('contacts', ContactController::class);
-        Route::resource('articles', ArticlesController::class); 
-        Route::resource('banners', BannerController::class); 
+        Route::resource('articles', ArticlesController::class);
+        Route::resource('banners', BannerController::class);
         Route::post('banners/{id}/restore', [BannerController::class, 'restore'])->name('banners.restore');
         Route::resource('/vouchers', VoucherController::class);
-        Route::get('/orders/create', [OrderController::class, 'create'])->name('orders.create'); 
+        Route::get('/orders/create', [OrderController::class, 'create'])->name('orders.create');
         Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
         Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
         Route::put('/orders/{order}/updateStatus', [OrderController::class, 'updateStatus'])->name('orders.updateStatus');
@@ -73,6 +73,9 @@ Route::group(
         Route::get('/get-variants/{productId}', [OrderController::class, 'getVariants'])->name('products.variants');
         Route::get('/search-products', [OrderController::class, 'search'])->name('products.search');
         Route::resource('admin/vouchers', VoucherController::class);
+        Route::patch('/user/{id}/toggle-status', [UserController::class, 'toggleStatus'])->name('user.toggleStatus');
+        Route::post('/brands/{id}/restore', [BrandController::class, 'restore'])->name('brands.restore');
+
     }
 );
 
@@ -106,7 +109,11 @@ Route::group(
         Route::get('/search-products', [OrderController::class, 'search'])->name('products.search');
         Route::resource('/vouchers', VoucherController::class);
     }
+
 );
+Route::put('/admin/products/{product}/update-variants', [ProductController::class, 'updateVariants'])->name('admin.products.updateVariants');
+
+
 // Route::middleware(['auth', 'checkRole:admin,staff'])->group(function () {
 //     Route::resource('admin/vouchers', VoucherController::class);
 // });

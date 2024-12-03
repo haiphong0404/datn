@@ -22,7 +22,7 @@ class UpdateBannerRequest extends FormRequest
     public function rules(): array
     {
         return [
-             'image_url' => 'required|image|mimes:jpeg,png,jpg,gif',
+             'image_url' => 'nullable|image|mimes:jpeg,png,jpg,gif',
             'title' => 'nullable|string|max:255',
             'sub_title' => 'nullable|string|max:255',
             'span_title' => 'nullable|string|max:255',      
@@ -37,7 +37,7 @@ class UpdateBannerRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'image_url.required' => 'Bạn cần tải lên một hình ảnh.',
+            // 'image_url.required' => 'Bạn cần tải lên một hình ảnh.',
             'image_url.image' => 'File tải lên phải là định dạng hình ảnh.',
             'image_url.mimes' => 'Hình ảnh phải có định dạng: jpeg, png, jpg, hoặc gif.',
             'image_url.max' => 'Hình ảnh không được vượt quá 2MB.',

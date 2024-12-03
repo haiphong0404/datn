@@ -64,28 +64,25 @@ class OrderController extends Controller
              }
      
              // Kiểm tra phương thức thanh toán và đặt giá trị payment_status
-             if ($request->input('payment_method') === 'online') {
-                $paymentStatus = 'paid';
-            } else {
-                $paymentStatus = 'unpaid';
-            }
-            
-            $orderDate = Carbon::parse($request->input('order_date'))->format('Y-m-d H:i:s');
-            
-            $orderData = [
-                'user_id' => $userId,
-                'order_date' => $orderDate,
-                'status' => $request->input('status'),
-                'total_amount' => $request->input('total_amount'),
-                'name' => $request->input('name'),
-                'phone' => $request->input('phone'),
-                'email' => $request->input('email'),
-                'address' => $request->input('address'),
-                'infor' => $request->input('infor'),
-                'payment_method' => $request->input('payment_method'),
-                'payment_status' => $paymentStatus, // Added the payment status separately
-            ];
-            
+             $paymentStatus = $request->input('payment_method') === 'online' ? 'paid' : 'unpaid';
+     
+             $orderDate = Carbon::parse($request->input('order_date'))->format('Y-m-d H:i:s');
+     
+             $orderData = [
+                 'user_id' => $userId,
+                 'order_date' => $orderDate,
+                 'status' => $request->input('status'),
+                 'total_amount' => $request->input('total_amount'),
+                 'name' => $request->input('name'),
+                 'phone' => $request->input('phone'),
+                 'email' => $request->input('email'),
+                 'address' => $request->input('address'),
+                 'infor' => $request->input('infor'),
+                 'voucher_discount' => $request->input('voucher_discount'),
+                 'shipping_fee' => $request->input('shipping_fee'),
+                 'payment_method' => $request->input('payment_method'),
+                 'payment_status' => $paymentStatus, // Added the payment status separately
+             ];
      
              $order = Order::create($orderData);
      
@@ -104,44 +101,48 @@ class OrderController extends Controller
                      if ($productVariant->quantity >= $product['quantity']) {
                          $productVariant->quantity -= $product['quantity'];
                          $productVariant->save();
+     
+                         // Cập nhật số lượng tồn kho tổng của sản phẩm
+                         $productModel = Product::findOrFail($productVariant->product_id);
+                         $productModel->total_quantity_in_stock -= $product['quantity'];
+                         $productModel->save();
                      } else {
                          throw new \Exception('Số lượng sản phẩm không đủ.');
                      }
                  }
-                 if ($request->has('id')) {
-                    $voucherId = $request->input('id');
-                    // Tìm kiếm voucher theo mã voucher
-                    $voucher = Voucher::where('id', $voucherId)->first();
-                    
-                    if (!$voucher) {
-                        throw new \Exception('Voucher không hợp lệ.');
-                    }
-                
-                    // Kiểm tra số lượng và ngày hết hạn
-                    if ($voucher->quantity <= 0) {
-                        throw new \Exception('Voucher đã hết.');
-                    }
-                
-                    if (!$voucher->start_date || !$voucher->expiration_date) {
-                        throw new \Exception('Ngày bắt đầu hoặc ngày hết hạn không hợp lệ.');
-                    }
-                
-                    if (Carbon::now()->lt($voucher->start_date) || Carbon::now()->gt($voucher->expiration_date)) {
-                        throw new \Exception('Voucher không nằm trong thời gian hợp lệ.');
-                    }
-                
-                    // Trừ số lượng voucher
-                    $voucher->quantity -= 1;
-                
-                    try {
-                        $voucher->save();
-                    } catch (\Exception $e) {
-                        throw new \Exception('Lỗi khi lưu voucher: ' . $e->getMessage());
-                    }
-                }
-        
              }
-             
+     
+             if ($request->has('id')) {
+                 $voucherId = $request->input('id');
+                 // Tìm kiếm voucher theo mã voucher
+                 $voucher = Voucher::where('id', $voucherId)->first();
+     
+                 if (!$voucher) {
+                     throw new \Exception('Voucher không hợp lệ.');
+                 }
+     
+                 // Kiểm tra số lượng và ngày hết hạn
+                 if ($voucher->quantity <= 0) {
+                     throw new \Exception('Voucher đã hết.');
+                 }
+     
+                 if (!$voucher->start_date || !$voucher->expiration_date) {
+                     throw new \Exception('Ngày bắt đầu hoặc ngày hết hạn không hợp lệ.');
+                 }
+     
+                 if (Carbon::now()->lt($voucher->start_date) || Carbon::now()->gt($voucher->expiration_date)) {
+                     throw new \Exception('Voucher không nằm trong thời gian hợp lệ.');
+                 }
+     
+                 // Trừ số lượng voucher
+                 $voucher->quantity -= 1;
+     
+                 try {
+                     $voucher->save();
+                 } catch (\Exception $e) {
+                     throw new \Exception('Lỗi khi lưu voucher: ' . $e->getMessage());
+                 }
+             }
      
              DB::commit();
      
@@ -162,6 +163,7 @@ class OrderController extends Controller
              ], 500);
          }
      }
+     
      
 
      

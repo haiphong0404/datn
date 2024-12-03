@@ -1,11 +1,17 @@
 
 
 import React from 'react';
+import { useQuery } from '@tanstack/react-query'
 import Details from './Details';
 import ProductReview from './ProductReview';
+import { fetchProducts } from '../../api/product';
+import { Link } from "react-router-dom";
 const Product_details = () => {
   // Sử dụng hook để lấy dữ liệu sản phẩm variants
- 
+  const { data: products = [], error: productsError } = useQuery({
+    queryKey: ['Products'],
+    queryFn: fetchProducts,
+  });
 
   return (
     <div>
@@ -50,13 +56,13 @@ const Product_details = () => {
               {/* product details wrapper start */}
               <div className="col-lg-12 order-1 order-lg-2">
                 {/* product details inner end */}
-              <Details/>
+                <Details />
                 {/* product details inner end */}
                 {/* product details reviews start */}
                 <div className="product-details-reviews section-padding pb-0">
                   <div className="row">
                     <div className="col-lg-12">
-                      <ProductReview/>
+                      <ProductReview />
                     </div>
                   </div>
                 </div>
@@ -73,12 +79,49 @@ const Product_details = () => {
             <div className="row">
               <div className="col-12">
                 <div className="section-title text-center">
-                  <h3 className="title">RELATED PRODUCT</h3>
-                  <h4 className="sub-title">
-                    Investigationes demonstraverunt lectores legere me lius quod ii
-                    legunt saepius claritas est etiam processus dynamicus, qui
-                    sequitur mutationem.
-                  </h4>
+                  <h3 className="title"  style={{
+                               
+                                marginBottom: '80px',
+                              
+                              }}>SẢN PHẨM LIÊN QUAN</h3>
+                  
+                  <div className="product-list">
+                    {products.slice(0, 4).map((product) => (
+                      <div key={product.id} className="product-item">
+                        <div className="product-thumb">
+                          <Link to={`/product_details/${product.id}`}>
+                            <img
+                              src={product.image || '/path/to/placeholder.jpg'} // Đổ hình ảnh từ API
+                              alt={product.name}
+                              style={{
+                                display: 'block',
+                                margin: '0 auto',
+                                width: '300px', // Đặt chiều rộng mong muốn
+                                height: '200px', // Đặt chiều cao mong muốn
+                                objectFit: 'cover', // Cắt ảnh để phù hợp với kích thước mà không bị méo
+                              }}
+                            />
+                          </Link>
+
+                        </div>
+                        <div className="product-content">
+                          <div className="product-caption">
+                            <h6 className="product-name">
+                              <Link to={`/product_details/${product.id}`}>{product.name}</Link> {/* Đổ tên sản phẩm */}
+                            </h6>
+                            <div className="price-box">
+                              <span className="price-regular">
+                                {product.price ? `${new Intl.NumberFormat('vi-VN', { minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(product.price)} Vnd` : "Liên hệ"}
+                              </span>
+                            </div>
+                            <Link className="add-to-cart" onClick={() => handleQuickView(product)} >
+                              <i className="fa fa-shopping-cart" />
+                            </Link>                    </div>
+
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>

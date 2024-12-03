@@ -11,11 +11,24 @@ class ArticlesController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $articles = Article::all();
-        return view('admin.articles.index', compact('articles'));
+        $search = $request->input('search');
+        $perPage = $request->input('per_page', 10); // Mặc định 10 bản ghi
+
+        // Tìm kiếm và phân trang
+        $articles = Article::when($search, function ($query, $search) {
+            return $query->where('title', 'LIKE', "%{$search}%")
+                ->orWhere('content', 'LIKE', "%{$search}%"); // Có thể tìm thêm ở trường 'content' nếu cần
+        })
+            ->orderBy('id', 'desc') // Sắp xếp giảm dần theo cột 'id'
+            ->paginate($perPage);
+
+        $noResults = $articles->isEmpty(); // Kiểm tra nếu không có kết quả tìm kiếm
+
+        return view('admin.articles.index', compact('articles', 'noResults'));
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -72,9 +85,10 @@ class ArticlesController extends Controller
      * Display the specified resource.
      */
     public function show(string $id)
-    {
-        //
-    }
+{
+    $article = Article::findOrFail($id);
+    return view('admin.articles.show', compact('article'));
+}
 
     /**
      * Show the form for editing the specified resource.
@@ -146,5 +160,4 @@ class ArticlesController extends Controller
         $article->delete();
         return redirect()->route('admin.articles.index')->with('success', 'Bài viết đã được xóa thành công.');
     }
-    
 }

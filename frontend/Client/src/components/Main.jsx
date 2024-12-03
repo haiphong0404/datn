@@ -170,6 +170,13 @@ const Main = () => {
                       <img
                         src={product.image || '/path/to/placeholder.jpg'} // Đổ hình ảnh từ API
                         alt={product.name}
+                        style={{
+                          display: 'block',
+                          margin: '0 auto',
+                          width: '300px', // Đặt chiều rộng mong muốn
+                          height: '200px', // Đặt chiều cao mong muốn
+                          objectFit: 'cover', // Cắt ảnh để phù hợp với kích thước mà không bị méo
+                        }}
                       />
                     </Link>
                     {/* <div className="button-group">
@@ -279,6 +286,13 @@ const Main = () => {
                       <img
                         src={product.image || '/path/to/placeholder.jpg'} // Đổ hình ảnh từ API
                         alt={product.name}
+                        style={{
+                          display: 'block',
+                          margin: '0 auto',
+                          width: '300px', // Đặt chiều rộng mong muốn
+                          height: '200px', // Đặt chiều cao mong muốn
+                          objectFit: 'cover', // Cắt ảnh để phù hợp với kích thước mà không bị méo
+                        }}
                       />
                     </Link>
                     
