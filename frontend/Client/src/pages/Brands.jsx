@@ -47,7 +47,7 @@ const Brands = () => {
                                     <button
                                         type="button"
                                         className="btn"
-                                        style={{ backgroundColor: '#87b106', color: '#fff' }}
+                                        style={{ backgroundColor: '#87b106', color: '#fff', paddingLeft: "20px", paddingRight: "20px" }}
                                         disabled
                                     >
                                         <i className="bi bi-search"></i>

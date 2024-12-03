@@ -27,14 +27,15 @@ export const useLoginForm = (isDisplay) => {
 
   const [userInfo, setUserInfo] = useState(null);
   const navigate = useNavigate();
-
-  // Lấy thông tin người dùng từ localStorage
+  
+  // Lấy thông tin người dùng từ localStorage khi component mount
   useEffect(() => {
     const storedUserInfo = localStorage.getItem("userInfo");
     if (storedUserInfo) {
       setUserInfo(JSON.parse(storedUserInfo));
     }
   }, []);
+  
   const syncCartToServer = async (userId, cartData) => {
     if (cartData && cartData.length > 0) { // Kiểm tra xem dữ liệu có trống không
       try {
