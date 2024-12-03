@@ -16,42 +16,42 @@ const Header = () => {
   const [localCart, setLocalCart] = useState([]);
   const [selectedItems, setSelectedItems] = useState(new Set());
 
-  const handleHoverCart = () => {
-    const savedCart = JSON.parse(localStorage.getItem("cart")) || [];
-    setLocalCart(savedCart);
-  };
-  const fetchCartFromAPI = async () => {
-    try {
-      const response = await axios.get('/cart');
-      setLocalCart(response.data);
-      localStorage.setItem("cart", JSON.stringify(response.data));
-    } catch (error) {
-      console.error("Lỗi khi gọi API giỏ hàng:", error);
-    }
-  };
-
+  // const handleHoverCart = () => {
+  //   const savedCart = JSON.parse(localStorage.getItem("cart")) || [];
+  //   setLocalCart(savedCart);
+  // };
   useEffect(() => {
-    const fetchData = async () => {
-      const savedCart = JSON.parse(localStorage.getItem('cart'));
-      if (cart?.length > 0) {
-        setLocalCart(cart);
-        localStorage.setItem('cart', JSON.stringify(cart));
-      } else if (Array.isArray(savedCart)) {
-        setLocalCart(savedCart);
+    const fetchCart = async () => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        try {
+          const response = await axios.get('/cart', {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          const { carts } = response.data; // Lấy danh sách carts từ API
+          if (Array.isArray(carts)) {
+            setLocalCart(carts);
+          } else {
+            setLocalCart([]);
+          }
+        } catch (error) {
+          console.error("Lỗi khi lấy dữ liệu giỏ hàng:", error);
+          setLocalCart([]);
+        }
       } else {
-        await fetchCartFromAPI();
+        // Lấy từ localStorage nếu không có token
+        const cartData = localStorage.getItem('cart');
+        if (cartData) {
+          setLocalCart(JSON.parse(cartData));
+        } else {
+          setLocalCart([]);
+        }
       }
     };
-    fetchData();
-  }, [cart]);
   
+    fetchCart();
+  }, []);
 
-  // Hàm lấy tất cả dữ liệu từ giỏ hàng
-  const handleGetAllCartData = () => {
-    console.log("Tất cả dữ liệu trong giỏ hàng:", localCart);
-    // Xử lý thêm nếu cần thiết
-  };
-  
   
   const handleRemoveFromCart = async (id_productVariant) => {
 
@@ -75,7 +75,7 @@ const Header = () => {
           // Cập nhật lại giỏ hàng sau khi xóa sản phẩm từ cơ sở dữ liệu
           setLocalCart(prevCart => {
             const updatedCart = prevCart.filter(item => item.id_productVariant !== id_productVariant);
-            localStorage.setItem('cart', JSON.stringify(updatedCart)); // Đồng bộ hóa lại localStorage
+            // localStorage.setItem('cart', JSON.stringify(updatedCart)); // Đồng bộ hóa lại localStorage
             return updatedCart;
           });
           setSelectedItems(prevSelected => new Set([...prevSelected].filter(item => item !== id_productVariant)));
@@ -113,16 +113,16 @@ const Header = () => {
   };
 
 
-  useEffect(() => {
-    const savedCart = JSON.parse(localStorage.getItem('cart'));
+  // useEffect(() => {
+  //   const savedCart = JSON.parse(localStorage.getItem('cart'));
 
-    // Ensure savedCart is an array, or fall back to an empty array
-    if (Array.isArray(savedCart)) {
-      setLocalCart(savedCart);
-    } else {
-      setLocalCart([]); // If it's not an array, reset to empty array
-    }
-  }, []);
+  //   // Ensure savedCart is an array, or fall back to an empty array
+  //   if (Array.isArray(savedCart)) {
+  //     setLocalCart(savedCart);
+  //   } else {
+  //     setLocalCart([]); // If it's not an array, reset to empty array
+  //   }
+  // }, []);
 
   // Function to calculate total price
   const calculateTotal = () => {
@@ -253,7 +253,7 @@ const Header = () => {
                             <i className="fa fa-shopping-cart" />
                           </Badge>
                         </Link>
-                        <div className="cart-list-wrapper" onMouseEnter={handleHoverCart}>
+                        <div className="cart-list-wrapper" >
                           <ul className="cart-list">
                             {Array.isArray(localCart) && localCart.length > 0 ? (
                               localCart.map((variant) => (

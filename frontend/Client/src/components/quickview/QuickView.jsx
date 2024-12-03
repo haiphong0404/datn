@@ -115,21 +115,21 @@ const QuickViewModal = ({ show, onClose, product }) => {
           toast.success("Sản phẩm đã được thêm vào giỏ hàng!");
   
           // Cập nhật giỏ hàng từ dữ liệu API và lưu lại trong localStorage
-          dispatch(addCart(response.data.cart_item));
+          // dispatch(addCart(response.data.cart_item));
   
-          // Đồng bộ giỏ hàng từ server về localStorage
-          const updatedCart = (localCart || []).map(item => 
-            item.id_productVariant === id_productVariant 
-              ? { ...item, quantity: item.quantity + quantity } 
-              : item
-          );
-          if (!updatedCart.some(item => item.id_productVariant === id_productVariant)) {
-            updatedCart.push(cartItem);
-          }
+          // // Đồng bộ giỏ hàng từ server về localStorage
+          // const updatedCart = (localCart || []).map(item => 
+          //   item.id_productVariant === id_productVariant 
+          //     ? { ...item, quantity: item.quantity + quantity } 
+          //     : item
+          // );
+          // if (!updatedCart.some(item => item.id_productVariant === id_productVariant)) {
+          //   updatedCart.push(cartItem);
+          // }
   
-          // Lưu tất cả dữ liệu vào localStorage
-          localStorage.setItem("cart", JSON.stringify(updatedCart));
-          setLocalCart(updatedCart); // Cập nhật lại state giỏ hàng từ localStorage
+          // // Lưu tất cả dữ liệu vào localStorage
+          // localStorage.setItem("cart", JSON.stringify(updatedCart));
+          // setLocalCart(updatedCart); // Cập nhật lại state giỏ hàng từ localStorage
         }
       } else {
         // Người dùng chưa đăng nhập: cập nhật giỏ hàng trong localStorage

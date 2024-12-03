@@ -17,38 +17,39 @@ const Cart = () => {
   // Fetch giỏ hàng từ server hoặc localStorage
   useEffect(() => {
     const fetchCart = async () => {
-      if (localStorage.getItem('token')) {
-        // Nếu đã đăng nhập, lấy giỏ hàng từ server
+      setIsLoading(true);
+      const token = localStorage.getItem('token');
+      if (token) {
         try {
           const response = await axios.get('/cart', {
-            headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+            headers: { Authorization: `Bearer ${token}` },
           });
-  
-          if (response.data && Array.isArray(response.data.carts)) {
-            // Cập nhật giỏ hàng từ server vào localStorage
-            setLocalCart(response.data.carts);
-            localStorage.setItem('cart', JSON.stringify(response.data.carts));
+          const { carts } = response.data; // Lấy danh sách carts từ API
+          if (Array.isArray(carts)) {
+            setLocalCart(carts);
           } else {
-            setLocalCart([]); // Nếu không có giỏ hàng từ server, khởi tạo giỏ hàng trống
+            setLocalCart([]);
           }
         } catch (error) {
-          console.error("Error fetching cart data", error);
+          console.error("Lỗi khi lấy dữ liệu giỏ hàng:", error);
           setLocalCart([]);
-        } finally {
-          setIsLoading(false);
         }
       } else {
-        // Nếu chưa đăng nhập, lấy giỏ hàng từ localStorage
+        // Lấy từ localStorage nếu không có token
         const cartData = localStorage.getItem('cart');
         if (cartData) {
           setLocalCart(JSON.parse(cartData));
+        } else {
+          setLocalCart([]);
         }
-        setIsLoading(false);
       }
+      setIsLoading(false);
     };
   
     fetchCart();
   }, []);
+  
+  
   
 
   // Tính tổng tiền và số lượng dựa trên các sản phẩm đã chọn
@@ -98,7 +99,6 @@ const Cart = () => {
         if (response.status === 200) {
           setLocalCart(prevCart => {
             const updatedCart = prevCart.filter(item => item.id_productVariant !== id_productVariant);
-            localStorage.setItem('cart', JSON.stringify(updatedCart));
             return updatedCart;
           });
           setSelectedItems(prevSelected => new Set([...prevSelected].filter(item => item !== id_productVariant)));
@@ -125,8 +125,20 @@ const Cart = () => {
   // Xử lý thanh toán
   const handleCheckout = () => {
     const selectedProducts = getSelectedProducts();
-
+  
     if (selectedProducts.length > 0) {
+      // Kiểm tra sản phẩm hết hàng
+      const outOfStockProducts = selectedProducts.filter(
+        (product) => product.stock === 0
+      );
+  
+      if (outOfStockProducts.length > 0) {
+        const productNames = outOfStockProducts.map((p) => p.name).join(', ');
+        toast.error(`Sản phẩm sau đã hết hàng: ${productNames}`);
+        return; // Ngăn điều hướng nếu có sản phẩm hết hàng
+      }
+  
+      // Nếu tất cả sản phẩm đều còn hàng, lưu vào localStorage và chuyển sang trang thanh toán
       console.log('Đang thanh toán cho các sản phẩm:', selectedProducts);
       localStorage.setItem('selectedProducts', JSON.stringify(selectedProducts));
       selectedProducts.forEach((product) => {
@@ -137,10 +149,10 @@ const Cart = () => {
       });
       navigate('/checkout');
     } else {
-      alert('Vui lòng chọn ít nhất một sản phẩm để thanh toán!');
+      toast.warn('Vui lòng chọn ít nhất một sản phẩm để thanh toán!');
     }
   };
-
+  
   const handleQuantityChange = async (variantId, change) => {
     const updatedCart = localCart.map(item => {
       if (item.id_productVariant === variantId) {
@@ -174,6 +186,35 @@ const Cart = () => {
 
 
   return (
+    <main >
+      <div
+          className="breadcrumb-area breadcrumb-img bg-img"
+          style={{
+            backgroundImage: "url(/assets/img/banner/shop.jpg)",
+          }}
+        >
+          <div className="container">
+            <div className="row">
+              <div className="col-12">
+                <div className="breadcrumb-wrap">
+                  <nav aria-label="breadcrumb">
+                    <h3 className="breadcrumb-title">Giỏ Hàng</h3>
+                    <ul className="breadcrumb justify-content-center">
+                      <li className="breadcrumb-item">
+                        <a href="/">
+                          <i className="fa fa-home" />
+                        </a>
+                      </li>
+                      <li className="breadcrumb-item active" aria-current="page">
+                        Cart
+                      </li>
+                    </ul>
+                  </nav>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
     <div className="cart-container">
       {isLoading ? (
         <p>Đang tải giỏ hàng...</p>
@@ -182,14 +223,16 @@ const Cart = () => {
           {Array.isArray(localCart) && localCart.length > 0 ? (
             localCart.map((variant) => (
               <div key={variant.id_productVariant} className="cart-variant-card">
-                <div className="variant-image">
-                  <div className="checkbox-control">
-                    <input
-                      type="checkbox"
-                      checked={selectedItems.has(variant.id_productVariant)}
-                      onChange={() => handleCheckboxChange(variant.id_productVariant)}
-                    />
+                <div className="checkbox-control">
+                <input
+                    type="checkbox"
+                    checked={selectedItems.has(variant.id_productVariant)}
+                    onChange={() => handleCheckboxChange(variant.id_productVariant)}
+                    // disabled={variant.outOfStockMessage !== null} // Vô hiệu hóa checkbox nếu hết hàng
+                  />
                   </div>
+                <div className="variant-image">
+                  
                   <Link to={`/product_details/${variant.productId}`}>
                     <img src={variant.image || '/default-image.jpg'} alt={variant.name} width={100} />
                   </Link>
@@ -244,6 +287,7 @@ const Cart = () => {
         <button onClick={handleCheckout}>Thanh toán</button>
       </div>
     </div>
+    </main>
   );
 };
 

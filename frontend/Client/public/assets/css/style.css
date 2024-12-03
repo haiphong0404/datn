@@ -8590,6 +8590,7 @@ only screen and (max-width: 767.98px) {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  /* height: 600px; */
 }
 
 .cart-variant-card {
@@ -8650,6 +8651,7 @@ only screen and (max-width: 767.98px) {
   border-radius: 8px;
   background-color: #f9f9f9;
   padding: 20px;
+  height: 200px;
 }
 
 .total-calculation h5 {
