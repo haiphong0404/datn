@@ -7,15 +7,22 @@ const ProductItem = ({ product }) => { // Nhận product qua props
             <div className="product-item">
                 <div className="product-thumb">
                     <Link to={`/product_details/${product.id}`}>
-                        <img src={product.image || '/path/to/placeholder.jpg'} alt={product.name.substring(0, 30)} />
+                        <img src={product.image || '/path/to/placeholder.jpg'} alt={product.name.substring(0, 30)}
+                            style={{
+                                display: 'block',
+                                margin: '0 auto',
+                                width: '300px', // Đặt chiều rộng mong muốn
+                                height: '200px', // Đặt chiều cao mong muốn
+                                objectFit: 'cover', // Cắt ảnh để phù hợp với kích thước mà không bị méo
+                              }} />
                     </Link>
                     <div className="button-group">
 
-                        <Link to="#" data-bs-toggle="modal" data-bs-target="#quick_view">
+                        {/* <Link to="#" data-bs-toggle="modal" data-bs-target="#quick_view">
                             <span data-bs-toggle="tooltip" title="Quick View">
                                 <i className="fa fa-eye" />
                             </span>
-                        </Link>
+                        </Link> */}
                     </div>
                     <div className="product-label">
                         <span>new</span>

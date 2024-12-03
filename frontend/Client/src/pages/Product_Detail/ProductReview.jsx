@@ -6,6 +6,7 @@ import { addComment, editComment, deleteComment } from "../../api/commentsApi";
 import moment from "moment"; // Import moment
 import { toast } from "react-toastify";
 import useProductAttributes from '../../hooks/useProductAtrib';
+import LoadingSpinner from "../../loading/LoadingSpinner"; 
 
 const ProductReview = ({ initialTab = "tab_one" }) => {
   const [activeTab, setActiveTab] = useState(initialTab);
@@ -103,7 +104,7 @@ const ProductReview = ({ initialTab = "tab_one" }) => {
 
 
   if (productLoading || commentsLoading) {
-    return <div>Loading...</div>;
+    return <LoadingSpinner />;;
   }
 
   if (productError || commentsError) {
@@ -122,7 +123,7 @@ const ProductReview = ({ initialTab = "tab_one" }) => {
             className={activeTab === "tab_one" ? "active" : ""}
             onClick={() => handleTabChange("tab_one")}
           >
-            Description
+            Mô tả
           </a>
         </li>
         <li>
@@ -130,7 +131,7 @@ const ProductReview = ({ initialTab = "tab_one" }) => {
             className={activeTab === "tab_two" ? "active" : ""}
             onClick={() => handleTabChange("tab_two")}
           >
-            Information
+            Thông tin
           </a>
         </li>
         <li>
@@ -138,7 +139,7 @@ const ProductReview = ({ initialTab = "tab_one" }) => {
             className={activeTab === "tab_three" ? "active" : ""}
             onClick={() => handleTabChange("tab_three")}
           >
-            Reviews ({comments?.length || 0})
+            Bình luận ({comments?.length || 0})
           </a>
         </li>
       </ul>
@@ -152,11 +153,11 @@ const ProductReview = ({ initialTab = "tab_one" }) => {
           <table className="table table-bordered">
             <tbody>
             <tr>
-                <td>Color</td>
+                <td>Màu sắc</td>
                 <td>{colorNames}</td>
               </tr>
               <tr>
-                <td>Size</td>
+                <td>Kích cỡ</td>
                 <td>{sizeNames}</td>
               </tr>
             </tbody>

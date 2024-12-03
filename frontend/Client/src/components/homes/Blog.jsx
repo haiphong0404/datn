@@ -32,12 +32,19 @@ const BlogMain = () => {
               <div className="blog-post-item">
                 <div className="blog-thumb">
                   <Link to={`/blog_details/${article.id}`}>
-                    <img src={article.image || '/path/to/placeholder.jpg'} alt="blog thumb" />
+                    <img src={article.image || '/path/to/placeholder.jpg'} alt="blog thumb"
+                     style={{
+                      display: 'block',
+                      margin: '0 auto',
+                      width: '300px', // Đặt chiều rộng mong muốn
+                      height: '170px', // Đặt chiều cao mong muốn
+                      objectFit: 'cover', // Cắt ảnh để phù hợp với kích thước mà không bị méo
+                    }} />
                   </Link>
                 </div>
                 <div className="blog-content">
                   <h6 className="blog-title">
-                    <Link to={`/blog_details/${article.id}`}>{article.title}</Link>
+                    <Link to={`/blog_details/${article.id}`}>{article.title.substring(0, 20)}</Link>
                   </h6>
                   <div className="blog-meta">
                     <span><i className="fa fa-calendar" /> {new Date(article.created_at).toLocaleDateString()}</span>

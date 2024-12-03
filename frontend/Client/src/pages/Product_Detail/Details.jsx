@@ -7,6 +7,7 @@ import Slider from 'react-slick';
 import { useDispatch, useSelector } from 'react-redux';
 import { addCart, loadCartFromLocalStorage } from '../../actions/action';
 import { toast } from 'react-toastify';
+import LoadingSpinner from "../../loading/LoadingSpinner"; 
 import axios from 'axios';
 
 const Details = () => {
@@ -179,12 +180,8 @@ const Details = () => {
             toast.error("Đã có lỗi xảy ra, vui lòng thử lại");
         }
     };
-    
-    
-
-
     if (productLoading || variantsLoading) {
-        return <div>Loading...</div>;
+        return <LoadingSpinner />;
     }
 
     if (productError || variantsError) {
@@ -207,8 +204,7 @@ const Details = () => {
                                     setSelectedSize('');
                                 }}>
                                     <img
-                                        src={variant.images} 
-                                        alt={`Product ${index + 1}`}
+                                        src={variant.images}                                 
                                         className={`w-full h-auto cursor-pointer ${selectedImage === variant.images ? 'selected-image' : ''}`}
                                     />
                                 </div>
@@ -277,10 +273,11 @@ const Details = () => {
                         </div>
 
                         <h6 className="option-title">Số lượng:</h6>
-                        <div className="quantity d-flex align-items-center">
-                            <button onClick={handleDecrease} disabled={selectedQuantity <= 1} className="btn-quantity">-</button>
-                            <div className="pro-qty">{selectedQuantity}</div>
-                            <button onClick={handleIncrease} disabled={selectedQuantity >= (selectedVariant?.quantity || 0)} className="btn-quantity">+</button>
+                        <div className="quantity d-flex align-items-center"
+                         style={{ marginTop: '10px' }} >
+                            <button onClick={handleDecrease} disabled={selectedQuantity <= 1} className="dec qtybtn">-</button>
+                            <div className="pro-qty"  style={{ paddingTop: '3px' }}>{selectedQuantity}</div>
+                            <button onClick={handleIncrease} disabled={selectedQuantity >= (selectedVariant?.quantity || 0)} className="inc qtybtn">+</button>
                         </div>
 
                         <div className="availability">
