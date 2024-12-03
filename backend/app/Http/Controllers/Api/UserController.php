@@ -121,37 +121,37 @@ class UserController extends Controller
      */
     public function update(UpdateUserRequest $request, User $user)
     {
-        DB::beginTransaction();
-
         try {
-            // Nếu có ảnh mới, lưu ảnh và cập nhật
-            if ($request->hasFile('avatar_img')) {
+            // Nếu nhận được dữ liệu base64 từ avatar_img
+            if ($request->avatar_img) {
                 // Xóa ảnh cũ nếu tồn tại
                 if ($user->avatar_img && Storage::disk('public')->exists($user->avatar_img)) {
                     Storage::disk('public')->delete($user->avatar_img);
                 }
 
-                // Lưu ảnh mới
-                $file = $request->file('avatar_img')->store('uploads/users', 'public');
-                $user->avatar_img = $file;
+                // Xử lý base64 và lưu tệp
+                $imageData = $request->avatar_img; // Base64 chuỗi
+                $imageName = 'uploads/users/' . uniqid() . '.png'; // Tên file
+                Storage::disk('public')->put($imageName, base64_decode($imageData));
+
+                // Lưu đường dẫn vào database
+                $user->avatar_img = $imageName;
             }
 
-            // Cập nhật các trường khác
+            // Cập nhật các thông tin khác
             $user->username = $request->username;
             $user->email = $request->email;
             $user->phone = $request->phone;
             $user->address = $request->address;
 
+            // Lưu thông tin người dùng
             $user->save();
-
-            DB::commit();
 
             return response()->json([
                 'message' => 'Cập nhật người dùng thành công.',
                 'data' => $user
             ], 200);
         } catch (Exception $e) {
-            DB::rollBack();
             return response()->json([
                 'message' => 'Có lỗi khi cập nhật người dùng.',
                 'error' => $e->getMessage()

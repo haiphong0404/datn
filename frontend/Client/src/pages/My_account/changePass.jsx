@@ -2,11 +2,16 @@ import React, { useState } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useChangePassword } from '../../hooks/useChangePass';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 function ChangePassword() {
     const [oldpassword, setOldPassword] = useState('');
     const [password, setPassword] = useState('');
     const [password_confirmation, setPassConfirmation] = useState('');
+    const [isOldPasswordVisible, setIsOldPasswordVisible] = useState(false);
+    const [isNewPasswordVisible, setIsNewPasswordVisible] = useState(false);
+    const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] = useState(false);
+
     const {
         loading,
         handleChangePassword,
@@ -22,7 +27,6 @@ function ChangePassword() {
 
     return (
         <>
-
             <form
                 onSubmit={handleSubmit}
                 className="container p-5 border rounded shadow-sm my-5"
@@ -30,17 +34,24 @@ function ChangePassword() {
             >
                 <h2 className="text-center mb-4">Đổi mật khẩu</h2>
 
-                {/* Mật khẩu cũ */}
                 <div className="row align-items-center mb-3">
                     <label className="col-sm-3 col-form-label">Mật khẩu cũ:</label>
                     <div className="col-sm-9">
-                        <input
-                            type="password"
-                            className="form-control"
-                            value={oldpassword}
-                            onChange={(e) => setOldPassword(e.target.value)}
-                            required
-                        />
+                        <div className="input-group">
+                            <input
+                                type={isOldPasswordVisible ? "text" : "password"}
+                                className="form-control"
+                                value={oldpassword}
+                                onChange={(e) => setOldPassword(e.target.value)}
+                                required
+                            />
+                            <span
+                                className="input-group-text"
+                                onClick={() => setIsOldPasswordVisible(!isOldPasswordVisible)}
+                            >
+                                {isOldPasswordVisible ? <FaEyeSlash /> : <FaEye />}
+                            </span>
+                        </div>
                         {oldPasswordError && <div className="alert alert-danger mt-2">{oldPasswordError}</div>}
                     </div>
                 </div>
@@ -49,35 +60,49 @@ function ChangePassword() {
                 <div className="row align-items-center mb-3">
                     <label className="col-sm-3 col-form-label">Mật khẩu mới:</label>
                     <div className="col-sm-9">
-                        <input
-                            type="password"
-                            className="form-control"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            required
-                        />
+                        <div className="input-group">
+                            <input
+                                type={isNewPasswordVisible ? "text" : "password"}
+                                className="form-control"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                required
+                            />
+                            <span
+                                className="input-group-text"
+                                onClick={() => setIsNewPasswordVisible(!isNewPasswordVisible)}
+                            >
+                                {isNewPasswordVisible ? <FaEyeSlash /> : <FaEye />}
+                            </span>
+                        </div>
                         {newPasswordError && <div className="alert alert-danger mt-2">{newPasswordError}</div>}
                     </div>
                 </div>
 
-                {/* Nhập lại mật khẩu mới */}
                 <div className="row align-items-center mb-3">
                     <label className="col-sm-3 col-form-label">Nhập lại mật khẩu mới:</label>
                     <div className="col-sm-9">
-                        <input
-                            type="password"
-                            className="form-control"
-                            value={password_confirmation}
-                            onChange={(e) => setPassConfirmation(e.target.value)}
-                            required
-                        />
+                        <div className="input-group">
+                            <input
+                                type={isConfirmPasswordVisible ? "text" : "password"}
+                                className="form-control"
+                                value={password_confirmation}
+                                onChange={(e) => setPassConfirmation(e.target.value)}
+                                required
+                            />
+                            <span
+                                className="input-group-text"
+                                onClick={() => setIsConfirmPasswordVisible(!isConfirmPasswordVisible)}
+                            >
+                                {isConfirmPasswordVisible ? <FaEyeSlash /> : <FaEye />}
+                            </span>
+                        </div>
                         {password_confirmationError && (
                             <div className="alert alert-danger mt-2">{password_confirmationError}</div>
                         )}
                     </div>
                 </div>
 
-                {/* Nút submit */}
                 <div className="row">
                     <div className="col-sm-9 offset-sm-3">
                         <button
