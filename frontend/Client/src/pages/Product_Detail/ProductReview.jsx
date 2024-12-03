@@ -57,25 +57,20 @@ const ProductReview = ({ initialTab = "tab_one" }) => {
 
   const handleEditComment = async () => {
     if (editedComment.trim() && editedRating > 0) {
+      const formData = new FormData();
+      formData.append("comment", editedComment);
+      formData.append("star_rating", editedRating);
+      if (file) {
+        formData.append("file", file);
+      }
+
       try {
-        const userComment = comments.find(comment => comment.id === editCommentId);
-
-        if (userComment.username !== "currentUser") { // Replace with actual username of logged-in user
-          toast.error("Bạn không có quyền sửa bình luận này.");
-          return;
-        }
-
-        await editComment(editCommentId, { comment: editedComment, star_rating: editedRating });
-
-        // Reset lại form chỉnh sửa
+        const response = await editComment(editCommentId, formData); // Sử dụng formData khi gọi API
         setEditCommentId(null);
         setEditedComment("");
         setEditedRating(0);
-
-        // Cập nhật lại danh sách bình luận
+        setFile(null); // Reset file ảnh
         refetch();
-
-        // Hiển thị thông báo thành công
         toast.success("Bình luận đã được sửa thành công!");
       } catch (error) {
         console.error("Không sửa bình luận: ", error);
@@ -85,14 +80,15 @@ const ProductReview = ({ initialTab = "tab_one" }) => {
   };
 
 
+
   const handleDeleteComment = async (id) => {
     try {
       const userComment = comments.find(comment => comment.id === id);
 
-      if (userComment.username !== "currentUser") { // Replace with actual username of logged-in user
-        toast.error("Bạn không có quyền xóa bình luận này.");
-        return;
-      }
+      // if (userComment.username !== "currentUser") { // Replace with actual username of logged-in user
+      //   toast.error("Bạn không có quyền xóa bình luận này.");
+      //   return;
+      // }
 
       await deleteComment(id);
       // Cập nhật lại danh sách bình luận sau khi xóa
@@ -252,11 +248,15 @@ const ProductReview = ({ initialTab = "tab_one" }) => {
                       <input
                         type="file"
                         accept="image/*"
-                        onChange={(e) => setFile(e.target.files[0])}
+                        onChange={(e) => {
+                          setFile(e.target.files[0]);
+                        }}
                       />
+
                       {file && (
                         <div className="preview-image">
-                          <img src={URL.createObjectURL(file)} alt="Preview" width="100" />
+                          <img key={file ? URL.createObjectURL(file) : comment.file} src={file ? URL.createObjectURL(file) : comment.file} alt="Review" width="130" />
+
                         </div>
                       )}
 

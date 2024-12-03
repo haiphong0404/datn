@@ -26,6 +26,7 @@
             text-overflow: ellipsis;
             /* Hiển thị dấu "..." khi văn bản bị cắt */
         }
+
         .custom-select-small {
             font-size: 0.70rem;
             /* Giảm kích thước font */
@@ -79,8 +80,8 @@
                                 </div>
                                 <div class="span6">
                                     <div class="dataTables_filter" id="hidden-table-info_filter">
-                                        <a href="{{ route('admin.banners.create') }}"
-                                            class=" btn btn-success btn-sm">CREATE</a>
+                                        <a href="{{ route('admin.banners.create') }}" class=" btn btn-success btn-sm">Tạo
+                                            mới</a>
 
                                     </div>
                                 </div>
@@ -89,8 +90,8 @@
                             <table class="display table table-bordered" id="hidden-table-info"
                                 aria-describedby="hidden-table-info_info">
                                 <thead>
-                                    <tr>
-                                        <th>STT</th>
+                                    <tr class="text-center">
+                                        <th>#</th>
                                         <th>Ảnh</th>
                                         <th>Tiêu đề</th>
                                         <th>Tiêu đề phụ</th>
@@ -106,16 +107,18 @@
                                     @else
                                         @foreach ($banners as $banner)
                                             <tr>
-                                                <td>{{ $banner->id }}</td>
+                                                <td class="text-center">{{ $banner->id }}</td>
                                                 <td><img class="text-truncate "src="{{ asset('storage/' . $banner->image_url) }}"
                                                         alt="{{ $banner->title }}" width="150"></td>
                                                 <td class="text-truncate">{{ $banner->title }}</td>
                                                 <td class="text-truncate">{{ $banner->sub_title }}</td>
                                                 <td class="text-truncate">{{ $banner->span_title }}</td>
 
-                                                <td>
-                                                    <a href="{{ route('admin.banners.show', $banner->id) }}"
-                                                        class="btn btn-primary"><i class="fa fa-eye"></i></a>
+                                                <td class="text-center">
+                                                    @if (!$banner->deleted_at)
+                                                        <a href="{{ route('admin.banners.show', $banner->id) }}"
+                                                            class="btn btn-primary"><i class="fa fa-eye"></i></a>
+                                                    @endif
                                                     @if ($banner->deleted_at)
                                                         <form action="{{ route('admin.banners.restore', $banner->id) }}"
                                                             method="POST" style="display:inline;">
@@ -142,14 +145,16 @@
                             <div class="row-fluid">
                                 <div class="span6">
                                     <div class="dataTables_info" id="hidden-table-info_info">
-                                        Hiển thị từ {{ $banners->firstItem() }} đến {{ $banners->lastItem() }} của tổng cộng {{ $banners->total() }} mục
+                                        Hiển thị từ {{ $banners->firstItem() }} đến {{ $banners->lastItem() }} của tổng
+                                        cộng {{ $banners->total() }} mục
                                     </div>
                                 </div>
                                 <div class="span6">
                                     <div class="dataTables_paginate paging_bootstrap pagination">
                                         <ul class="pagination">
                                             <li class="prev">
-                                                <a href="{{ $banners->previousPageUrl() }}" aria-label="Previous">← Previous</a>
+                                                <a href="{{ $banners->previousPageUrl() }}" aria-label="Previous">←
+                                                    Previous</a>
                                             </li>
                                             @foreach ($banners->getUrlRange(1, $banners->lastPage()) as $page => $url)
                                                 <li class="{{ $page == $banners->currentPage() ? 'active' : '' }}">
@@ -162,7 +167,7 @@
                                         </ul>
                                     </div>
                                 </div>
-                            </div>                        
+                            </div>
                         </div>
                     </div>
                 </div>

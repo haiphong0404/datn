@@ -47,8 +47,8 @@ const Header = () => {
     console.log("Tất cả dữ liệu trong giỏ hàng:", localCart);
     // Xử lý thêm nếu cần thiết
   };
-  
-  
+
+
   const handleRemoveFromCart = async (id_productVariant) => {
 
     if (!id_productVariant) {
@@ -131,7 +131,7 @@ const Header = () => {
   };
 
   const { userInfo, handleLogout } = useLoginForm();
-
+  console.log("Thông tin người dùng trong Account_info:", userInfo);
 
   return (
     <header className="header-area">
@@ -145,7 +145,7 @@ const Header = () => {
                 <div className="top-left-navigation"></div>
               </div>
               <div className="col-lg-6 d-flex justify-content-end">
-                
+
                 <ul className="user-info-block">
                   <li>
                     <Link to="/my_account">
@@ -209,6 +209,11 @@ const Header = () => {
                         <li>
                           <Link to="/blog">
                             Tin tức</Link>
+                        </li>
+                        <li>
+                          <Link to="/brands">
+                            Khám Phá
+                          </Link>
                         </li>
                         <li>
                           <Link to="/contact_us">

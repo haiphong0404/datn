@@ -35,6 +35,8 @@ import CheckoutDetail from "./pages/CheckoutDetail";
 import ChangePassword from "./pages/My_account/changePass";
 import EditProfile from "./pages/My_account/editProfile";
 import LoadingSpinner from "./loading/LoadingSpinner"; 
+import Brands from "./pages/Brands";
+import BrandDetail from "./pages/BrandDetail";
 
 
 
@@ -59,7 +61,15 @@ const routeConfig = [
       { path: "*", element: <NotFoundPage /> },
       { path: "faqs", element: <FAQs /> },
       { path: "checkout/bill", element: <Bill /> },
+      { path: "brands", element: <Brands /> },
+      { path: "brand_detail/:id", element: <BrandDetail /> },
+
+
       { path: "/checkout-detail/:orderId", element: <CheckoutDetail /> },
+      { path: "brands", element: <Brands /> },
+      { path: "brand_detail/:id", element: <BrandDetail /> },
+
+
     ],
   },
   {

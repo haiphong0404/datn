@@ -9,8 +9,8 @@
     </form>
 @endsection
 @section('content')
-    <div class="container">
-        <div class="row ">
+<div class="row">
+    <div class="col-sm-12">
             <div class="card shadow-sm">
                 <header class="card-header">
                     <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center">
@@ -32,22 +32,20 @@
                         enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
-                        <div class="mb-3">
+                        <div class="mb-3 text-center">
                             <label for="image_url" class="form-label"><strong>Image Banner:</strong></label>
 
-                            <div class="form-group mb-3">
+                            <div class="d-flex flex-column align-items-center">
                                 @if ($banner->image_url)
                                     <div class="d-flex justify-content-center">
                                         <img src="{{ Storage::url($banner->image_url) }}" alt="{{ $banner->title }}"
-                                            class="img-thumbnail" style="max-width: 800px; margin-bottom: 10px;">
+                                            class="img-thumbnail" style="max-width: 400px; margin-bottom: 10px;">
                                     </div>
                                 @else
                                     <div class="alert alert-warning" role="alert" style="margin-bottom: 10px;">
                                         Chưa có banner.
                                     </div>
                                 @endif
-                            </div>
-                            <div class="form-group mb-3">
                                 <label class="form-label"><strong>Thay đổi banner:</strong></label>
                                 <input type="file" class="form-control" id="image_url" name="image_url"
                                     style="width: auto;">

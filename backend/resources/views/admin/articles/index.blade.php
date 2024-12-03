@@ -1,117 +1,167 @@
 @extends('admin.layout')
 
-@section('css')
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.3/css/dataTables.bootstrap5.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-<link href="{{ asset('assets')}}/admin/css/list-brand.css" rel="stylesheet">
+@section('search')
+    <form action="{{ route('admin.articles.index') }}" method="GET">
+        <div class="input-group mt-1">
+            <input type="text" name="search" class="form-control" placeholder="Tìm kiếm"
+                value="{{ request()->input('search') }}">
+            <button class="btn btn-outline-secondary" type="submit">
+                <i class="bi bi-search"></i>
+            </button>
+        </div>
+    </form>
 @endsection
 
 @section('content')
- <!-- Hero -->
- <div class="bg-body-light">
-    <div class="content content-full">
-        <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center">
-            <h1 class="flex-grow-1 fs-3 fw-semibold my-2 my-sm-3">Danh sách bài viết</h1>
-            <nav class="flex-shrink-0 my-2 my-sm-0 ms-sm-3" aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item">
-                        <a href="{{ route('admin.articles.index') }}" style="color: inherit;">articles</a>
-                    </li>
-                    <li class="breadcrumb-item active" aria-current="page">Danh sách bài viết</li>
-                </ol>
-            </nav>
+    @if (session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
-    </div>
-</div>
-  <!-- END Hero -->
-<div class="content">
-    <div class="block block-rounded">
-        <div class="block-header block-header-default">
-            <div class="block-options">
-                <div class="block-options-item">
-                    <a href="{{ route('admin.articles.create') }}" class="btn btn-sm btn-alt-primary" data-bs-toggle="tooltip" title="Thêm Bài viết"><i class="fa fa-plus"></i></a>
-                </div>
-            </div>
-        </div>
-        <div class="block-content">
-            <table class="table table-hover" id="brandsTable">
-                <thead>
-                    <tr>
-                        <th class="text-center" style="width: 50px;">#</th>
-                        <th>name</th>
-                        <th class="d-none d-sm-table-cell">title</th>
-                        <th class="d-none d-sm-table-cell">content</th>
-                        <th class="d-none d-sm-table-cell">image</th>
-                     
-                        <th class="text-center" style="width: 100px;">Thao tác</th>
-                    </tr>
-                </thead>
-                
-                <tbody>
-                    @foreach ($articles as $item)
-                        <tr>
-                           <td class="d-none d-sm-table-cell">{{ $item->id }}</td>
-                            <td class="d-none d-sm-table-cell">{{ $item->name }}</td>
-                              <td class="d-none d-sm-table-cell">{{ $item->title }}</td>
-                                <td class="d-none d-sm-table-cell">{{ $item->content }}</td>
-                                     <td>
-                                @if($item->image)
-                                <img src="{{ Storage::url($item->image) }}" width="100" height="100" alt="Ảnh đại diện hiện tại" class="mt-2">
-                                @endif
-                            </td>
-                            <td class="text-center">
-                                <div class="btn-group">
-                                    {{-- EDIT --}}
-                                    <a href="{{route('admin.articles.edit',$item)}}" type="button" class="btn btn-sm btn-alt-warning mx-2" data-bs-toggle="tooltip" title="Chỉnh sửa">
-                                        <i class="fa fa-pencil-alt"></i>
-                                    </a>
+    @endif
 
-                                    {{-- DELETE  --}}
-                                    <form action="{{route('admin.articles.destroy',$item)}}" method="POST" class="form-delete">
-                                      @csrf
-                                      @method('DELETE')
-                                      <button type="submit"  class="btn btn-sm btn-alt-danger" data-bs-toggle="tooltip" title="Xóa" >
-                                        <i class="fa fa-times"></i>
-                                      </button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-         
-        </div>
-    </div>
-</div>
-@endsection
-
-@section('js')
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const deleteBtns = document.querySelectorAll('.form-delete');
-
-        for (const btn of deleteBtns) {
-            btn.addEventListener('submit', function(e) {
-                e.preventDefault();
-
-                Swal.fire({
-                    title: "Xác nhận xóa?",
-                    text: "Nếu xóa bạn sẽ xóa cả những sản phẩm thuộc thương hiệu này!",
-                    icon: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Đồng ý',
-                    cancelButtonText: 'Hủy'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        this.submit();
-                    }
-                });
-            });
+    <style>
+        .text-truncate {
+            max-width: 200px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
-    });
-</script>
+
+        .custom-select-small {
+            font-size: 0.70rem;
+            height: 20px;
+            padding: 2px 6px;
+            width: auto;
+        }
+    </style>
+
+    <div id="list" class="row">
+        <div class="col-sm-12">
+            <section class="card">
+                <header class="card-header">
+                    <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center">
+                        <h1 class="flex-grow-1 fs-3 fw-semibold my-2 my-sm-3">Danh sách bài viết</h1>
+                        <nav class="flex-shrink-0 my-2 my-sm-0 ms-sm-3" aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item">
+                                    <a href="{{ route('admin.articles.index') }}" style="color: inherit;">Bài viết</a>
+                                </li>
+                                <li class="breadcrumb-item active" aria-current="page">Danh sách bài viết</li>
+                            </ol>
+                        </nav>
+                    </div>
+                </header>
+                <div class="card-body">
+                    <div class="adv-table">
+                        <div id="hidden-table-info_wrapper" class="dataTables_wrapper form-inline" role="grid">
+                            <div class="row-fluid">
+                                <div class="span6">
+                                    <div id="hidden-table-info_length" class="dataTables_length">
+                                        <form action="{{ route('admin.articles.index') }}" method="GET">
+                                            <label>Xem
+                                                <select class="form-control-sm ml-1 custom-select-small" name="per_page"
+                                                    onchange="this.form.submit()">
+                                                    <option value="10"
+                                                        {{ request('per_page') == 10 ? 'selected' : '' }}>10</option>
+                                                    <option value="25"
+                                                        {{ request('per_page') == 25 ? 'selected' : '' }}>25</option>
+                                                    <option value="50"
+                                                        {{ request('per_page') == 50 ? 'selected' : '' }}>50</option>
+                                                    <option value="100"
+                                                        {{ request('per_page') == 100 ? 'selected' : '' }}>100</option>
+                                                </select><span style="margin-left:-5px;">mục</span>
+                                            </label>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="span6">
+                                    <div class="dataTables_filter" id="hidden-table-info_filter">
+                                        <a href="{{ route('admin.articles.create') }}"
+                                            class="btn btn-success btn-sm">Tạo mới</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <table class="display table table-bordered" id="hidden-table-info"
+                                aria-describedby="hidden-table-info_info">
+                                <thead>
+                                    <tr class="text-center">
+                                        <th>#</th>
+                                        <th>Tên</th>
+                                        <th>Tiêu đề</th>
+                                        <th>Nội dung</th>
+                                        <th>Hình ảnh</th>
+                                        <th>Thao tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if ($noResults)
+                                        <tr>
+                                            <td colspan="6" class="text-center">Không có bài viết phù hợp</td>
+                                        </tr>
+                                    @else
+                                        @foreach ($articles as $item)
+                                            <tr>
+                                                <td class="text-center">{{ $item->id }}</td>
+                                                <td class="text-truncate">{{ $item->name }}</td>
+                                                <td class="text-truncate">{{ $item->title }}</td>
+                                                <td class="text-truncate">{{ Str::limit($item->content, 50) }}</td>
+                                                <td>
+                                                    @if ($item->image)
+                                                        <img src="{{ Storage::url($item->image) }}" alt="Hình ảnh bài viết"
+                                                            width="150">
+                                                    @endif
+                                                </td>
+                                                <td class="text-center">
+                                                    <a href="{{ route('admin.articles.show', $item->id) }}"
+                                                        class="btn btn-primary">
+                                                        <i class="fa fa-eye"></i>
+                                                    </a>
+                                                    <form action="{{ route('admin.articles.destroy', $item->id) }}"
+                                                        method="POST" class="d-inline-block">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="btn btn-danger"
+                                                            onclick="return confirm('Bạn có chắc muốn xóa bài viết này?')">
+                                                            <i class="fa fa-trash-o"></i>
+                                                        </button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    @endif
+                                </tbody>
+                            </table>
+                            <div class="row-fluid">
+                                <div class="span6">
+                                    <div class="dataTables_info" id="hidden-table-info_info">
+                                        Hiển thị từ {{ $articles->firstItem() }} đến {{ $articles->lastItem() }} của tổng
+                                        cộng {{ $articles->total() }} mục
+                                    </div>
+                                </div>
+                                <div class="span6">
+                                    <div class="dataTables_paginate paging_bootstrap pagination">
+                                        <ul class="pagination">
+                                            <li class="prev">
+                                                <a href="{{ $articles->previousPageUrl() }}" aria-label="Previous">←
+                                                    Previous</a>
+                                            </li>
+                                            @foreach ($articles->getUrlRange(1, $articles->lastPage()) as $page => $url)
+                                                <li class="{{ $page == $articles->currentPage() ? 'active' : '' }}">
+                                                    <a href="{{ $url }}">{{ $page }}</a>
+                                                </li>
+                                            @endforeach
+                                            <li class="next">
+                                                <a href="{{ $articles->nextPageUrl() }}" aria-label="Next">Next →</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
 @endsection

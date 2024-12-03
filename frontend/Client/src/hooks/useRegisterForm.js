@@ -1,16 +1,23 @@
-// src/hooks/useRegisterForm.js
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { useNavigate } from 'react-router-dom';
-import { registerUser } from '../api/user.js'; // Đảm bảo đường dẫn đúng
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { registerUser } from "../api/user.js";
 
 // Xác thực với Yup
 const schema = yup.object().shape({
     username: yup.string().required("Vui lòng nhập tên tài khoản"),
-    email: yup.string().email("Invalid email").required("Vui lòng nhập email"),
-    password: yup.string().min(6, "Mật khẩu phải đủ 6 ký tự").required("vui lòng nhập mật khẩu"),
+    email: yup.string().email("Email không hợp lệ").required("Vui lòng nhập email"),
+    password: yup.string().min(6, "Mật khẩu phải đủ 6 ký tự").required("Vui lòng nhập mật khẩu"),
+    password_confirmation: yup
+        .string()
+        .oneOf([yup.ref("password"), null], "Mật khẩu không khớp")
+        .required("Vui lòng nhập lại mật khẩu"),
+    phone: yup
+        .string()
+        .matches(/^[0-9]{10}$/, "Số điện thoại không hợp lệ")
+        .required("Vui lòng nhập số điện thoại"),
 });
 
 export const useRegisterForm = () => {
@@ -19,18 +26,13 @@ export const useRegisterForm = () => {
         resolver: yupResolver(schema),
     });
 
-    const [error, setError] = useState('');
-    const [success, setSuccess] = useState('');
-
     const handleRegister = async (data) => {
         try {
-            const res = await registerUser(data); // Gọi hàm đăng ký
-            setSuccess("Đăng ký thành công.");
-            setError('');
-            navigate('/login');
+            await registerUser(data); // Gọi hàm đăng ký
+            toast.success("Đăng ký thành công!"); // Hiển thị thông báo thành công
+            navigate("/login"); // Điều hướng về trang đăng nhập
         } catch (err) {
-            setError("Đăng ký thất bại. Vui lòng thử lại.");
-            setSuccess('');
+            toast.error("Đăng ký thất bại. Vui lòng thử lại."); // Hiển thị thông báo lỗi
         }
     };
 
@@ -38,8 +40,6 @@ export const useRegisterForm = () => {
         register,
         handleSubmit,
         errors,
-        error,
-        success,
-        handleRegister
+        handleRegister,
     };
 };
