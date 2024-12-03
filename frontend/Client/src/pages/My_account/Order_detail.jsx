@@ -142,6 +142,20 @@ const Order_detail = () => {
                                                 </tr>
 
                                             ))}
+                                            <tr className="pro-title">
+                                                <td colSpan="6" style={{ textAlign: 'center' }}>Phí Vận Chuyển</td>
+                                                <td >
+                                                    {parseFloat(orderDetail.shipping_fee).toLocaleString()} VND
+                                                </td>
+                                            </tr>
+                                            {orderDetail.voucher_discount != 0 && (
+                                                <tr className="pro-title">
+                                                    <td colSpan="6" style={{ textAlign: 'center' }}>Mã Giảm Giá :</td>
+                                                    <td>
+                                                        -{parseFloat(orderDetail.voucher_discount).toLocaleString()} VND
+                                                    </td>
+                                                </tr>
+                                            )}
 
                                             <tr className="total-amount-row">
                                                 <th colSpan="6" style={{ textAlign: 'center' }}>Tổng Tiền:</th>
