@@ -40,6 +40,7 @@ export const deleteComment = async (id) => {
 export const editComment = async (commentId, formData) => {
     try {
         const response = await axios.put(`/comments/${commentId}`, formData);
+        console.log("API response sửa:", response);
         return response;
     } catch (error) {
         console.error("Error while editing comment", error);

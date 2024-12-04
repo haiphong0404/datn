@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useQuery } from '@tanstack/react-query';
 import { useParams } from "react-router-dom";
 import useProductById from "../../hooks/useProductById";
 import { useComments } from "../../hooks/useComments";
@@ -6,7 +7,7 @@ import { addComment, editComment, deleteComment } from "../../api/commentsApi";
 import moment from "moment"; // Import moment
 import { toast } from "react-toastify";
 import useProductAttributes from '../../hooks/useProductAtrib';
-import LoadingSpinner from "../../loading/LoadingSpinner"; 
+import LoadingSpinner from "../../loading/LoadingSpinner";
 import { useAuth } from '../../contexts/AuthContext';
 import { useLoginForm } from '../../hooks/useLoginForm';
 
@@ -38,7 +39,7 @@ const ProductReview = ({ initialTab = "tab_one" }) => {
     };
   }, []);
 
-  
+
   const [activeTab, setActiveTab] = useState(initialTab);
   const { productId } = useParams();
   const { product, loading: productLoading, error: productError } = useProductById(productId);
@@ -52,7 +53,11 @@ const ProductReview = ({ initialTab = "tab_one" }) => {
   const [editedComment, setEditedComment] = useState("");
   const [editedRating, setEditedRating] = useState(0);
   const { userInfo } = useLoginForm();
+ console.log(comments);
  
+  
+
+
   const handleTabChange = (tabId) => setActiveTab(tabId);
 
   const handleAddComment = async () => {
@@ -65,56 +70,79 @@ const ProductReview = ({ initialTab = "tab_one" }) => {
       try {
         const response = await addComment(productId, formData);
         if (response.status === 201) {
-          updateComments(response.data);
+          // Đảm bảo phản hồi từ API bao gồm thông tin ảnh
+          const newCommentWithImage = response.data;
+          updateComments(newCommentWithImage); // Cập nhật danh sách bình luận
           setNewComment("");
           setNewRating(0);
           setFile(null);
-          toast.success("Bình luận đã được thêm thành công!");
+          refetch();
         } else {
           toast.error("Bạn phải mua sản phẩm trước khi đánh giá.");
         }
       } catch (error) {
-        console.error("Lỗi khi thêm bình luận:", error);
-        toast.error("Có lỗi xảy ra khi thêm bình luận.");
+        toast.error("Bạn phải mua sản phẩm trước khi đánh giá.");
       }
     }
   };
+
 
   const handleEditComment = async () => {
     if (editedComment.trim() && editedRating > 0) {
       const formData = new FormData();
       formData.append("comment", editedComment);
       formData.append("star_rating", editedRating);
-      if (file) {
-        formData.append("file", file);
-      }
-
+      if (file) formData.append("file", file);
+  
       try {
         const response = await editComment(editCommentId, formData);
-        setEditCommentId(null);
-        setEditedComment("");
-        setEditedRating(0);
-        setFile(null);
-        refetch();
-        toast.success("Bình luận đã được sửa thành công!");
+        console.log("Response from API:", response);
+         // Gọi API sửa bình luận
+        if (response.status === 200) {
+          // Cập nhật danh sách bình luận bằng cách thay thế hoặc cập nhật comment cụ thể
+          const updatedComment = response.data;
+          setComments((prevComments) => 
+            prevComments.map((comment) => 
+              comment.id === updatedComment.id ? updatedComment : comment
+            )
+          );
+          setEditCommentId(null);
+          setEditedComment("");
+          setEditedRating(0);
+          setFile(null);
+          toast.success("Bình luận đã được sửa thành công!");
+
+        
+        } else {
+          toast.error("Có lỗi xảy ra khi sửa bình luận.");
+        }
       } catch (error) {
-        console.error("Không sửa bình luận: ", error);
+        console.error("Error while editing comment:", error);
         toast.error("Có lỗi xảy ra khi sửa bình luận.");
       }
     }
   };
+  
+  
+  
 
   const handleDeleteComment = async (id) => {
     try {
-      const userComment = comments.find(comment => comment.id === id);
-      await deleteComment(id);
-      refetch();
-      toast.success("Bình luận đã được xóa thành công!");
+      // Kiểm tra nếu người dùng là admin
+      if (userInfo?.role === "admin" || comments.find(comment => comment.id === id)?.user_id === userInfo?.id) {
+        const userComment = comments.find(comment => comment.id === id);
+        await deleteComment(id);
+        refetch();
+        toast.success("Bình luận đã được xóa thành công!");
+      } else {
+        toast.error("Bạn không có quyền xóa bình luận này.");
+      }
     } catch (error) {
       console.error("Không xóa bình luận: ", error);
       toast.error("Có lỗi xảy ra khi xóa bình luận.");
     }
   };
+  
 
   if (productLoading || commentsLoading) {
     return <LoadingSpinner />;
@@ -168,7 +196,7 @@ const ProductReview = ({ initialTab = "tab_one" }) => {
         <div className={`tab-pane fade ${activeTab === "tab_two" ? "show active" : ""}`} id="tab_two">
           <table className="table table-bordered">
             <tbody>
-            <tr>
+              <tr>
                 <td>Màu sắc</td>
                 <td>{colorNames}</td>
               </tr>
@@ -180,161 +208,165 @@ const ProductReview = ({ initialTab = "tab_one" }) => {
           </table>
         </div>
 
-        <div className={`tab-pane fade ${initialTab === "tab_one" ? "show active" : ""}`} id="tab_one">
-  <div className="reviews">
-    {comments.length > 0 ? (
-      comments.map((comment) => (
-        <div key={comment.id} className="review-box mb-4">
-          <div className="ratings mb-2">
-            <strong>Mức độ hài lòng: </strong>
-            {[...Array(5)].map((_, idx) => (
-              <i
-                key={idx}
-                className={`fa fa-star ${idx < comment.star_rating ? 'text-warning' : 'text-muted'}`}
-              />
-            ))}
-          </div>
-          <p><strong>Người đánh giá:</strong> {comment.username}</p>
-          <p><strong>Bình luận:</strong> {comment.comment}</p>
-          {comment.file && (
-            <div className="review-image">
-              <img src={comment.file} alt="Review" width="130" />
-            </div>
-          )}
-          <p><strong>Thời gian:</strong> {moment(comment.created_at, "YYYY-MM-DD HH:mm:ss").format('DD-MM-YYYY HH:mm:ss')}</p>
+        <div className={`tab-pane fade ${activeTab === "tab_three" ? "show active" : ""}`} id="tab_three">
+          <div className="reviews">
+            {comments.length > 0 ? (
+              comments.map((comment) => (
+                <div key={comment.id} className="review-box mb-4">
+                  <div className="ratings mb-2">
+                    <strong>Mức độ hài lòng: </strong>
+                    {[...Array(5)].map((_, idx) => (
+                      <i
+                        key={idx}
+                        className={`fa fa-star ${idx < comment.star_rating ? 'text-warning' : 'text-muted'}`}
+                      />
+                    ))}
+                  </div>
+                  <p><strong>Người đánh giá:</strong> {comment.username}</p>
+                  <p><strong>Bình luận:</strong> {comment.comment}</p>
+                  {comment.file && (
+                    <div className="review-image">
+                      <img src={comment.file} alt="Review" width="130" />
+                    </div>
+                  )}
+                  <p><strong>Thời gian:</strong> {moment(comment.created_at, "YYYY-MM-DD HH:mm:ss").format('DD-MM-YYYY HH:mm:ss')}</p>
 
-          {isAuthenticated && (
-            <div>
-              {(userInfo?.role === "admin" ||  comment.username === userInfo?.username) && (
-                <>
-                  <button
-                    className="btn me-2"
-                    style={{ color: "black" }}
-                    onMouseEnter={(e) => (e.target.style.color = "#ffc107")}
-                    onMouseLeave={(e) => (e.target.style.color = "black")}
-                    onClick={() => {
-                      setEditCommentId(comment.id);
-                      setEditedComment(comment.comment);
-                      setEditedRating(comment.star_rating);
-                    }}
-                  >
-                    Sửa
-                  </button>
+                  {isAuthenticated && (
+                    <div>
+                      {(userInfo?.role === "admin" || comment.user_id === userInfo?.id) && (
+                        <>
+                          {/* Hiển thị nút Sửa chỉ khi người dùng không phải admin */}
+                          {userInfo?.role !== "admin" && (
+                            <button
+                              className="btn me-2"
+                              style={{ color: "black" }}
+                              onMouseEnter={(e) => (e.target.style.color = "#ffc107")}
+                              onMouseLeave={(e) => (e.target.style.color = "black")}
+                              onClick={() => {
+                                setEditCommentId(comment.id);
+                                setEditedComment(comment.comment);
+                                setEditedRating(comment.star_rating);
+                              }}
+                            >
+                              Sửa
+                            </button>
+                          )}
 
-                  <button
-                    className="btn"
-                    style={{ color: "black" }}
-                    onMouseEnter={(e) => (e.target.style.color = "#dc3545")}
-                    onMouseLeave={(e) => (e.target.style.color = "black")}
-                    onClick={() => handleDeleteComment(comment.id)}
-                  >
-                    Xóa
-                  </button>
-                </>
-              )}
-            </div>
-          )}
+                          <button
+                            className="btn"
+                            style={{ color: "black" }}
+                            onMouseEnter={(e) => (e.target.style.color = "#dc3545")}
+                            onMouseLeave={(e) => (e.target.style.color = "black")}
+                            onClick={() => handleDeleteComment(comment.id)}
+                          >
+                            Xóa
+                          </button>
+                        </>
+                      )}
 
-          {editCommentId === comment.id && (
-            <div className="mt-2">
-              <textarea
-                value={editedComment}
-                onChange={(e) => setEditedComment(e.target.value)}
-                className="form-control"
-              />
-              <div className="rating-stars">
-                <span>Mức độ hài lòng: </span>
-                {[...Array(5)].map((_, idx) => (
-                  <span
-                    key={idx}
-                    className={`fa fa-star ${idx < editedRating ? "text-warning" : "text-muted"}`}
-                    onClick={() => setEditedRating(idx + 1)}
-                  />
-                ))}
-              </div>
-              {comment.file && !file && (
-                <div className="preview-image">
-                  <img src={comment.file} alt="Current review image" width="100" />
-                  <p>Ảnh hiện tại</p>
+                    </div>
+                  )}
+
+                  {editCommentId === comment.id && (
+                    <div className="mt-2">
+                      <textarea
+                        value={editedComment}
+                        onChange={(e) => setEditedComment(e.target.value)}
+                        className="form-control"
+                      />
+                      <div className="rating-stars">
+                        <span>Mức độ hài lòng: </span>
+                        {[...Array(5)].map((_, idx) => (
+                          <span
+                            key={idx}
+                            className={`fa fa-star ${idx < editedRating ? "text-warning" : "text-muted"}`}
+                            onClick={() => setEditedRating(idx + 1)}
+                          />
+                        ))}
+                      </div>
+                      {comment.file && !file && (
+                        <div className="preview-image">
+                          <img src={comment.file} alt="Current review image" width="100" />
+                          <p>Ảnh hiện tại</p>
+                        </div>
+                      )}
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => {
+                          setFile(e.target.files[0]);
+                        }}
+                      />
+                      {file && (
+                        <div className="preview-image">
+                          <img src={URL.createObjectURL(file)} alt="Review" width="130" />
+                        </div>
+                      )}
+                      <div className="d-flex gap-2 mt-2">
+                        <button
+                          className="btn btn-success btn-sm p-3 rounded custom-btn"
+                          onClick={handleEditComment}
+                        >
+                          Lưu thay đổi
+                        </button>
+                        <button
+                          className="btn btn-danger btn-sm p-3 rounded custom-btn"
+                          onClick={() => {
+                            setEditCommentId(null);
+                            setEditedComment("");
+                            setEditedRating(0);
+                            setFile(null);
+                          }}
+                        >
+                          Hủy thay đổi
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </div>
-              )}
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => {
-                  setFile(e.target.files[0]);
-                }}
-              />
-              {file && (
-                <div className="preview-image">
-                  <img src={URL.createObjectURL(file)} alt="Review" width="130" />
+              ))
+            ) : (
+              <p>Chưa có đánh giá nào.</p>
+            )}
+
+            {isAuthenticated && (
+              <div className="add-review-form">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => setFile(e.target.files[0])}
+                />
+                {file && (
+                  <div className="preview-image">
+                    <img src={URL.createObjectURL(file)} alt="Preview" width="100" />
+                  </div>
+                )}
+                <textarea
+                  className="form-control"
+                  value={newComment}
+                  onChange={(e) => setNewComment(e.target.value)}
+                  placeholder="Thêm bình luận của bạn..."
+                />
+                <div className="rating-stars">
+                  <strong>Mức độ hài lòng: </strong>
+                  {[...Array(5)].map((_, idx) => (
+                    <span
+                      key={idx}
+                      className={`fa fa-star ${idx < newRating ? "text-warning" : "text-muted"}`}
+                      onClick={() => setNewRating(idx + 1)}
+                    />
+                  ))}
                 </div>
-              )}
-              <div className="d-flex gap-2 mt-2">
                 <button
-                  className="btn btn-success btn-sm p-3 rounded custom-btn"
-                  onClick={handleEditComment}
+                  className="btn btn-sqr mt-2"
+                  onClick={handleAddComment}
                 >
-                  Lưu thay đổi
-                </button>
-                <button
-                  className="btn btn-danger btn-sm p-3 rounded custom-btn"
-                  onClick={() => {
-                    setEditCommentId(null);
-                    setEditedComment("");
-                    setEditedRating(0);
-                    setFile(null);
-                  }}
-                >
-                  Hủy thay đổi
+                  Thêm bình luận
                 </button>
               </div>
-            </div>
-          )}
-        </div>
-      ))
-    ) : (
-      <p>Chưa có đánh giá nào.</p>
-    )}
-
-    {isAuthenticated && (
-      <div className="add-review-form">
-        <input
-          type="file"
-          accept="image/*"
-          onChange={(e) => setFile(e.target.files[0])}
-        />
-        {file && (
-          <div className="preview-image">
-            <img src={URL.createObjectURL(file)} alt="Preview" width="100" />
+            )}
           </div>
-        )}
-        <textarea
-          className="form-control"
-          value={newComment}
-          onChange={(e) => setNewComment(e.target.value)}
-          placeholder="Thêm bình luận của bạn..."
-        />
-        <div className="rating-stars">
-          <strong>Mức độ hài lòng: </strong>
-          {[...Array(5)].map((_, idx) => (
-            <span
-              key={idx}
-              className={`fa fa-star ${idx < newRating ? "text-warning" : "text-muted"}`}
-              onClick={() => setNewRating(idx + 1)}
-            />
-          ))}
         </div>
-        <button
-          className="btn btn-sqr mt-2"
-          onClick={handleAddComment}
-        >
-          Thêm bình luận
-        </button>
-      </div>
-    )}
-  </div>
-</div>
 
       </div>
     </div>
