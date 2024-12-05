@@ -27,6 +27,8 @@ const Cart = () => {
           const { carts } = response.data; // Lấy danh sách carts từ API
           if (Array.isArray(carts)) {
             setLocalCart(carts);
+            localStorage.removeItem('cart');
+
           } else {
             setLocalCart([]);
           }
@@ -154,33 +156,51 @@ const Cart = () => {
   };
   
   const handleQuantityChange = async (variantId, change) => {
-    const updatedCart = localCart.map(item => {
+    const updatedCart = localCart.map((item) => {
       if (item.id_productVariant === variantId) {
         const newQuantity = item.quantity + change;
-        
-        // Debug logs để kiểm tra giá trị
+  
         console.log(`Current quantity: ${item.quantity}, Stock: ${item.stock}, New quantity: ${newQuantity}`);
   
-        // Kiểm tra xem số lượng có vượt quá số lượng trong kho hay không
+        // Kiểm tra số lượng
         if (newQuantity > item.stock) {
           toast.warn('Số lượng trong kho không đủ!');
-          return item;  // Nếu số lượng vượt quá kho, giữ nguyên số lượng hiện tại
+          return item;
         }
   
-        // Kiểm tra nếu số lượng mới là hợp lệ (phải lớn hơn 0)
         if (newQuantity <= 0) {
           toast.warn('Số lượng không thể nhỏ hơn 1!');
-          return item;  // Nếu số lượng nhỏ hơn hoặc bằng 0, giữ nguyên số lượng hiện tại
+          return item;
         }
   
-        // Cập nhật số lượng hợp lệ
         return { ...item, quantity: newQuantity };
       }
-      return item;  // Nếu không phải sản phẩm đang sửa đổi, giữ nguyên
+      return item;
     });
-  
-    setLocalCart(updatedCart);
-    localStorage.setItem('cart', JSON.stringify(updatedCart));
+    const token = localStorage.getItem('token');
+    // Nếu đăng nhập, cập nhật trên backend
+    if (token) {
+      try {
+        const response = await axios.put(`http://127.0.0.1:8000/api/cart/update/${variantId}`, { quantity: newQuantity });
+        toast.success(response.data.message);
+      } catch (error) {
+        if (error.response) {
+          const { message, stock_available, requested_quantity } = error.response.data;
+          if (message === "Số lượng sản phẩm trong kho không đủ") {
+            toast.error(`Chỉ còn ${stock_available} sản phẩm trong kho, bạn đã yêu cầu ${requested_quantity}`);
+          } else {
+            toast.error(message);
+          }
+        } else {
+          toast.error("Đã có lỗi xảy ra, vui lòng thử lại sau!");
+        }
+      }
+    } else {
+      // Nếu chưa đăng nhập, cập nhật localStorage
+      setLocalCart(updatedCart);
+      localStorage.setItem('cart', JSON.stringify(updatedCart));
+      toast.success('Cập nhật số lượng thành công!');
+    }
   };
   
 

@@ -31,6 +31,7 @@ const Header = () => {
           const { carts } = response.data; // Lấy danh sách carts từ API
           if (Array.isArray(carts)) {
             setLocalCart(carts);
+            
           } else {
             setLocalCart([]);
           }
