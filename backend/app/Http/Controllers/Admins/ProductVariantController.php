@@ -55,7 +55,7 @@ class ProductVariantController extends Controller
         'new_color' => 'nullable|string|max:255', // Dành cho color mới
         'price' => 'required|numeric|min:0',
         'quantity' => 'required|integer|min:0',
-        'variant_images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // Kích thước tối đa 2MB
+
     ]);
 
     // Kiểm tra và xử lý kích thước
@@ -112,12 +112,6 @@ class ProductVariantController extends Controller
     return redirect()->route('admin.products.variants.index', $productId)
         ->with('success', 'Biến thể đã được thêm thành công.');
 }
-
-
-
-
-
-
     /**
      * Display the specified resource.
      */

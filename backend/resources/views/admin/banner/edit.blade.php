@@ -39,7 +39,7 @@
                                 @if ($banner->image_url)
                                     <div class="d-flex justify-content-center">
                                         <img src="{{ Storage::url($banner->image_url) }}" alt="{{ $banner->title }}"
-                                            class="img-thumbnail" style="max-width: 800px; margin-bottom: 10px;">
+                                            class="img-thumbnail" style="max-width: 400px; margin-bottom: 10px;">
                                     </div>
                                 @else
                                     <div class="alert alert-warning" role="alert" style="margin-bottom: 10px;">

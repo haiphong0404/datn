@@ -78,6 +78,8 @@ class OrderController extends Controller
                  'email' => $request->input('email'),
                  'address' => $request->input('address'),
                  'infor' => $request->input('infor'),
+                 'voucher_discount' => $request->input('voucher_discount'),
+                 'shipping_fee' => $request->input('shipping_fee'),
                  'payment_method' => $request->input('payment_method'),
                  'payment_status' => $paymentStatus, // Added the payment status separately
              ];

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Pagination } from '@mui/material';
 import useGetAllArticles from '../hooks/useGetAllBlogs ';
+import LoadingSpinner from "../loading/LoadingSpinner"; 
 
 const Blog = () => {
   const { articles, loading, error } = useGetAllArticles();
@@ -15,7 +16,7 @@ const Blog = () => {
     setFilteredArticles(articles);
   }, [articles]);
 
-  if (loading) return <div>Đang tải...</div>;
+  if (loading)  return <LoadingSpinner />;;
   if (error) return <div>{error}</div>;
 
   // Tính tổng số trang dựa trên filteredArticles
@@ -155,6 +156,13 @@ const Blog = () => {
                                 <img
                                   src={article.image || "assets/img/blog/default.jpg"}
                                   alt={article.name}
+                                  style={{
+                                    display: 'block',
+                                    margin: '0 auto',
+                                    width: '300px', // Đặt chiều rộng mong muốn
+                                    height: '200px', // Đặt chiều cao mong muốn
+                                    objectFit: 'cover', // Cắt ảnh để phù hợp với kích thước mà không bị méo
+                                  }}
                                 />
                               </Link>
                             </div>
@@ -174,7 +182,7 @@ const Blog = () => {
                                 </span>
                               </div>
                               <p className="blog-desc">
-                                {article.content || "No description available."}
+                                {article.content.substring(0, 40) || "No description available."}
                               </p>
                               <Link
                                 className="btn read-more"

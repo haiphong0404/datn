@@ -47,7 +47,9 @@ class OrderSeeder extends Seeder
                 'status' => $status, // Trạng thái đơn hàng
                 'payment_method' => $paymentMethod,
                 'payment_status' => $paymentStatus, // Trạng thái thanh toán
-                'total_amount' => $faker->numberBetween(1000, 50000), // Tổng số tiền
+                'total_amount' => $faker->numberBetween(1000, 50000),
+                'shipping_fee' => $faker->numberBetween(1000, 50000),
+                'voucher_discount' => $faker->numberBetween(1000, 50000), 
                 'name' => $faker->name(), // Tên người nhận
                 'phone' => $faker->phoneNumber(), // Số điện thoại người nhận
                 'address' => $faker->address(), // Địa chỉ người nhận

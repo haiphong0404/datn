@@ -80,8 +80,8 @@
                                 </div>
                                 <div class="span6">
                                     <div class="dataTables_filter" id="hidden-table-info_filter">
-                                        <a href="{{ route('admin.banners.create') }}"
-                                            class=" btn btn-success btn-sm">Tạo mới</a>
+                                        <a href="{{ route('admin.banners.create') }}" class=" btn btn-success btn-sm">Tạo
+                                            mới</a>
 
                                     </div>
                                 </div>
@@ -114,9 +114,11 @@
                                                 <td class="text-truncate">{{ $banner->sub_title }}</td>
                                                 <td class="text-truncate">{{ $banner->span_title }}</td>
 
-                                                <td>
-                                                    <a href="{{ route('admin.banners.show', $banner->id) }}"
-                                                        class="btn btn-primary"><i class="fa fa-eye"></i></a>
+                                                <td class="text-center">
+                                                    @if (!$banner->deleted_at)
+                                                        <a href="{{ route('admin.banners.show', $banner->id) }}"
+                                                            class="btn btn-primary"><i class="fa fa-eye"></i></a>
+                                                    @endif
                                                     @if ($banner->deleted_at)
                                                         <form action="{{ route('admin.banners.restore', $banner->id) }}"
                                                             method="POST" style="display:inline;">
