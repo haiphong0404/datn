@@ -138,7 +138,7 @@ const Details = () => {
     
                 if (response.status === 200) {
                     toast.success("Sản phẩm đã được thêm vào giỏ hàng!");
-    
+                    window.location.reload()
                     // Cập nhật giỏ hàng từ dữ liệu API và lưu lại trong localStorage
                     // dispatch(addCart(response.data.cart_item));
     

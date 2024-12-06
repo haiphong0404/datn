@@ -155,53 +155,60 @@ const Cart = () => {
     }
   };
   
-  const handleQuantityChange = async (variantId, change) => {
-    const updatedCart = localCart.map((item) => {
-      if (item.id_productVariant === variantId) {
-        const newQuantity = item.quantity + change;
+  // const handleQuantityChange = async (variantId, change) => {
+  //   // Tính lại số lượng mới cho sản phẩm
+  //   const updatedCart = localCart.map((item) => {
+  //     if (item.id_productVariant === variantId) {
+  //       const newQuantity = item.quantity + change;
+  //       console.log(`Current quantity: ${item.quantity}, Stock: ${item.stock}, New quantity: ${newQuantity}`);
+        
+  //       // Kiểm tra số lượng
+  //       if (newQuantity > item.stock) {
+  //         toast.warn('Số lượng trong kho không đủ!');
+  //         return item;
+  //       }
+        
+  //       if (newQuantity <= 0) {
+  //         toast.warn('Số lượng không thể nhỏ hơn 1!');
+  //         return item;
+  //       }
+        
+  //       // Cập nhật lại số lượng nếu hợp lệ
+  //       return { ...item, quantity: newQuantity };
+  //     }
+  //     return item;
+  //   });
+    
+  //   const token = localStorage.getItem('token');
+    
+  //   // Nếu người dùng đã đăng nhập, cập nhật dữ liệu trên backend
+  //   if (token) {
+  //     try {
+  //       const response = await axios.put(`http://127.0.0.1:8000/api/cart/update/${variantId}`, { quantity: newQuantity });
+  //       toast.success(response.data.message);
+  //       // Cập nhật lại giỏ hàng sau khi thành công
+  //       setLocalCart(updatedCart);
+  //       localStorage.setItem('cart', JSON.stringify(updatedCart));
+  //     } catch (error) {
+  //       if (error.response) {
+  //         const { message, stock_available, requested_quantity } = error.response.data;
+  //         if (message === "Số lượng sản phẩm trong kho không đủ") {
+  //           toast.error(`Chỉ còn ${stock_available} sản phẩm trong kho, bạn đã yêu cầu ${requested_quantity}`);
+  //         } else {
+  //           toast.error(message);
+  //         }
+  //       } else {
+  //         toast.error("Đã có lỗi xảy ra, vui lòng thử lại sau!");
+  //       }
+  //     }
+  //   } else {
+  //     // Nếu chưa đăng nhập, chỉ cập nhật dữ liệu trong localStorage
+  //     setLocalCart(updatedCart);
+  //     localStorage.setItem('cart', JSON.stringify(updatedCart));
+  //     toast.success('Cập nhật số lượng thành công!');
+  //   }
+  // };
   
-        console.log(`Current quantity: ${item.quantity}, Stock: ${item.stock}, New quantity: ${newQuantity}`);
-  
-        // Kiểm tra số lượng
-        if (newQuantity > item.stock) {
-          toast.warn('Số lượng trong kho không đủ!');
-          return item;
-        }
-  
-        if (newQuantity <= 0) {
-          toast.warn('Số lượng không thể nhỏ hơn 1!');
-          return item;
-        }
-  
-        return { ...item, quantity: newQuantity };
-      }
-      return item;
-    });
-    const token = localStorage.getItem('token');
-    // Nếu đăng nhập, cập nhật trên backend
-    if (token) {
-      try {
-        const response = await axios.put(`http://127.0.0.1:8000/api/cart/update/${variantId}`, { quantity: newQuantity });
-        toast.success(response.data.message);
-      } catch (error) {
-        if (error.response) {
-          const { message, stock_available, requested_quantity } = error.response.data;
-          if (message === "Số lượng sản phẩm trong kho không đủ") {
-            toast.error(`Chỉ còn ${stock_available} sản phẩm trong kho, bạn đã yêu cầu ${requested_quantity}`);
-          } else {
-            toast.error(message);
-          }
-        } else {
-          toast.error("Đã có lỗi xảy ra, vui lòng thử lại sau!");
-        }
-      }
-    } else {
-      // Nếu chưa đăng nhập, cập nhật localStorage
-      setLocalCart(updatedCart);
-      localStorage.setItem('cart', JSON.stringify(updatedCart));
-      toast.success('Cập nhật số lượng thành công!');
-    }
-  };
   
 
 
@@ -271,19 +278,19 @@ const Cart = () => {
                 <div className="variant-quantity">
 
                   <div className="quantity-controls">
-                    <button
+                    {/* <button
                       className="quantity-btn"
                       onClick={() => handleQuantityChange(variant.id_productVariant, -1)} // Giảm số lượng
                     >
                       -
-                    </button>
-                    <span className="quantity-display">{variant.quantity}</span>
-                    <button
+                    </button> */}
+                    <span className="quantity-display">Số lượng :{variant.quantity}</span>
+                    {/* <button
                       className="quantity-btn"
                       onClick={() => handleQuantityChange(variant.id_productVariant, 1)} // Tăng số lượng
                     >
                       +
-                    </button>
+                    </button> */}
                   </div>
                   <p className="variant-price">Giá: {variant.price} VND</p>
                 </div>

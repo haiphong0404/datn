@@ -34,6 +34,8 @@ import CheckoutDetail from "./pages/CheckoutDetail";
 
 import ChangePassword from "./pages/My_account/changePass";
 import EditProfile from "./pages/My_account/editProfile";
+import PaymentSuccess from "./pages/Stripe/SuccessPage";
+import PaymentCancel from "./pages/Stripe/PaymentCancel";
 
 
 
@@ -59,6 +61,8 @@ const routeConfig = [
       { path: "faqs", element: <FAQs /> },
       { path: "checkout/bill", element: <Bill /> },
       { path: "/checkout-detail/:orderId", element: <CheckoutDetail /> },
+      { path: "/payment-success", element: <PaymentSuccess /> },
+      { path: "/payment-cancel", element: <PaymentCancel /> },
     ],
   },
   {
