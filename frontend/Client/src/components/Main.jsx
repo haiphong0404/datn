@@ -162,6 +162,7 @@ const Main = () => {
             </div>
 
             {/* product single item start */}
+            
             <div className="product-list">
               {products.slice(0, 4).map((product) => (
                 <div key={product.id} className="product-item">
@@ -187,6 +188,9 @@ const Main = () => {
                         </span>
                       </a>
                     </div> */}
+                    <div className="product-label">
+                        <span>new</span>
+                    </div>
 
                   </div>
                   <div className="product-content">

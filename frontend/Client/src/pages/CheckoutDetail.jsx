@@ -38,7 +38,7 @@ const CheckoutDetail = () => {
       }
     } catch (error) {
       console.error('Có lỗi xảy ra khi cập nhật thanh toán:', error);
-      alert('Cập nhật thanh toán thất bại');
+      toast('Cập nhật thanh toán thất bại');
     }
   };
 

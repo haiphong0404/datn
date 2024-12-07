@@ -24,9 +24,9 @@ const ProductItem = ({ product }) => { // Nhận product qua props
                             </span>
                         </Link> */}
                     </div>
-                    <div className="product-label">
+                    {/* <div className="product-label">
                         <span>new</span>
-                    </div>
+                    </div> */}
                     {/* <div className="discount-label">
                         <span>-10% Off</span>
                     </div> */}
