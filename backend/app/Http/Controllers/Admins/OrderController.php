@@ -20,6 +20,8 @@ class OrderController extends Controller
     public function __construct(OrderService $orderService)
     {
         $this->orderService = $orderService;
+        $this->middleware('checkRole:admin')->only(['create', 'store']);
+        $this->middleware('checkRole:admin,staff')->only(['index', 'show','updateStatus','updatePaymentStatus']);
     }
 
     /**
@@ -32,9 +34,9 @@ class OrderController extends Controller
 
     // Lấy tất cả orders từ cơ sở dữ liệu với tìm kiếm
     $orders = Order::when($search, function ($query, $search) {
-            return $query->where('order_number', 'LIKE', "%{$search}%")
-                         ->orWhere('customer_name', 'LIKE', "%{$search}%")
-                         ->orWhere('status', 'LIKE', "%{$search}%"); // Tìm kiếm trong các cột khác nếu cần
+            return $query->where('id', 'LIKE', "%{$search}%")
+                         ->orWhere('name', 'LIKE', "%{$search}%")
+                         ->orWhere('phone', 'LIKE', "%{$search}%"); // Tìm kiếm trong các cột khác nếu cần
         })
         ->orderBy('created_at', 'desc') // Sắp xếp theo ngày tạo mới nhất
         ->paginate($perPage);

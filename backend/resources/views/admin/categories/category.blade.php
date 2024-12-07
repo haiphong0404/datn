@@ -12,10 +12,6 @@
 
 @section('content')
     @if (session('success'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            {{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
     @endif
     @if (session('error'))
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -78,8 +74,8 @@
                                     </form>
                                 </div>
                                 <div class="col-sm-6 text-end">
-                                    <a href="{{ route('admin.categories.create') }}"
-                                        class="btn btn-success btn-sm">Tạo mới</a>
+                                    <a href="{{ route('admin.categories.create') }}" class="btn btn-success btn-sm">Tạo
+                                        mới</a>
                                 </div>
                             </div>
 
@@ -127,7 +123,7 @@
                                                         @method('DELETE')
                                                         <button type="submit" class="btn btn-danger "
                                                             onclick="return confirm('Bạn có chắc muốn xóa thể loại này?');">
-                                                            <i class="fa fa-trash-o"></i>
+                                                            <i class="fa fa-trash"></i>
                                                         </button>
                                                     </form>
                                                 @endif
@@ -172,4 +168,14 @@
             </section>
         </div>
     </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        toastr.success('{{ session('success') }}', 'Thành công', {
+            closeButton: true,
+            progressBar: true,
+            timeOut: 3000,
+            positionClass: "toast-top-right"
+        });
+    });
+</script>
 @endsection

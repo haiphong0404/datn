@@ -15,13 +15,6 @@
 @endsection
 
 @section('content')
-    @if (session('success'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            {{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    @endif
-
     <style>
         .text-truncate {
             max-width: 150px;
@@ -87,7 +80,10 @@
                                 </div>
                                 <div class="span6">
                                     <div class="dataTables_filter" id="hidden-table-info_filter">
-                                        <a href="{{ route('admin.products.create') }}" class="btn btn-success ">Tạo mới</a>
+                                        @if (auth()->user()->hasRole(['admin']))
+                                            <a href="{{ route('admin.products.create') }}" class="btn btn-success ">Tạo
+                                                mới</a>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -119,7 +115,8 @@
                                             </td>
                                             <td class="text-truncate">{{ $product->name }}</td>
                                             <td class="text-truncate">{{ $product->description }}</td>
-                                            <td style="width: 120px;"class="text-end">{{ number_format($product->price, 0, ',', '.') }} VNĐ</td>
+                                            <td style="width: 120px;"class="text-end">
+                                                {{ number_format($product->price, 0, ',', '.') }} VNĐ</td>
                                             <td>{{ $product->category->name ?? 'Không có' }}</td>
                                             <td>{{ $product->brand->name ?? 'Không có' }}</td>
                                             <td class="text-end">{{ $product->total_quantity_in_stock }}</td>
@@ -137,35 +134,39 @@
                                                         class="btn btn-info mr-1">
                                                         <i class="fa fa-eye"></i>
                                                     </a>
-                                                    <a href="{{ route('admin.products.edit', $product->id) }}"
-                                                        class="btn btn-warning">
-                                                        <i class="fa fa-edit"></i>
-                                                    </a>
+                                                    @if (auth()->user()->hasRole(['admin']))
+                                                        <a href="{{ route('admin.products.edit', $product->id) }}"
+                                                            class="btn btn-warning">
+                                                            <i class="fa fa-edit"></i>
+                                                        </a>
+                                                    @endif
                                                 </div>
-                                                <a href="{{ route('admin.products.variants.index', $product->id) }}"
-                                                    class="btn btn-secondary">
-                                                    <i class="fa fa-list"></i>
-                                                </a>
+                                                @if (auth()->user()->hasRole(['admin']))
+                                                    <a href="{{ route('admin.products.variants.index', $product->id) }}"
+                                                        class="btn btn-secondary">
+                                                        <i class="fa fa-list"></i>
+                                                    </a>
 
 
-                                                @if ($product->trashed())
-                                                    <form action="{{ route('admin.products.restore', $product->id) }}"
-                                                        method="POST" style="display:inline;">
-                                                        @csrf
-                                                        <button type="submit" class="btn btn-info">
-                                                            <i class="fa fa-undo"></i>
-                                                        </button>
-                                                    </form>
-                                                @else
-                                                    <form action="{{ route('admin.products.destroy', $product->id) }}"
-                                                        method="POST" style="display:inline;">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit" class="btn btn-danger "
-                                                            onclick="return confirm('Bạn có chắc chắn muốn xóa không?');">
-                                                            <i class="fa fa-trash"></i>
-                                                        </button>
-                                                    </form>
+                                                    @if ($product->trashed())
+                                                        <form action="{{ route('admin.products.restore', $product->id) }}"
+                                                            method="POST" style="display:inline;">
+                                                            @csrf
+                                                            <button type="submit" class="btn btn-info">
+                                                                <i class="fa fa-undo"></i>
+                                                            </button>
+                                                        </form>
+                                                    @else
+                                                        <form action="{{ route('admin.products.destroy', $product->id) }}"
+                                                            method="POST" style="display:inline;">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="btn btn-danger "
+                                                                onclick="return confirm('Bạn có chắc chắn muốn xóa không?');">
+                                                                <i class="fa fa-trash"></i>
+                                                            </button>
+                                                        </form>
+                                                    @endif
                                                 @endif
                                             </td>
                                         </tr>
@@ -204,4 +205,14 @@
             </section>
         </div>
     </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        toastr.success('{{ session('success') }}', 'Thành công', {
+            closeButton: true,
+            progressBar: true,
+            timeOut: 3000,
+            positionClass: "toast-top-right"
+        });
+    });
+</script>
 @endsection

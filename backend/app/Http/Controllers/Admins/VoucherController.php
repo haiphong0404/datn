@@ -31,7 +31,7 @@ class VoucherController extends Controller
    public function index(Request $request)
 {
     $search = $request->input('search');
-    $perPage = $request->input('per_page', 2); // Mặc định là 2 bản ghi mỗi trang
+    $perPage = $request->input('per_page', 10); // Mặc định là 2 bản ghi mỗi trang
 
     // Truy vấn và lọc các voucher
     $vouchers = $this->voucher->when($search, function ($query, $search) {

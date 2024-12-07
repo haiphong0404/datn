@@ -73,7 +73,7 @@
                             <a href="{{ route('admin.user.index') }}" class="btn btn-secondary flex-fill me-1">Quay lại</a>
                             
                             {{-- Kiểm tra nếu tài khoản đăng nhập không phải admin hoặc người dùng hiện tại không phải admin --}}
-                            @if (!(auth()->user()->role === 'admin' && $user->role === 'admin'))
+                            @if (!(auth()->user()->role === 'admin' && $user->role === 'admin') && auth()->user()->hasRole(['admin']))
                                 <a href="{{ route('admin.user.edit', $user->id) }}" class="btn btn-warning flex-fill me-1">Chỉnh sửa</a>
                             @endif
                         </div>

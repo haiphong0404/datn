@@ -12,10 +12,6 @@
 
 @section('content')
     @if (session('success'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            {{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
     @endif
 
     <style>
@@ -76,7 +72,10 @@
                                 </div>
                                 <div class="span6">
                                     <div class="dataTables_filter" id="hidden-table-info_filter">
-                                        <a href="{{ route('admin.orders.create') }}" class="btn btn-success btn-sm">Tạo mới</a>
+                                        @if (auth()->user()->hasRole(['admin']))
+                                            <a href="{{ route('admin.orders.create') }}" class="btn btn-success btn-sm">Tạo
+                                                mới</a>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -90,7 +89,7 @@
                                         <th>Số điện thoại</th>
                                         <th>PTTT</th>
                                         <th>Địa chỉ</th>
-                                        <th >Tổng tiền</th>
+                                        <th>Tổng tiền</th>
                                         <th>Ngày tạo</th>
                                         <th>Ngày cập nhật</th>
                                         <th>Trạng Thái Thanh Toán</th>
@@ -106,7 +105,7 @@
                                             <td class="text-end">{{ $order->phone }}</td>
                                             <td>{{ $order->payment_method }}</td>
                                             <td class="text-truncate">{{ $order->address }}</td>
-                                            <td class="text-end" >{{ number_format($order->total_amount, 0, ',', '.') }} VND
+                                            <td class="text-end" style="width: 150px;">{{ number_format($order->total_amount, 0, ',', '.') }} VND
                                             </td>
                                             <td style="width: 100px;">{{ $order->order_date }}</td>
                                             <td style="width: 100px;">{{ $order->updated_at }}</td>
@@ -202,4 +201,14 @@
     </div>
 
     <script src="{{ asset('assets') }}/admin/js/dynamic_table_init.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            toastr.success('{{ session('success') }}', 'Thành công', {
+                closeButton: true,
+                progressBar: true,
+                timeOut: 3000,
+                positionClass: "toast-top-right"
+            });
+        });
+    </script>
 @endsection

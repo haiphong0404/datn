@@ -38,7 +38,7 @@
 
     <link href="{{ asset('assets') }}/admin/css/style.css" rel="stylesheet">
     <link href="{{ asset('assets') }}/admin/css/style-responsive.css" rel="stylesheet" />
-
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
     @yield('css')
 </head>
 
@@ -313,76 +313,118 @@
         </header>
         <!--header end-->
         <!--sidebar start-->
-        <aside>
+        <aside style="position: sticky; top: 0; z-index: 1000;">
             <div id="sidebar" class="nav-collapse ">
                 <!-- sidebar menu start-->
                 <ul class="sidebar-menu" id="nav-accordion">
-                    <li>
-                        <a href="{{ route('admin.index') }}">
-                            <i class="fa fa-dashboard"></i>
-                            <span>Thông kê</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('admin.articles.index') }}">
-                            <i class="bi bi-newspaper"></i>
-                            <span>Bài viết</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('admin.banners.index') }}">
-                            <i class="bi bi-card-image"></i>
-                            <span>Banner</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('admin.brands.index') }}">
-                            <i class="bi bi-badge-tm-fill"></i>
-                            <span>Thương hiệu</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('admin.categories.index') }}">
-                            <i class="bi bi-tags-fill"></i>
-                            <span>Danh mục</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('admin.contacts.index') }}">
-                            <i class="bi bi-person-rolodex"></i>
-                            <span>Liên hệ</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('admin.comments.index') }}">
-                            <i class="bi bi-chat-square-dots-fill"></i>
-                            <span>Bình luận</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('admin.orders.index') }}">
-                            <i class="bi bi-receipt"></i>
-                            <span>Đơn hàng</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('admin.user.index') }}">
-                            <i class="fa fa-user"></i>
-                            <span>Tài khoản</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('admin.products.index') }}">
-                            <i class="bi bi-shop"></i>
-                            <span>Shops</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('admin.vouchers.index') }}">
-                            <i class="fas fa-ticket-alt"></i>
-                            <span>Voucher</span>
-                        </a>
-                    </li>
+                    <!-- Thống kê -->
+                    @if (auth()->user()->hasRole(['admin', 'staff']))
+                        <li>
+                            <a href="{{ route('admin.index') }}">
+                                <i class="bi bi-speedometer2"></i>
+                                <span>Thống kê</span>
+                            </a>
+                        </li>
+                    @endif
+                    <!-- Bài viết -->
+                    @if (auth()->user()->hasRole(['admin']))
+                        <li>
+                            <a href="{{ route('admin.articles.index') }}">
+                                <i class="bi bi-newspaper"></i>
+                                <span>Bài viết</span>
+                            </a>
+                        </li>
+                    @endif
+
+                    <!-- Banner -->
+                    @if (auth()->user()->hasRole(['admin']))
+                        <li>
+                            <a href="{{ route('admin.banners.index') }}">
+                                <i class="bi bi-card-image"></i>
+                                <span>Banner</span>
+                            </a>
+                        </li>
+                    @endif
+
+                    <!-- Thương hiệu -->
+                    @if (auth()->user()->hasRole(['admin']))
+                        <li>
+                            <a href="{{ route('admin.brands.index') }}">
+                                <i class="bi bi-badge-tm-fill"></i>
+                                <span>Thương hiệu</span>
+                            </a>
+                        </li>
+                    @endif
+
+                    <!-- Danh mục -->
+                    @if (auth()->user()->hasRole(['admin']))
+                        <li>
+                            <a href="{{ route('admin.categories.index') }}">
+                                <i class="bi bi-tags-fill"></i>
+                                <span>Danh mục</span>
+                            </a>
+                        </li>
+                    @endif
+
+                    <!-- Liên hệ -->
+                    @if (auth()->user()->hasRole(['admin']))
+                        <li>
+                            <a href="{{ route('admin.contacts.index') }}">
+                                <i class="bi bi-person-rolodex"></i>
+                                <span>Liên hệ</span>
+                            </a>
+                        </li>
+                    @endif
+
+                    <!-- Bình luận -->
+                    @if (auth()->user()->hasRole(['admin']))
+                        <li>
+                            <a href="{{ route('admin.comments.index') }}">
+                                <i class="bi bi-chat-square-dots-fill"></i>
+                                <span>Bình luận</span>
+                            </a>
+                        </li>
+                    @endif
+
+                    <!-- Đơn hàng -->
+                    @if (auth()->user()->hasRole(['admin', 'staff']))
+                        <li>
+                            <a href="{{ route('admin.orders.index') }}">
+                                <i class="bi bi-receipt"></i>
+                                <span>Đơn hàng</span>
+                            </a>
+                        </li>
+                    @endif
+
+                    <!-- Tài khoản (Chỉ Admin) -->
+                    @if (auth()->user()->hasRole(['admin', 'staff']))
+                        <li>
+                            <a href="{{ route('admin.user.index') }}">
+                                <i class="bi bi-person-lines-fill"></i>
+                                <span>Tài khoản</span>
+                            </a>
+                        </li>
+                    @endif
+
+                    <!-- Shops -->
+                    @if (auth()->user()->hasRole(['admin', 'staff']))
+                        <li>
+                            <a href="{{ route('admin.products.index') }}">
+                                <i class="bi bi-shop"></i>
+                                <span>Shops</span>
+                            </a>
+                        </li>
+                    @endif
+
+                    <!-- Voucher (Chỉ Admin) -->
+                    @if (auth()->user()->hasRole(['admin']))
+                        <li>
+                            <a href="{{ route('admin.vouchers.index') }}">
+                                <i class="fas fa-ticket-alt"></i>
+                                <span>Voucher</span>
+                            </a>
+                        </li>
+                    @endif
                 </ul>
                 <!-- sidebar menu end-->
             </div>
@@ -399,7 +441,7 @@
     <!-- Section for additional JS -->
     @yield('js')
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <!-- JS của Select2 -->
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <!-- js placed at the end of the document so the pages load faster -->
