@@ -5952,13 +5952,10 @@ only screen and (max-width: 767.98px) {
 /* Đảm bảo rằng sản phẩm trong list-view hiển thị theo chiều dọc */
 
 
-.product-thumb {
-  /* flex: 0 0 100px; */
+/* .product-thumb {
   height: 200px;
-  /* Kích thước hình ảnh */
   margin-right: 20px;
-  /* Khoảng cách giữa hình ảnh và nội dung sản phẩm */
-}
+} */
 
 .product-content-list {
   flex: 1;
@@ -8593,6 +8590,7 @@ only screen and (max-width: 767.98px) {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  /* height: 600px; */
 }
 
 .cart-variant-card {
@@ -8653,6 +8651,7 @@ only screen and (max-width: 767.98px) {
   border-radius: 8px;
   background-color: #f9f9f9;
   padding: 20px;
+  height: 200px;
 }
 
 .total-calculation h5 {
@@ -8700,7 +8699,7 @@ only screen and (max-width: 767.98px) {
 .quantity-display {
   font-size: 18px;
   font-weight: bold;
-  width: 40px;
+  /* width: 40px; */
   text-align: center;
 }
 .total-amount-row {
@@ -9023,4 +9022,82 @@ button {
   font-size: 16px;
   line-height: 1.6;
   color: #333;
+}
+/* Container chung cho thông báo thanh toán thành công */
+.payment-success-container {
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+/* Tiêu đề thanh toán thành công */
+.payment-success-title {
+  font-size: 24px;
+  color: #4CAF50;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+/* Bao bọc thông tin đơn hàng */
+.order-info {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+  text-align: left;
+}
+
+/* Tiêu đề phần thông tin đơn hàng */
+.order-info-title {
+  font-size: 20px;
+  color: #333;
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+
+/* Các dòng thông tin đơn hàng */
+.order-id, .order-status, .payment-method, .payment-status {
+  font-size: 16px;
+  color: #555;
+  margin: 8px 0;
+}
+
+/* Đổi màu cho mỗi thông tin khác nhau */
+.order-id {
+  color: #2196F3;
+}
+
+.order-status {
+  color: #FF9800;
+}
+
+.payment-method {
+  color: #9C27B0;
+}
+
+.payment-status {
+  color: #4CAF50;
+}
+
+/* Cải thiện giao diện trên thiết bị di động */
+@media (max-width: 600px) {
+  .payment-success-container {
+    padding: 15px;
+  }
+
+  .payment-success-title {
+    font-size: 20px;
+  }
+
+  .order-info-title {
+    font-size: 18px;
+  }
+
+  .order-id, .order-status, .payment-method, .payment-status {
+    font-size: 14px;
+  }
 }
