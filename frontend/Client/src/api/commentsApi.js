@@ -1,5 +1,5 @@
 import axios from "axios";
-
+import FormData from 'form-data';
 // Lấy danh sách bình luận của sản phẩm
 export const fetchComments = async (productId) => {
     try {
@@ -37,13 +37,19 @@ export const deleteComment = async (id) => {
 }
 
 // sửa bình luận
-export const editComment = async (commentId, formData) => {
+export const editComment = async (id, formData) => {
     try {
-        const response = await axios.put(`/comments/${commentId}`, formData);
-        console.log("API response sửa:", response);
+        const token = localStorage.getItem('token');
+        const response = await axios.put(`/comments/${id}`, formData, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'multipart/form-data',
+            }
+        });
+       
         return response;
     } catch (error) {
         console.error("Error while editing comment", error);
         throw error;
     }
-};
+}
