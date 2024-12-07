@@ -155,8 +155,7 @@
                                                                         @method('DELETE')
                                                                         <button type="submit" class="btn btn-danger"
                                                                             data-bs-toggle="tooltip" title="Xóa">
-                                                                            <i class="fa fa-trash"></i>
-                                                                        </button>
+                                                                            <i class="bi bi-trash"></i> </button>
                                                                     </form>
                                                                 </div>
                                                             </td>
@@ -169,22 +168,26 @@
                                             <div class="row-fluid" style="margin-bottom: 100px">
                                                 <div class="span6">
                                                     <div class="dataTables_info" id="hidden-table-info_info">
-                                                        Hiển thị từ {{ $items->firstItem() }} đến {{ $items->lastItem() }} của tổng cộng {{ $items->total() }} mục
+                                                        Hiển thị từ {{ $items->firstItem() }} đến {{ $items->lastItem() }}
+                                                        của tổng cộng {{ $items->total() }} mục
                                                     </div>
                                                 </div>
                                                 <div class="span6">
                                                     <div class="dataTables_paginate paging_bootstrap pagination">
                                                         <ul class="pagination">
                                                             <li class="prev">
-                                                                <a href="{{ $items->previousPageUrl() }}" aria-label="Previous">← Previous</a>
+                                                                <a href="{{ $items->previousPageUrl() }}"
+                                                                    aria-label="Previous">← Previous</a>
                                                             </li>
                                                             @foreach ($items->getUrlRange(1, $items->lastPage()) as $page => $url)
-                                                                <li class="{{ $page == $items->currentPage() ? 'active' : '' }}">
+                                                                <li
+                                                                    class="{{ $page == $items->currentPage() ? 'active' : '' }}">
                                                                     <a href="{{ $url }}">{{ $page }}</a>
                                                                 </li>
                                                             @endforeach
                                                             <li class="next">
-                                                                <a href="{{ $items->nextPageUrl() }}" aria-label="Next">Next →</a>
+                                                                <a href="{{ $items->nextPageUrl() }}"
+                                                                    aria-label="Next">Next →</a>
                                                             </li>
                                                         </ul>
                                                     </div>
@@ -207,7 +210,7 @@
     <script src="{{ asset('assets') }}/admin/js/dynamic_table_init.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-         document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function() {
             toastr.success('{{ session('success') }}', 'Thành công', {
                 closeButton: true,
                 progressBar: true,

@@ -420,7 +420,7 @@
                     @if (auth()->user()->hasRole(['admin']))
                         <li>
                             <a href="{{ route('admin.vouchers.index') }}">
-                                <i class="fas fa-ticket-alt"></i>
+                                <i class="bi bi-ticket-detailed"></i>
                                 <span>Voucher</span>
                             </a>
                         </li>

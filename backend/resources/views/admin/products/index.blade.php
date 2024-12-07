@@ -163,7 +163,7 @@
                                                             @method('DELETE')
                                                             <button type="submit" class="btn btn-danger "
                                                                 onclick="return confirm('Bạn có chắc chắn muốn xóa không?');">
-                                                                <i class="fa fa-trash"></i>
+                                                                <i class="bi bi-trash"></i> 
                                                             </button>
                                                         </form>
                                                     @endif
@@ -205,14 +205,14 @@
             </section>
         </div>
     </div>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        toastr.success('{{ session('success') }}', 'Thành công', {
-            closeButton: true,
-            progressBar: true,
-            timeOut: 3000,
-            positionClass: "toast-top-right"
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            toastr.success('{{ session('success') }}', 'Thành công', {
+                closeButton: true,
+                progressBar: true,
+                timeOut: 3000,
+                positionClass: "toast-top-right"
+            });
         });
-    });
-</script>
+    </script>
 @endsection

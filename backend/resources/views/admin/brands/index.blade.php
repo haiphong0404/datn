@@ -133,7 +133,7 @@
                                                             @method('DELETE')
                                                             <button type="submit" class="btn btn-danger"
                                                                 onclick="return confirm('Bạn có chắc muốn xóa thương hiệu này?')">
-                                                                <i class="fa fa-trash"></i>
+                                                                <i class="bi bi-trash"></i>
                                                             </button>
                                                         </form>
                                                     @endif

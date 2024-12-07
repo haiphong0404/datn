@@ -11,8 +11,8 @@
 @endsection
 
 @section('content')
-@if (session('success'))
-@endif
+    @if (session('success'))
+    @endif
 
 
     <style>
@@ -118,7 +118,7 @@
                                                         @method('DELETE')
                                                         <button type="submit" class="btn btn-danger"
                                                             onclick="return confirm('Bạn có chắc muốn xóa bài viết này?')">
-                                                            <i class="fa fa-trash"></i>
+                                                            <i class="bi bi-trash"></i>
                                                         </button>
                                                     </form>
                                                 </td>
@@ -159,7 +159,7 @@
             </section>
         </div>
     </div>
-<script src="{{ asset('assets') }}/admin/js/dynamic_table_init.js"></script>
+    <script src="{{ asset('assets') }}/admin/js/dynamic_table_init.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             toastr.success('{{ session('success') }}', 'Thành công', {
@@ -171,4 +171,3 @@
         });
     </script>
 @endsection
-

@@ -22,6 +22,7 @@
             text-overflow: ellipsis;
             /* Hiển thị dấu "..." khi văn bản bị cắt */
         }
+
         .custom-select-small {
             font-size: 0.70rem;
             /* Giảm kích thước font */
@@ -110,8 +111,8 @@
                                                 <td class="text-end">{{ $item->star_rating }} / 5</td>
                                                 <td class="text-center">
                                                     @if (!$item->deleted_at)
-                                                    <a href="{{ route('admin.comments.show', $item->id) }}"
-                                                        class="btn btn-primary"><i class="fa fa-eye"></i></a>
+                                                        <a href="{{ route('admin.comments.show', $item->id) }}"
+                                                            class="btn btn-primary"><i class="fa fa-eye"></i></a>
                                                     @endif
                                                     @if ($item->deleted_at)
                                                         <form action="{{ route('admin.comments.restore', $item->id) }}"
@@ -127,7 +128,8 @@
                                                             @method('DELETE')
                                                             <button type="submit" class="btn btn-danger"
                                                                 onclick="return confirm('Bạn có chắc muốn xóa comment này?')"><i
-                                                                    class="fa fa-trash"></i></button>
+                                                                    class="bi bi-trash"></i>
+                                                                </button>
                                                         </form>
                                                     @endif
                                                 </td>
@@ -170,8 +172,8 @@
     </div>
     <!--dynamic table initialization -->
     <script src="{{ asset('assets') }}/admin/js/dynamic_table_init.js"></script>
-<script>
-     document.addEventListener('DOMContentLoaded', function() {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
             toastr.success('{{ session('success') }}', 'Thành công', {
                 closeButton: true,
                 progressBar: true,
@@ -179,5 +181,5 @@
                 positionClass: "toast-top-right"
             });
         });
-</script>
+    </script>
 @endsection

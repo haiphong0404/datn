@@ -117,7 +117,8 @@
                                                         @method('DELETE')
                                                         <button type="submit" class="btn btn-danger"
                                                             onclick="return confirm('Bạn có chắc muốn xóa liên hệ này?')"><i
-                                                                class="fa fa-trash"></i></button>
+                                                                class="bi bi-trash"></i>
+                                                        </button>
                                                     </form>
                                                 </td>
                                             </tr>
