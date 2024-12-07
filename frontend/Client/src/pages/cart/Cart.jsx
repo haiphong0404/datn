@@ -17,39 +17,42 @@ const Cart = () => {
   // Fetch giỏ hàng từ server hoặc localStorage
   useEffect(() => {
     const fetchCart = async () => {
-      if (localStorage.getItem('token')) {
-        // Nếu đã đăng nhập, lấy giỏ hàng từ server
+      setIsLoading(true);
+      const token = localStorage.getItem('token');
+      if (token) {
         try {
           const response = await axios.get('/cart', {
-            headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+            headers: { Authorization: `Bearer ${token}` },
           });
+          const { carts } = response.data; // Lấy danh sách carts từ API
+          if (Array.isArray(carts)) {
+            setLocalCart(carts);
+            localStorage.removeItem('cart');
 
-          if (response.data && Array.isArray(response.data.carts)) {
-            // Cập nhật giỏ hàng từ server vào localStorage
-            setLocalCart(response.data.carts);
-            localStorage.setItem('cart', JSON.stringify(response.data.carts));
           } else {
-            setLocalCart([]); // Nếu không có giỏ hàng từ server, khởi tạo giỏ hàng trống
+            setLocalCart([]);
           }
         } catch (error) {
-       
+          console.error("Lỗi khi lấy dữ liệu giỏ hàng:", error);
           setLocalCart([]);
-        } finally {
-          setIsLoading(false);
         }
       } else {
-        // Nếu chưa đăng nhập, lấy giỏ hàng từ localStorage
+        // Lấy từ localStorage nếu không có token
         const cartData = localStorage.getItem('cart');
         if (cartData) {
           setLocalCart(JSON.parse(cartData));
+        } else {
+          setLocalCart([]);
         }
-        setIsLoading(false);
       }
+      setIsLoading(false);
     };
 
     fetchCart();
   }, []);
-
+  
+  
+  
 
   // Tính tổng tiền và số lượng dựa trên các sản phẩm đã chọn
   useEffect(() => {
@@ -102,7 +105,6 @@ const Cart = () => {
         if (response.status === 200) {
           setLocalCart(prevCart => {
             const updatedCart = prevCart.filter(item => item.id_productVariant !== id_productVariant);
-            localStorage.setItem('cart', JSON.stringify(updatedCart));
             return updatedCart;
           });
           setSelectedItems(prevSelected => new Set([...prevSelected].filter(item => item !== id_productVariant)));
@@ -127,6 +129,91 @@ const Cart = () => {
   };
 
   // Xử lý thanh toán
+  // const handleCheckout = () => {
+  //   const selectedProducts = getSelectedProducts();
+  
+  //   if (selectedProducts.length > 0) {
+  //     // Kiểm tra sản phẩm hết hàng
+  //     const outOfStockProducts = selectedProducts.filter(
+  //       (product) => product.stock === 0
+  //     );
+  
+  //     if (outOfStockProducts.length > 0) {
+  //       const productNames = outOfStockProducts.map((p) => p.name).join(', ');
+  //       toast.error(`Sản phẩm sau đã hết hàng: ${productNames}`);
+  //       return; // Ngăn điều hướng nếu có sản phẩm hết hàng
+  //     }
+  
+  //     // Nếu tất cả sản phẩm đều còn hàng, lưu vào localStorage và chuyển sang trang thanh toán
+  //     console.log('Đang thanh toán cho các sản phẩm:', selectedProducts);
+  //     localStorage.setItem('selectedProducts', JSON.stringify(selectedProducts));
+  //     selectedProducts.forEach((product) => {
+  //       console.log(product.name); // "Giày Nike Air Force 1 ’07"
+  //       console.log(product.color); // "Spinka, Lemke and Corkery"
+  //       console.log(product.id_productVariant); // 104
+  //       console.log(product.quantity); // 2
+  //     });
+  //     navigate('/checkout');
+  //   } else {
+  //     toast.warn('Vui lòng chọn ít nhất một sản phẩm để thanh toán!');
+  //   }
+  // };
+  
+  // const handleQuantityChange = async (variantId, change) => {
+  //   // Tính lại số lượng mới cho sản phẩm
+  //   const updatedCart = localCart.map((item) => {
+  //     if (item.id_productVariant === variantId) {
+  //       const newQuantity = item.quantity + change;
+  //       console.log(`Current quantity: ${item.quantity}, Stock: ${item.stock}, New quantity: ${newQuantity}`);
+        
+  //       // Kiểm tra số lượng
+  //       if (newQuantity > item.stock) {
+  //         toast.warn('Số lượng trong kho không đủ!');
+  //         return item;
+  //       }
+        
+  //       if (newQuantity <= 0) {
+  //         toast.warn('Số lượng không thể nhỏ hơn 1!');
+  //         return item;
+  //       }
+        
+  //       // Cập nhật lại số lượng nếu hợp lệ
+  //       return { ...item, quantity: newQuantity };
+  //     }
+  //     return item;
+  //   });
+    
+  //   const token = localStorage.getItem('token');
+    
+  //   // Nếu người dùng đã đăng nhập, cập nhật dữ liệu trên backend
+  //   if (token) {
+  //     try {
+  //       const response = await axios.put(`http://127.0.0.1:8000/api/cart/update/${variantId}`, { quantity: newQuantity });
+  //       toast.success(response.data.message);
+  //       // Cập nhật lại giỏ hàng sau khi thành công
+  //       setLocalCart(updatedCart);
+  //       localStorage.setItem('cart', JSON.stringify(updatedCart));
+  //     } catch (error) {
+  //       if (error.response) {
+  //         const { message, stock_available, requested_quantity } = error.response.data;
+  //         if (message === "Số lượng sản phẩm trong kho không đủ") {
+  //           toast.error(`Chỉ còn ${stock_available} sản phẩm trong kho, bạn đã yêu cầu ${requested_quantity}`);
+  //         } else {
+  //           toast.error(message);
+  //         }
+  //       } else {
+  //         toast.error("Đã có lỗi xảy ra, vui lòng thử lại sau!");
+  //       }
+  //     }
+  //   } else {
+  //     // Nếu chưa đăng nhập, chỉ cập nhật dữ liệu trong localStorage
+  //     setLocalCart(updatedCart);
+  //     localStorage.setItem('cart', JSON.stringify(updatedCart));
+  //     toast.success('Cập nhật số lượng thành công!');
+  //   }
+  // };
+  
+  
   const handleCheckout = async () => {
     if (selectedItems.size > 0) { // Kiểm tra xem có sản phẩm được chọn hay không
       
@@ -194,39 +281,68 @@ const Cart = () => {
   };
   
   
-  const handleQuantityChange = async (variantId, change) => {
-    const updatedCart = localCart.map(item => {
-      if (item.id_productVariant === variantId) {
-        const newQuantity = item.quantity + change;
+  // const handleQuantityChange = async (variantId, change) => {
+  //   const updatedCart = localCart.map(item => {
+  //     if (item.id_productVariant === variantId) {
+  //       const newQuantity = item.quantity + change;
 
-        // Debug logs để kiểm tra giá trị
+  //       // Debug logs để kiểm tra giá trị
        
 
-        // Kiểm tra xem số lượng có vượt quá số lượng trong kho hay không
-        if (newQuantity > item.stock) {
-          toast.warn('Số lượng trong kho không đủ!');
-          return item;  // Nếu số lượng vượt quá kho, giữ nguyên số lượng hiện tại
-        }
+  //       // Kiểm tra xem số lượng có vượt quá số lượng trong kho hay không
+  //       if (newQuantity > item.stock) {
+  //         toast.warn('Số lượng trong kho không đủ!');
+  //         return item;  // Nếu số lượng vượt quá kho, giữ nguyên số lượng hiện tại
+  //       }
 
-        // Kiểm tra nếu số lượng mới là hợp lệ (phải lớn hơn 0)
-        if (newQuantity <= 0) {
-          toast.warn('Số lượng không thể nhỏ hơn 1!');
-          return item;  // Nếu số lượng nhỏ hơn hoặc bằng 0, giữ nguyên số lượng hiện tại
-        }
+  //       // Kiểm tra nếu số lượng mới là hợp lệ (phải lớn hơn 0)
+  //       if (newQuantity <= 0) {
+  //         toast.warn('Số lượng không thể nhỏ hơn 1!');
+  //         return item;  // Nếu số lượng nhỏ hơn hoặc bằng 0, giữ nguyên số lượng hiện tại
+  //       }
 
-        // Cập nhật số lượng hợp lệ
-        return { ...item, quantity: newQuantity };
-      }
-      return item;  // Nếu không phải sản phẩm đang sửa đổi, giữ nguyên
-    });
+  //       // Cập nhật số lượng hợp lệ
+  //       return { ...item, quantity: newQuantity };
+  //     }
+  //     return item;  // Nếu không phải sản phẩm đang sửa đổi, giữ nguyên
+  //   });
 
-    setLocalCart(updatedCart);
-    localStorage.setItem('cart', JSON.stringify(updatedCart));
-  };
+  //   setLocalCart(updatedCart);
+  //   localStorage.setItem('cart', JSON.stringify(updatedCart));
+  // };
 
 
 
   return (
+    <main >
+      <div
+          className="breadcrumb-area breadcrumb-img bg-img"
+          style={{
+            backgroundImage: "url(/assets/img/banner/shop.jpg)",
+          }}
+        >
+          <div className="container">
+            <div className="row">
+              <div className="col-12">
+                <div className="breadcrumb-wrap">
+                  <nav aria-label="breadcrumb">
+                    <h3 className="breadcrumb-title">Giỏ Hàng</h3>
+                    <ul className="breadcrumb justify-content-center">
+                      <li className="breadcrumb-item">
+                        <a href="/">
+                          <i className="fa fa-home" />
+                        </a>
+                      </li>
+                      <li className="breadcrumb-item active" aria-current="page">
+                        Cart
+                      </li>
+                    </ul>
+                  </nav>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
     <div className="cart-container">
       {isLoading ? (
         <p>Đang tải giỏ hàng...</p>
@@ -235,14 +351,16 @@ const Cart = () => {
           {Array.isArray(localCart) && localCart.length > 0 ? (
             localCart.map((variant) => (
               <div key={variant.id_productVariant} className="cart-variant-card">
-                <div className="variant-image">
-                  <div className="checkbox-control">
-                    <input
-                      type="checkbox"
-                      checked={selectedItems.has(variant.id_productVariant)}
-                      onChange={() => handleCheckboxChange(variant.id_productVariant)}
-                    />
+                <div className="checkbox-control">
+                <input
+                    type="checkbox"
+                    checked={selectedItems.has(variant.id_productVariant)}
+                    onChange={() => handleCheckboxChange(variant.id_productVariant)}
+                    // disabled={variant.outOfStockMessage !== null} // Vô hiệu hóa checkbox nếu hết hàng
+                  />
                   </div>
+                <div className="variant-image">
+                  
                   <Link to={`/product_details/${variant.productId}`}>
                     <img src={variant.image || '/default-image.jpg'} alt={variant.name} width={100} />
                   </Link>
@@ -261,19 +379,19 @@ const Cart = () => {
                 <div className="variant-quantity">
 
                   <div className="quantity-controls">
-                    <button
+                    {/* <button
                       className="quantity-btn"
                       onClick={() => handleQuantityChange(variant.id_productVariant, -1)} // Giảm số lượng
                     >
                       -
-                    </button>
-                    <span className="quantity-display">{variant.quantity}</span>
-                    <button
+                    </button> */}
+                    <span className="quantity-display">Số lượng :{variant.quantity}</span>
+                    {/* <button
                       className="quantity-btn"
                       onClick={() => handleQuantityChange(variant.id_productVariant, 1)} // Tăng số lượng
                     >
                       +
-                    </button>
+                    </button> */}
                   </div>
                   <p className="variant-price">Giá: {variant.price} VND</p>
                 </div>
@@ -297,6 +415,7 @@ const Cart = () => {
         <button onClick={handleCheckout}>Thanh toán</button>
       </div>
     </div>
+    </main>
   );
 };
 

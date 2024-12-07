@@ -10,6 +10,8 @@ use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\ProductVariantController;
 use App\Http\Controllers\Api\SizeController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\StripeController;
+use App\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\BrandController;
@@ -96,5 +98,8 @@ Route::post('/payment/create', [PaymentController::class, 'createPayment']);
 Route::post('/payment/success/{order_id}', [PaymentController::class, 'paymentSuccess']);
 Route::post('/payment/cancel/{order_id}', [PaymentController::class, 'paymentCancel']);
 Route::post('order/{order_id}/status', [OrderDetailController::class, 'updateOrderStatus']);
+Route::post('/create-stripe', [StripeController::class, 'createStripe']);
+Route::post('/webhook/stripe', [StripeController::class, 'handle'])->withoutMiddleware([VerifyCsrfToken::class]);
+Route::get('/stripe/verify-session/{sessionId}', [StripeController::class, 'verifySession']);
 
 Route::post('/product-variants/check-quantity', [ProductVariantController::class, 'checkQuantity']);
