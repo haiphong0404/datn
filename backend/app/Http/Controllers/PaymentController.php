@@ -190,13 +190,6 @@ class PaymentController extends Controller
         } catch (\Exception $e) {
             // Rollback transaction nếu có lỗi
             DB::rollBack();
-
-            // Log lỗi
-            Log::error('Lỗi khi hủy đơn hàng:', [
-                'order_id' => $order_id,
-                'error_message' => $e->getMessage(),
-            ]);
-
             return response()->json([
                 'message' => 'Đã có lỗi xảy ra khi hủy đơn hàng. Vui lòng thử lại.',
             ], 500);

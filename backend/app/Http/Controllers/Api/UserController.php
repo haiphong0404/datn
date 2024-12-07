@@ -107,6 +107,9 @@ class UserController extends Controller
             ], 404);
         }
 
+        // Chuyển đổi avatar_img thành Base64 nếu tồn tại
+        $user->avatar_img = $this->getImageAsBase64($user->avatar_img);
+
         return response()->json([
             'message' => 'Lấy thông tin người dùng thành công.',
             'data' => $user
@@ -121,6 +124,19 @@ class UserController extends Controller
         DB::beginTransaction();
 
         try {
+            // Nếu có ảnh mới, lưu ảnh và cập nhật
+            if ($request->hasFile('avatar_img')) {
+                // Xóa ảnh cũ nếu tồn tại
+                if ($user->avatar_img && Storage::disk('public')->exists($user->avatar_img)) {
+                    Storage::disk('public')->delete($user->avatar_img);
+                }
+
+                // Lưu ảnh mới
+                $file = $request->file('avatar_img')->store('uploads/users', 'public');
+                $user->avatar_img = $file;
+            }
+
+            // Cập nhật các trường khác
             $user->username = $request->username;
             $user->email = $request->email;
             $user->phone = $request->phone;
@@ -146,36 +162,4 @@ class UserController extends Controller
     /**
      * Xóa tài nguyên cụ thể khỏi cơ sở dữ liệu.
      */
-    public function destroy(string $id)
-    {
-        DB::beginTransaction();
-
-        try {
-            $user = User::find($id);
-
-            if (!$user) {
-                return response()->json([
-                    'message' => 'Không tìm thấy người dùng.'
-                ], 404);
-            }
-
-            if ($user->avatar_img) {
-                Storage::disk('public')->delete($user->avatar_img);
-            }
-
-            $user->delete();
-
-            DB::commit();
-
-            return response()->json([
-                'message' => 'Xóa người dùng thành công.'
-            ], 200);
-        } catch (Exception $e) {
-            DB::rollBack();
-            return response()->json([
-                'message' => 'Có lỗi khi xóa người dùng.',
-                'error' => $e->getMessage()
-            ], 500);
-        }
-    }
 }

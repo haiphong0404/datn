@@ -6,13 +6,15 @@ import { Pagination } from '@mui/material';
 import { fetchBrands } from '../../api/brand';
 import ProductItem from './productItem';
 import ProductList from './productList';
+import LoadingSpinner from "../../loading/LoadingSpinner"; 
 
 const Shop = () => {
   const [viewMode, setViewMode] = useState('grid-view');
   const [page, setPage] = useState(1);
   const [selectedBrandId, setSelectedBrandId] = useState(null);
   const [selectedCategoryId, setSelectedCategoryId] = useState(null);
-  const itemsPerPage = 6;
+  const [sortOption, setSortOption] = useState(''); // Lưu giá trị sắp xếp
+  const itemsPerPage = 9;
 
   const results = useQueries({
     queries: [
@@ -32,7 +34,12 @@ const Shop = () => {
     setPage(value);
   };
 
+  const handleSortChange = (e) => {
+    setSortOption(e.target.value);
+  };
+
   const handleBrandFilterChange = (brand_id) => {
+    console.log('Selected Brand ID:', brand_id);
     setSelectedBrandId((prev) => (prev === brand_id ? null : brand_id)); // Toggle selection
   };
 
@@ -41,29 +48,32 @@ const Shop = () => {
   };
 
   if (isLoading) {
-    return <div>Đang tải...</div>;
+    return <LoadingSpinner />;;
   }
 
   if (isError) {
     return <div>Lỗi khi tải dữ liệu.</div>;
   }
 
-  // Kiểm tra dữ liệu của các brand và sản phẩm
-  console.log('Brands:', brands);
-  console.log('Selected Brand ID:', selectedBrandId);
-  console.log('Products:', products);
 
   // Lọc sản phẩm theo thương hiệu
-  const filteredProducts = products.filter((product) => {
+  let  filteredProducts = products.filter((product) => {
     const brandMatch = selectedBrandId ? Number(product.brand_id) === Number(selectedBrandId) : true;
     const categoryMatch = selectedCategoryId ? Number(product.category_id) === Number(selectedCategoryId) : true;
     return brandMatch && categoryMatch;
   });
 
-  // Kiểm tra kết quả lọc
-  console.log('Filtered Products:', filteredProducts);
-  console.log('Filtered Products Count:', filteredProducts.length);
+  if (sortOption === 'az') {
+    filteredProducts = filteredProducts.sort((a, b) => a.name.localeCompare(b.name));
+  } else if (sortOption === 'za') {
+    filteredProducts = filteredProducts.sort((a, b) => b.name.localeCompare(a.name));
+  } else if (sortOption === 'priceLowToHigh') {
+    filteredProducts = filteredProducts.sort((a, b) => a.price - b.price);
+  } else if (sortOption === 'priceHighToLow') {
+    filteredProducts = filteredProducts.sort((a, b) => b.price - a.price);
+  }
 
+ 
   const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
 
   return (
@@ -98,6 +108,7 @@ const Shop = () => {
 
         <div className="shop-main-wrapper section-padding">
           <div className="container">
+
             <div className="row">
               <div className="col-lg-3 order-2 order-lg-1">
                 <aside className="sidebar-wrapper">
@@ -165,6 +176,24 @@ const Shop = () => {
               </div>
 
               <div className="col-lg-9 order-1 order-lg-2">
+                <div className="blog-posts">
+                  {brands
+                    .filter((brand) => Number(brand.id) === Number(selectedBrandId)) // Lọc brand theo selectedBrandId
+                    .map((brand) => (
+                      <div className="blog-post-item" key={brand.id}>
+                        <div className="blog-thumb">
+                          <img src={brand.image || 'default-image.jpg'} alt={brand.name} />
+                        </div>
+                        <div className="blog-content">
+                          <h6 className="blog-title">{brand.name}</h6>
+                          <div className="blog-meta">
+
+                          </div>
+                          <p className="blog-desc">{brand.description || 'Không có mô tả.'}</p>
+                        </div>
+                      </div>
+                    ))}
+                </div>
                 <div className="shop-product-wrapper">
                   <div className="shop-top-bar">
                     <div className="row align-items-center">
@@ -199,6 +228,22 @@ const Shop = () => {
 
                           <div className="product-amount">
                             <p>Hiển thị {filteredProducts.length} kết quả</p>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-lg-5 col-md-6 order-1 order-md-2">
+                        <div class="top-bar-right">
+                          <div class="product-short">
+                            <div className="product-amount">
+                              <p>Tìm kiếm theo :</p>
+                            </div>
+                            <select className="nice-select" onChange={handleSortChange}>
+                              <option value="">Sắp xếp</option>
+                              <option value="az">Theo thứ tự (A - Z)</option>
+                              <option value="za">Theo thứ tự (Z - A)</option>
+                              <option value="priceLowToHigh">Giá (Thấp &gt; Cao)</option>
+                              <option value="priceHighToLow">Giá (Cao &gt; Thấp)</option>
+                            </select>
                           </div>
                         </div>
                       </div>

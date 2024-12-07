@@ -8,7 +8,7 @@ const ProductList = ({ product }) => {
                 <Link to={`/product-details/${product.id}`}>
                     <img src={product.image} alt={product.name} />
                 </Link>
-                <div className="button-group">
+                {/* <div className="button-group">
 
                     <a
                         href="#"
@@ -19,7 +19,7 @@ const ProductList = ({ product }) => {
                             <i className="fa fa-eye" />
                         </span>
                     </a>
-                </div>
+                </div> */}
                 <div className="product-label">
                     <span>NEW</span>
                 </div>

@@ -26,6 +26,7 @@ use App\Http\Controllers\Api\OrderDetailController;
 use App\Http\Controllers\Api\VoucherController;
 use App\Http\Controllers\Api\Auth\NewPasswordController;
 use App\Http\Controllers\Api\Auth\ForgotPasswordController;
+use App\Http\Controllers\Api\Auth\ProfileController;
 use App\Http\Controllers\Api\Auth\ResetPasswordController;
 use App\Http\Controllers\Api\BannerController;
 
@@ -69,8 +70,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/cart/update', [CartController::class, 'updateCart']);
     Route::delete('/cart/remove', [CartController::class, 'removeFromCart']);
     Route::delete('/cart/remove/{product_variant_id}', [CartController::class, 'removeFromCart']);
-    Route::apiResource('order', OrderController::class );
-
+    Route::apiResource('order', OrderController::class);
 });
 Route::get('comments/{product_id}', [CommentController::class, 'index']);
 Route::get('products/{productId}/variants', [ProductVariantController::class, 'index']);
@@ -80,7 +80,7 @@ Route::get('/colors', [ColorController::class, 'index']);
 Route::get('contacts', [ContactController::class, 'index']); // Lấy danh sách tất cả contacts
 Route::get('contacts/{id}', [ContactController::class, 'show']); // Lấy contact theo ID
 Route::get('/banners', [BannerController::class, 'index']);
-Route::apiResource('order', OrderController::class );
+Route::apiResource('order', OrderController::class);
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/cart', [CartController::class, 'index']);
     Route::put('/cart/update/{id_cart_item}', [CartController::class, 'updateCart']);
@@ -88,6 +88,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('order', OrderController::class);
     Route::post('/cart/add', [CartController::class, 'addToCart']);
     Route::post('/cart/sync', [CartController::class, 'syncCart']);
+});
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/change-password', [ProfileController::class, 'changePassword']);
 });
 Route::get('orders', [OrderController::class, 'abc']);
 Route::post('/apply-voucher', [VoucherController::class, 'applyVoucher']);
@@ -98,3 +101,5 @@ Route::post('order/{order_id}/status', [OrderDetailController::class, 'updateOrd
 Route::post('/create-stripe', [StripeController::class, 'createStripe']);
 Route::post('/webhook/stripe', [StripeController::class, 'handle'])->withoutMiddleware([VerifyCsrfToken::class]);
 Route::get('/stripe/verify-session/{sessionId}', [StripeController::class, 'verifySession']);
+
+Route::post('/product-variants/check-quantity', [ProductVariantController::class, 'checkQuantity']);

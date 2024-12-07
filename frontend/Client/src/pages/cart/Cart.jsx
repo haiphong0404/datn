@@ -12,8 +12,8 @@ const Cart = () => {
   const [selectedItems, setSelectedItems] = useState(new Set());
 
 
- 
-  
+
+
   // Fetch giỏ hàng từ server hoặc localStorage
   useEffect(() => {
     const fetchCart = async () => {
@@ -47,7 +47,7 @@ const Cart = () => {
       }
       setIsLoading(false);
     };
-  
+
     fetchCart();
   }, []);
   
@@ -76,19 +76,23 @@ const Cart = () => {
   };
 
   // Xử lý khi chọn sản phẩm
-  const handleCheckboxChange = (variantId) => {
+  const handleCheckboxChange = (variant) => {
     const updatedSelectedItems = new Set(selectedItems);
-    if (updatedSelectedItems.has(variantId)) {
-      updatedSelectedItems.delete(variantId);
+    
+    // Kiểm tra xem sản phẩm đã được chọn chưa
+    if (updatedSelectedItems.has(variant)) {
+      updatedSelectedItems.delete(variant);  // Nếu đã chọn thì xóa khỏi Set
     } else {
-      updatedSelectedItems.add(variantId);
+      updatedSelectedItems.add(variant);  // Nếu chưa chọn thì thêm sản phẩm vào Set
     }
+  
+    // Cập nhật lại trạng thái selectedItems
     setSelectedItems(updatedSelectedItems);
   };
 
   // Xử lý xóa sản phẩm khỏi giỏ hàng
   const handleRemoveFromCart = async (id_productVariant) => {
-    console.log("id_productVariant:", id_productVariant);
+    
     if (!id_productVariant) return;
 
     const token = localStorage.getItem('token');
@@ -108,7 +112,7 @@ const Cart = () => {
           window.location.reload();
         }
       } catch (error) {
-        console.error('Error removing item from cart:', error);
+    
         toast.error('Không thể xóa sản phẩm khỏi giỏ hàng.');
       }
     } else {
@@ -125,35 +129,35 @@ const Cart = () => {
   };
 
   // Xử lý thanh toán
-  const handleCheckout = () => {
-    const selectedProducts = getSelectedProducts();
+  // const handleCheckout = () => {
+  //   const selectedProducts = getSelectedProducts();
   
-    if (selectedProducts.length > 0) {
-      // Kiểm tra sản phẩm hết hàng
-      const outOfStockProducts = selectedProducts.filter(
-        (product) => product.stock === 0
-      );
+  //   if (selectedProducts.length > 0) {
+  //     // Kiểm tra sản phẩm hết hàng
+  //     const outOfStockProducts = selectedProducts.filter(
+  //       (product) => product.stock === 0
+  //     );
   
-      if (outOfStockProducts.length > 0) {
-        const productNames = outOfStockProducts.map((p) => p.name).join(', ');
-        toast.error(`Sản phẩm sau đã hết hàng: ${productNames}`);
-        return; // Ngăn điều hướng nếu có sản phẩm hết hàng
-      }
+  //     if (outOfStockProducts.length > 0) {
+  //       const productNames = outOfStockProducts.map((p) => p.name).join(', ');
+  //       toast.error(`Sản phẩm sau đã hết hàng: ${productNames}`);
+  //       return; // Ngăn điều hướng nếu có sản phẩm hết hàng
+  //     }
   
-      // Nếu tất cả sản phẩm đều còn hàng, lưu vào localStorage và chuyển sang trang thanh toán
-      console.log('Đang thanh toán cho các sản phẩm:', selectedProducts);
-      localStorage.setItem('selectedProducts', JSON.stringify(selectedProducts));
-      selectedProducts.forEach((product) => {
-        console.log(product.name); // "Giày Nike Air Force 1 ’07"
-        console.log(product.color); // "Spinka, Lemke and Corkery"
-        console.log(product.id_productVariant); // 104
-        console.log(product.quantity); // 2
-      });
-      navigate('/checkout');
-    } else {
-      toast.warn('Vui lòng chọn ít nhất một sản phẩm để thanh toán!');
-    }
-  };
+  //     // Nếu tất cả sản phẩm đều còn hàng, lưu vào localStorage và chuyển sang trang thanh toán
+  //     console.log('Đang thanh toán cho các sản phẩm:', selectedProducts);
+  //     localStorage.setItem('selectedProducts', JSON.stringify(selectedProducts));
+  //     selectedProducts.forEach((product) => {
+  //       console.log(product.name); // "Giày Nike Air Force 1 ’07"
+  //       console.log(product.color); // "Spinka, Lemke and Corkery"
+  //       console.log(product.id_productVariant); // 104
+  //       console.log(product.quantity); // 2
+  //     });
+  //     navigate('/checkout');
+  //   } else {
+  //     toast.warn('Vui lòng chọn ít nhất một sản phẩm để thanh toán!');
+  //   }
+  // };
   
   // const handleQuantityChange = async (variantId, change) => {
   //   // Tính lại số lượng mới cho sản phẩm
@@ -210,6 +214,103 @@ const Cart = () => {
   // };
   
   
+  const handleCheckout = async () => {
+    if (selectedItems.size > 0) { // Kiểm tra xem có sản phẩm được chọn hay không
+      
+  
+      // Lưu selectedItems vào localStorage
+      localStorage.setItem('selectedItems', JSON.stringify([...selectedItems]));
+      const selectedProducts = getSelectedProducts();
+      // Mảng để theo dõi các sản phẩm hết hàng
+      const outOfStockItems = [];
+      let allInStock = true; // Flag kiểm tra tất cả sản phẩm có đủ số lượng hay không
+  
+      // Duyệt qua selectedItems để kiểm tra từng sản phẩm trong localCart
+      for (const variantId of selectedItems) {  // Đảm bảo dùng variantId trong selectedItems
+        try {
+          // Tìm variant trong localCart dựa trên variantId
+          const variant = localCart.find(v => v.id_productVariant === variantId);
+  
+          if (variant) {
+            const quantityRequested = variant.quantity; // Số lượng cần kiểm tra
+            // Gửi API call để kiểm tra số lượng tồn kho
+            const response = await axios.post('http://127.0.0.1:8000/api/product-variants/check-quantity', [
+              {
+                product_variant_id: variant.id_productVariant,
+                quantity: quantityRequested,
+              },
+            ]);
+  
+            const data = response.data;
+  
+            if (!data.success) {
+              // Nếu sản phẩm hết hàng, thêm vào mảng outOfStockItems và đánh dấu flag
+              outOfStockItems.push(variant);
+              allInStock = false;  // Nếu có sản phẩm hết hàng, đánh dấu là không đủ số lượng
+            }
+          }
+  
+        } catch (error) {
+          
+          
+          // Nếu có lỗi, cần kiểm tra lỗi và thêm variant vào outOfStockItems
+          const variant = localCart.find(v => v.id_productVariant === variantId); // Đảm bảo variant được định nghĩa
+          if (variant) {
+            outOfStockItems.push(variant); // Thêm variant vào danh sách hết hàng nếu có lỗi
+          }
+          allInStock = false; // Đánh dấu là không đủ số lượng nếu có lỗi
+        }
+      }
+  
+      // Kiểm tra nếu có sản phẩm hết hàng
+      if (outOfStockItems.length > 0) {
+        const outOfStockMessages = outOfStockItems.map((item) => {
+          return `Sản phẩm: ${item.name} (Kích thước: ${item.size}, Màu sắc: ${item.color}) đã hết.`;
+        });
+        toast.error(`\n${outOfStockMessages.join('\n')}`);
+      }
+  
+      // Chỉ chuyển đến trang checkout nếu tất cả sản phẩm đều đủ số lượng
+      if (allInStock) {
+        localStorage.setItem('selectedProducts', JSON.stringify(selectedProducts));
+        navigate('/checkout');
+      } 
+    } else {
+      toast.error('Vui lòng chọn ít nhất một sản phẩm để thanh toán!');
+    }
+  };
+  
+  
+  // const handleQuantityChange = async (variantId, change) => {
+  //   const updatedCart = localCart.map(item => {
+  //     if (item.id_productVariant === variantId) {
+  //       const newQuantity = item.quantity + change;
+
+  //       // Debug logs để kiểm tra giá trị
+       
+
+  //       // Kiểm tra xem số lượng có vượt quá số lượng trong kho hay không
+  //       if (newQuantity > item.stock) {
+  //         toast.warn('Số lượng trong kho không đủ!');
+  //         return item;  // Nếu số lượng vượt quá kho, giữ nguyên số lượng hiện tại
+  //       }
+
+  //       // Kiểm tra nếu số lượng mới là hợp lệ (phải lớn hơn 0)
+  //       if (newQuantity <= 0) {
+  //         toast.warn('Số lượng không thể nhỏ hơn 1!');
+  //         return item;  // Nếu số lượng nhỏ hơn hoặc bằng 0, giữ nguyên số lượng hiện tại
+  //       }
+
+  //       // Cập nhật số lượng hợp lệ
+  //       return { ...item, quantity: newQuantity };
+  //     }
+  //     return item;  // Nếu không phải sản phẩm đang sửa đổi, giữ nguyên
+  //   });
+
+  //   setLocalCart(updatedCart);
+  //   localStorage.setItem('cart', JSON.stringify(updatedCart));
+  // };
+
 
 
   return (

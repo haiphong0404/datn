@@ -29,7 +29,12 @@ const PaymentSuccess = () => {
         <p class="order-id">ID đơn hàng: {order.id}</p>
         <p class="order-status">Trạng thái: {order.status}</p>
         <p class="payment-method">Phương thức thanh toán: {order.payment_method}</p>
-        <p class="payment-status">Trạng thái thanh toán: {order.payment_status}</p>
+        <p class="payment-status">Trạng thái thanh toán: {order.payment_status === 'unpaid'
+                                    ? 'Thanh Toán Khi Nhận Hàng'
+                                    : order.payment_status === 'paid'
+                                        ? 'Đã Thanh Toán'
+                                        : 'Không Xác Định'}</p>
+
       </div>
     )}
   </div>

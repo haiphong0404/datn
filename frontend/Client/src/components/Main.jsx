@@ -162,6 +162,7 @@ const Main = () => {
             </div>
 
             {/* product single item start */}
+            
             <div className="product-list">
               {products.slice(0, 4).map((product) => (
                 <div key={product.id} className="product-item">
@@ -170,6 +171,13 @@ const Main = () => {
                       <img
                         src={product.image || '/path/to/placeholder.jpg'} // Đổ hình ảnh từ API
                         alt={product.name}
+                        style={{
+                          display: 'block',
+                          margin: '0 auto',
+                          width: '300px', // Đặt chiều rộng mong muốn
+                          height: '200px', // Đặt chiều cao mong muốn
+                          objectFit: 'cover', // Cắt ảnh để phù hợp với kích thước mà không bị méo
+                        }}
                       />
                     </Link>
                     {/* <div className="button-group">
@@ -180,6 +188,9 @@ const Main = () => {
                         </span>
                       </a>
                     </div> */}
+                    <div className="product-label">
+                        <span>new</span>
+                    </div>
 
                   </div>
                   <div className="product-content">
@@ -279,6 +290,13 @@ const Main = () => {
                       <img
                         src={product.image || '/path/to/placeholder.jpg'} // Đổ hình ảnh từ API
                         alt={product.name}
+                        style={{
+                          display: 'block',
+                          margin: '0 auto',
+                          width: '300px', // Đặt chiều rộng mong muốn
+                          height: '200px', // Đặt chiều cao mong muốn
+                          objectFit: 'cover', // Cắt ảnh để phù hợp với kích thước mà không bị méo
+                        }}
                       />
                     </Link>
                     

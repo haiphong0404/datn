@@ -25,17 +25,27 @@ class OrderController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        // Lấy tất cả orders từ cơ sở dữ liệu
-        $orders = Order::all();
+    public function index(Request $request)
+{
+    $search = $request->input('search');
+    $perPage = $request->input('per_page', 10); // Mặc định 10 bản ghi mỗi trang
 
-        // Quy tắc chuyển trạng thái
-        $allowedTransitions = $this->orderService->getAllowedTransitions();
+    // Lấy tất cả orders từ cơ sở dữ liệu với tìm kiếm
+    $orders = Order::when($search, function ($query, $search) {
+            return $query->where('order_number', 'LIKE', "%{$search}%")
+                         ->orWhere('customer_name', 'LIKE', "%{$search}%")
+                         ->orWhere('status', 'LIKE', "%{$search}%"); // Tìm kiếm trong các cột khác nếu cần
+        })
+        ->orderBy('created_at', 'desc') // Sắp xếp theo ngày tạo mới nhất
+        ->paginate($perPage);
 
-        // Truyền dữ liệu vào view
-        return view('admin.orders.index', compact('orders', 'allowedTransitions'));
-    }
+    // Quy tắc chuyển trạng thái
+    $allowedTransitions = $this->orderService->getAllowedTransitions();
+
+    // Truyền dữ liệu vào view
+    return view('admin.orders.index', compact('orders', 'allowedTransitions'));
+}
+
 
     public function show(Order $order)
     {
@@ -60,27 +70,47 @@ class OrderController extends Controller
         $products = Product::all();
 
         try {
-            // Gọi phương thức createOrder từ service để tạo đơn hàng
-            $this->orderService->createOrder($request);
+            // Tạo đơn hàng mới
+            $order = $this->orderService->createOrder($request);
+
+            // Tạo thông báo thành công với thông tin của đơn hàng
+            $message = 'Đơn hàng ' . $order->id . ' - ' . $order->name . ' đã được tạo thành công  ' . $order->order_date;
+
+            // Lấy thông báo hiện tại từ session (nếu có) hoặc khởi tạo mảng trống
+            $successOrders = session()->get('success_orders', []);
+
+            // Kiểm tra xem successOrders có phải là mảng không
+            if (!is_array($successOrders)) {
+                $successOrders = []; // Nếu không phải mảng, khởi tạo lại mảng
+            }
+
+            // Thêm thông báo mới vào mảng success_orders
+            $successOrders[] = $message;
+
+            // Lưu lại thông báo vào session
+            session()->put('success_orders', $successOrders);
 
             // Redirect thành công với thông báo
-            return redirect()->route('admin.orders.index')->with('success', 'Đơn hàng đã được tạo thành công');
+            return redirect()->route('admin.orders.index');
+
         } catch (\Exception $e) {
             // Xử lý lỗi nếu có
             return redirect()->back()
-            ->withInput($request->all()) // Giữ lại dữ liệu nhập
-            ->with([
-                'error' => 'Xảy ra lỗi trong khi tạo đơn hàng: ' . $e->getMessage(),
-                'products' => $products, // Truyền lại products vào view
-            ]);
+                ->withInput($request->all()) // Giữ lại dữ liệu nhập
+                ->with([
+                    'error' => 'Xảy ra lỗi trong khi tạo đơn hàng: ' . $e->getMessage(),
+                    'products' => $products, // Truyền lại products vào view
+                ]);
         }
     }
+
+
 
     public function updateStatus(Request $request, Order $order)
     {
         // Lấy trạng thái mới từ request
         $newStatus = $request->status;
-    
+
         // Kiểm tra kết quả
         if ($newStatus === $order->status) {
             return redirect()->route('admin.orders.index')
@@ -89,16 +119,16 @@ class OrderController extends Controller
 
         // Sử dụng service để kiểm tra và cập nhật trạng thái
         $statusUpdated = $this->orderService->updateOrderStatus($order, $newStatus);
-    
+
         if (!$statusUpdated) {
             return redirect()->route('admin.orders.index')
                 ->with('error', 'Chuyển trạng thái không hợp lệ.');
         }
-    
+
         // Trả về kết quả thành công nếu trạng thái được cập nhật
         return redirect()->back()->with('success', 'Trạng thái đơn hàng đã được cập nhật thành công.');
     }
-    
+
     public function updatePaymentStatus(Request $request, Order $order)
     {
         $validatedData = $request->validate([
