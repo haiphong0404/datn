@@ -88,73 +88,73 @@ class PaymentController extends Controller
      * Xử lý khi thanh toán thành công.
      */
     public function paymentSuccess($order_id)
-    {
-        $order = Order::find($order_id);
+{
+    $order = Order::find($order_id);
 
-        if (!$order || $order->status !== 'pending') {
-            return response()->json([
-                'message' => 'Đơn hàng không tồn tại hoặc không hợp lệ.',
-            ], 404);
-        }
+    if (!$order || $order->status !== 'pending') {
+        return response()->json([
+            'message' => 'Đơn hàng không tồn tại hoặc không hợp lệ.',
+        ], 404);
+    }
 
-        try {
-            // Bắt đầu transaction
-            DB::beginTransaction();
+    try {
+        // Bắt đầu transaction
+        DB::beginTransaction();
 
-            // Cập nhật trạng thái đơn hàng
-            $order->update([
-                'payment_status' => 'paid',
-            ]);
+        // Cập nhật trạng thái đơn hàng
+        $order->update([
+            'payment_status' => 'paid',
+        ]);
 
-            foreach ($order->orderDetails as $detail) {
-                $productVariant = $detail->productVariant;
-                if ($productVariant) {
-                    if ($productVariant->quantity >= $detail->quantity) {
-                        $productVariant->decrement('quantity', $detail->quantity);
+        foreach ($order->orderDetails as $detail) {
+            $productVariant = $detail->productVariant;
+            if ($productVariant) {
+                if ($productVariant->quantity >= $detail->quantity) {
+                    $productVariant->decrement('quantity', $detail->quantity);
 
-                        $product = $productVariant->product;
-                        if ($product) {
-                            $product->total_quantity_in_stock = $product->variants->sum('quantity');
-                            $product->save();
-                        }
-                    } else {
-                        throw new \Exception("Không đủ số lượng trong kho cho biến thể sản phẩm ID: {$productVariant->id}");
+                    $product = $productVariant->product;
+                    if ($product) {
+                        $product->total_quantity_in_stock = $product->variants->sum('quantity');
+                        $product->save();
                     }
                 } else {
-                    throw new \Exception("Không tìm thấy biến thể sản phẩm cho order_detail ID: {$detail->id}");
+                    throw new \Exception("Không đủ số lượng trong kho cho biến thể sản phẩm ID: {$productVariant->id}");
                 }
+            } else {
+                throw new \Exception("Không tìm thấy biến thể sản phẩm cho order_detail ID: {$detail->id}");
             }
 
-            // Xóa giỏ hàng
+            // Xóa sản phẩm tương ứng trong giỏ hàng
             CartItem::whereHas('cart', function ($query) use ($order) {
                 $query->where('user_id', $order->user_id);
             })
-                ->where('product_variant_id', $productVariant->id)
-                ->delete();
-
-            // Commit transaction
-            DB::commit();
-
-            return response()->json([
-                'message' => 'Thanh toán thành công!',
-                'order' => $order,
-            ]);
-
-        } catch (\Exception $e) {
-            // Rollback transaction nếu có lỗi
-            DB::rollBack();
-
-            // Log lỗi
-            Log::error('Lỗi khi xử lý thanh toán :', [
-                'order_id' => $order_id,
-                'error_message' => $e->getMessage(),
-            ]);
-
-            return response()->json([
-                'message' => 'Đã có lỗi xảy ra trong quá trình xử lý thanh toán.',
-            ], 500);
+            ->where('product_variant_id', $productVariant->id)
+            ->delete();
         }
+
+        // Commit transaction
+        DB::commit();
+
+        return response()->json([
+            'message' => 'Thanh toán thành công!',
+            'order' => $order,
+        ]);
+
+    } catch (\Exception $e) {
+        // Rollback transaction nếu có lỗi
+        DB::rollBack();
+
+        // Log lỗi
+        Log::error('Lỗi khi xử lý thanh toán :', [
+            'order_id' => $order_id,
+            'error_message' => $e->getMessage(),
+        ]);
+
+        return response()->json([
+            'message' => 'Đã có lỗi xảy ra trong quá trình xử lý thanh toán.',
+        ], 500);
     }
+}
 
 
     /**
