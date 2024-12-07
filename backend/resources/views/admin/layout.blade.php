@@ -73,20 +73,18 @@
                         <li class="notification-header">
                             <p class="green">Có {{ count(session('success_orders')) }} đơn hàng mới.</p>
                         </li>
-                        <li class="task-list">
-                            @foreach(array_reverse(session('success_orders')) as $successMessage) <!-- Đảo ngược thứ tự của thông báo -->
-                        <li class="task-item" style="border-bottom: 1px solid #eee; padding: 8px 10px;">
-                            <p class="green" style="margin: 0;">{{ $successMessage }}</p>
+                        @foreach(array_reverse(session('success_orders')) as $successMessage)
+                            <li class="task-item" style="border-bottom: 1px solid #eee; padding: 8px 10px;">
+                                <p class="green" style="margin: 0;">{{ $successMessage }}</p>
+                            </li>
+                        @endforeach
+                    @else
+                        <li>
+                            <p class="green" style="margin: 0;">Không có thông báo đơn hàng nào mới.</p>
                         </li>
-                @endforeach
-            </li>
-            @else
-                <li>
-                    <p class="green" style="margin: 0;">Không có thông báo đơn hàng nào mới.</p>
-                </li>
-                @endif
-                </ul>
-                </li>
+                    @endif
+                </ul> <!-- Đảm bảo thẻ <ul> đóng đúng -->
+
 
                 <!-- notification for low stock -->
                 <li id="header_notification_bar" class="dropdown">
@@ -100,16 +98,17 @@
                             @endif
             </span>
                     </a>
-                    <ul class="dropdown-menu extended notification" style="max-height: 300px; overflow-y: auto; width: 350px;">
+                    <ul class="dropdown-menu extended notification"
+                        style="max-height: 300px; overflow-y: auto; width: 350px;">
                         <div class="notify-arrow notify-arrow-yellow"></div>
 
                         <!-- Hiển thị sản phẩm dưới số lượng tối thiểu -->
                         @if(session('low_stock_products') && count(session('low_stock_products')) > 0)
                             <li class="notification-header">
-                                <p class="yellow">Có {{ count(session('low_stock_products')) }} sản phẩm dưới 5 đôi</p>
+                                <p class="yellow">Có {{ count(session('low_stock_products')) }} sản phẩm dưới 10 đôi</p>
                             </li>
                             <li class="product-list">
-                                @foreach(session('low_stock_products') as $product) <!-- Đảo ngược thứ tự của sản phẩm -->
+                                @foreach(session('low_stock_products') as $product)
                             <li class="product-item" style="border-bottom: 1px solid #eee; padding: 8px 10px;">
                                 <a href="{{ route('admin.products.show', $product->id) }}">
                                     <div class="d-flex align-items-center">
@@ -126,7 +125,7 @@
                 </li>
                 @else
                     <li>
-                        <p class="yellow" style="margin: 0;">Không có sản phẩm nào dưới 5 đôi trong kho</p>
+                        <p class="yellow" style="margin: 0;">Không có sản phẩm nào dưới 10 đôi trong kho</p>
                     </li>
                     @endif
                     </ul>

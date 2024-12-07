@@ -174,14 +174,14 @@ class OrderService
                             }
                         }
                         break;
-    
+
                     case 'first_order':
                         // Giảm giá cố định cho đơn hàng đầu tiên nếu đạt giá trị tối thiểu
                         if ($totalAmount >= $voucher->min_order_value) {
                             $discount = $voucher->discount_value;
                         }
                         break;
-    
+
                     default:
                         throw new \Exception('Loại mã giảm giá không hợp lệ.');
                 }
