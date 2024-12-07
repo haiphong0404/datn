@@ -5,6 +5,7 @@
 @endsection
 
 @section('search')
+
     <form action="{{ route('admin.products.index') }}" method="GET">
         <div class="input-group mt-1">
             <input type="text" name="search" class="form-control" placeholder="Tìm kiếm sản phẩm"
@@ -105,7 +106,7 @@
                                         <th>Thương hiệu</th>
                                         <th>Số lượng tồn kho</th>
                                         <th>Tổng số lượng nhập kho</th>
-                                        <th>Trạng thái</th>
+{{--                                        <th>Trạng thái</th>--}}
                                         <th>Hành động</th>
                                     </tr>
                                 </thead>
@@ -124,13 +125,13 @@
                                             <td>{{ $product->brand->name ?? 'Không có' }}</td>
                                             <td class="text-end">{{ $product->total_quantity_in_stock }}</td>
                                             <td class="text-end">{{ $product->incoming_quantity }}</td>
-                                            <td>
-                                                @if ($product->trashed())
-                                                    <span class="badge badge-danger">Đã xóa</span>
-                                                @else
-                                                    <span class="badge badge-success">Còn</span>
-                                                @endif
-                                            </td>
+{{--                                            <td>--}}
+{{--                                                @if ($product->trashed())--}}
+{{--                                                    <span class="badge badge-danger">Đã xóa</span>--}}
+{{--                                                @else--}}
+{{--                                                    <span class="badge badge-success">Còn</span>--}}
+{{--                                                @endif--}}
+{{--                                            </td>--}}
                                             <td>
                                                 <div class="d-flex mb-3">
                                                     <a href="{{ route('admin.products.show', $product->id) }}"
