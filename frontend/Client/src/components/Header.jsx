@@ -15,6 +15,16 @@ const Header = () => {
 
   const [localCart, setLocalCart] = useState(JSON.parse(localStorage.getItem('cart')) || []);
   const [selectedItems, setSelectedItems] = useState(new Set());
+  // const location = useLocation();
+  // const prevLocation = useRef(location.pathname);
+
+  //  useEffect(() => {
+ 
+  //   if (prevLocation.current !== location.pathname) {
+  //     prevLocation.current = location.pathname;
+  //     window.location.reload();
+  //   }
+  // }, [location]);
 
   useEffect(() => {
     const fetchCart = async () => {

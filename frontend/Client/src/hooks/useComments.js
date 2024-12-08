@@ -22,14 +22,27 @@ export const useComments = (productId) => {
     }, [productId]);
 
     // Hàm updateComments trực tiếp thay đổi state `comments` khi thêm, sửa hoặc xóa bình luận
-    const updateComments = useCallback((newComment) => {
-        setComments((prevComments) => [newComment, ...prevComments]);
+    const updateComments = useCallback((updatedComment) => {
+        setComments((prevComments) => {
+            // Tìm chỉ mục của bình luận cần sửa (nếu có)
+            const index = prevComments.findIndex((comment) => comment.id === updatedComment.id);
+            if (index !== -1) {
+                // Cập nhật bình luận nếu đã tồn tại
+                const newComments = [...prevComments];
+                newComments[index] = updatedComment;
+                return newComments;
+            }
+            // Nếu không tìm thấy, thêm bình luận mới vào đầu danh sách
+            return [updatedComment, ...prevComments];
+        });
     }, []);
+    
+    
 
 
     useEffect(() => {
         refetch(); // Gọi refetch khi productId thay đổi
     }, [productId, refetch]);
 
-    return { comments, isLoading, error, refetch, updateComments };
+    return { comments, isLoading, error, refetch, updateComments, setComments };
 };

@@ -8,6 +8,12 @@ use Illuminate\Http\Request;
 
 class ArticlesController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('checkRole:admin')->only(['create', 'store', 'destroy']);
+        $this->middleware('checkRole:admin,staff')->only(['index', 'show']);
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -65,7 +71,7 @@ class ArticlesController extends Controller
             'image.image' => 'File phải là một hình ảnh.',
             'image.mimes' => 'Ảnh chỉ cho phép các định dạng jpeg, png, jpg, gif, svg.',
             'image.max' => 'Ảnh không được vượt quá 2MB.'
-        ]);;
+        ]);
 
         if ($request->hasFile('image')) {
             $file = $request->file('image')->store('uploads/article', 'public');
@@ -85,10 +91,10 @@ class ArticlesController extends Controller
      * Display the specified resource.
      */
     public function show(string $id)
-{
-    $article = Article::findOrFail($id);
-    return view('admin.articles.show', compact('article'));
-}
+    {
+        $article = Article::findOrFail($id);
+        return view('admin.articles.show', compact('article'));
+    }
 
     /**
      * Show the form for editing the specified resource.

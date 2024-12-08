@@ -1,6 +1,7 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import useBrandDetail from "../hooks/useBrandDetail";
+import { Link } from "react-router-dom";
 
 const BrandDetail = () => {
     const { id } = useParams(); // Lấy ID từ URL
@@ -26,6 +27,39 @@ const BrandDetail = () => {
 
     return (
         <div>
+             <div
+          className="breadcrumb-area breadcrumb-img bg-img"
+          style={{ backgroundImage: "url(/assets/img/banner/shop.jpg)" }}
+        >
+          <div className="container">
+            <div className="row">
+              <div className="col-12">
+                <div className="breadcrumb-wrap">
+                  <nav aria-label="breadcrumb">
+                    <h3 className="breadcrumb-title">CHI TIẾT THƯƠNG HIỆU</h3>
+                    <ul className="breadcrumb justify-content-center">
+                      <li className="breadcrumb-item">
+                        
+                          
+                          <Link to="/">
+                          <i className="fa fa-home" /></Link>
+                      
+                      </li>
+                      <li className="breadcrumb-item active" aria-current="page">
+                      <Link to="/brands">
+                      Thương hiệu</Link>
+                        
+                      </li>
+                      <li className="breadcrumb-item active" aria-current="page">
+                        Chi tiết thương hiệu
+                      </li>
+                    </ul>
+                  </nav>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
             <header className="py-3 mt-2" style={{ backgroundColor: '#87b106', color: '#fff' }}>
                 <div className="container text-center">
                     <h1 className="fw-bold">{brand.name}</h1>

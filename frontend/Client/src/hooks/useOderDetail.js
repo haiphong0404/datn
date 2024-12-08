@@ -1,10 +1,12 @@
 import { useEffect, useState, useCallback } from 'react';
 import { getOrderDetail } from '../api/order.js'; 
+import { useNavigate } from "react-router-dom";
 
 const useOrderDetail = (orderId) => {
     const [orderDetail, setOrderDetail] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const navigate = useNavigate();
 
     // Hàm refetch
     const refetch = useCallback(() => {
@@ -18,7 +20,7 @@ const useOrderDetail = (orderId) => {
                     setLoading(false);  // Kết thúc quá trình tải
                 })
                 .catch(err => {
-                    console.error('Lỗi chi tiết đơn hàng:', err.message); // Log lỗi
+                    navigate("/*");
                     setError(err.message);  // Lưu lỗi vào state
                     setLoading(false);  // Kết thúc quá trình tải
                 });

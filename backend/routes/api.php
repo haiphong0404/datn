@@ -58,7 +58,7 @@ Route::middleware('api')->group(function () {
     Route::apiResource('categories', CategoryController::class);
     Route::apiResource('products', ProductController::class);
 });
-Route::apiResource('user', UserController::class);
+    Route::apiResource('user', UserController::class);
 Route::get('order-details/{order_id}', [OrderDetailController::class, 'getOrderDetails']);
 Route::apiResource('order-details', OrderDetailController::class);
 Route::middleware('auth:sanctum')->group(function () {
@@ -104,3 +104,4 @@ Route::post('/webhook/stripe', [StripeController::class, 'handle'])->withoutMidd
 Route::get('/stripe/verify-session/{sessionId}', [StripeController::class, 'verifySession']);
 Route::post('/orders/{orderId}/cancel', [StripeController::class, 'cancelOrder']);
 Route::post('/product-variants/check-quantity', [ProductVariantController::class, 'checkQuantity']);
+
