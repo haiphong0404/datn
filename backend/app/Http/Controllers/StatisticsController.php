@@ -18,7 +18,7 @@ class StatisticsController extends Controller
     {
         if (auth()->user()->role == 'admin' || auth()->user()->role == 'staff') {
 
-            $totalProducts = $this->statisticsService->getTotalProducts();
+            $totalProducts = $this->statisticsService->getTopSellingProduct();
             $totalOrders = $this->statisticsService->gettotalOrders();
             $totalRevenue = $this->statisticsService->gettotalRevenue();
             $revenueByProduct = $this->statisticsService->getRevenueByProduct();

@@ -14,10 +14,11 @@
                                 </div>
                                 <div class="value">
                                     <h1 class="text-truncate" style="max-width: 100%;" data-bs-toggle="tooltip"
-                                        title="{{ $totalProducts }}">
-                                        {{ $totalProducts }}
+                                        title="{{ $totalProducts['total_sold'] }}">
+                                        {{ $totalProducts['total_sold'] }}
                                     </h1>
-                                    <p>Số loại mặt hàng đang bán</p>
+                                    <p class="text-truncate" style="max-width: 100%;" data-bs-toggle="tooltip"
+                                        title="{{ $totalProducts['product_name']}}">{{ $totalProducts['product_name'] }}</p>
                                 </div>
                             </section>
                         </div>

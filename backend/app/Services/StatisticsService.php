@@ -16,9 +16,32 @@ class StatisticsService
      *
      * @return int
      */
-    public function getTotalProducts(): int
+    public function getTopSellingProduct(): array
     {
-        return Product::count(); // Truy vấn tổng số sản phẩm trong bảng products
+        // Truy vấn sản phẩm bán chạy nhất, lọc theo trạng thái đơn hàng 'completed'
+        $topSelling = OrderDetail::select('product_variants.product_id', DB::raw('SUM(order_details.quantity) as total_sold'))
+                            ->join('orders', 'orders.id', '=', 'order_details.order_id') // Kết nối bảng orders
+                            ->join('product_variants', 'product_variants.id', '=', 'order_details.product_variant_id') // Kết nối bảng product_variants
+                            ->join('products', 'products.id', '=', 'product_variants.product_id') // Kết nối bảng products qua product_variants
+                            ->where('orders.status', 'completed') // Lọc theo trạng thái 'completed'
+                            ->groupBy('product_variants.product_id') // Nhóm theo product_id (sản phẩm chung)
+                            ->orderByDesc(DB::raw('SUM(order_details.quantity)')) // Sắp xếp theo số lượng bán giảm dần
+                            ->first(); // Lấy sản phẩm bán chạy nhất (sản phẩm có số lượng bán nhiều nhất)
+
+        if ($topSelling) {
+            // Lấy tên sản phẩm từ bảng products
+            $product = Product::find($topSelling->product_id);
+
+            return [
+            'product_id' => $topSelling->product_id,
+            'product_name' => $product ? $product->name : 'Không tìm thấy sản phẩm',
+            'total_sold' => $topSelling['total_sold']
+            ];
+        }
+        
+        return [
+            'message' => 'Không có sản phẩm bán chạy',
+        ];
     }
 
     public function gettotalOrders(): int
