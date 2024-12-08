@@ -155,7 +155,7 @@
                                         <ul class="pagination">
                                             <li class="prev">
                                                 <a href="{{ $brands->previousPageUrl() }}" aria-label="Previous">←
-                                                    Previous</a>
+                                                    Trước</a>
                                             </li>
                                             @foreach ($brands->getUrlRange(1, $brands->lastPage()) as $page => $url)
                                                 <li class="{{ $page == $brands->currentPage() ? 'active' : '' }}">
@@ -163,7 +163,7 @@
                                                 </li>
                                             @endforeach
                                             <li class="next">
-                                                <a href="{{ $brands->nextPageUrl() }}" aria-label="Next">Next →</a>
+                                                <a href="{{ $brands->nextPageUrl() }}" aria-label="Next">Sau →</a>
                                             </li>
                                         </ul>
                                     </div>
@@ -180,13 +180,16 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            toastr.success('{{ session('success') }}', 'Thành công', {
-                closeButton: true,
-                progressBar: true,
-                timeOut: 3000,
-                positionClass: "toast-top-right"
-            });
+            @if (session('success'))
+                toastr.success('{{ session('success') }}', 'Thành công', {
+                    closeButton: true,
+                    progressBar: true,
+                    timeOut: 3000,
+                    positionClass: "toast-top-right"
+                });
+            @endif
         });
+
 
 
         document.addEventListener('DOMContentLoaded', function() {

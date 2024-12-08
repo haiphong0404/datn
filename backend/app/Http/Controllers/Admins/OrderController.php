@@ -77,7 +77,7 @@ class OrderController extends Controller
 
             // Tạo thông báo thành công với thông tin của đơn hàng
             $message = 'Đơn hàng ' . $order->id . ' - ' . $order->name . ' đã được tạo thành công  ' . $order->order_date;
-
+            session()->flash('success', $message);
             // Lấy thông báo hiện tại từ session (nếu có) hoặc khởi tạo mảng trống
             $successOrders = session()->get('success_orders', []);
 

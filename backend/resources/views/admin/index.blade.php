@@ -10,7 +10,7 @@
                         <div class="col-lg-4 col-sm-6">
                             <section class="card">
                                 <div class="symbol red">
-                                    <i class="fa fa-shopping-cart"></i>
+                                    <i class="bi bi-box-seam"></i>
                                 </div>
                                 <div class="value">
                                     <h1 class="text-truncate" style="max-width: 100%;" data-bs-toggle="tooltip"
@@ -24,7 +24,7 @@
                         <div class="col-lg-4 col-sm-6">
                             <section class="card">
                                 <div class="symbol yellow">
-                                    <i class="fa fa-shopping-cart"></i>
+                                    <i class="bi bi-receipt"></i>
                                 </div>
                                 <div class="value">
                                     <h1 class="text-truncate" style="max-width: 100%;" data-bs-toggle="tooltip"
@@ -38,7 +38,7 @@
                         <div class="col-lg-4 col-sm-6">
                             <section class="card">
                                 <div class="symbol blue">
-                                    <i class="fa fa-bar-chart-o"></i>
+                                    <i class="bi bi-reception-4"></i>
                                 </div>
                                 <div class="value">
                                     <h1 class="text-truncate" style="max-width: 100%;" data-bs-toggle="tooltip"

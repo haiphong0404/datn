@@ -132,7 +132,9 @@
                                                     @endif
                                                 </td>
                                                 <td class="text-center">
-                                                    @if ($item->role !== 'admin' && auth()->user()->hasRole(['admin']))
+                                                    @if (
+                                                        $item->role !== 'admin' &&
+                                                            auth()->user()->hasRole(['admin']))
                                                         <form action="{{ route('admin.user.toggleStatus', $item->id) }}"
                                                             method="POST" class="d-inline-block">
                                                             @csrf
@@ -166,7 +168,7 @@
                                         <ul class="pagination">
                                             <li class="prev">
                                                 <a href="{{ $users->previousPageUrl() }}" aria-label="Previous">←
-                                                    Previous</a>
+                                                    Trước</a>
                                             </li>
                                             @foreach ($users->getUrlRange(1, $users->lastPage()) as $page => $url)
                                                 <li class="{{ $page == $users->currentPage() ? 'active' : '' }}">
@@ -174,7 +176,7 @@
                                                 </li>
                                             @endforeach
                                             <li class="next">
-                                                <a href="{{ $users->nextPageUrl() }}" aria-label="Next">Next →</a>
+                                                <a href="{{ $users->nextPageUrl() }}" aria-label="Next">Sau →</a>
                                             </li>
                                         </ul>
                                     </div>
@@ -188,14 +190,16 @@
     </div>
     <!--dynamic table initialization -->
     <script src="{{ asset('assets') }}/admin/js/dynamic_table_init.js"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        toastr.success('{{ session('success') }}', 'Thành công', {
-            closeButton: true,
-            progressBar: true,
-            timeOut: 3000,
-            positionClass: "toast-top-right"
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            @if (session('success'))
+                toastr.success('{{ session('success') }}', 'Thành công', {
+                    closeButton: true,
+                    progressBar: true,
+                    timeOut: 3000,
+                    positionClass: "toast-top-right"
+                });
+            @endif
         });
-    });
-</script>
+    </script>
 @endsection

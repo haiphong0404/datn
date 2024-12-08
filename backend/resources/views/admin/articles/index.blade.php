@@ -3,7 +3,7 @@
 @section('search')
     <form action="{{ route('admin.articles.index') }}" method="GET">
         <div class="input-group mt-1">
-            <input type="text" name="search" class="form-control" placeholder="Search"
+            <input type="text" name="search" class="form-control" placeholder="Tìm kiếm bài viết"
                 value="{{ request()->input('search') }}">
             <button class="btn btn-outline-secondary" type="submit"><i class="bi bi-search"></i></button>
         </div>
@@ -139,7 +139,7 @@
                                         <ul class="pagination">
                                             <li class="prev">
                                                 <a href="{{ $articles->previousPageUrl() }}" aria-label="Previous">←
-                                                    Previous</a>
+                                                    Trước</a>
                                             </li>
                                             @foreach ($articles->getUrlRange(1, $articles->lastPage()) as $page => $url)
                                                 <li class="{{ $page == $articles->currentPage() ? 'active' : '' }}">
@@ -147,7 +147,7 @@
                                                 </li>
                                             @endforeach
                                             <li class="next">
-                                                <a href="{{ $articles->nextPageUrl() }}" aria-label="Next">Next →</a>
+                                                <a href="{{ $articles->nextPageUrl() }}" aria-label="Next">Sau →</a>
                                             </li>
                                         </ul>
                                     </div>
@@ -162,12 +162,14 @@
     <script src="{{ asset('assets') }}/admin/js/dynamic_table_init.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            toastr.success('{{ session('success') }}', 'Thành công', {
-                closeButton: true,
-                progressBar: true,
-                timeOut: 3000,
-                positionClass: "toast-top-right"
-            });
+            @if (session('success'))
+                toastr.success('{{ session('success') }}', 'Thành công', {
+                    closeButton: true,
+                    progressBar: true,
+                    timeOut: 3000,
+                    positionClass: "toast-top-right"
+                });
+            @endif
         });
     </script>
 @endsection

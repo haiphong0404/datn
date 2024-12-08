@@ -21,7 +21,7 @@ class ProductController extends Controller
 {
     public function __construct()
 {
-    $this->middleware('checkRole:admin')->only(['create', 'store', 'restore','update','edit','destroy']);
+    $this->middleware('checkRole:admin')->only(['create', 'store', 'restore','update','edit','destroy','updateVariants']);
     $this->middleware('checkRole:admin,staff')->only(['index', 'show']);
 }
 

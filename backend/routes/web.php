@@ -47,6 +47,7 @@ require __DIR__ . '/auth.php';
 Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'checkRole:admin,staff']], function () {
     // Quản lý thương hiệu
     Route::resource('brands', BrandController::class)->middleware('checkRole:admin');
+    Route::post('brands/{id}/restore', [BrandController::class, 'restore'])->name('brands.restore')->middleware('checkRole:admin');
 
     // Quản lý danh mục
     Route::resource('categories', CategoryController::class)->middleware('checkRole:admin');
@@ -85,4 +86,5 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'c
     Route::get('/orders/{order}/details', [OrderController::class, 'show'])->name('orders.show');
     Route::get('/get-variants/{productId}', [OrderController::class, 'getVariants'])->name('products.variants');
     Route::get('/search-products', [OrderController::class, 'search'])->name('products.search');
+    Route::put('/products/{product}/update-variants', [ProductController::class, 'updateVariants'])->name('products.updateVariants')->middleware('checkRole:admin');
 });

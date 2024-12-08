@@ -1,8 +1,5 @@
 @extends('admin.layout')
 
-@section('title')
-    Chỉnh sửa sản phẩm
-@endsection
 @section('search')
     <form action="{{ route('admin.products.index') }}" method="GET">
         <div class="input-group mt-1">
