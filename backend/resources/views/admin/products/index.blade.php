@@ -5,7 +5,6 @@
 @endsection
 
 @section('search')
-
     <form action="{{ route('admin.products.index') }}" method="GET">
         <div class="input-group mt-1">
             <input type="text" name="search" class="form-control" placeholder="Tìm kiếm sản phẩm"
@@ -164,7 +163,7 @@
                                                             @method('DELETE')
                                                             <button type="submit" class="btn btn-danger "
                                                                 onclick="return confirm('Bạn có chắc chắn muốn xóa không?');">
-                                                                <i class="bi bi-trash"></i> 
+                                                                <i class="bi bi-trash"></i>
                                                             </button>
                                                         </form>
                                                     @endif
@@ -186,7 +185,7 @@
                                         <ul class="pagination">
                                             <li class="prev">
                                                 <a href="{{ $products->previousPageUrl() }}" aria-label="Previous">←
-                                                    Previous</a>
+                                                    Trước</a>
                                             </li>
                                             @foreach ($products->getUrlRange(1, $products->lastPage()) as $page => $url)
                                                 <li class="{{ $page == $products->currentPage() ? 'active' : '' }}">
@@ -194,7 +193,7 @@
                                                 </li>
                                             @endforeach
                                             <li class="next">
-                                                <a href="{{ $products->nextPageUrl() }}" aria-label="Next">Next →</a>
+                                                <a href="{{ $products->nextPageUrl() }}" aria-label="Next">Sau →</a>
                                             </li>
                                         </ul>
                                     </div>
@@ -208,12 +207,14 @@
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            toastr.success('{{ session('success') }}', 'Thành công', {
-                closeButton: true,
-                progressBar: true,
-                timeOut: 3000,
-                positionClass: "toast-top-right"
-            });
+            @if (session('success'))
+                toastr.success('{{ session('success') }}', 'Thành công', {
+                    closeButton: true,
+                    progressBar: true,
+                    timeOut: 3000,
+                    positionClass: "toast-top-right"
+                });
+            @endif
         });
     </script>
 @endsection

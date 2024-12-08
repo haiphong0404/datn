@@ -56,102 +56,101 @@
             <!--logo end-->
             <div class="nav notify-row" id="top_menu">
                 <!-- notification start -->
-                <li class="dropdown">
-                    <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                        <i class="fa fa-tasks"></i>
-                        <span class="badge badge-success">
+                <ul class="nav top-menu">
+                    <!-- settings start -->
+                    <li class="dropdown">
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                            <i class="fa fa-tasks"></i>
+                            <span class="badge badge-success">
+                                @if (session('success_orders') && is_array(session('success_orders')))
+                                    {{ count(session('success_orders')) }}
+                                @else
+                                    0
+                                @endif
+                            </span>
+                        </a>
+                        <ul class="dropdown-menu extended tasks-bar"
+                            style="max-height: 200px; overflow-y: auto; width: 350px;">
+                            <div class="notify-arrow notify-arrow-green"></div>
                             @if (session('success_orders') && is_array(session('success_orders')))
-                                {{ count(session('success_orders')) }}
-                            @else
-                                0
-                            @endif
-                        </span>
-                    </a>
-                    <ul class="dropdown-menu extended tasks-bar"
-                        style="max-height: 300px; overflow-y: auto; width: 350px;">
-                        <div class="notify-arrow notify-arrow-green"></div>
-
-                        <!-- Hiển thị thông báo thành công, thông báo mới nhất lên đầu tiên -->
-                        @if (session('success_orders') && is_array(session('success_orders')))
-                            <li class="notification-header">
-                                <p class="green">Có {{ count(session('success_orders')) }} đơn hàng mới.</p>
-                            </li>
-                            <li class="task-list">
+                                <li class="notification-header">
+                                    <p style="font-size: 16px" class="green">Có {{ count(session('success_orders')) }}
+                                        đơn hàng mới.</p>
+                                </li>
                                 @foreach (array_reverse(session('success_orders')) as $successMessage)
-                                    <!-- Đảo ngược thứ tự của thông báo -->
-                            <li class="task-item" style="border-bottom: 1px solid #eee; padding: 8px 10px;">
-                                <p class="green" style="margin: 0;">{{ $successMessage }}</p>
-                            </li>
-                        @endforeach
-                </li>
-            @else
-                <li>
-                    <p class="green" style="margin: 0;">Không có thông báo đơn hàng nào mới.</p>
-                </li>
-                @endif
-                </ul>
-                </li>
-
-                <!-- notification for low stock -->
-                <li id="header_notification_bar" class="dropdown">
-                    <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                        <i class="fa fa-bell-o"></i>
-                        <span class="badge badge-warning">
-                            @if (session('low_stock_products') && count(session('low_stock_products')) > 0)
-                                {{ count(session('low_stock_products')) }}
+                                    <li class="task-item">
+                                        <a href="{{ route('admin.orders.index') }}">
+                                            <span style="font-size: 14px;">{{ $successMessage }}</span>
+                                        </a>
+                                    </li>
+                                @endforeach
                             @else
-                                0
+                                <li>
+                                    <p class="green" style="margin: 0;">Không có thông báo đơn hàng nào mới.</p>
+                                </li>
                             @endif
-                        </span>
-                    </a>
-                    <ul class="dropdown-menu extended notification"
-                        style="max-height: 300px; overflow-y: auto; width: 350px;">
-                        <div class="notify-arrow notify-arrow-yellow"></div>
+                        </ul>
+                    </li>
+                    <!-- settings end -->
 
-                        <!-- Hiển thị sản phẩm dưới số lượng tối thiểu -->
-                        @if (session('low_stock_products') && count(session('low_stock_products')) > 0)
-                            <li class="notification-header">
-                                <p class="yellow">Có {{ count(session('low_stock_products')) }} sản phẩm dưới 5 đôi</p>
-                            </li>
-                            <li class="product-list">
+                    <!-- notification dropdown start-->
+                    <li id="header_notification_bar" class="dropdown">
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                            <i class="fa fa-bell-o"></i>
+                            <span class="badge badge-warning">
+                                @if (session('low_stock_products') && count(session('low_stock_products')) > 0)
+                                    {{ count(session('low_stock_products')) }}
+                                @else
+                                    0
+                                @endif
+                            </span>
+                        </a>
+                        <ul class="dropdown-menu extended notification"
+                            style="max-height: 200px; overflow-y: auto; width: 350px;">
+                            <div class="notify-arrow notify-arrow-yellow"></div>
+                            @if (session('low_stock_products') && count(session('low_stock_products')) > 0)
+                                <li class="notification-header">
+                                    <p style="font-size: 16px" class="yellow">Có
+                                        {{ count(session('low_stock_products')) }} sản phẩm dưới 5 đôi
+                                    </p>
+                                </li>
                                 @foreach (session('low_stock_products') as $product)
-                                    <!-- Đảo ngược thứ tự của sản phẩm -->
-                            <li class="product-item" style="border-bottom: 1px solid #eee; padding: 8px 10px;">
-                                <a href="{{ route('admin.products.show', $product->id) }}">
-                                    <div class="d-flex align-items-center">
-                                        <span class="label label-danger mr-2"><i class="fa fa-bolt"></i></span>
-                                        <div>
-                                            <strong>{{ $product->name }}</strong>
-                                            <br>
-                                            <span class="small italic">Số lượng còn:
-                                                {{ $product->total_quantity_in_stock }} đôi</span>
-                                        </div>
-                                    </div>
-                                </a>
-                            </li>
-                        @endforeach
-                </li>
-            @else
-                <li>
-                    <p class="yellow" style="margin: 0;">Không có sản phẩm nào dưới 5 đôi trong kho</p>
-                </li>
-                @endif
+                                    <li class="product-item">
+                                        <a href="{{ route('admin.products.show', $product->id) }}">
+                                            <div class="d-flex align-items-center">
+                                                <span class="mr-2"><img src="{{ Storage::url($product->image) }}"
+                                                        style="width: 60px;" alt=""></span>
+                                                <div>
+                                                    <strong style="font-size: 13px">{{ $product->name }}</strong>
+                                                    <br>
+                                                    <span style="font-size: 11px" class="small italic">Số lượng còn:
+                                                        {{ $product->total_quantity_in_stock }} đôi</span>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </li>
+                                @endforeach
+                            @else
+                                <li>
+                                    <p class="yellow" style="margin: 0;">Không có sản phẩm nào dưới 5 đôi trong kho</p>
+                                </li>
+                            @endif
+                        </ul>
+                    </li>
+                    <!-- notification dropdown end -->
                 </ul>
-                </li>
-                <!-- notification dropdown end -->
             </div>
-
 
             <div class="top-nav ">
                 <!--search & user info start-->
                 <!--search & user info start-->
                 <ul class="nav pull-right top-menu">
-                    <li>
+                    <li class="mr-2">
                         @yield('search')
                     </li>
                     <!-- user login dropdown start-->
                     @auth
-                        <li class="dropdown">
+                        <li class="dropdown mr-2">
                             <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                                 <img src="{{ optional(Auth::user()->avatar_img) ? Storage::url(Auth::user()->avatar_img) : asset('default-avatar.png') }}"
                                     alt="{{ optional(Auth::user())->username }}" width="30px">
@@ -160,7 +159,7 @@
                             <ul class="dropdown-menu dropdown-menu-right">
                                 <li>
                                     <a href="{{ route('admin.profile') }}" class="dropdown-item">
-                                        <i class="fa fa-suitcase"></i> Hồ sơ
+                                        <i class="bi bi-suitcase-lg mr-2"></i> Hồ sơ
                                     </a>
                                 </li>
                                 <li>
@@ -168,7 +167,7 @@
                                         @csrf
                                         <button type="submit"
                                             class="btn btn-link dropdown-item text-danger d-flex align-items-center">
-                                            <i class="fa fa-sign-out-alt me-2"></i> Đăng xuất
+                                            <i class="fa fa-sign-out-alt mr-2"></i> Đăng xuất
                                         </button>
                                     </form>
                                 </li>
@@ -181,7 +180,7 @@
                     @endauth
                     <a href="http://localhost:3000"
                         style="display: inline-flex; justify-content: center; align-items: center; text-decoration: none; font-size: 15px; padding: 5px;"
-                        target="_blank"><i class="fa fa-sign-in mr-2"></i><span>Website</span></a>
+                        target="_blank"><i class="bi bi-box-arrow-right mr-1"></i><span>Website</span></a>
                     <!-- user login dropdown end -->
                 </ul>
                 <!--search & user info end-->
@@ -286,8 +285,8 @@
                     @if (auth()->user()->hasRole(['admin', 'staff']))
                         <li>
                             <a href="{{ route('admin.products.index') }}">
-                                <i class="bi bi-shop"></i>
-                                <span>Shops</span>
+                                <i class="bi bi-box-seam"></i>
+                                <span>Sản phẩm</span>
                             </a>
                         </li>
                     @endif
@@ -297,7 +296,7 @@
                         <li>
                             <a href="{{ route('admin.vouchers.index') }}">
                                 <i class="bi bi-ticket-detailed"></i>
-                                <span>Voucher</span>
+                                <span>Mã giảm giá</span>
                             </a>
                         </li>
                     @endif

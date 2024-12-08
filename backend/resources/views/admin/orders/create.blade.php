@@ -116,6 +116,8 @@
                                             Thanh Toán Offline</option>
                                         <option value="online" {{ old('payment_method') == 'online' ? 'selected' : '' }}>
                                             Thanh Toán Online</option>
+                                        <option value="stripe" {{ old('payment_method') == 'stripe' ? 'selected' : '' }}>
+                                            Thanh Toán Stripe</option>
                                     </select>
                                 </div>
                             </div>

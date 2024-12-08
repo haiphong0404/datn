@@ -123,7 +123,7 @@
                                                         @method('DELETE')
                                                         <button type="submit" class="btn btn-danger "
                                                             onclick="return confirm('Bạn có chắc muốn xóa thể loại này?');">
-                                                            <i class="bi bi-trash"></i> 
+                                                            <i class="bi bi-trash"></i>
                                                         </button>
                                                     </form>
                                                 @endif
@@ -148,7 +148,7 @@
                                         <ul class="pagination">
                                             <li class="prev">
                                                 <a href="{{ $categories->previousPageUrl() }}" aria-label="Previous">←
-                                                    Previous</a>
+                                                    Trước</a>
                                             </li>
                                             @foreach ($categories->getUrlRange(1, $categories->lastPage()) as $page => $url)
                                                 <li class="{{ $page == $categories->currentPage() ? 'active' : '' }}">
@@ -156,7 +156,7 @@
                                                 </li>
                                             @endforeach
                                             <li class="next">
-                                                <a href="{{ $categories->nextPageUrl() }}" aria-label="Next">Next →</a>
+                                                <a href="{{ $categories->nextPageUrl() }}" aria-label="Next">Sau →</a>
                                             </li>
                                         </ul>
                                     </div>
@@ -170,12 +170,14 @@
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            toastr.success('{{ session('success') }}', 'Thành công', {
-                closeButton: true,
-                progressBar: true,
-                timeOut: 3000,
-                positionClass: "toast-top-right"
-            });
+            @if (session('success'))
+                toastr.success('{{ session('success') }}', 'Thành công', {
+                    closeButton: true,
+                    progressBar: true,
+                    timeOut: 3000,
+                    positionClass: "toast-top-right"
+                });
+            @endif
         });
     </script>
 @endsection
