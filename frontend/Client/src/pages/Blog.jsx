@@ -69,7 +69,7 @@ const Blog = () => {
               <div className="col-12">
                 <div className="breadcrumb-wrap">
                   <nav aria-label="breadcrumb">
-                    <h3 className="breadcrumb-title">BLOG</h3>
+                    <h3 className="breadcrumb-title">TIN TỨC</h3>
                     <ul className="breadcrumb justify-content-center">
                       <li className="breadcrumb-item">
                         <a href="index.html">
@@ -77,7 +77,7 @@ const Blog = () => {
                         </a>
                       </li>
                       <li className="breadcrumb-item active" aria-current="page">
-                        Blog
+                        Tin tức
                       </li>
                     </ul>
                   </nav>
