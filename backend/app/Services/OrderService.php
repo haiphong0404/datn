@@ -127,6 +127,16 @@ class OrderService
             $order->payment_method = $request->input('payment_method');
             $order->payment_status = $request->input('payment_status');
 
+            $fee = 0;
+            if ($request->input('shipping_fee') == 1) {
+                $fee = 40000;
+            }elseif ($request->input('shipping_fee') == 2) {
+                $fee = 60000;
+            }else {
+                $fee = 0;
+            }
+            $order->shipping_fee = $fee;
+
             $order->save();
 
             // Xử lý chi tiết đơn hàng
@@ -134,7 +144,7 @@ class OrderService
 
             // Áp dụng mã giảm giá
             $voucherCode = $request->input('voucher_code');
-            $discount = 0; // Lưu giá trị giảm giá cuối cùng
+            $discount = 0;
 
             if ($voucherCode) {
                 $voucher = Voucher::where('code', $voucherCode)
@@ -193,8 +203,11 @@ class OrderService
                 }
             }
 
+            // Lưu số tiền giảm giá vào đơn hàng
+            $order->voucher_discount = $discount;
+
             // Cập nhật tổng tiền đơn hàng sau giảm giá
-            $order->total_amount = $totalAmount - $discount;
+            $order->total_amount = $totalAmount - $discount + $fee;
             $order->save();
 
             // Commit transaction
@@ -206,7 +219,7 @@ class OrderService
             DB::rollBack();
             $this->restoreQuantities($originalQuantities); // Khôi phục số lượng biến thể
             $this->updateTotalQuantityInStock($arrProduct_id); // Tính lại tổng sản phẩm tồn kho
-            throw $e; // Ném lại lỗi để xử lý ở nơi khác nếu cần
+            throw $e;
         }
     }
 

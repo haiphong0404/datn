@@ -77,21 +77,8 @@ class OrderController extends Controller
 
             // Tạo thông báo thành công với thông tin của đơn hàng
             $message = 'Đơn hàng ' . $order->id . ' - ' . $order->name . ' đã được tạo thành công  ' . $order->order_date;
-
-            // Lấy thông báo hiện tại từ session (nếu có) hoặc khởi tạo mảng trống
-            $successOrders = session()->get('success_orders', []);
-
-            // Kiểm tra xem successOrders có phải là mảng không
-            if (!is_array($successOrders)) {
-                $successOrders = []; // Nếu không phải mảng, khởi tạo lại mảng
-            }
-
-            // Thêm thông báo mới vào mảng success_orders
-            $successOrders[] = $message;
-
-            // Lưu lại thông báo vào session
-            session()->put('success_orders', $successOrders);
-
+            session()->flash('success', $message);
+            
             // Redirect thành công với thông báo
             return redirect()->route('admin.orders.index');
 

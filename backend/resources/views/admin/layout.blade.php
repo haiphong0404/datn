@@ -134,44 +134,12 @@
                     </li>
                     <!-- notification dropdown end -->
         </div>
-
-
         <div class="top-nav ">
-            <!--search & user info start-->
-            <!--search & user info start-->
-            <ul class="nav pull-right top-menu">
-                <li>
-                    @yield('search')
-                </li>
-                <!-- user login dropdown start-->
-                @auth
-                    <li class="dropdown">
-                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                            <img
-                                src="{{ optional(Auth::user()->avatar_img) ? Storage::url(Auth::user()->avatar_img) : asset('default-avatar.png') }}"
-                                alt="{{ optional(Auth::user())->username }}" width="30px">
-                            <b class="caret"></b>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-right">
-                            <li>
-                                <a href="{{ route('admin.profile') }}" class="dropdown-item">
-                                    <i class="fa fa-suitcase"></i> Hồ sơ
-                                </a>
-                            </li>
-                            <li>
-                                <form action="{{ route('logout') }}" method="POST" style="display: inline;">
-                                    @csrf
-                                    <button type="submit"
-                                            class="btn btn-link dropdown-item text-danger d-flex align-items-center">
-                                        <i class="fa fa-sign-out-alt me-2"></i> Đăng xuất
-                                    </button>
-                                </form>
-                            </li>
-                        </ul>
-                    </li>
-                @else
+                <!--search & user info start-->
+                <!--search & user info start-->
+                <ul class="nav pull-right top-menu">
                     <li>
-                        <a href="{{ route('login') }}" class="dropdown-item">Đăng nhập</a>
+                        @yield('search')
                     </li>
                     <!-- user login dropdown start-->
                     @auth
@@ -220,7 +188,7 @@
                     <!-- Thống kê -->
                     @if (auth()->user()->hasRole(['admin', 'staff']))
                         <li>
-                            <a href="{{ route('admin.index') }}">
+<a href="{{ route('admin.index') }}">
                                 <i class="bi bi-speedometer2"></i>
                                 <span>Thống kê</span>
                             </a>
@@ -290,7 +258,7 @@
                     @if (auth()->user()->hasRole(['admin', 'staff']))
                         <li>
                             <a href="{{ route('admin.orders.index') }}">
-                                <i class="bi bi-receipt"></i>
+<i class="bi bi-receipt"></i>
                                 <span>Đơn hàng</span>
                             </a>
                         </li>
@@ -337,7 +305,6 @@
             </section>
         </section>
     </section>
-</section>
 
     <!-- Section for additional JS -->
     @yield('js')
@@ -355,47 +322,42 @@
     <script src="{{ asset('assets') }}/admin/js/jquery.sparkline.js" type="text/javascript"></script>
     <script src="{{ asset('assets') }}/admin/assets/js/jquery-easy-pie-chart/jquery.easy-pie-chart.js"></script>
     <script src="{{ asset('assets') }}/admin/js/owl.carousel.js"></script>
-    <script src="{{ asset('assets') }}/admin/js/jquery.customSelect.min.js"></script>
+<script src="{{ asset('assets') }}/admin/js/jquery.customSelect.min.js"></script>
     <script src="{{ asset('assets') }}/admin/js/respond.min.js"></script>
 
+    <!--right slidebar-->
+    <script src="{{ asset('assets') }}/admin/js/slidebars.min.js"></script>
 
-<!--right slidebar-->
-<script src="{{ asset('assets') }}/admin/js/slidebars.min.js"></script>
+    <!--common script for all pages-->
+    <script src="{{ asset('assets') }}/admin/js/common-scripts.js"></script>
 
-<!--common script for all pages-->
-<script src="{{ asset('assets') }}/admin/js/common-scripts.js"></script>
+    <!--script for this page-->
+    <script src="{{ asset('assets') }}/admin/js/sparkline-chart.js"></script>
+    <script src="{{ asset('assets') }}/admin/js/easy-pie-chart.js"></script>
 
-<!--script for this page-->
-<script src="{{ asset('assets') }}/admin/js/sparkline-chart.js"></script>
-<script src="{{ asset('assets') }}/admin/js/easy-pie-chart.js"></script>
+    <script>
+        //owl carousel
+        $(document).ready(function() {
+            $("#owl-demo").owlCarousel({
+                navigation: true,
+                slideSpeed: 300,
+                paginationSpeed: 400,
+                singleItem: true,
+                autoPlay: true
 
-<script>
-    //owl carousel
-
-    $(document).ready(function () {
-        $("#owl-demo").owlCarousel({
-            navigation: true,
-            slideSpeed: 300,
-            paginationSpeed: 400,
-            singleItem: true,
-            autoPlay: true
-
+            });
         });
-    });
 
-    //custom select box
+        //custom select box
 
-    $(function () {
-        $('select.styled').customSelect();
-    });
+        $(function() {
+            $('select.styled').customSelect();
+        });
 
-    $(window).on("resize", function () {
-        var owl = $("#owl-demo").data("owlCarousel");
-        owl.reinit();
-    });
-</script>
-
+        $(window).on("resize", function() {
+            var owl = $("#owl-demo").data("owlCarousel");
+            owl.reinit();
+        });
+    </script>
 </body>
-
-
 </html>

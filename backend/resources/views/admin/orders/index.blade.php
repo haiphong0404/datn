@@ -11,9 +11,6 @@
 @endsection
 
 @section('content')
-    @if (session('success'))
-    @endif
-
     <style>
         .text-truncate {
             max-width: 150px;
@@ -49,6 +46,17 @@
 
                 <div class="card-body">
                     <div class="adv-table">
+                    @if (session('success'))
+                        <div class="alert alert-success">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+
+                    @if (session('error'))
+                        <div class="alert alert-danger">
+                            {{ session('error') }}
+                        </div>
+                    @endif
                         <div id="hidden-table-info_wrapper" class="dataTables_wrapper form-inline" role="grid">
                             <div class="row-fluid">
                                 <div class="span6">
@@ -199,13 +207,13 @@
 
     <script src="{{ asset('assets') }}/admin/js/dynamic_table_init.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            toastr.success('{{ session('success') }}', 'Thành công', {
-                closeButton: true,
-                progressBar: true,
-                timeOut: 3000,
-                positionClass: "toast-top-right"
-            });
-        });
+        // document.addEventListener('DOMContentLoaded', function() {
+        //     toastr.success('{{ session('success') }}', 'Thành công', {
+        //         closeButton: true,
+        //         progressBar: true,
+        //         timeOut: 3000,
+        //         positionClass: "toast-top-right"
+        //     });
+        // });
     </script>
 @endsection
