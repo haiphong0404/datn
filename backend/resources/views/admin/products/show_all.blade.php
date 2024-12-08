@@ -41,7 +41,9 @@
                                         <th>Màu sắc</th>
                                         <th>Giá</th>
                                         <th>Số lượng hiện tại</th>
+                                        @if (auth()->user()->hasRole(['admin']))
                                         <th>Số lượng thêm</th>
+                                        @endif
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -60,18 +62,22 @@
                                             <td>{{ $variant->color->name ?? 'Không có' }}</td>
                                             <td>{{ number_format($variant->price, 0, ',', '.') }} VNĐ</td>
                                             <td>{{ $variant->quantity }}</td>
+                                            @if (auth()->user()->hasRole(['admin']))
                                             <td>
                                                 <input type="number" name="additional_quantities[{{ $variant->id }}]"
                                                     class="form-control" min="0" placeholder="0" disabled>
                                             </td>
+                                            @endif
                                         </tr>
                                     @endforeach
                                 </tbody>
                             </table>
                         </div>
+                        @if (auth()->user()->hasRole(['admin']))
                         <div class="d-flex justify-content-end mt-2">
                             <button type="submit" class="btn btn-primary">Cập nhật số lượng</button>
                         </div>
+                        @endif
                     </form>
                 </div>
                 <div class="d-flex justify-content-end mt-4 mb-2">
