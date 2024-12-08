@@ -11,6 +11,12 @@ use Illuminate\Support\Facades\Storage;
 
 class BannerController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('checkRole:admin')->only(['create', 'store', 'destroy']);
+        $this->middleware('checkRole:admin,staff')->only(['index', 'show']);
+    }
+
     /**
      * Display a listing of the resource.
      */

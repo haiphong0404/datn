@@ -91,7 +91,7 @@
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-danger " title="Xóa"
                                                         onclick="return confirm('Bạn có chắc chắn muốn xóa không?');">
-                                                        <i class="fa fa-trash"></i>
+                                                        <i class="bi bi-trash"></i> 
                                                     </button>
                                                 </form>
                                             </div>
