@@ -49,8 +49,10 @@
                                                 <input type="checkbox" name="selected_variants[]" value="{{ $variant->id }}" class="select-variant">
                                             </td>
                                             <td class="text-center">
-                                                <img src="{{ asset('storage/' . $variant->images->random()->image) }}"
-                                                     style="width: 80px; height: auto; object-fit: cover;" alt="Biến thể {{ $variant->id }}">
+                                                <img src="{{ $variant->images->isNotEmpty() ? asset('storage/' . $variant->images->random()->image) : asset('default-image-path/default.jpg') }}"
+                                                     style="width: 80px; height: auto; object-fit: cover;"
+                                                     alt="Biến thể {{ $variant->id }}">
+
                                             </td>
                                             <td>{{ $variant->size->name ?? 'Không có' }}</td>
                                             <td>{{ $variant->color->name ?? 'Không có' }}</td>
