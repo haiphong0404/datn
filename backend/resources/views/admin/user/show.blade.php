@@ -31,7 +31,6 @@
 
                     <form action="{{ route('admin.user.show', $user->id) }}" method="POST" enctype="multipart/form-data">
                         @csrf
-                        @if ($user->avatar_img)
                             <div class="mb-3 text-center">
                                 <label class="form-label"><strong>Ảnh đại diện:</strong></label>
                                 <div class="d-flex justify-content-center">
@@ -39,7 +38,6 @@
                                         style="max-width: 150px;">
                                 </div>
                             </div>
-                        @endif
 
                         <div class="mb-3">
                             <label class="form-label"><strong>Tên người dùng:</strong></label>

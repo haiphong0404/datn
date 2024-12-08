@@ -15,23 +15,7 @@
 @endsection
 
 @section('content')
-    <!-- Hero Section -->
-    <div class="bg-body-light">
-        <div class="content content-full">
-            <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center">
-                <h1 class="flex-grow-1 fs-3 fw-semibold my-2 my-sm-3">Thêm Mới Thương Hiệu</h1>
-                <nav class="flex-shrink-0 my-2 my-sm-0 ms-sm-3" aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item">
-                            <a href="{{ route('admin.brands.index') }}" style="color: inherit;">Thương Hiệu</a>
-                        </li>
-                        <li class="breadcrumb-item active" aria-current="page">Thêm Mới Thương Hiệu</li>
-                    </ol>
-                </nav>
-            </div>
-        </div>
-    </div>
-    <!-- END Hero Section -->
+    
 
     <div class="row">
         <div class="col-sm-12">
@@ -39,6 +23,14 @@
                 <header class="card-header">
                     <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center">
                         <h1 class="flex-grow-1 fs-3 fw-semibold my-2 my-sm-3">Thêm Mới Thương Hiệu</h1>
+                        <nav class="flex-shrink-0 my-2 my-sm-0 ms-sm-3" aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item">
+                                    <a href="{{ route('admin.brands.index') }}" style="color: inherit;">Thương Hiệu</a>
+                                </li>
+                                <li class="breadcrumb-item active" aria-current="page">Thêm Mới Thương Hiệu</li>
+                            </ol>
+                        </nav>
                     </div>
                 </header>
 
@@ -83,11 +75,11 @@
 
                         <!-- Địa Chỉ Bản Đồ -->
                         <div class="form-group mb-3">
-                            <label for="link" class="form-label">Đường Dẫn Bản Đồ:</label>
+                            <label for="link" class="form-label">Đường Dẫn Website:</label>
                             <div class="input-group">
                                 <input type="url" name="link" id="link"
                                     class="form-control @error('link') is-invalid @enderror" value="{{ old('link') }}"
-                                    placeholder="Nhập đường dẫn Google Maps">
+                                    placeholder="Nhập đường dẫn Website">
                             </div>
                             @error('link')
                                 <span class="text-danger">{{ $message }}</span>
