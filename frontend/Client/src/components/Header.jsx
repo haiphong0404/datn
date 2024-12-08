@@ -13,7 +13,7 @@ const Header = () => {
   const dispatch = useDispatch()
   const { cart } = useSelector((state) => state.updateCart || {});
 
-  const [localCart, setLocalCart] = useState([]);
+  const [localCart, setLocalCart] = useState(JSON.parse(localStorage.getItem('cart')) || []);
   const [selectedItems, setSelectedItems] = useState(new Set());
 
   useEffect(() => {

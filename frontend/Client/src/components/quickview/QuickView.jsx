@@ -188,16 +188,16 @@ const QuickViewModal = ({ show, onClose, product }) => {
           <div className="color-selection">
             <h4>Chọn Màu</h4>
             <div className="color-options">
-              {variants.map((variant) => (
-                <button
-                  key={variant.id}
-                  className={`color-option ${variant.color === selectedColor ? 'selected' : ''}`}
-                  style={{ backgroundColor: variant.color }}
-                  onClick={() => handleColorSelect(variant.color)}
-                >
-                  {variant.color}
-                </button>
-              ))}
+            {Array.from(new Set(variants.map((variant) => variant.color))).map((color) => (
+      <button
+        key={color}
+        className={`color-option ${color === selectedColor ? 'selected' : ''}`}
+        style={{ backgroundColor: color }}
+        onClick={() => handleColorSelect(color)}
+      >
+        {color}
+      </button>
+    ))}
             </div>
           </div>
 
@@ -240,7 +240,7 @@ const QuickViewModal = ({ show, onClose, product }) => {
           {/* Trạng thái có sẵn */}
           <div className="availability">
             <i className="fa fa-check-circle"></i>
-            <span>{selectedVariant?.quantity} in stock</span>
+            <span>{selectedVariant?.quantity} Số lượng tồn kho</span>
           </div>
 
           {/* Thêm vào giỏ hàng */}
