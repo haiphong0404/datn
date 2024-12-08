@@ -30,10 +30,10 @@ const Contact_us = () => {
               <div className="col-12">
                 <div className="breadcrumb-wrap">
                   <nav aria-label="breadcrumb">
-                    <h3 className="breadcrumb-title">LIÊN HỆ</h3>
+                    <h3 className="breadcrumb-title">Liên hệ</h3>
                     <ul className="breadcrumb justify-content-center">
                       <li className="breadcrumb-item">
-                        <a href="index.html">
+                        <a href="">
                           <i className="fa fa-home" />
                         </a>
                       </li>
