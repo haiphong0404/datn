@@ -18,21 +18,21 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link href="{{ asset('assets') }}/admin/css/bootstrap.min.css" rel="stylesheet">
     <link href="{{ asset('assets') }}/admin/css/bootstrap-reset.css" rel="stylesheet">
     <!--external css-->
-    <link href="{{ asset('assets') }}/admin/assets/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <link href="{{ asset('assets') }}/admin/assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
     <link href="{{ asset('assets') }}/admin/assets/jquery-easy-pie-chart/jquery.easy-pie-chart.css" rel="stylesheet"
-          type="text/css" media="screen"/>
+        type="text/css" media="screen" />
     <link rel="stylesheet" href="{{ asset('assets') }}/admin/css/owl.carousel.css" type="text/css">
 
     <!--right slidebar-->
     <link href="{{ asset('assets') }}/admin/css/slidebars.css" rel="stylesheet">
     <!--dynamic table-->
-    <link href="{{ asset('assets') }}/admin/assets/advanced-datatable/media/css/demo_page.css" rel="stylesheet"/>
-    <link href="{{ asset('assets') }}/admin/assets/advanced-datatable/media/css/demo_table.css" rel="stylesheet"/>
-    <link rel="stylesheet" href="{{ asset('assets') }}/admin/assets/data-tables/DT_bootstrap.css"/>
+    <link href="{{ asset('assets') }}/admin/assets/advanced-datatable/media/css/demo_page.css" rel="stylesheet" />
+    <link href="{{ asset('assets') }}/admin/assets/advanced-datatable/media/css/demo_table.css" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ asset('assets') }}/admin/assets/data-tables/DT_bootstrap.css" />
 
     <!-- Custom styles for this template -->
 
@@ -42,45 +42,48 @@
 
     @yield('css')
 </head>
+
 <body class="light-sidebar-nav">
 
-<section id="container">
-    <!--header start-->
-    <header class="header white-bg">
-        <div class="sidebar-toggle-box">
-            <i class="fa fa-bars"></i>
-        </div>
-        <!--logo start-->
-        <a href="{{ route('admin.index') }}" class="logo">Admin<span>THOR</span></a>
-        <!--logo end-->
-        <div class="nav notify-row" id="top_menu">
-            <!-- notification start -->
-            <li class="dropdown">
-                <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                    <i class="fa fa-tasks"></i>
-                    <span class="badge badge-success">
-                @if(session('success_orders') && is_array(session('success_orders')))
-                            {{ count(session('success_orders')) }}
-                        @else
-                            0
-                        @endif
-            </span>
-                </a>
-                <ul class="dropdown-menu extended tasks-bar" style="max-height: 300px; overflow-y: auto; width: 350px;">
-                    <div class="notify-arrow notify-arrow-green"></div>
+    <section id="container">
+        <!--header start-->
+        <header class="header white-bg">
+            <div class="sidebar-toggle-box">
+                <i class="fa fa-bars"></i>
+            </div>
+            <!--logo start-->
+            <a href="{{ route('admin.index') }}" class="logo">Admin<span>THOR</span></a>
+            <!--logo end-->
+            <div class="nav notify-row" id="top_menu">
+                <!-- notification start -->
+                <li class="dropdown">
+                    <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                        <i class="fa fa-tasks"></i>
+                        <span class="badge badge-success">
+                            @if (session('success_orders') && is_array(session('success_orders')))
+                                {{ count(session('success_orders')) }}
+                            @else
+                                0
+                            @endif
+                        </span>
+                    </a>
+                    <ul class="dropdown-menu extended tasks-bar"
+                        style="max-height: 300px; overflow-y: auto; width: 350px;">
+                        <div class="notify-arrow notify-arrow-green"></div>
 
-                    <!-- Hiển thị thông báo thành công, thông báo mới nhất lên đầu tiên -->
-                    @if(session('success_orders') && is_array(session('success_orders')))
-                        <li class="notification-header">
-                            <p class="green">Có {{ count(session('success_orders')) }} đơn hàng mới.</p>
-                        </li>
-                        <li class="task-list">
-                            @foreach(array_reverse(session('success_orders')) as $successMessage) <!-- Đảo ngược thứ tự của thông báo -->
-                        <li class="task-item" style="border-bottom: 1px solid #eee; padding: 8px 10px;">
-                            <p class="green" style="margin: 0;">{{ $successMessage }}</p>
-                        </li>
-                @endforeach
-            </li>
+                        <!-- Hiển thị thông báo thành công, thông báo mới nhất lên đầu tiên -->
+                        @if (session('success_orders') && is_array(session('success_orders')))
+                            <li class="notification-header">
+                                <p class="green">Có {{ count(session('success_orders')) }} đơn hàng mới.</p>
+                            </li>
+                            <li class="task-list">
+                                @foreach (array_reverse(session('success_orders')) as $successMessage)
+                                    <!-- Đảo ngược thứ tự của thông báo -->
+                            <li class="task-item" style="border-bottom: 1px solid #eee; padding: 8px 10px;">
+                                <p class="green" style="margin: 0;">{{ $successMessage }}</p>
+                            </li>
+                        @endforeach
+                </li>
             @else
                 <li>
                     <p class="green" style="margin: 0;">Không có thông báo đơn hàng nào mới.</p>
@@ -94,23 +97,25 @@
                     <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                         <i class="fa fa-bell-o"></i>
                         <span class="badge badge-warning">
-                @if(session('low_stock_products') && count(session('low_stock_products')) > 0)
+                            @if (session('low_stock_products') && count(session('low_stock_products')) > 0)
                                 {{ count(session('low_stock_products')) }}
                             @else
                                 0
                             @endif
-            </span>
+                        </span>
                     </a>
-                    <ul class="dropdown-menu extended notification" style="max-height: 300px; overflow-y: auto; width: 350px;">
+                    <ul class="dropdown-menu extended notification"
+                        style="max-height: 300px; overflow-y: auto; width: 350px;">
                         <div class="notify-arrow notify-arrow-yellow"></div>
 
                         <!-- Hiển thị sản phẩm dưới số lượng tối thiểu -->
-                        @if(session('low_stock_products') && count(session('low_stock_products')) > 0)
+                        @if (session('low_stock_products') && count(session('low_stock_products')) > 0)
                             <li class="notification-header">
                                 <p class="yellow">Có {{ count(session('low_stock_products')) }} sản phẩm dưới 5 đôi</p>
                             </li>
                             <li class="product-list">
-                                @foreach(session('low_stock_products') as $product) <!-- Đảo ngược thứ tự của sản phẩm -->
+                                @foreach (session('low_stock_products') as $product)
+                                    <!-- Đảo ngược thứ tự của sản phẩm -->
                             <li class="product-item" style="border-bottom: 1px solid #eee; padding: 8px 10px;">
                                 <a href="{{ route('admin.products.show', $product->id) }}">
                                     <div class="d-flex align-items-center">
@@ -118,60 +123,31 @@
                                         <div>
                                             <strong>{{ $product->name }}</strong>
                                             <br>
-                                            <span class="small italic">Số lượng còn: {{ $product->total_quantity_in_stock }} đôi</span>
+                                            <span class="small italic">Số lượng còn:
+                                                {{ $product->total_quantity_in_stock }} đôi</span>
                                         </div>
                                     </div>
                                 </a>
                             </li>
-                    @endforeach
+                        @endforeach
                 </li>
-                @else
-                    <li>
-                        <p class="yellow" style="margin: 0;">Không có sản phẩm nào dưới 5 đôi trong kho</p>
-                    </li>
-                    @endif
-                    </ul>
-                    </li>
-                    <!-- notification dropdown end -->
-        </div>
-
-
-        <div class="top-nav ">
-            <!--search & user info start-->
-            <!--search & user info start-->
-            <ul class="nav pull-right top-menu">
+            @else
                 <li>
-                    @yield('search')
+                    <p class="yellow" style="margin: 0;">Không có sản phẩm nào dưới 5 đôi trong kho</p>
                 </li>
-                <!-- user login dropdown start-->
-                @auth
-                    <li class="dropdown">
-                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                            <img
-                                src="{{ optional(Auth::user()->avatar_img) ? Storage::url(Auth::user()->avatar_img) : asset('default-avatar.png') }}"
-                                alt="{{ optional(Auth::user())->username }}" width="30px">
-                            <b class="caret"></b>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-right">
-                            <li>
-                                <a href="{{ route('admin.profile') }}" class="dropdown-item">
-                                    <i class="fa fa-suitcase"></i> Hồ sơ
-                                </a>
-                            </li>
-                            <li>
-                                <form action="{{ route('logout') }}" method="POST" style="display: inline;">
-                                    @csrf
-                                    <button type="submit"
-                                            class="btn btn-link dropdown-item text-danger d-flex align-items-center">
-                                        <i class="fa fa-sign-out-alt me-2"></i> Đăng xuất
-                                    </button>
-                                </form>
-                            </li>
-                        </ul>
-                    </li>
-                @else
+                @endif
+                </ul>
+                </li>
+                <!-- notification dropdown end -->
+            </div>
+
+
+            <div class="top-nav ">
+                <!--search & user info start-->
+                <!--search & user info start-->
+                <ul class="nav pull-right top-menu">
                     <li>
-                        <a href="{{ route('login') }}" class="dropdown-item">Đăng nhập</a>
+                        @yield('search')
                     </li>
                     <!-- user login dropdown start-->
                     @auth
@@ -337,7 +313,6 @@
             </section>
         </section>
     </section>
-</section>
 
     <!-- Section for additional JS -->
     @yield('js')
@@ -358,42 +333,41 @@
     <script src="{{ asset('assets') }}/admin/js/jquery.customSelect.min.js"></script>
     <script src="{{ asset('assets') }}/admin/js/respond.min.js"></script>
 
+    <!--right slidebar-->
+    <script src="{{ asset('assets') }}/admin/js/slidebars.min.js"></script>
 
-<!--right slidebar-->
-<script src="{{ asset('assets') }}/admin/js/slidebars.min.js"></script>
+    <!--common script for all pages-->
+    <script src="{{ asset('assets') }}/admin/js/common-scripts.js"></script>
 
-<!--common script for all pages-->
-<script src="{{ asset('assets') }}/admin/js/common-scripts.js"></script>
+    <!--script for this page-->
+    <script src="{{ asset('assets') }}/admin/js/sparkline-chart.js"></script>
+    <script src="{{ asset('assets') }}/admin/js/easy-pie-chart.js"></script>
 
-<!--script for this page-->
-<script src="{{ asset('assets') }}/admin/js/sparkline-chart.js"></script>
-<script src="{{ asset('assets') }}/admin/js/easy-pie-chart.js"></script>
+    <script>
+        //owl carousel
 
-<script>
-    //owl carousel
+        $(document).ready(function() {
+            $("#owl-demo").owlCarousel({
+                navigation: true,
+                slideSpeed: 300,
+                paginationSpeed: 400,
+                singleItem: true,
+                autoPlay: true
 
-    $(document).ready(function () {
-        $("#owl-demo").owlCarousel({
-            navigation: true,
-            slideSpeed: 300,
-            paginationSpeed: 400,
-            singleItem: true,
-            autoPlay: true
-
+            });
         });
-    });
 
-    //custom select box
+        //custom select box
 
-    $(function () {
-        $('select.styled').customSelect();
-    });
+        $(function() {
+            $('select.styled').customSelect();
+        });
 
-    $(window).on("resize", function () {
-        var owl = $("#owl-demo").data("owlCarousel");
-        owl.reinit();
-    });
-</script>
+        $(window).on("resize", function() {
+            var owl = $("#owl-demo").data("owlCarousel");
+            owl.reinit();
+        });
+    </script>
 
 </body>
 
