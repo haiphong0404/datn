@@ -85,4 +85,5 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'c
     Route::get('/orders/{order}/details', [OrderController::class, 'show'])->name('orders.show');
     Route::get('/get-variants/{productId}', [OrderController::class, 'getVariants'])->name('products.variants');
     Route::get('/search-products', [OrderController::class, 'search'])->name('products.search');
+    Route::put('/products/{product}/update-variants', [ProductController::class, 'updateVariants'])->name('products.updateVariants');
 });

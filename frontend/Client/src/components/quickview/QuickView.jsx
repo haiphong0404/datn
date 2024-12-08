@@ -239,8 +239,8 @@ const QuickViewModal = ({ show, onClose, product }) => {
 
           {/* Trạng thái có sẵn */}
           <div className="availability">
-            <i className="fa fa-check-circle"></i>
-            <span>{selectedVariant?.quantity} in stock</span>
+            {/* <i className="fa fa-check-circle"></i> */}
+            <span>{selectedVariant?.quantity} Sản phẩm còn trong kho</span>
           </div>
 
           {/* Thêm vào giỏ hàng */}

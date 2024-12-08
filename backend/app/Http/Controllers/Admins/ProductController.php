@@ -21,7 +21,7 @@ class ProductController extends Controller
 {
     public function __construct()
 {
-    $this->middleware('checkRole:admin')->only(['create', 'store', 'restore','update','edit','destroy']);
+    $this->middleware('checkRole:admin')->only(['create', 'store', 'restore','update','edit','destroy','updateVariants']);
     $this->middleware('checkRole:admin,staff')->only(['index', 'show']);
 }
 
@@ -29,7 +29,7 @@ class ProductController extends Controller
      * Display a listing of the resource.
      */
     public function index(Request $request)
-    { 
+    {
         $search = $request->input('search');
         $products = Product::withTrashed() // Lấy cả sản phẩm đã xóa mềm
         ->with(['category' => function ($query) {
