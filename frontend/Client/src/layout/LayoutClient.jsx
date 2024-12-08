@@ -3,8 +3,8 @@ import { Outlet } from 'react-router-dom';
 
 const LayoutClient = () => {
   return (
-<div>
-<div className="offcanvas-search-wrapper">
+    <div>
+      <div className="offcanvas-search-wrapper">
         <div className="offcanvas-search-inner">
           <div className="offcanvas-close">
             <i className="fa fa-close" />
@@ -25,9 +25,17 @@ const LayoutClient = () => {
           </div>
         </div>
       </div>
-    <Outlet></Outlet>
-
-</div>
+      <div
+        style={{
+          minHeight: '80vh', // Chiều cao tối thiểu cho Outlet
+          display: 'flex', // Đảm bảo bố cục linh hoạt
+          flexDirection: 'column', // Sắp xếp theo chiều dọc
+        }}
+      >
+        <Outlet />
+      </div>
+    </div>
   );
 };
+
 export default LayoutClient;

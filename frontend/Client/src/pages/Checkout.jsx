@@ -5,6 +5,7 @@ import usePostOrder from '../hooks/usePostOrder';
 import useApplyVoucher from '../hooks/useApplyVoucher';
 import axios from 'axios';
 import { Navigate, useNavigate } from 'react-router-dom';
+import { Elements } from '@stripe/react-stripe-js';
 
 const Checkout = () => {
   const { userInfo } = useLoginForm();
@@ -257,6 +258,49 @@ const Checkout = () => {
       );
       const data = response.data;
 
+      //     // Remove cart from localStorage
+      //     localStorage.removeItem('selectedProducts');
+      //     localStorage.removeItem('cart');
+      //     setSelectedProducts([]);
+      //     setTotalAmount(0);
+
+      //     // Reset shipping status after order
+      //     setIsShippingSelected(false);  // This resets the shipping status to false
+      //     setIsVoucherApplied(false);
+      //   }else if (paymentMethod === "stripe") {
+      //     try {
+      //       // Gửi yêu cầu tạo Stripe session
+      //       const response = await fetch('http://127.0.0.1:8000/api/create-stripe', {
+      //         method: 'POST',
+      //         headers: {
+      //           'Content-Type': 'application/json',
+      //           'Authorization': `Bearer ${token}`, // Thêm token nếu cần
+      //         },
+      //         body: JSON.stringify(orderData),
+      //       });
+      
+      //       const data = await response.json();
+      
+      //       if (data.sessionId) {
+      //         // Chuyển người dùng đến trang thanh toán của Stripe
+      //         const stripe = Stripe('pk_test_51QSbecJMpBf2NQMLmRWimHDjNlzeFQCDaOZgdrIvgbeKZ2oCGQFReuzuMDb9d7LrAV59kah5Kcb6lkZKop0l4Z6A00xEjpeTkF');
+      //         const { error } = await stripe.redirectToCheckout({ sessionId: data.sessionId });
+      
+      //         if (error) {
+      //           console.error('Stripe Checkout error:', error);
+      //           // Xử lý lỗi nếu có
+      //         }
+      //       } else {
+      //         console.error('Không nhận được sessionId từ server');
+      //       }
+          
+      //     } catch (error) {
+      //       toast.error(`Đặt hàng thất bại: ${error.message}`);
+      //     }
+      //   }
+        
+      // } catch (error) {
+      //   toast.error(`Đặt hàng thất bại: sản phẩm trong kho hiện không đủ`);
      
   
       // Tiếp tục xử lý đơn hàng khi không có lỗi
@@ -343,6 +387,36 @@ const Checkout = () => {
                   // Đặt lại trạng thái vận chuyển và voucher
                   setIsShippingSelected(false);
                   setIsVoucherApplied(false);
+              }else if (paymentMethod === "stripe") {
+                try {
+                  // Gửi yêu cầu tạo Stripe session
+                  const response = await fetch('http://127.0.0.1:8000/api/create-stripe', {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                      'Authorization': `Bearer ${token}`, // Thêm token nếu cần
+                    },
+                    body: JSON.stringify(orderData),
+                  });
+            
+                  const data = await response.json();
+            
+                  if (data.sessionId) {
+                    // Chuyển người dùng đến trang thanh toán của Stripe
+                    const stripe = Stripe('pk_test_51QSbecJMpBf2NQMLmRWimHDjNlzeFQCDaOZgdrIvgbeKZ2oCGQFReuzuMDb9d7LrAV59kah5Kcb6lkZKop0l4Z6A00xEjpeTkF');
+                    const { error } = await stripe.redirectToCheckout({ sessionId: data.sessionId });
+            
+                    if (error) {
+                      console.error('Stripe Checkout error:', error);
+                      // Xử lý lỗi nếu có
+                    }
+                  } else {
+                    console.error('Không nhận được sessionId từ server');
+                  }
+                
+                } catch (error) {
+                  toast.error(`Đặt hàng thất bại: ${error.message}`);
+                }
               }
           } catch (error) {
               toast.error("Đặt hàng thất bại: sản phẩm trong kho hiện không đủ");
@@ -378,28 +452,8 @@ const Checkout = () => {
 
 
 
-
-  // Component xác nhận thanh toán sau khi quay về từ VNPay
-// useEffect(() => {
-//   const searchParams = new URLSearchParams(window.location.search);
-//   const transactionStatus = searchParams.get('vnp_TransactionStatus');
-//   const orderId = searchParams.get('vnp_TxnRef');
-
-//   if (transactionStatus === '00') {
-//     // Thanh toán thành công
-//     toast.success("Thanh toán thành công!");
-    
-//     // Cập nhật trạng thái đơn hàng trong Laravel
-//     updateOrderStatus(orderId, "paid");
-//   } else {
-//     // Thanh toán thất bại
-//     toast.error("Thanh toán thất bại!");
-//   }
-// }, []);
-
-
   return (
-    <div>
+    <div id="card-element">
       <main>
         {/* Vùng breadcrumb bắt đầu */}
         <div
@@ -646,7 +700,7 @@ const Checkout = () => {
                   {/* Kết thúc input mã giảm giá */}
 
                   <div className="order-payment-method">
-                  <h5 className="checkout-title" >Phương thức thanh toán</h5>
+                    <h5 className="checkout-title" >Phương thức thanh toán</h5>
                     <div className="single-payment-method show">
                       <div className="payment-method-name">
                         <div className="custom-control custom-radio">
@@ -683,7 +737,26 @@ const Checkout = () => {
                         </div>
                       </div>
                     </div>
+                    <div className="single-payment-method">
+                      <div className="payment-method-name">
+                        <div className="custom-control custom-radio">
+                          <input
+                            type="radio"
+                            id="stripe"
+                            name="paymentmethod"
+                            value="stripe"
+                            className="custom-control-input"
+                            checked={paymentMethod === 'stripe'}
+                            onChange={handlePaymentMethodChange}
+                          />
+                          <label className="custom-control-label" htmlFor="stripe">
+                            Thanh toán Stripe
+                          </label>
+                        </div>
+                      </div>
 
+                    </div>
+                   
                   </div>
                   <div className="checkout-btn">
                     <button

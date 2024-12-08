@@ -22,7 +22,7 @@ const Order_detail = () => {
 
     // Hiển thị khi đang tải hoặc có lỗi
     if (loading) return <div>Loading...</div>;
-    if (error) return <div>Error: {error}</div>;
+    if (error) return <div>bình đẹp trai: {error}</div>;
     console.log("refetch", orderItems)
     return (
         <div>
@@ -85,11 +85,12 @@ const Order_detail = () => {
                     </div>
                 )}
                 <h5 className="checkout-title"></h5>
-                {(orderDetail.status !== 'completed' && orderDetail.status !== 'cancelled') || orderDetail.status === 'processing' ? (
+                {(orderDetail.status !== 'completed' && orderDetail.status !== 'cancelled' && orderDetail.payment_status !== 'paid') || orderDetail.status === 'processing' ? (
                     <div className="checkout-btn" style={{ marginTop: '30px' }}>
                         <CancelOrderButton orderId={orderId} refetch={refetch} />
                     </div>
                 ) : null}
+
 
                 {/* Hiển thị sản phẩm trong đơn hàng */}
                 {orderItems.length > 0 && (
@@ -103,7 +104,7 @@ const Order_detail = () => {
                                                 <th className="pro-title">Tên</th>
                                                 <th className="pro-title">Ảnh</th>
                                                 <th className="pro-title">Màu sắc</th>
-                                                <th className="pro-title">Kích thước</th>
+                                                <th className="pro-title">Kích cỡ</th>
                                                 <th className="pro-price">Giá</th>
                                                 <th className="pro-quantity">Số lượng</th>
                                                 <th className="pro-subtotal">Tổng cộng</th>
@@ -113,7 +114,7 @@ const Order_detail = () => {
                                             {orderItems.map((item, index) => (
                                                 <tr key={index}>
                                                     <td className="pro-title">
-                                                        {item.product?.name || 'Tên sản phẩm không có'}
+                                                        {item.product?.name.substring(0, 18) || 'Tên sản phẩm không có'}
                                                     </td>
                                                     <td className="pro-title">
                                                         <img
@@ -141,6 +142,20 @@ const Order_detail = () => {
                                                 </tr>
 
                                             ))}
+                                            <tr className="pro-title">
+                                                <td colSpan="6" style={{ textAlign: 'center' }}>Phí Vận Chuyển</td>
+                                                <td >
+                                                    {parseFloat(orderDetail.shipping_fee).toLocaleString()} VND
+                                                </td>
+                                            </tr>
+                                            {orderDetail.voucher_discount != 0 && (
+                                                <tr className="pro-title">
+                                                    <td colSpan="6" style={{ textAlign: 'center' }}>Mã Giảm Giá :</td>
+                                                    <td>
+                                                        -{parseFloat(orderDetail.voucher_discount).toLocaleString()} VND
+                                                    </td>
+                                                </tr>
+                                            )}
 
                                             <tr className="total-amount-row">
                                                 <th colSpan="6" style={{ textAlign: 'center' }}>Tổng Tiền:</th>

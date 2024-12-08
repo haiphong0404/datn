@@ -20,6 +20,8 @@ class Order extends Model
         'address',
         'infor',
         'payment_status',
+        'shipping_fee',
+        'voucher_discount',
         'payment_method'
     ];
 

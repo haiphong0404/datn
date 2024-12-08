@@ -30,7 +30,7 @@ const Contact_us = () => {
               <div className="col-12">
                 <div className="breadcrumb-wrap">
                   <nav aria-label="breadcrumb">
-                    <h3 className="breadcrumb-title">CONTACT US</h3>
+                    <h3 className="breadcrumb-title">LIÊN HỆ</h3>
                     <ul className="breadcrumb justify-content-center">
                       <li className="breadcrumb-item">
                         <a href="index.html">
@@ -38,7 +38,7 @@ const Contact_us = () => {
                         </a>
                       </li>
                       <li className="breadcrumb-item active" aria-current="page">
-                        Contact Us
+                        Liên hệ
                       </li>
                     </ul>
                   </nav>
@@ -53,64 +53,70 @@ const Contact_us = () => {
         <div className="contact-area section-padding pt-0">
           <div className="container">
             <div className="row">
-              {/* <div className="col-lg-6">
-                <div className="contact-message">
-                  <h4 className="contact-title">Bạn có thể điền vào mẫu dưới đây</h4>
-                  <form id="contact-form" action="" method="post" className="contact-form">
-                    <div className="row">
-                      <div className="col-lg-6 col-md-6 col-sm-6">
-                        <input name="first_name" placeholder="Tên *" type="text" required />
-                      </div>
-                      <div className="col-lg-6 col-md-6 col-sm-6">
-                        <input name="phone" placeholder="Số điện thoại *" type="text" required />
-                      </div>
-                      <div className="col-lg-6 col-md-6 col-sm-6">
-                        <input name="email_address" placeholder="Email *" type="text" required />
-                      </div>
-                      
-                      <div className="col-12">
-                        <div className="contact2-textarea text-center">
-                          <textarea placeholder="Message *" name="message" className="form-control2" required defaultValue={""} />
-                        </div>
-                        <div className="contact-btn">
-                          <button className="btn btn-sqr" type="submit">Gửi</button>
-                        </div>
-                      </div>
-                      <div className="col-12 d-flex justify-content-center">
-                        <p className="form-messege" />
-                      </div>
-                    </div>
-                  </form>
-                </div>
-              </div> */}
-              {contactInfo.slice(0, 2).map((info) => (
-                <div className="col-lg-6" key={info.id}>
-                  <div className="contact-info">
-                    <h4 className="contact-title">Liên hệ với chúng tôi</h4>
-                    <p>
-                      Chúng tôi luôn sẵn sàng hỗ trợ bạn. Hãy liên hệ với chúng tôi qua các phương thức dưới đây
-                    </p>
-                    <ul>
-                      <li>
-                        <i className="fa fa-fax" /> Tên: {info.name}
-                      </li>
-                      <li>
-                        <i className="fa fa-envelope-o" /> E-mail: {info.email}
-                      </li>
-                      <li>
-                        <i className="fa fa-phone" /> {info.phone}
-                      </li>
-                    </ul>
-                    <div class="working-time">
-                      <h6>Giờ Làm Việc</h6>
-                      <p>Thứ Hai - Thứ Sáu: 8:00 AM - 6:00 PM</p>
-                      <p>Thứ Bảy: 9:00 AM - 2:00 PM</p>
-                      <p>Chủ Nhật: Nghỉ</p>
-                    </div>
+              {/* Thông tin liên hệ */}
+              <div className="col-lg-6">
+                <div className="contact-info">
+                  <h4 className="contact-title">Liên hệ với chúng tôi</h4>
+                  <p>
+                    Chúng tôi luôn sẵn sàng hỗ trợ bạn. Hãy liên hệ với chúng tôi qua các phương thức dưới đây
+                  </p>
+                  <ul>
+                    <li>
+                      <i className="fa fa-fax" /> Tên: {contactInfo[0].name}
+                    </li>
+                    <li>
+                      <i className="fa fa-envelope-o" /> E-mail: {contactInfo[0].email}
+                    </li>
+                    <li>
+                      <i className="fa fa-phone" /> {contactInfo[0].phone}
+                    </li>
+                  </ul>
+                  <div className="working-time">
+                    <h6>Giờ Làm Việc</h6>
+                    <p>Thứ Hai - Thứ Sáu: 8:00 AM - 6:00 PM</p>
+                    <p>Thứ Bảy: 9:00 AM - 2:00 PM</p>
+                    <p>Chủ Nhật: Nghỉ</p>
                   </div>
                 </div>
-              ))}
+              </div>
 
+              {/* Chính sách đổi trả và hoàn tiền */}
+              {/* Chính sách đổi trả và hoàn tiền */}
+<div className="col-lg-6">
+  <div className="contact-info">
+    <h4 className="contact-title">Chính Sách Đổi Trả & Hoàn Tiền</h4>
+    <p>
+      Chúng tôi cam kết bảo vệ quyền lợi khách hàng bằng các chính sách đổi trả và hoàn tiền sau:
+    </p>
+    <ul>
+      <li>
+        <i className="fa fa-check-circle" /> <strong>Thời hạn đổi trả:</strong> Trong vòng 7 ngày kể từ khi nhận hàng.
+      </li>
+      <li>
+        <i className="fa fa-check-circle" /> <strong>Điều kiện:</strong> Sản phẩm còn nguyên vẹn, chưa qua sử dụng, có đầy đủ hóa đơn và bao bì.
+      </li>
+      <li>
+        <i className="fa fa-check-circle" /> <strong>Hoàn tiền:</strong> 
+        - Áp dụng với đơn hàng thanh toán online nếu:
+        <ul>
+          <li>Sản phẩm lỗi do nhà sản xuất.</li>
+          <li>Sản phẩm không đúng mô tả hoặc sai hàng.</li>
+        </ul>
+      </li>
+      <li>
+        <i className="fa fa-check-circle" /> <strong>Hình thức hoàn tiền:</strong> 
+        - Hoàn trả qua tài khoản ngân hàng hoặc ví điện tử mà khách hàng đã sử dụng để thanh toán.
+      </li>
+      <li>
+        <i className="fa fa-check-circle" /> <strong>Chi phí:</strong> Miễn phí đổi trả với sản phẩm lỗi. 
+        Khách hàng chịu phí vận chuyển trong trường hợp đổi ý.
+      </li>
+    </ul>
+    <p>
+      Nếu bạn có bất kỳ câu hỏi nào, vui lòng liên hệ với đội ngũ hỗ trợ của chúng tôi. Chúng tôi sẵn sàng giúp đỡ!
+    </p>
+  </div>
+</div>
 
             </div>
           </div>

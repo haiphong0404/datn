@@ -1,117 +1,103 @@
 @extends('admin.layout')
 
 @section('title', 'Chi tiết sản phẩm: ' . $product->name)
-@section('search')
-    <form action="{{ route('admin.products.index') }}" method="GET">
-        <div class="input-group mt-1">
-            <input type="text" name="search" class="form-control" placeholder="Tìm kiếm sản phẩm"
-                value="{{ request()->input('search') }}">
-            <button class="btn btn-outline-secondary" type="submit"><i class="bi bi-search"></i></button>
-        </div>
-    </form>
-@endsection
 
 @section('content')
-<div class="row">
-    <div class="col-sm-12">
+    <div class="row">
+        <div class="col-sm-12">
             <div class="card shadow-sm">
                 <header class="card-header">
-                    <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center">
-                        <h1 class="flex-grow-1 fs-3 fw-semibold my-2 my-sm-3">Chi tiết sản phẩm: {{ $product->name }}</h1>
-                        <nav class="flex-shrink-0 my-2 my-sm-0 ms-sm-3" aria-label="breadcrumb">
-                            <ol class="breadcrumb">
-                                <li class="breadcrumb-item">
-                                    <a href="{{ route('admin.products.index') }}" style="color: inherit;">Sản phẩm</a>
-                                </li>
-                                <li class="breadcrumb-item active" aria-current="page">Chi tiết sản phẩm</li>
-                            </ol>
-                        </nav>
-                    </div>
+                    <h1 class="fs-3 fw-semibold">Chi tiết sản phẩm: {{ $product->name }}</h1>
                 </header>
                 <div class="card-body">
                     <div class="row">
-                        <!-- Ảnh sản phẩm -->
-                        <div class="col-md-6 text-center ">
+                        <div class="col-md-6 text-center">
                             <img src="{{ asset('storage/' . $product->image) }}" class="img-fluid"
-                                alt="{{ $product->name }}" style="max-width: 100%; height: auto;">
+                                 alt="{{ $product->name }}" style="max-width: 100%; height: auto;">
                         </div>
-
-                        <!-- Thông tin sản phẩm -->
                         <div class="col-md-6">
-                            <div class="mb-3">
-                                <strong>Tên sản phẩm:</strong>
-                                {{ $product->name }}
-                            </div>
-                            <div class="mb-3">
-                                <strong>Thể loại:</strong>
-                                {{ $product->category->name }}
-                            </div>
-                            <div class="mb-3">
-                                <strong>Thương hiệu:</strong>
-                                {{ $product->brand->name }}
-                            </div>
-                            <div class="mb-3">
-                                <strong>Giá:</strong>
-                                {{ number_format($product->price, 0, ',', '.') }} VNĐ
-                            </div>
-                            <div class="mb-3">
-                                <strong>Mô tả:</strong>
-                                {{ $product->description }}
-                            </div>
-
-                            <div class="mb-3">
-                                <strong>Số lượng nhập vào:</strong>
-                                {{ $product->incoming_quantity }}
-                            </div>
-                            <div class="mb-3">
-                                <strong>Số lượng còn trong kho:</strong>
-                                {{ $product->total_quantity_in_stock }}
-                            </div>
+                            <div class="mb-3"><strong>Tên sản phẩm:</strong> {{ $product->name }}</div>
+                            <div class="mb-3"><strong>Thể loại:</strong> {{ $product->category->name }}</div>
+                            <div class="mb-3"><strong>Thương hiệu:</strong> {{ $product->brand->name }}</div>
+                            <div class="mb-3"><strong>Giá:</strong> {{ number_format($product->price, 0, ',', '.') }} VNĐ</div>
+                            <div class="mb-3"><strong>Số lượng trong kho:</strong> {{ $product->total_quantity_in_stock }}</div>
                         </div>
                     </div>
-                    <div class="row">
-                        <!-- Thông tin biến thể (Sản phẩm con) -->
-                        <h5 class="mt-3">Danh sách biến thể sản phẩm</h5>
+
+                    <div class="row mt-4">
+                        <h5>Danh sách biến thể sản phẩm</h5>
+                        <form action="{{ route('admin.products.updateVariants', $product->id) }}" method="POST">
+                            @csrf
+                            @method('PUT')
                             <div class="table-responsive">
                                 <table class="table table-bordered table-hover">
-                                    <thead class="thead-light">
-                                        <tr class="text-center">
-                                            <th>Hình ảnh</th>
-                                            <th>Kích thước</th>
-                                            <th>Màu sắc</th>
-                                            <th>Giá</th>
-                                            <th>Số lượng</th>
-                                        </tr>
+                                    <thead>
+                                    <tr class="text-center">
+                                        <th><input type="checkbox" id="select-all"></th>
+                                        <th>Hình ảnh</th>
+                                        <th>Kích thước</th>
+                                        <th>Màu sắc</th>
+                                        <th>Giá</th>
+                                        <th>Số lượng hiện tại</th>
+                                        <th>Số lượng thêm</th>
+                                    </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($product->variants as $variant)
-                                            <tr>
-                                                <!-- Hiển thị ảnh biến thể -->
-                                                <td class="text-center">
-                                                    <img src="{{ asset('storage/' . $variant->images->random()->image) }}"
-                                                        alt="Biến thể {{ $variant->id }}"
-                                                        style="width: 80px; height: auto; object-fit: cover;">
-                                                </td>
-                                                <td class="text-end">{{ $variant->size->name ?? 'Không có' }}</td>
-                                                <td>{{ $variant->color->name ?? 'Không có' }}</td>
-                                                <td class="text-end">{{ number_format($variant->price, 0, ',', '.') }} VNĐ</td>
-                                                <td class="text-end">{{ $variant->quantity }}</td>
-                                            </tr>
-                                        @endforeach
+                                    @foreach ($product->variants as $variant)
+                                        <tr>
+                                            <td class="text-center">
+                                                <input type="checkbox" name="selected_variants[]" value="{{ $variant->id }}" class="select-variant">
+                                            </td>
+                                            <td class="text-center">
+                                                <img src="{{ asset('storage/' . $variant->images->random()->image) }}"
+                                                     style="width: 80px; height: auto; object-fit: cover;" alt="Biến thể {{ $variant->id }}">
+                                            </td>
+                                            <td>{{ $variant->size->name ?? 'Không có' }}</td>
+                                            <td>{{ $variant->color->name ?? 'Không có' }}</td>
+                                            <td>{{ number_format($variant->price, 0, ',', '.') }} VNĐ</td>
+                                            <td>{{ $variant->quantity }}</td>
+                                            <td>
+                                                <input type="number" name="additional_quantities[{{ $variant->id }}]"
+                                                       class="form-control" min="0" placeholder="0" disabled>
+                                            </td>
+                                        </tr>
+                                    @endforeach
                                     </tbody>
                                 </table>
-                        </div>
+                            </div>
+                            <div class="d-flex justify-content-end mt-2">
+                                <button type="submit" class="btn btn-primary">Cập nhật số lượng</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="d-flex justify-content-end mt-4 mb-2">
+                        <a href="{{ route('admin.products.index') }}" class="btn btn-secondary flex-fill me-1">Quay lại</a>
                     </div>
                 </div>
-
-
-                <div class="d-flex justify-content-end mt-4 mb-2">
-                    <a href="{{ route('admin.products.index') }}" class="btn btn-secondary flex-fill me-1">Quay lại</a>
-                </div>
             </div>
-
         </div>
     </div>
-    <!-- Nút quay lại danh sách sản phẩm -->
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const selectAll = document.getElementById('select-all');
+            const checkboxes = document.querySelectorAll('.select-variant');
+            const quantityInputs = document.querySelectorAll('input[name^="additional_quantities"]');
+
+            // Chọn tất cả
+            selectAll.addEventListener('change', function () {
+                checkboxes.forEach((checkbox, index) => {
+                    checkbox.checked = this.checked;
+                    quantityInputs[index].disabled = !this.checked;
+                });
+            });
+
+            // Bật/Tắt trường số lượng khi chọn biến thể
+            checkboxes.forEach((checkbox, index) => {
+                checkbox.addEventListener('change', function () {
+                    quantityInputs[index].disabled = !this.checked;
+                });
+            });
+        });
+    </script>
 @endsection

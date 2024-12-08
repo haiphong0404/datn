@@ -7,6 +7,7 @@ import Slider from 'react-slick';
 import { useDispatch, useSelector } from 'react-redux';
 import { addCart, loadCartFromLocalStorage } from '../../actions/action';
 import { toast } from 'react-toastify';
+import LoadingSpinner from "../../loading/LoadingSpinner"; 
 import axios from 'axios';
 
 const Details = () => {
@@ -138,23 +139,23 @@ const Details = () => {
     
                 if (response.status === 200) {
                     toast.success("Sản phẩm đã được thêm vào giỏ hàng!");
-    
+                    window.location.reload()
                     // Cập nhật giỏ hàng từ dữ liệu API và lưu lại trong localStorage
-                    dispatch(addCart(response.data.cart_item));
+                    // dispatch(addCart(response.data.cart_item));
     
-                    // Đồng bộ giỏ hàng từ server về localStorage
-                    const updatedCart = cart.map(item => 
-                        item.id_productVariant === id_productVariant 
-                            ? { ...item, quantity: item.quantity + quantity } 
-                            : item
-                    );
-                    if (!updatedCart.some(item => item.id_productVariant === id_productVariant)) {
-                        updatedCart.push(cartItem);
-                    }
+                    // // Đồng bộ giỏ hàng từ server về localStorage
+                    // const updatedCart = cart.map(item => 
+                    //     item.id_productVariant === id_productVariant 
+                    //         ? { ...item, quantity: item.quantity + quantity } 
+                    //         : item
+                    // );
+                    // if (!updatedCart.some(item => item.id_productVariant === id_productVariant)) {
+                    //     updatedCart.push(cartItem);
+                    // }
     
-                    // Lưu tất cả dữ liệu vào localStorage
-                    localStorage.setItem("cart", JSON.stringify(updatedCart));
-                    setLocalCart(updatedCart); // Cập nhật lại state giỏ hàng từ localStorage
+                    // // Lưu tất cả dữ liệu vào localStorage
+                    // localStorage.setItem("cart", JSON.stringify(updatedCart));
+                    // setLocalCart(updatedCart); // Cập nhật lại state giỏ hàng từ localStorage
                 }
             } else {
                 // Người dùng chưa đăng nhập: cập nhật giỏ hàng trong localStorage
@@ -179,12 +180,8 @@ const Details = () => {
             toast.error("Đã có lỗi xảy ra, vui lòng thử lại");
         }
     };
-    
-    
-
-
     if (productLoading || variantsLoading) {
-        return <div>Loading...</div>;
+        return <LoadingSpinner />;
     }
 
     if (productError || variantsError) {
@@ -207,8 +204,7 @@ const Details = () => {
                                     setSelectedSize('');
                                 }}>
                                     <img
-                                        src={variant.images} 
-                                        alt={`Product ${index + 1}`}
+                                        src={variant.images}                                 
                                         className={`w-full h-auto cursor-pointer ${selectedImage === variant.images ? 'selected-image' : ''}`}
                                     />
                                 </div>
@@ -277,10 +273,11 @@ const Details = () => {
                         </div>
 
                         <h6 className="option-title">Số lượng:</h6>
-                        <div className="quantity d-flex align-items-center">
-                            <button onClick={handleDecrease} disabled={selectedQuantity <= 1} className="btn-quantity">-</button>
-                            <div className="pro-qty">{selectedQuantity}</div>
-                            <button onClick={handleIncrease} disabled={selectedQuantity >= (selectedVariant?.quantity || 0)} className="btn-quantity">+</button>
+                        <div className="quantity d-flex align-items-center"
+                         style={{ marginTop: '10px' }} >
+                            <button onClick={handleDecrease} disabled={selectedQuantity <= 1} className="dec qtybtn">-</button>
+                            <div className="pro-qty"  style={{ paddingTop: '3px' }}>{selectedQuantity}</div>
+                            <button onClick={handleIncrease} disabled={selectedQuantity >= (selectedVariant?.quantity || 0)} className="inc qtybtn">+</button>
                         </div>
 
                         <div className="availability">

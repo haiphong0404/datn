@@ -135,9 +135,7 @@
                                                 @endif
                                             </td>
                                             <td>
-                                                @if ($order->payment_method === 'online')
-                                                    <p class="text-success">{{ ucfirst($order->status) }}</p>
-                                                @else
+
                                                     @if ($order->status === 'cancelled' || $order->status === 'completed')
                                                         <p class="text-success">{{ ucfirst($order->status) }}</p>
                                                     @else
@@ -156,7 +154,6 @@
                                                             </select>
                                                         </form>
                                                     @endif
-                                                @endif
                                             </td>
                                             <td>
                                                 <a href="{{ route('admin.orders.show', $order->id) }}"
