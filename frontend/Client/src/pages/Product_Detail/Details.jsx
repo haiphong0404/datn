@@ -177,7 +177,7 @@ const Details = () => {
             }
         } catch (error) {
             console.error("Error occurred while adding to cart:", error);
-            toast.error("Đã có lỗi xảy ra, vui lòng thử lại");
+            toast.error("sản phẩm trong kho không đủ");
         }
     };
     if (productLoading || variantsLoading) {

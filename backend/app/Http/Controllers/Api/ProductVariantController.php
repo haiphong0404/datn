@@ -48,7 +48,7 @@ class ProductVariantController extends Controller
             '*.product_variant_id' => 'required|exists:product_variants,id',
             '*.quantity' => 'required|integer|min:1',
         ]);
-    
+
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
@@ -56,17 +56,17 @@ class ProductVariantController extends Controller
                 'errors' => $validator->errors(),
             ], 422);
         }
-    
+
         $requestedVariants = $request->all();
         $insufficientVariants = [];
-    
+
         foreach ($requestedVariants as $variant) {
             $variantId = $variant['product_variant_id'];
             $quantityRequested = $variant['quantity'];
-    
+
             // Tìm biến thể theo ID
             $productVariant = ProductVariant::find($variantId);
-    
+
             // Kiểm tra số lượng
             $size = $productVariant->size->name ?? 'Chưa xác định';  // Lấy tên size nếu có
         $color = $productVariant->color->name ?? 'Chưa xác định'; // Lấy tên màu nếu có
@@ -83,7 +83,7 @@ class ProductVariantController extends Controller
             ];
         }
         }
-    
+
         if (!empty($insufficientVariants)) {
             return response()->json([
                 'success' => false,
@@ -91,7 +91,7 @@ class ProductVariantController extends Controller
                 'insufficient_variants' => $insufficientVariants,
             ], 422);
         }
-    
+
         return response()->json([
             'success' => true,
             'message' => 'Tất cả sản phẩm đều đủ số lượng.',

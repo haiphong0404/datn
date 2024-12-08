@@ -9101,3 +9101,23 @@ button {
     font-size: 14px;
   }
 }
+.payment-failure {
+  text-align: center;
+  background-color: #ffe4e6; /* Màu nền nhẹ nhàng để báo lỗi */
+  padding: 20px;
+  border: 1px solid #ff4d4f; /* Màu viền đỏ nhấn mạnh lỗi */
+  border-radius: 8px;
+  max-width: 400px;
+  margin: 20px auto;
+}
+
+.payment-failure__title {
+  color: #ff4d4f; /* Màu đỏ để nhấn mạnh lỗi */
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.payment-failure__message {
+  color: #333; /* Màu chữ chính */
+  font-size: 16px;
+}
