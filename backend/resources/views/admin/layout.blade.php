@@ -37,7 +37,8 @@
     <!-- Custom styles for this template -->
 
     <link href="{{ asset('assets') }}/admin/css/style.css" rel="stylesheet">
-    <link href="{{ asset('assets') }}/admin/css/style-responsive.css" rel="stylesheet"/>
+    <link href="{{ asset('assets') }}/admin/css/style-responsive.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
 
     @yield('css')
 </head>
@@ -172,118 +173,191 @@
                     <li>
                         <a href="{{ route('login') }}" class="dropdown-item">Đăng nhập</a>
                     </li>
-                @endauth
-                <a href="http://localhost:3000"
-                   style="display: inline-flex; justify-content: center; align-items: center; text-decoration: none; font-size: 15px; padding: 5px;"
-                   target="_blank"><i class="fa fa-sign-in mr-2"></i><span>Website</span></a>
-                <!-- user login dropdown end -->
-            </ul>
-            <!--search & user info end-->
-        </div>
-    </header>
-    <!--header end-->
-    <!--sidebar start-->
-    <aside>
-        <div id="sidebar" class="nav-collapse ">
-            <!-- sidebar menu start-->
-            <ul class="sidebar-menu" id="nav-accordion">
-                <li>
-                    <a href="{{ route('admin.index') }}">
-                        <i class="fa fa-dashboard"></i>
-                        <span>Thông kê</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('admin.articles.index') }}">
-                        <i class="bi bi-newspaper"></i>
-                        <span>Bài viết</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('admin.banners.index') }}">
-                        <i class="bi bi-card-image"></i>
-                        <span>Banner</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('admin.brands.index') }}">
-                        <i class="bi bi-badge-tm-fill"></i>
-                        <span>Thương hiệu</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('admin.categories.index') }}">
-                        <i class="bi bi-tags-fill"></i>
-                        <span>Danh mục</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('admin.contacts.index') }}">
-                        <i class="bi bi-person-rolodex"></i>
-                        <span>Liên hệ</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('admin.comments.index') }}">
-                        <i class="bi bi-chat-square-dots-fill"></i>
-                        <span>Bình luận</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('admin.orders.index') }}">
-                        <i class="bi bi-receipt"></i>
-                        <span>Đơn hàng</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('admin.user.index') }}">
-                        <i class="fa fa-user"></i>
-                        <span>Tài khoản</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('admin.products.index') }}">
-                        <i class="bi bi-shop"></i>
-                        <span>Shops</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('admin.vouchers.index') }}">
-                        <i class="fas fa-ticket-alt"></i>
-                        <span>Voucher</span>
-                    </a>
-                </li>
-            </ul>
-            <!-- sidebar menu end-->
-        </div>
-    </aside>
-    <!--sidebar end-->
-    <!--main content start-->
-    <section id="main-content">
-        <section class="wrapper">
-            @yield('content')
+                    <!-- user login dropdown start-->
+                    @auth
+                        <li class="dropdown">
+                            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                                <img src="{{ optional(Auth::user()->avatar_img) ? Storage::url(Auth::user()->avatar_img) : asset('default-avatar.png') }}"
+                                    alt="{{ optional(Auth::user())->username }}" width="30px">
+                                <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-right">
+                                <li>
+                                    <a href="{{ route('admin.profile') }}" class="dropdown-item">
+                                        <i class="fa fa-suitcase"></i> Hồ sơ
+                                    </a>
+                                </li>
+                                <li>
+                                    <form action="{{ route('logout') }}" method="POST" style="display: inline;">
+                                        @csrf
+                                        <button type="submit"
+                                            class="btn btn-link dropdown-item text-danger d-flex align-items-center">
+                                            <i class="fa fa-sign-out-alt me-2"></i> Đăng xuất
+                                        </button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </li>
+                    @else
+                        <li>
+                            <a href="{{ route('login') }}" class="dropdown-item">Đăng nhập</a>
+                        </li>
+                    @endauth
+                    <a href="http://localhost:3000"
+                        style="display: inline-flex; justify-content: center; align-items: center; text-decoration: none; font-size: 15px; padding: 5px;"
+                        target="_blank"><i class="fa fa-sign-in mr-2"></i><span>Website</span></a>
+                    <!-- user login dropdown end -->
+                </ul>
+                <!--search & user info end-->
+            </div>
+        </header>
+        <!--header end-->
+        <!--sidebar start-->
+        <aside style="position: sticky; top: 0; z-index: 1000;">
+            <div id="sidebar" class="nav-collapse ">
+                <!-- sidebar menu start-->
+                <ul class="sidebar-menu" id="nav-accordion">
+                    <!-- Thống kê -->
+                    @if (auth()->user()->hasRole(['admin', 'staff']))
+                        <li>
+                            <a href="{{ route('admin.index') }}">
+                                <i class="bi bi-speedometer2"></i>
+                                <span>Thống kê</span>
+                            </a>
+                        </li>
+                    @endif
+                    <!-- Bài viết -->
+                    @if (auth()->user()->hasRole(['admin']))
+                        <li>
+                            <a href="{{ route('admin.articles.index') }}">
+                                <i class="bi bi-newspaper"></i>
+                                <span>Bài viết</span>
+                            </a>
+                        </li>
+                    @endif
+
+                    <!-- Banner -->
+                    @if (auth()->user()->hasRole(['admin']))
+                        <li>
+                            <a href="{{ route('admin.banners.index') }}">
+                                <i class="bi bi-card-image"></i>
+                                <span>Banner</span>
+                            </a>
+                        </li>
+                    @endif
+
+                    <!-- Thương hiệu -->
+                    @if (auth()->user()->hasRole(['admin']))
+                        <li>
+                            <a href="{{ route('admin.brands.index') }}">
+                                <i class="bi bi-badge-tm-fill"></i>
+                                <span>Thương hiệu</span>
+                            </a>
+                        </li>
+                    @endif
+
+                    <!-- Danh mục -->
+                    @if (auth()->user()->hasRole(['admin']))
+                        <li>
+                            <a href="{{ route('admin.categories.index') }}">
+                                <i class="bi bi-tags-fill"></i>
+                                <span>Danh mục</span>
+                            </a>
+                        </li>
+                    @endif
+
+                    <!-- Liên hệ -->
+                    @if (auth()->user()->hasRole(['admin']))
+                        <li>
+                            <a href="{{ route('admin.contacts.index') }}">
+                                <i class="bi bi-person-rolodex"></i>
+                                <span>Liên hệ</span>
+                            </a>
+                        </li>
+                    @endif
+
+                    <!-- Bình luận -->
+                    @if (auth()->user()->hasRole(['admin']))
+                        <li>
+                            <a href="{{ route('admin.comments.index') }}">
+                                <i class="bi bi-chat-square-dots-fill"></i>
+                                <span>Bình luận</span>
+                            </a>
+                        </li>
+                    @endif
+
+                    <!-- Đơn hàng -->
+                    @if (auth()->user()->hasRole(['admin', 'staff']))
+                        <li>
+                            <a href="{{ route('admin.orders.index') }}">
+                                <i class="bi bi-receipt"></i>
+                                <span>Đơn hàng</span>
+                            </a>
+                        </li>
+                    @endif
+
+                    <!-- Tài khoản (Chỉ Admin) -->
+                    @if (auth()->user()->hasRole(['admin', 'staff']))
+                        <li>
+                            <a href="{{ route('admin.user.index') }}">
+                                <i class="bi bi-person-lines-fill"></i>
+                                <span>Tài khoản</span>
+                            </a>
+                        </li>
+                    @endif
+
+                    <!-- Shops -->
+                    @if (auth()->user()->hasRole(['admin', 'staff']))
+                        <li>
+                            <a href="{{ route('admin.products.index') }}">
+                                <i class="bi bi-shop"></i>
+                                <span>Shops</span>
+                            </a>
+                        </li>
+                    @endif
+
+                    <!-- Voucher (Chỉ Admin) -->
+                    @if (auth()->user()->hasRole(['admin']))
+                        <li>
+                            <a href="{{ route('admin.vouchers.index') }}">
+                                <i class="bi bi-ticket-detailed"></i>
+                                <span>Voucher</span>
+                            </a>
+                        </li>
+                    @endif
+                </ul>
+                <!-- sidebar menu end-->
+            </div>
+        </aside>
+        <!--sidebar end-->
+        <!--main content start-->
+        <section id="main-content">
+            <section class="wrapper">
+                @yield('content')
+            </section>
         </section>
     </section>
 </section>
 
-<!-- Section for additional JS -->
-@yield('js')
-<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <!-- Section for additional JS -->
+    @yield('js')
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <!-- JS của Select2 -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <!-- js placed at the end of the document so the pages load faster -->
+    {{-- <script src="{{ asset('assets/admin/js/jquery.js') }}"></script> --}}
+    <script src="{{ asset('assets') }}/admin/js/bootstrap.bundle.min.js"></script>
+    <script class="include" type="text/javascript" src="{{ asset('assets') }}/admin/js/jquery.dcjqaccordion.2.7.js">
+    </script>
+    <!-- <script src="{{ asset('assets') }}/admin/js/jquery.scrollTo.min.js"></script> -->
+    <script src="{{ asset('assets') }}/admin/js/jquery.nicescroll.js" type="text/javascript"></script>
+    <script src="{{ asset('assets') }}/admin/js/jquery.sparkline.js" type="text/javascript"></script>
+    <script src="{{ asset('assets') }}/admin/assets/js/jquery-easy-pie-chart/jquery.easy-pie-chart.js"></script>
+    <script src="{{ asset('assets') }}/admin/js/owl.carousel.js"></script>
+    <script src="{{ asset('assets') }}/admin/js/jquery.customSelect.min.js"></script>
+    <script src="{{ asset('assets') }}/admin/js/respond.min.js"></script>
 
-<!-- JS của Select2 -->
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-<!-- js placed at the end of the document so the pages load faster -->
-{{-- <script src="{{ asset('assets/admin/js/jquery.js') }}"></script> --}}
-<script src="{{ asset('assets') }}/admin/js/bootstrap.bundle.min.js"></script>
-<script class="include" type="text/javascript" src="{{ asset('assets') }}/admin/js/jquery.dcjqaccordion.2.7.js">
-</script>
-<!-- <script src="{{ asset('assets') }}/admin/js/jquery.scrollTo.min.js"></script> -->
-<script src="{{ asset('assets') }}/admin/js/jquery.nicescroll.js" type="text/javascript"></script>
-<script src="{{ asset('assets') }}/admin/js/jquery.sparkline.js" type="text/javascript"></script>
-<script src="{{ asset('assets') }}/admin/assets/js/jquery-easy-pie-chart/jquery.easy-pie-chart.js"></script>
-<script src="{{ asset('assets') }}/admin/js/owl.carousel.js"></script>
-<script src="{{ asset('assets') }}/admin/js/jquery.customSelect.min.js"></script>
-<script src="{{ asset('assets') }}/admin/js/respond.min.js"></script>
 
 <!--right slidebar-->
 <script src="{{ asset('assets') }}/admin/js/slidebars.min.js"></script>

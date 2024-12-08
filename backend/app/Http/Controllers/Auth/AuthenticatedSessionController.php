@@ -39,7 +39,7 @@ class AuthenticatedSessionController extends Controller
         } elseif ($user->role === 'staff') {
             // Nếu là staff, tái tạo session và chuyển hướng đến staff
             $request->session()->regenerate();
-            return redirect()->route('staff.index');
+            return redirect()->route('admin.index');
         }
 
         // Nếu vai trò không hợp lệ, đăng xuất và thông báo lỗi

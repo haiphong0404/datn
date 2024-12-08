@@ -10,10 +10,6 @@
 @endsection
 @section('content')
     @if (session('success'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            {{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
     @endif
     <style>
         .text-truncate {
@@ -133,7 +129,7 @@
                                                             @method('DELETE')
                                                             <button type="submit" class="btn btn-danger"
                                                                 onclick="return confirm('Bạn có chắc muốn xóa banner này?')"><i
-                                                                    class="fa fa-trash-o"></i></button>
+                                                                    class="bi bi-trash"></i></button>
                                                         </form>
                                                     @endif
                                                 </td>
@@ -176,4 +172,15 @@
     </div>
     <!--dynamic table initialization -->
     <script src="{{ asset('assets') }}/admin/js/dynamic_table_init.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            toastr.success('{{ session('success') }}', 'Thành công', {
+                closeButton: true,
+                progressBar: true,
+                timeOut: 3000,
+                positionClass: "toast-top-right"
+            });
+        });
+    </script>
+
 @endsection

@@ -39,7 +39,7 @@
                             <label class="form-label"><strong>Hình ảnh:</strong></label>
                             <div class="d-flex justify-content-center">
                                 <img src="{{ Storage::url($article->image) }}" alt="{{ $article->title }}"
-                                    class="img-thumbnail" style="max-width: 800px;">
+                                    class="img-thumbnail" style="max-width: 400px;">
                             </div>
                         @endif
 

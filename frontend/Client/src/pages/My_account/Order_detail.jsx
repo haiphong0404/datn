@@ -22,7 +22,7 @@ const Order_detail = () => {
 
     // Hiển thị khi đang tải hoặc có lỗi
     if (loading) return <div>Loading...</div>;
-    if (error) return <div>Error: {error}</div>;
+    if (error) return <div>bình đẹp trai: {error}</div>;
     console.log("refetch", orderItems)
     return (
         <div>

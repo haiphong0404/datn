@@ -28,7 +28,7 @@ const AboutUs = () => {
                         </a>
                       </li>
                       <li className="breadcrumb-item active" aria-current="page">
-                        About Us
+                        Giới thiệu
                       </li>
                     </ul>
                   </nav>

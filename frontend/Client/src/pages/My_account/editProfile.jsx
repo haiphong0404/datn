@@ -1,41 +1,51 @@
 import React, { useState, useEffect } from 'react';
-import { useLoginForm } from '../../hooks/useLoginForm.js';
-import { useEditUser } from '../../hooks/useEditUser';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
 const EditProfile = () => {
-    const { userInfo, setUserInfo } = useLoginForm();
-    const { editUserById, loading, error } = useEditUser();
-
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
     const [address, setAddress] = useState('');
-    const [avatar_img, setAvatarImg] = useState(null);
+    const [avatarImg, setAvatarImg] = useState(null);
     const [previewImage, setPreviewImage] = useState('');
+    const [base64Avatar, setBase64Avatar] = useState(null);
 
     useEffect(() => {
-        if (userInfo) {
-            setUsername(userInfo.username || '');
-            setEmail(userInfo.email || '');
-            setPhone(userInfo.phone || '');
-            setAddress(userInfo.address || '');
-            setPreviewImage(userInfo.avatar_img || '');
-        }
-    }, [userInfo]);
+        // Giả sử userInfo được lấy từ hook useLoginForm hoặc từ props
+        const fetchUserInfo = async () => {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await axios.get('/user/me', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (response && response.data) {
+                    const user = response.data.data;
+                    setUsername(user.username || '');
+                    setEmail(user.email || '');
+                    setPhone(user.phone || '');
+                    setAddress(user.address || '');
+                    setPreviewImage(user.avatar_img ? `data:image/png;base64,${user.avatar_img_base64}` : '');
+                } else {
+                    toast.error('Dữ liệu người dùng không hợp lệ!');
+                }
+            } catch (error) {
+                toast.error('Không thể tải thông tin người dùng!');
+            }
+        };
 
-    const fetchUserInfo = async (id) => {
-        try {
-            const token = localStorage.getItem('token');
-            const response = await axios.get(`/user/${id}`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                },
-            });
-            setUserInfo(response.data);
-        } catch (error) {
-            toast.error('Không thể lấy thông tin người dùng!');
+        fetchUserInfo();
+    }, []);
+
+    const handleImageChange = (e) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            setAvatarImg(file);
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setPreviewImage(reader.result);
+            };
+            reader.readAsDataURL(file);
         }
     };
 
@@ -47,32 +57,34 @@ const EditProfile = () => {
         updatedInfo.append('email', email);
         updatedInfo.append('phone', phone);
         updatedInfo.append('address', address);
-        if (avatar_img) updatedInfo.append('avatar_img', avatar_img);
+        if (avatarImg) updatedInfo.append('avatar_img', avatarImg);
 
         try {
-            await editUserById(userInfo.id, updatedInfo);
-            toast.success('Cập nhật thông tin thành công!');
-            await fetchUserInfo(userInfo.id);
+            const token = localStorage.getItem('token');
+            const response = await axios.put('/api/user/${userId}', updatedInfo, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            // Kiểm tra dữ liệu trả về từ server
+            if (response && response.data) {
+                setBase64Avatar(response.data.data.avatar_img_base64);
+                toast.success('Cập nhật thông tin thành công!');
+            } else {
+                toast.error('Dữ liệu phản hồi không hợp lệ!');
+            }
         } catch (error) {
-            toast.error('Cập nhật thông tin không thành công: ' + error.message);
+            if (error.response) {
+                // Lỗi từ server, có thể là 404, 500 hoặc các mã lỗi khác
+                toast.error('Cập nhật thông tin không thành công: ' + error.response.data.message);
+            } else {
+                // Lỗi không liên quan đến phản hồi từ server
+                toast.error('Đã xảy ra lỗi. Vui lòng thử lại sau.');
+            }
         }
     };
-
-    const handleImageChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            setAvatarImg(file);
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setPreviewImage(reader.result);
-            };
-            reader.readAsDataURL(file);
-        }
-    };
-
-    if (!userInfo) {
-        return <p>Không có thông tin người dùng.</p>;
-    }
 
     return (
         <div>
@@ -132,7 +144,7 @@ const EditProfile = () => {
                             />
                         </div>
                         <div className="single-input-item">
-                            <label htmlFor="address" className="required">Địa Chỉ </label>
+                            <label htmlFor="address" className="required">Địa Chỉ</label>
                             <input
                                 type="text"
                                 id="address"
@@ -142,8 +154,8 @@ const EditProfile = () => {
                             />
                         </div>
                         <div className="single-input-item">
-                            <button type="submit" className="btn btn-sqr" disabled={loading}>
-                                {loading ? 'Đang lưu...' : 'Lưu Thay Đổi'}
+                            <button type="submit" className="btn btn-sqr">
+                                Lưu Thay Đổi
                             </button>
                         </div>
                     </form>

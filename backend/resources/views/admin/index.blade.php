@@ -13,7 +13,8 @@
                                     <i class="fa fa-shopping-cart"></i>
                                 </div>
                                 <div class="value">
-                                    <h1 class="text-truncate" style="max-width: 100%;" data-bs-toggle="tooltip" title="{{ $totalProducts }}">
+                                    <h1 class="text-truncate" style="max-width: 100%;" data-bs-toggle="tooltip"
+                                        title="{{ $totalProducts }}">
                                         {{ $totalProducts }}
                                     </h1>
                                     <p>Số loại mặt hàng đang bán</p>
@@ -26,7 +27,8 @@
                                     <i class="fa fa-shopping-cart"></i>
                                 </div>
                                 <div class="value">
-                                    <h1 class="text-truncate" style="max-width: 100%;" data-bs-toggle="tooltip" title="{{ $totalOrders }}">
+                                    <h1 class="text-truncate" style="max-width: 100%;" data-bs-toggle="tooltip"
+                                        title="{{ $totalOrders }}">
                                         {{ $totalOrders }}
                                     </h1>
                                     <p>Số đơn hàng trong tháng</p>
@@ -39,7 +41,8 @@
                                     <i class="fa fa-bar-chart-o"></i>
                                 </div>
                                 <div class="value">
-                                    <h1 class="text-truncate" style="max-width: 100%;" data-bs-toggle="tooltip" title="{{ $totalRevenue }}">
+                                    <h1 class="text-truncate" style="max-width: 100%;" data-bs-toggle="tooltip"
+                                        title="{{ $totalRevenue }}">
                                         {{ $totalRevenue }}
                                     </h1>
                                     <p>Doanh thu tháng</p>
@@ -51,36 +54,38 @@
                 </header>
                 <div class="card-body">
 
-                <h2 class="mt-5 mb-3">Thống Kê Doanh Thu Theo Từng Sản Phẩm</h2>
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>STT</th>
-                            <th>Tên Sản Phẩm</th>
-                            <th>Số lượng tồn kho</th>
-                            <th>Doanh Thu (VND)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($revenueByProduct as $key => $product)
+                    <h2 class="mt-5 mb-3">Thống Kê Doanh Thu Theo Từng Sản Phẩm</h2>
+                    <table class="table table-bordered">
+                        <thead>
                             <tr>
-                                <td>{{ $key + 1 }}</td>
-                                <td>{{ $product['name'] }}</td>
-                                <td>{{ $product['total_quantity_in_stock'] }}</td>
-                                <td>{{ number_format($product['total_revenue'], 0, ',', '.') }} VND</td>
+                                <th>STT</th>
+                                <th>Tên Sản Phẩm</th>
+                                <th>Số lượng tồn kho</th>
+                                <th>Doanh Thu (VND)</th>
                             </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-
-                <!-- Hiển thị doanh thu theo tháng -->
-                <h3 class="mt-5 mb-3">Biểu Đồ Doanh Thu 12 Tháng Gần Nhất</h3>
-                <canvas id="revenueChart"></canvas>
+                        </thead>
+                        <tbody>
+                            @foreach ($revenueByProduct as $key => $product)
+                                <tr>
+                                    <td>{{ $key + 1 }}</td>
+                                    <td>{{ $product['name'] }}</td>
+                                    <td>{{ $product['total_quantity_in_stock'] }}</td>
+                                    <td>{{ number_format($product['total_revenue'], 0, ',', '.') }} VND</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                    @if (auth()->user()->hasRole(['admin']))
+                        <!-- Hiển thị doanh thu theo tháng -->
+                        <h3 class="mt-5 mb-3">Biểu Đồ Doanh Thu 12 Tháng Gần Nhất</h3>
+                        <canvas id="revenueChart"></canvas>
+                    @endif
                 </div>
             </section>
         </div>
     </div>
 @endsection
+@if (auth()->user()->hasRole(['admin']))
 @section('js')
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
@@ -113,8 +118,9 @@
     <script>
         // Khởi tạo tooltip
         var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
             return new bootstrap.Tooltip(tooltipTriggerEl);
         });
     </script>
 @endsection
+@endif
