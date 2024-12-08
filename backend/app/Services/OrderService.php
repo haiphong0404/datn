@@ -270,6 +270,7 @@ class OrderService
 
         // Cập nhật trạng thái nếu hợp lệ
         $order->status = $newStatus;
+        $order->handler_id = Auth::id();
         $order->save();
 
         return true; // Thành công
