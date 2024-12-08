@@ -16,10 +16,6 @@ const Header = () => {
   const [localCart, setLocalCart] = useState([]);
   const [selectedItems, setSelectedItems] = useState(new Set());
 
-  // const handleHoverCart = () => {
-  //   const savedCart = JSON.parse(localStorage.getItem("cart")) || [];
-  //   setLocalCart(savedCart);
-  // };
   useEffect(() => {
     const fetchCart = async () => {
       const token = localStorage.getItem('token');
@@ -114,16 +110,7 @@ const Header = () => {
   };
 
 
-  // useEffect(() => {
-  //   const savedCart = JSON.parse(localStorage.getItem('cart'));
 
-  //   // Ensure savedCart is an array, or fall back to an empty array
-  //   if (Array.isArray(savedCart)) {
-  //     setLocalCart(savedCart);
-  //   } else {
-  //     setLocalCart([]); // If it's not an array, reset to empty array
-  //   }
-  // }, []);
 
   // Function to calculate total price
   const calculateTotal = () => {

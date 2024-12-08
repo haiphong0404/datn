@@ -281,35 +281,45 @@ const Cart = () => {
   };
   
   
-  // const handleQuantityChange = async (variantId, change) => {
-  //   const updatedCart = localCart.map(item => {
-  //     if (item.id_productVariant === variantId) {
-  //       const newQuantity = item.quantity + change;
+  const handleQuantityChange = async (variantId, change) => {
+    const updatedCart = localCart.map(item => {
+        if (item.id_productVariant === variantId) {
+            const newQuantity = item.quantity + change;
 
-  //       // Debug logs để kiểm tra giá trị
-       
+            // Kiểm tra xem số lượng có vượt quá số lượng trong kho hay không
+            if (newQuantity > item.stock) {
+                toast.warn('Số lượng trong kho không đủ!');
+                return item; // Giữ nguyên số lượng hiện tại nếu vượt quá kho
+            }
 
-  //       // Kiểm tra xem số lượng có vượt quá số lượng trong kho hay không
-  //       if (newQuantity > item.stock) {
-  //         toast.warn('Số lượng trong kho không đủ!');
-  //         return item;  // Nếu số lượng vượt quá kho, giữ nguyên số lượng hiện tại
-  //       }
+            // Kiểm tra nếu số lượng mới là hợp lệ (phải lớn hơn 0)
+            if (newQuantity <= 0) {
+                toast.warn('Số lượng không thể nhỏ hơn 1!');
+                return item; // Giữ nguyên số lượng hiện tại nếu không hợp lệ
+            }
 
-  //       // Kiểm tra nếu số lượng mới là hợp lệ (phải lớn hơn 0)
-  //       if (newQuantity <= 0) {
-  //         toast.warn('Số lượng không thể nhỏ hơn 1!');
-  //         return item;  // Nếu số lượng nhỏ hơn hoặc bằng 0, giữ nguyên số lượng hiện tại
-  //       }
+            // Cập nhật số lượng hợp lệ
+            return { ...item, quantity: newQuantity };
+        }
+        return item; // Giữ nguyên các sản phẩm khác
+    });
 
-  //       // Cập nhật số lượng hợp lệ
-  //       return { ...item, quantity: newQuantity };
-  //     }
-  //     return item;  // Nếu không phải sản phẩm đang sửa đổi, giữ nguyên
-  //   });
+    setLocalCart(updatedCart);
+    const isLoggedIn = Boolean(localStorage.getItem('token')); // Ví dụ kiểm tra có token đăng nhập
 
-  //   setLocalCart(updatedCart);
-  //   localStorage.setItem('cart', JSON.stringify(updatedCart));
-  // };
+    if (isLoggedIn) {
+      // Người dùng đã đăng nhập: Lưu tối ưu
+      const optimizedCart = updatedCart.map(item => ({
+          id_productVariant: item.id_productVariant,
+          quantity: item.quantity,
+      }));
+      localStorage.setItem('cart', JSON.stringify(optimizedCart));
+  } else {
+      // Người dùng chưa đăng nhập: Lưu đầy đủ
+      localStorage.setItem('cart', JSON.stringify(updatedCart));
+  }
+};
+
 
 
 
@@ -379,19 +389,19 @@ const Cart = () => {
                 <div className="variant-quantity">
 
                   <div className="quantity-controls">
-                    {/* <button
+                    <button
                       className="quantity-btn"
                       onClick={() => handleQuantityChange(variant.id_productVariant, -1)} // Giảm số lượng
                     >
                       -
-                    </button> */}
-                    <span className="quantity-display">Số lượng :{variant.quantity}</span>
-                    {/* <button
+                    </button>
+                    <span className="quantity-display">{variant.quantity}</span>
+                    <button
                       className="quantity-btn"
                       onClick={() => handleQuantityChange(variant.id_productVariant, 1)} // Tăng số lượng
                     >
                       +
-                    </button> */}
+                    </button>
                   </div>
                   <p className="variant-price">Giá: {variant.price} VND</p>
                 </div>
