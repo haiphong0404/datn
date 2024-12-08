@@ -34,9 +34,16 @@ import CheckoutDetail from "./pages/CheckoutDetail";
 
 import ChangePassword from "./pages/My_account/changePass";
 import EditProfile from "./pages/My_account/editProfile";
+
+import PaymentSuccess from "./pages/Stripe/SuccessPage";
+import PaymentCancel from "./pages/Stripe/PaymentCancel";
 import LoadingSpinner from "./loading/LoadingSpinner"; 
+
 import Brands from "./pages/Brands";
 import BrandDetail from "./pages/BrandDetail";
+
+import { AuthProvider } from './contexts/AuthContext';
+
 
 
 
@@ -66,6 +73,8 @@ const routeConfig = [
 
 
       { path: "/checkout-detail/:orderId", element: <CheckoutDetail /> },
+      { path: "/payment-success", element: <PaymentSuccess /> },
+      { path: "/payment-cancel", element: <PaymentCancel /> },
       { path: "brands", element: <Brands /> },
       { path: "brand_detail/:id", element: <BrandDetail /> },
 
@@ -74,7 +83,9 @@ const routeConfig = [
   },
   {
     path: "/my_account",
-    element: <MyAccount />,
+    element: 
+      <MyAccount />
+    ,
     children: [
       { path: "", element: <Dashboard /> },
       {
@@ -97,33 +108,22 @@ function AppRoutes() {
 const theme = createTheme({});
 
 function App() {
-  const [loading, setLoading] = useState(true);
 
-  
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      setLoading(false); 
-    }, 2000);
-
-    return () => clearTimeout(timeout);
-  }, []);
-
-  if (loading) {
-    return <LoadingSpinner />;
-  }
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <Header />
-        <main>
-          <AppRoutes />
-          <ToastContainer />
-        </main>
-        <Footer />
-      </ThemeProvider>
-    </QueryClientProvider>
+    <AuthProvider> {/* Bao bọc toàn bộ ứng dụng */}
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <Header />
+          <main>
+            <AppRoutes />
+            <ToastContainer />
+          </main>
+          <Footer />
+        </ThemeProvider>
+      </QueryClientProvider>
+    </AuthProvider>
   );
 }
 

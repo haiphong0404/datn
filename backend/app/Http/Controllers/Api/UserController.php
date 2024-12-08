@@ -121,43 +121,66 @@ class UserController extends Controller
      */
     public function update(UpdateUserRequest $request, User $user)
     {
+        DB::beginTransaction();
+
         try {
-            // Nếu nhận được dữ liệu base64 từ avatar_img
-            if ($request->avatar_img) {
+            // Kiểm tra xem người dùng có tồn tại hay không
+            if (!$user) {
+                return response()->json(['error' => 'User not found.'], 404);
+            }
+
+            // Nếu có ảnh mới, lưu ảnh và cập nhật
+            if ($request->hasFile('avatar_img')) {
                 // Xóa ảnh cũ nếu tồn tại
                 if ($user->avatar_img && Storage::disk('public')->exists($user->avatar_img)) {
                     Storage::disk('public')->delete($user->avatar_img);
                 }
 
-                // Xử lý base64 và lưu tệp
-                $imageData = $request->avatar_img; // Base64 chuỗi
-                $imageName = 'uploads/users/' . uniqid() . '.png'; // Tên file
-                Storage::disk('public')->put($imageName, base64_decode($imageData));
-
-                // Lưu đường dẫn vào database
-                $user->avatar_img = $imageName;
+                // Lưu ảnh mới
+                $file = $request->file('avatar_img')->store('uploads/users', 'public');
+                $user->avatar_img = $file;
             }
 
-            // Cập nhật các thông tin khác
+            // Cập nhật các trường khác
             $user->username = $request->username;
             $user->email = $request->email;
             $user->phone = $request->phone;
             $user->address = $request->address;
-
-            // Lưu thông tin người dùng
             $user->save();
+            DB::commit();
+
+            // Trả về ảnh dưới dạng base64 nếu có
+            $base64Image = null;
+            if ($user->avatar_img && Storage::disk('public')->exists($user->avatar_img)) {
+                $base64Image = base64_encode(Storage::disk('public')->get($user->avatar_img));
+            }
 
             return response()->json([
                 'message' => 'Cập nhật người dùng thành công.',
-                'data' => $user
+                'data' => [
+                    'user' => $user,
+                    'avatar_img_base64' => $base64Image
+                ]
             ], 200);
         } catch (Exception $e) {
+            DB::rollBack();
             return response()->json([
                 'message' => 'Có lỗi khi cập nhật người dùng.',
                 'error' => $e->getMessage()
             ], 500);
         }
     }
+    public function rules()
+    {
+        return [
+            'username' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . auth()->id(),
+            'phone' => 'required|string|max:15',
+            'address' => 'nullable|string|max:255',
+        ];
+    }
+
+
 
     /**
      * Xóa tài nguyên cụ thể khỏi cơ sở dữ liệu.
