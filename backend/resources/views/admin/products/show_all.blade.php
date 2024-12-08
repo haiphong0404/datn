@@ -1,5 +1,15 @@
 @extends('admin.layout')
 
+@section('search')
+    <form action="{{ route('admin.products.index') }}" method="GET">
+        <div class="input-group mt-1">
+            <input type="text" name="search" class="form-control" placeholder="Tìm kiếm sản phẩm"
+                value="{{ request()->input('search') }}">
+            <button class="btn btn-outline-secondary" type="submit"><i class="bi bi-search"></i></button>
+        </div>
+    </form>
+@endsection
+
 @section('title', 'Chi tiết sản phẩm: ' . $product->name)
 
 @section('content')

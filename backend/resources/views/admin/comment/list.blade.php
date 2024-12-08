@@ -2,7 +2,7 @@
 @section('search')
     <form action="{{ route('admin.comments.index') }}" method="GET">
         <div class="input-group mt-1">
-            <input type="text" name="search" class="form-control" placeholder="Tìm kiếm comment"
+            <input type="text" name="search" class="form-control" placeholder="Tìm kiếm bình luận"
                 value="{{ request()->input('search') }}">
             <button class="btn btn-outline-secondary" type="submit"><i class="bi bi-search"></i></button>
         </div>
