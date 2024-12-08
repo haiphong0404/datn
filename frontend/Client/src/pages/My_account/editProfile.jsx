@@ -16,6 +16,7 @@ const EditProfile = () => {
     const [previewImage, setPreviewImage] = useState('');
 
     useEffect(() => {
+
         if (userInfo) {
             setUsername(userInfo.username || '');
             setEmail(userInfo.email || '');
