@@ -122,25 +122,25 @@ class UserController extends Controller
     public function update(UpdateUserRequest $request, User $user)
     {
         DB::beginTransaction();
-        
+
         try {
             // Kiểm tra xem người dùng có tồn tại hay không
             if (!$user) {
                 return response()->json(['error' => 'User not found.'], 404);
             }
-    
+
             // Nếu có ảnh mới, lưu ảnh và cập nhật
             if ($request->hasFile('avatar_img')) {
                 // Xóa ảnh cũ nếu tồn tại
                 if ($user->avatar_img && Storage::disk('public')->exists($user->avatar_img)) {
                     Storage::disk('public')->delete($user->avatar_img);
                 }
-    
+
                 // Lưu ảnh mới
                 $file = $request->file('avatar_img')->store('uploads/users', 'public');
                 $user->avatar_img = $file;
             }
-    
+
             // Cập nhật các trường khác
             $user->username = $request->username;
             $user->email = $request->email;
@@ -148,13 +148,13 @@ class UserController extends Controller
             $user->address = $request->address;
             $user->save();
             DB::commit();
-    
+
             // Trả về ảnh dưới dạng base64 nếu có
             $base64Image = null;
             if ($user->avatar_img && Storage::disk('public')->exists($user->avatar_img)) {
                 $base64Image = base64_encode(Storage::disk('public')->get($user->avatar_img));
             }
-    
+
             return response()->json([
                 'message' => 'Cập nhật người dùng thành công.',
                 'data' => [
@@ -171,15 +171,15 @@ class UserController extends Controller
         }
     }
     public function rules()
-{
-    return [
-        'username' => 'required|string|max:255',
-        'email' => 'required|email|unique:users,email,' . auth()->id(),
-        'phone' => 'required|string|max:15',
-        'address' => 'nullable|string|max:255',
-    ];
-}
+    {
+        return [
+            'username' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . auth()->id(),
+            'phone' => 'required|string|max:15',
+            'address' => 'nullable|string|max:255',
+        ];
+    }
 
-    
+
 
 }

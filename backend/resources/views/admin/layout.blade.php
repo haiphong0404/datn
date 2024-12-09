@@ -63,9 +63,9 @@
                             <i class="fa fa-tasks"></i>
                             <span class="badge badge-success">
                                 @if (session('success_orders') && is_array(session('success_orders')))
-                                    {{ count(session('success_orders')) }}
+                                {{ count(session('success_orders')) }}
                                 @else
-                                    0
+                                0
                                 @endif
                             </span>
                         </a>
@@ -73,21 +73,21 @@
                             style="max-height: 200px; overflow-y: auto; width: 350px;">
                             <div class="notify-arrow notify-arrow-green"></div>
                             @if (session('success_orders') && is_array(session('success_orders')))
-                                <li class="notification-header">
-                                    <p style="font-size: 16px" class="green">Có {{ count(session('success_orders')) }}
-                                        đơn hàng mới.</p>
-                                </li>
-                                @foreach (array_reverse(session('success_orders')) as $successMessage)
-                                    <li class="task-item">
-                                        <a href="{{ route('admin.orders.index') }}">
-                                            <span style="font-size: 14px;">{{ $successMessage }}</span>
-                                        </a>
-                                    </li>
-                                @endforeach
+                            <li class="notification-header">
+                                <p style="font-size: 16px" class="green">Có {{ count(session('success_orders')) }}
+                                    đơn hàng mới.</p>
+                            </li>
+                            @foreach (array_reverse(session('success_orders')) as $successMessage)
+                            <li class="task-item">
+                                <a href="{{ route('admin.orders.index') }}">
+                                    <span style="font-size: 14px;">{{ $successMessage }}</span>
+                                </a>
+                            </li>
+                            @endforeach
                             @else
-                                <li>
-                                    <p class="green" style="margin: 0;">Không có thông báo đơn hàng nào mới.</p>
-                                </li>
+                            <li>
+                                <p class="green" style="margin: 0;">Không có thông báo đơn hàng nào mới.</p>
+                            </li>
                             @endif
                         </ul>
                     </li>
@@ -99,9 +99,9 @@
                             <i class="fa fa-bell-o"></i>
                             <span class="badge badge-warning">
                                 @if (session('low_stock_products') && count(session('low_stock_products')) > 0)
-                                    {{ count(session('low_stock_products')) }}
+                                {{ count(session('low_stock_products')) }}
                                 @else
-                                    0
+                                0
                                 @endif
                             </span>
                         </a>
@@ -109,31 +109,31 @@
                             style="max-height: 200px; overflow-y: auto; width: 350px;">
                             <div class="notify-arrow notify-arrow-yellow"></div>
                             @if (session('low_stock_products') && count(session('low_stock_products')) > 0)
-                                <li class="notification-header">
-                                    <p style="font-size: 16px" class="yellow">Có
-                                        {{ count(session('low_stock_products')) }} sản phẩm dưới 5 đôi
-                                    </p>
-                                </li>
-                                @foreach (session('low_stock_products') as $product)
-                                    <li class="product-item">
-                                        <a href="{{ route('admin.products.show', $product->id) }}">
-                                            <div class="d-flex align-items-center">
-                                                <span class="mr-2"><img src="{{ Storage::url($product->image) }}"
-                                                        style="width: 60px;" alt=""></span>
-                                                <div>
-                                                    <strong style="font-size: 13px">{{ $product->name }}</strong>
-                                                    <br>
-                                                    <span style="font-size: 11px" class="small italic">Số lượng còn:
-                                                        {{ $product->total_quantity_in_stock }} đôi</span>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </li>
-                                @endforeach
+                            <li class="notification-header">
+                                <p style="font-size: 16px" class="yellow">Có
+                                    {{ count(session('low_stock_products')) }} sản phẩm dưới 5 đôi
+                                </p>
+                            </li>
+                            @foreach (session('low_stock_products') as $product)
+                            <li class="product-item">
+                                <a href="{{ route('admin.products.show', $product->id) }}">
+                                    <div class="d-flex align-items-center">
+                                        <span class="mr-2"><img src="{{ Storage::url($product->image) }}"
+                                                style="width: 60px;" alt=""></span>
+                                        <div>
+                                            <strong style="font-size: 13px">{{ $product->name }}</strong>
+                                            <br>
+                                            <span style="font-size: 11px" class="small italic">Số lượng còn:
+                                                {{ $product->total_quantity_in_stock }} đôi</span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                            @endforeach
                             @else
-                                <li>
-                                    <p class="yellow" style="margin: 0;">Không có sản phẩm nào dưới 5 đôi trong kho</p>
-                                </li>
+                            <li>
+                                <p class="yellow" style="margin: 0;">Không có sản phẩm nào dưới 5 đôi trong kho</p>
+                            </li>
                             @endif
                         </ul>
                     </li>
@@ -150,33 +150,33 @@
                     </li>
                     <!-- user login dropdown start-->
                     @auth
-                        <li class="dropdown mr-2">
-                            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                                <img src="{{ optional(Auth::user()->avatar_img) ? Storage::url(Auth::user()->avatar_img) : asset('default-avatar.png') }}"
-                                    alt="{{ optional(Auth::user())->username }}" width="30px">
-                                <b class="caret"></b>
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-right">
-                                <li>
-                                    <a href="{{ route('admin.profile') }}" class="dropdown-item">
-                                        <i class="bi bi-suitcase-lg mr-2"></i> Hồ sơ
-                                    </a>
-                                </li>
-                                <li>
-                                    <form action="{{ route('logout') }}" method="POST" style="display: inline;">
-                                        @csrf
-                                        <button type="submit"
-                                            class="btn btn-link dropdown-item text-danger d-flex align-items-center">
-                                            <i class="fa fa-sign-out-alt mr-2"></i> Đăng xuất
-                                        </button>
-                                    </form>
-                                </li>
-                            </ul>
-                        </li>
+                    <li class="dropdown mr-2">
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                            <img src="{{ optional(Auth::user()->avatar_img) ? Storage::url(Auth::user()->avatar_img) : asset('default-avatar.png') }}"
+                                alt="{{ optional(Auth::user())->username }}" width="30px">
+                            <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-right">
+                            <li>
+                                <a href="{{ route('admin.profile') }}" class="dropdown-item">
+                                    <i class="bi bi-suitcase-lg mr-2"></i> Hồ sơ
+                                </a>
+                            </li>
+                            <li>
+                                <form action="{{ route('logout') }}" method="POST" style="display: inline;">
+                                    @csrf
+                                    <button type="submit"
+                                        class="btn btn-link dropdown-item text-danger d-flex align-items-center">
+                                        <i class="fa fa-sign-out-alt mr-2"></i> Đăng xuất
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                    </li>
                     @else
-                        <li>
-                            <a href="{{ route('login') }}" class="dropdown-item">Đăng nhập</a>
-                        </li>
+                    <li>
+                        <a href="{{ route('login') }}" class="dropdown-item">Đăng nhập</a>
+                    </li>
                     @endauth
                     <a href="http://localhost:3000"
                         style="display: inline-flex; justify-content: center; align-items: center; text-decoration: none; font-size: 15px; padding: 5px;"
@@ -194,111 +194,111 @@
                 <ul class="sidebar-menu" id="nav-accordion">
                     <!-- Thống kê -->
                     @if (auth()->user()->hasRole(['admin', 'staff']))
-                        <li>
-                            <a href="{{ route('admin.index') }}">
-                                <i class="bi bi-speedometer2"></i>
-                                <span>Thống kê</span>
-                            </a>
-                        </li>
+                    <li>
+                        <a href="{{ route('admin.index') }}">
+                            <i class="bi bi-speedometer2"></i>
+                            <span>Thống kê</span>
+                        </a>
+                    </li>
                     @endif
                     <!-- Bài viết -->
                     @if (auth()->user()->hasRole(['admin']))
-                        <li>
-                            <a href="{{ route('admin.articles.index') }}">
-                                <i class="bi bi-newspaper"></i>
-                                <span>Bài viết</span>
-                            </a>
-                        </li>
+                    <li>
+                        <a href="{{ route('admin.articles.index') }}">
+                            <i class="bi bi-newspaper"></i>
+                            <span>Bài viết</span>
+                        </a>
+                    </li>
                     @endif
 
                     <!-- Banner -->
                     @if (auth()->user()->hasRole(['admin']))
-                        <li>
-                            <a href="{{ route('admin.banners.index') }}">
-                                <i class="bi bi-card-image"></i>
-                                <span>Banner</span>
-                            </a>
-                        </li>
+                    <li>
+                        <a href="{{ route('admin.banners.index') }}">
+                            <i class="bi bi-card-image"></i>
+                            <span>Banner</span>
+                        </a>
+                    </li>
                     @endif
 
                     <!-- Thương hiệu -->
                     @if (auth()->user()->hasRole(['admin']))
-                        <li>
-                            <a href="{{ route('admin.brands.index') }}">
-                                <i class="bi bi-badge-tm-fill"></i>
-                                <span>Thương hiệu</span>
-                            </a>
-                        </li>
+                    <li>
+                        <a href="{{ route('admin.brands.index') }}">
+                            <i class="bi bi-badge-tm-fill"></i>
+                            <span>Thương hiệu</span>
+                        </a>
+                    </li>
                     @endif
 
                     <!-- Danh mục -->
                     @if (auth()->user()->hasRole(['admin']))
-                        <li>
-                            <a href="{{ route('admin.categories.index') }}">
-                                <i class="bi bi-tags-fill"></i>
-                                <span>Danh mục</span>
-                            </a>
-                        </li>
+                    <li>
+                        <a href="{{ route('admin.categories.index') }}">
+                            <i class="bi bi-tags-fill"></i>
+                            <span>Danh mục</span>
+                        </a>
+                    </li>
                     @endif
 
                     <!-- Liên hệ -->
                     @if (auth()->user()->hasRole(['admin']))
-                        <li>
-                            <a href="{{ route('admin.contacts.index') }}">
-                                <i class="bi bi-person-rolodex"></i>
-                                <span>Liên hệ</span>
-                            </a>
-                        </li>
+                    <li>
+                        <a href="{{ route('admin.contacts.index') }}">
+                            <i class="bi bi-person-rolodex"></i>
+                            <span>Liên hệ</span>
+                        </a>
+                    </li>
                     @endif
 
                     <!-- Bình luận -->
                     @if (auth()->user()->hasRole(['admin']))
-                        <li>
-                            <a href="{{ route('admin.comments.index') }}">
-                                <i class="bi bi-chat-square-dots-fill"></i>
-                                <span>Bình luận</span>
-                            </a>
-                        </li>
+                    <li>
+                        <a href="{{ route('admin.comments.index') }}">
+                            <i class="bi bi-chat-square-dots-fill"></i>
+                            <span>Bình luận</span>
+                        </a>
+                    </li>
                     @endif
 
                     <!-- Đơn hàng -->
                     @if (auth()->user()->hasRole(['admin', 'staff']))
-                        <li>
-                            <a href="{{ route('admin.orders.index') }}">
-                                <i class="bi bi-receipt"></i>
-                                <span>Đơn hàng</span>
-                            </a>
-                        </li>
+                    <li>
+                        <a href="{{ route('admin.orders.index') }}">
+                            <i class="bi bi-receipt"></i>
+                            <span>Đơn hàng</span>
+                        </a>
+                    </li>
                     @endif
 
                     <!-- Tài khoản (Chỉ Admin) -->
                     @if (auth()->user()->hasRole(['admin', 'staff']))
-                        <li>
-                            <a href="{{ route('admin.user.index') }}">
-                                <i class="bi bi-person-lines-fill"></i>
-                                <span>Tài khoản</span>
-                            </a>
-                        </li>
+                    <li>
+                        <a href="{{ route('admin.user.index') }}">
+                            <i class="bi bi-person-lines-fill"></i>
+                            <span>Tài khoản</span>
+                        </a>
+                    </li>
                     @endif
 
                     <!-- Shops -->
                     @if (auth()->user()->hasRole(['admin', 'staff']))
-                        <li>
-                            <a href="{{ route('admin.products.index') }}">
-                                <i class="bi bi-box-seam"></i>
-                                <span>Sản phẩm</span>
-                            </a>
-                        </li>
+                    <li>
+                        <a href="{{ route('admin.products.index') }}">
+                            <i class="bi bi-box-seam"></i>
+                            <span>Sản phẩm</span>
+                        </a>
+                    </li>
                     @endif
 
                     <!-- Voucher (Chỉ Admin) -->
                     @if (auth()->user()->hasRole(['admin']))
-                        <li>
-                            <a href="{{ route('admin.vouchers.index') }}">
-                                <i class="bi bi-ticket-detailed"></i>
-                                <span>Mã giảm giá</span>
-                            </a>
-                        </li>
+                    <li>
+                        <a href="{{ route('admin.vouchers.index') }}">
+                            <i class="bi bi-ticket-detailed"></i>
+                            <span>Mã giảm giá</span>
+                        </a>
+                    </li>
                     @endif
                 </ul>
                 <!-- sidebar menu end-->
