@@ -29,17 +29,17 @@ class ContactController extends Controller
 }
     
 
-    public function create()
-    {
-        return view('admin.contacts.create');
-    }
+    // public function create()
+    // {
+    //     return view('admin.contacts.create');
+    // }
 
-    // Lưu thông tin liên hệ mới
-    public function store(ContactRequest $request )
-    {
-        Contact::create($request->all());
-        return redirect()->route('admin.contacts.index')->with('success', 'Liên hệ đã được tạo thành công.');
-    }
+    // // Lưu thông tin liên hệ mới
+    // public function store(ContactRequest $request )
+    // {
+    //     Contact::create($request->all());
+    //     return redirect()->route('admin.contacts.index')->with('success', 'Liên hệ đã được tạo thành công.');
+    // }
 
     public function edit(Contact $contact)
     {
@@ -56,9 +56,9 @@ class ContactController extends Controller
     }
 
     // Xóa liên hệ
-    public function destroy(Contact $contact)
-    {
-        $contact->delete();
-        return redirect()->route('admin.contacts.index')->with('success', 'Liên hệ đã được xóa thành công.');
-    }
+    // public function destroy(Contact $contact)
+    // {
+    //     $contact->delete();
+    //     return redirect()->route('admin.contacts.index')->with('success', 'Liên hệ đã được xóa thành công.');
+    // }
 }

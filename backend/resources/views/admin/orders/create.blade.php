@@ -199,7 +199,7 @@
                                                     class="form-control total" readonly>
                                             </td>
                                             <td>
-                                                <button type="button" class="btn btn-danger remove-row">Xóa</button>
+                                                <button type="button" class="btn btn-danger remove-row"> <i class="bi bi-trash"></i></button>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -356,7 +356,7 @@
                         <input type="number" id="total_${productCount}" name="products[${productCount}][total]" class="form-control total" readonly>
                     </td>
                     <td>
-                        <button type="button" class="btn btn-danger remove-row">Xóa</button>
+                        <button type="button" class="btn btn-danger remove-row"> <i class="bi bi-trash"></i></button>
                     </td>
                 </tr>
             `;
