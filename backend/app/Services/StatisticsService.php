@@ -35,12 +35,13 @@ class StatisticsService
             return [
             'product_id' => $topSelling->product_id,
             'product_name' => $product ? $product->name : 'Không tìm thấy sản phẩm',
-            'total_sold' => $topSelling['total_sold']
+            'total_sold' => $topSelling->total_sold ?? 0, // Truy cập thuộc tính thay vì key mảng
             ];
         }
-        
+
         return [
-            'message' => 'Không có sản phẩm bán chạy',
+            'product_name' => $product?->name ?? 'Không có sản phẩm bán chạy',
+            'total_sold' => $topSelling->total_sold ?? 0, // Truy cập thuộc tính thay vì key mảng
         ];
     }
 
@@ -131,11 +132,11 @@ class StatisticsService
             $query = Order::where('status', 'completed')
                 ->whereMonth('created_at', $month->month)
                 ->whereYear('created_at', $month->year);
-            
+
             if ($user->role === 'staff') {
                 $query->where('handler_id', $user->id);
             }
-                
+
             $totalRevenue = $query->sum('total_amount');
 
             // Thêm tổng doanh thu vào mảng revenues
