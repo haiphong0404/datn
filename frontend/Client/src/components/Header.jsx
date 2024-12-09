@@ -19,7 +19,7 @@ const Header = () => {
   // const prevLocation = useRef(location.pathname);
 
   //  useEffect(() => {
- 
+
   //   if (prevLocation.current !== location.pathname) {
   //     prevLocation.current = location.pathname;
   //     window.location.reload();
@@ -41,7 +41,7 @@ const Header = () => {
           const { carts } = response.data; // Lấy danh sách carts từ API
           if (Array.isArray(carts)) {
             setLocalCart(carts);
-            
+
           } else {
             setLocalCart([]);
           }
@@ -59,11 +59,11 @@ const Header = () => {
         }
       }
     };
-  
+
     fetchCart();
   }, []);
 
-  
+
   const handleRemoveFromCart = async (id_productVariant) => {
 
     if (!id_productVariant) {
@@ -160,7 +160,7 @@ const Header = () => {
                 <div className="top-left-navigation"></div>
               </div>
               <div className="col-lg-6 d-flex justify-content-end">
-                
+
                 <ul className="user-info-block">
                   <li>
                     <Link to="/my_account">
@@ -226,14 +226,18 @@ const Header = () => {
                             Tin tức</Link>
                         </li>
                         <li>
+                          <Link to="/brands">
+                            Thương hiệu</Link>
+                        </li>
+                        <li>
                           <Link to="/contact_us">
                             Liên hệ</Link>
                         </li>
-                        <li>
+                        {/* <li>
                           <Link to="/faqs">
                             Hỏi đáp
                           </Link>
-                        </li>
+                        </li> */}
                         <li>
                           <Link to="/about_us">
                             Giới thiệu

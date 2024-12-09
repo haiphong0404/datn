@@ -29,30 +29,24 @@ class RegisteredUserController extends Controller
         try {
             // Validate the request data
             $validatedData = $request->validate([
-                'username' => ['required', 'string', 'max:255'],
+                'username' => ['required', 'string', 'max:255', 'unique:users,username'],
                 'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
-                'password' => [
-                    'required',
-                    'string',
-                    'confirmed',
-                    'regex:/^[a-zA-Z0-9]+$/', // Không cho phép ký tự đặc biệt
-                    Rules\Password::defaults(),
-                ],
-                'password_confirmation' => ['required'],
-                'phone' => ['required', 'string', 'regex:/^(0|\+84)[0-9]{9,10}$/'],
+                'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
+                'password_confirmation' => ['required'], // Confirm password field
+                'phone' => ['required', 'unique:users,phone', 'string', 'regex:/^(0|\+84)[0-9]{9,10}$/'],
             ], [
                 'username.required' => 'Tên đăng nhập là bắt buộc.',
                 'username.max' => 'Tên đăng nhập không được vượt quá 255 ký tự.',
+                'username.unique' => 'Tên đăng nhập này đã được sử dụng.',
                 'email.required' => 'Email là bắt buộc.',
                 'email.email' => 'Email không đúng định dạng.',
                 'email.unique' => 'Email này đã được sử dụng.',
                 'password.required' => 'Mật khẩu là bắt buộc.',
                 'password.confirmed' => 'Xác nhận mật khẩu không khớp.',
-                'password.regex' => 'Mật khẩu chỉ được chứa chữ cái và số, không được chứa ký tự đặc biệt.',
-                'password_confirmation.required' => 'Vui lòng nhập lại mật khẩu để xác nhận.',
+                'pa 33ssword_confirmation.required' => 'Vui lòng nhập lại mật khẩu để xác nhận.',
                 'phone.required' => 'Số điện thoại là bắt buộc.',
-                'phone.regex' => 'Số điện thoại phải bắt đầu bằng 0 hoặc +84, và có từ 9 đến 10 chữ số.',
-
+                'phone.regex' => 'Số điện thoại phải bắt đầu bằng +84 mã quốc gia.',
+                'phone.unique' => 'Số điện thoại này đã được sử dụng.',
             ]);
 
             // Create a new user
