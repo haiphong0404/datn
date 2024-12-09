@@ -14,10 +14,6 @@
 
 @section('content')
     @if (session('success'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            {{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
     @endif
 
     <style>
@@ -128,7 +124,7 @@
                                                             method="POST" style="display:inline;">
                                                             @csrf
                                                             <button type="submit" class="btn btn-info "><i
-                                                                class="bi bi-arrow-repeat"></i></button>
+                                                                    class="bi bi-arrow-repeat"></i></button>
                                                         </form>
                                                     @else
                                                         <form action="{{ route('admin.brands.destroy', $item->id) }}"
@@ -137,7 +133,7 @@
                                                             @method('DELETE')
                                                             <button type="submit" class="btn btn-danger"
                                                                 onclick="return confirm('Bạn có chắc muốn xóa thương hiệu này?')">
-                                                                <i class="fa fa-trash-o"></i>
+                                                                <i class="bi bi-trash"></i>
                                                             </button>
                                                         </form>
                                                     @endif
@@ -159,7 +155,7 @@
                                         <ul class="pagination">
                                             <li class="prev">
                                                 <a href="{{ $brands->previousPageUrl() }}" aria-label="Previous">←
-                                                    Previous</a>
+                                                    Trước</a>
                                             </li>
                                             @foreach ($brands->getUrlRange(1, $brands->lastPage()) as $page => $url)
                                                 <li class="{{ $page == $brands->currentPage() ? 'active' : '' }}">
@@ -167,7 +163,7 @@
                                                 </li>
                                             @endforeach
                                             <li class="next">
-                                                <a href="{{ $brands->nextPageUrl() }}" aria-label="Next">Next →</a>
+                                                <a href="{{ $brands->nextPageUrl() }}" aria-label="Next">Sau →</a>
                                             </li>
                                         </ul>
                                     </div>
@@ -183,6 +179,19 @@
 @section('js')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            @if (session('success'))
+                toastr.success('{{ session('success') }}', 'Thành công', {
+                    closeButton: true,
+                    progressBar: true,
+                    timeOut: 3000,
+                    positionClass: "toast-top-right"
+                });
+            @endif
+        });
+
+
+
         document.addEventListener('DOMContentLoaded', function() {
             const deleteBtns = document.querySelectorAll('.form-delete');
 

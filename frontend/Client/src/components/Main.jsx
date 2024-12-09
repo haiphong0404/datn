@@ -174,8 +174,8 @@ const Main = () => {
                         style={{
                           display: 'block',
                           margin: '0 auto',
-                          width: '300px', // Đặt chiều rộng mong muốn
-                          height: '200px', // Đặt chiều cao mong muốn
+                          // width: '300px', // Đặt chiều rộng mong muốn
+                          // height: '200px', // Đặt chiều cao mong muốn
                           objectFit: 'cover', // Cắt ảnh để phù hợp với kích thước mà không bị méo
                         }}
                       />
@@ -225,7 +225,7 @@ const Main = () => {
             <div className="row mtn-30">
               <div className="col-md-6">
                 <div className="banner-statistics mt-30">
-                  <a href="#">
+                  <a href="/shop">
                     <img
                       src="assets/img/banner/banner_1.2.jpg"
                       alt="banner thumb"
@@ -235,7 +235,7 @@ const Main = () => {
               </div>
               <div className="col-md-6">
                 <div className="banner-statistics mt-30">
-                  <a href="#">
+                  <a href="/shop">
                     <img
                       src="assets/img/banner/banner_1.3.jpg"
                       alt="banner thumb"
@@ -293,8 +293,8 @@ const Main = () => {
                         style={{
                           display: 'block',
                           margin: '0 auto',
-                          width: '300px', // Đặt chiều rộng mong muốn
-                          height: '200px', // Đặt chiều cao mong muốn
+                          // width: '300px', // Đặt chiều rộng mong muốn
+                          // height: '200px', // Đặt chiều cao mong muốn
                           objectFit: 'cover', // Cắt ảnh để phù hợp với kích thước mà không bị méo
                         }}
                       />

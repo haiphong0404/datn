@@ -11,10 +11,6 @@
 @endsection
 @section('content')
     @if (session('success'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            {{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
     @endif
 
     <div class="row">
@@ -159,8 +155,7 @@
                                                                         @method('DELETE')
                                                                         <button type="submit" class="btn btn-danger"
                                                                             data-bs-toggle="tooltip" title="Xóa">
-                                                                            <i class="fa fa-trash"></i>
-                                                                        </button>
+                                                                            <i class="bi bi-trash"></i> </button>
                                                                     </form>
                                                                 </div>
                                                             </td>
@@ -170,12 +165,11 @@
                                             </table>
 
                                             <!-- Phân trang cho từng nhóm -->
-                                            <div class="row-fluid " style="margin-bottom: 100px">
+                                            <div class="row-fluid" style="margin-bottom: 100px">
                                                 <div class="span6">
                                                     <div class="dataTables_info" id="hidden-table-info_info">
-                                                        Hiển thị từ {{ $items->firstItem() }} đến
-                                                        {{ $items->lastItem() }} của tổng
-                                                        cộng {{ $items->total() }} mục
+                                                        Hiển thị từ {{ $items->firstItem() }} đến {{ $items->lastItem() }}
+                                                        của tổng cộng {{ $items->total() }} mục
                                                     </div>
                                                 </div>
                                                 <div class="span6">
@@ -183,8 +177,7 @@
                                                         <ul class="pagination">
                                                             <li class="prev">
                                                                 <a href="{{ $items->previousPageUrl() }}"
-                                                                    aria-label="Previous">←
-                                                                    Previous</a>
+                                                                    aria-label="Previous">← Trước</a>
                                                             </li>
                                                             @foreach ($items->getUrlRange(1, $items->lastPage()) as $page => $url)
                                                                 <li
@@ -194,7 +187,7 @@
                                                             @endforeach
                                                             <li class="next">
                                                                 <a href="{{ $items->nextPageUrl() }}"
-                                                                    aria-label="Next">Next →</a>
+                                                                    aria-label="Next">Sau →</a>
                                                             </li>
                                                         </ul>
                                                     </div>
@@ -217,6 +210,17 @@
     <script src="{{ asset('assets') }}/admin/js/dynamic_table_init.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            @if (session('success'))
+                toastr.success('{{ session('success') }}', 'Thành công', {
+                    closeButton: true,
+                    progressBar: true,
+                    timeOut: 3000,
+                    positionClass: "toast-top-right"
+                });
+            @endif
+        });
+
         document.addEventListener('DOMContentLoaded', function() {
             const deleteBtns = document.querySelectorAll('.form-delete');
 

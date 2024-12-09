@@ -5,7 +5,7 @@
 @section('search')
     <form action="{{ route('admin.articles.index') }}" method="GET">
         <div class="input-group mt-1">
-            <input type="text" name="search" class="form-control" placeholder="Tìm kiếm"
+            <input type="text" name="search" class="form-control" placeholder="Tìm kiếm bài viết"
                 value="{{ request()->input('search') }}">
             <button class="btn btn-outline-secondary" type="submit"><i class="bi bi-search"></i></button>
         </div>
@@ -39,7 +39,7 @@
                             <label class="form-label"><strong>Hình ảnh:</strong></label>
                             <div class="d-flex justify-content-center">
                                 <img src="{{ Storage::url($article->image) }}" alt="{{ $article->title }}"
-                                    class="img-thumbnail" style="max-width: 800px;">
+                                    class="img-thumbnail" style="max-width: 400px;">
                             </div>
                         @endif
 

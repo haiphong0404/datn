@@ -87,6 +87,16 @@
                                     </tbody>
                                     <tfoot>
                                         <tr>
+                                            <th>Phí:</th>
+                                            <th colspan="5" class="text-end ">
+                                                {{ number_format($order->shipping_fee, 0, ',', '.') }} VND</th>
+                                        </tr>
+                                        <tr>
+                                            <th>Số tiền được khuyến mại:</th>
+                                            <th colspan="5" class="text-end ">
+                                                {{ number_format($order->voucher_discount, 0, ',', '.') }} VND</th>
+                                        </tr>
+                                        <tr>
                                             <th>Tổng số tiền:</th>
                                             <th colspan="5" class="text-end ">
                                                 {{ number_format($order->total_amount, 0, ',', '.') }} VND</th>

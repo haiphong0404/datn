@@ -16,10 +16,12 @@ class CheckRole
      * @param  string  ...$roles
      * @return mixed
      */
-    public function handle(Request $request, Closure $next, ...$roles)
+   public function handle($request, Closure $next, ...$roles)
     {
-        if (!Auth::check() || !in_array(Auth::user()->role, $roles)) {
-            abort(403); // Trả về trang 403 Forbidden
+        $user = Auth::user();
+
+        if (!$user || !in_array($user->role, $roles)) {
+            abort(403, 'Bạn không có quyền truy cập.');
         }
 
         return $next($request);

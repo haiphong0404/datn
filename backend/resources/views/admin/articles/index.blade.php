@@ -3,22 +3,17 @@
 @section('search')
     <form action="{{ route('admin.articles.index') }}" method="GET">
         <div class="input-group mt-1">
-            <input type="text" name="search" class="form-control" placeholder="Tìm kiếm"
+            <input type="text" name="search" class="form-control" placeholder="Tìm kiếm bài viết"
                 value="{{ request()->input('search') }}">
-            <button class="btn btn-outline-secondary" type="submit">
-                <i class="bi bi-search"></i>
-            </button>
+            <button class="btn btn-outline-secondary" type="submit"><i class="bi bi-search"></i></button>
         </div>
     </form>
 @endsection
 
 @section('content')
     @if (session('success'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            {{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
     @endif
+
 
     <style>
         .text-truncate {
@@ -77,8 +72,8 @@
                                 </div>
                                 <div class="span6">
                                     <div class="dataTables_filter" id="hidden-table-info_filter">
-                                        <a href="{{ route('admin.articles.create') }}"
-                                            class="btn btn-success btn-sm">Tạo mới</a>
+                                        <a href="{{ route('admin.articles.create') }}" class="btn btn-success btn-sm">Tạo
+                                            mới</a>
                                     </div>
                                 </div>
                             </div>
@@ -123,7 +118,7 @@
                                                         @method('DELETE')
                                                         <button type="submit" class="btn btn-danger"
                                                             onclick="return confirm('Bạn có chắc muốn xóa bài viết này?')">
-                                                            <i class="fa fa-trash-o"></i>
+                                                            <i class="bi bi-trash"></i>
                                                         </button>
                                                     </form>
                                                 </td>
@@ -144,7 +139,7 @@
                                         <ul class="pagination">
                                             <li class="prev">
                                                 <a href="{{ $articles->previousPageUrl() }}" aria-label="Previous">←
-                                                    Previous</a>
+                                                    Trước</a>
                                             </li>
                                             @foreach ($articles->getUrlRange(1, $articles->lastPage()) as $page => $url)
                                                 <li class="{{ $page == $articles->currentPage() ? 'active' : '' }}">
@@ -152,7 +147,7 @@
                                                 </li>
                                             @endforeach
                                             <li class="next">
-                                                <a href="{{ $articles->nextPageUrl() }}" aria-label="Next">Next →</a>
+                                                <a href="{{ $articles->nextPageUrl() }}" aria-label="Next">Sau →</a>
                                             </li>
                                         </ul>
                                     </div>
@@ -164,4 +159,17 @@
             </section>
         </div>
     </div>
+    <script src="{{ asset('assets') }}/admin/js/dynamic_table_init.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            @if (session('success'))
+                toastr.success('{{ session('success') }}', 'Thành công', {
+                    closeButton: true,
+                    progressBar: true,
+                    timeOut: 3000,
+                    positionClass: "toast-top-right"
+                });
+            @endif
+        });
+    </script>
 @endsection

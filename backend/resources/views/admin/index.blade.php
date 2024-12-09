@@ -10,23 +10,26 @@
                         <div class="col-lg-4 col-sm-6">
                             <section class="card">
                                 <div class="symbol red">
-                                    <i class="fa fa-shopping-cart"></i>
+                                    <i class="bi bi-box-seam"></i>
                                 </div>
                                 <div class="value">
-                                    <h1 class="text-truncate" style="max-width: 100%;" data-bs-toggle="tooltip" title="{{ $totalProducts }}">
-                                        {{ $totalProducts }}
+                                    <h1 class="text-truncate" style="max-width: 100%;" data-bs-toggle="tooltip"
+                                        title="{{ $totalProducts['total_sold'] }}">
+                                        {{ $totalProducts['total_sold'] }}
                                     </h1>
-                                    <p>Số loại mặt hàng đang bán</p>
+                                    <p class="text-truncate" style="max-width: 100%;" data-bs-toggle="tooltip"
+                                        title="{{ $totalProducts['product_name']}}">{{ $totalProducts['product_name'] }}</p>
                                 </div>
                             </section>
                         </div>
                         <div class="col-lg-4 col-sm-6">
                             <section class="card">
                                 <div class="symbol yellow">
-                                    <i class="fa fa-shopping-cart"></i>
+                                    <i class="bi bi-receipt"></i>
                                 </div>
                                 <div class="value">
-                                    <h1 class="text-truncate" style="max-width: 100%;" data-bs-toggle="tooltip" title="{{ $totalOrders }}">
+                                    <h1 class="text-truncate" style="max-width: 100%;" data-bs-toggle="tooltip"
+                                        title="{{ $totalOrders }}">
                                         {{ $totalOrders }}
                                     </h1>
                                     <p>Số đơn hàng trong tháng</p>
@@ -36,11 +39,12 @@
                         <div class="col-lg-4 col-sm-6">
                             <section class="card">
                                 <div class="symbol blue">
-                                    <i class="fa fa-bar-chart-o"></i>
+                                    <i class="bi bi-reception-4"></i>
                                 </div>
                                 <div class="value">
-                                    <h1 class="text-truncate" style="max-width: 100%;" data-bs-toggle="tooltip" title="{{ $totalRevenue }}">
-                                        {{ $totalRevenue }}
+                                    <h1 class="text-truncate" style="max-width: 100%;" data-bs-toggle="tooltip"
+                                        title="{{ number_format($totalRevenue, 0, ',', '.') }} VND">
+                                        {{ number_format($totalRevenue, 0, ',', '.') }} VND
                                     </h1>
                                     <p>Doanh thu tháng</p>
                                 </div>
@@ -51,31 +55,32 @@
                 </header>
                 <div class="card-body">
 
-                <h2 class="mt-5 mb-3">Thống Kê Doanh Thu Theo Từng Sản Phẩm</h2>
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>STT</th>
-                            <th>Tên Sản Phẩm</th>
-                            <th>Số lượng tồn kho</th>
-                            <th>Doanh Thu (VND)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($revenueByProduct as $key => $product)
+                    <h2 class="mt-5 mb-3">Thống Kê Doanh Thu Theo Từng Sản Phẩm</h2>
+                    <table class="table table-bordered">
+                        <thead>
                             <tr>
-                                <td>{{ $key + 1 }}</td>
-                                <td>{{ $product['name'] }}</td>
-                                <td>{{ $product['total_quantity_in_stock'] }}</td>
-                                <td>{{ number_format($product['total_revenue'], 0, ',', '.') }} VND</td>
+                                <th>STT</th>
+                                <th>Tên Sản Phẩm</th>
+                                <th>Số lượng sản phẩm đã bán</th>
+                                <th>Số lượng tồn kho</th>
+                                <th>Doanh Thu (VND)</th>
                             </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-
-                <!-- Hiển thị doanh thu theo tháng -->
-                <h3 class="mt-5 mb-3">Biểu Đồ Doanh Thu 12 Tháng Gần Nhất</h3>
-                <canvas id="revenueChart"></canvas>
+                        </thead>
+                        <tbody>
+                            @foreach ($revenueByProduct as $key => $product)
+                                <tr>
+                                    <td>{{ $key + 1 }}</td>
+                                    <td>{{ $product['name'] }}</td>
+                                    <td>{{ $product['total_sold'] }}</td>
+                                    <td>{{ $product['total_quantity_in_stock'] }}</td>
+                                    <td>{{ number_format($product['total_revenue'], 0, ',', '.') }} VND</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                        <!-- Hiển thị doanh thu theo tháng -->
+                        <h3 class="mt-5 mb-3">Biểu Đồ Doanh Thu 12 Tháng Gần Nhất</h3>
+                        <canvas id="revenueChart"></canvas>
                 </div>
             </section>
         </div>
@@ -113,7 +118,7 @@
     <script>
         // Khởi tạo tooltip
         var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
             return new bootstrap.Tooltip(tooltipTriggerEl);
         });
     </script>

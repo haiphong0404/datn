@@ -2,7 +2,7 @@
 @section('search')
     <form action="{{ route('admin.banners.index') }}" method="GET">
         <div class="input-group mt-1">
-            <input type="text" name="search" class="form-control" placeholder="Search"
+            <input type="text" name="search" class="form-control" placeholder="Tìm kiếm banner"
                 value="{{ request()->input('search') }}">
             <button class="btn btn-outline-secondary" type="submit"><i class="bi bi-search"></i></button>
         </div>
@@ -10,10 +10,6 @@
 @endsection
 @section('content')
     @if (session('success'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            {{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
     @endif
     <style>
         .text-truncate {
@@ -133,7 +129,7 @@
                                                             @method('DELETE')
                                                             <button type="submit" class="btn btn-danger"
                                                                 onclick="return confirm('Bạn có chắc muốn xóa banner này?')"><i
-                                                                    class="fa fa-trash-o"></i></button>
+                                                                    class="bi bi-trash"></i></button>
                                                         </form>
                                                     @endif
                                                 </td>
@@ -154,7 +150,7 @@
                                         <ul class="pagination">
                                             <li class="prev">
                                                 <a href="{{ $banners->previousPageUrl() }}" aria-label="Previous">←
-                                                    Previous</a>
+                                                    Trước</a>
                                             </li>
                                             @foreach ($banners->getUrlRange(1, $banners->lastPage()) as $page => $url)
                                                 <li class="{{ $page == $banners->currentPage() ? 'active' : '' }}">
@@ -162,7 +158,7 @@
                                                 </li>
                                             @endforeach
                                             <li class="next">
-                                                <a href="{{ $banners->nextPageUrl() }}" aria-label="Next">Next →</a>
+                                                <a href="{{ $banners->nextPageUrl() }}" aria-label="Next">Sau →</a>
                                             </li>
                                         </ul>
                                     </div>
@@ -176,4 +172,18 @@
     </div>
     <!--dynamic table initialization -->
     <script src="{{ asset('assets') }}/admin/js/dynamic_table_init.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            @if (session('success'))
+                toastr.success('{{ session('success') }}', 'Thành công', {
+                    closeButton: true,
+                    progressBar: true,
+                    timeOut: 3000,
+                    positionClass: "toast-top-right"
+                });
+            @endif
+        });
+    </script>
+    
+
 @endsection
