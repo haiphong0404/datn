@@ -24,9 +24,35 @@ const Brands = () => {
 
     return (
         <div>
-            <header className="py-3 mt-2" style={{ backgroundColor: '#87b106', color: '#fff' }}>
+             <div
+          className="breadcrumb-area breadcrumb-img bg-img"
+          style={{ backgroundImage: "url(/assets/img/banner/shop.jpg)" }}
+        >
+          <div className="container">
+            <div className="row">
+              <div className="col-12">
+                <div className="breadcrumb-wrap">
+                  <nav aria-label="breadcrumb">
+                    <h3 className="breadcrumb-title">THƯƠNG HIỆU</h3>
+                    <ul className="breadcrumb justify-content-center">
+                      <li className="breadcrumb-item">
+                        <a href="index.html">
+                          <i className="fa fa-home" />
+                        </a>
+                      </li>
+                      <li className="breadcrumb-item active" aria-current="page">
+                        Thương hiệu
+                      </li>
+                    </ul>
+                  </nav>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+            <header className="py-3 " style={{ backgroundColor: '#87b106', color: '#ffffff' }}>
                 <div className="container text-center">
-                    <h1 className="fw-bold">Khám Phá Các Thương Hiệu Nổi Tiếng</h1>
+                    <h1 className="fw-bold" style={{ color: '#ffffff'}}>Khám Phá Các Thương Hiệu Nổi Tiếng</h1>
                 </div>
             </header>
 
@@ -47,7 +73,7 @@ const Brands = () => {
                                     <button
                                         type="button"
                                         className="btn"
-                                        style={{ backgroundColor: '#87b106', color: '#fff' }}
+                                        style={{ backgroundColor: '#87b106', color: '#fff', paddingLeft: "20px", paddingRight: "20px" }}
                                         disabled
                                     >
                                         <i className="bi bi-search"></i>

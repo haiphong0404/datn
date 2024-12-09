@@ -15,8 +15,8 @@
 @endsection
 
 @section('content')
-<div class="row">
-    <div class="col-sm-12">
+    <div class="row">
+        <div class="col-sm-12">
             <div class="card shadow-sm">
                 <header class="card-header">
                     <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center">
@@ -116,6 +116,8 @@
                                             Thanh Toán Offline</option>
                                         <option value="online" {{ old('payment_method') == 'online' ? 'selected' : '' }}>
                                             Thanh Toán Online</option>
+                                        <option value="stripe" {{ old('payment_method') == 'stripe' ? 'selected' : '' }}>
+                                            Thanh Toán Stripe</option>
                                     </select>
                                 </div>
                             </div>
@@ -228,8 +230,9 @@
                                                 class="form-control total" readonly>
                                         </td>
                                         <td>
-                                            <button type="button" class="btn btn-danger remove-row"><i
-                                                class="fa fa-trash-o"></i></button>
+                                            <button type="button" class="btn btn-danger remove-row">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
                                         </td>
                                     </tr>
                                 @endif

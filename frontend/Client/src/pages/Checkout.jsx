@@ -4,10 +4,10 @@ import { useLoginForm } from '../hooks/useLoginForm';
 import usePostOrder from '../hooks/usePostOrder';
 import useApplyVoucher from '../hooks/useApplyVoucher';
 import axios from 'axios';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { Elements } from '@stripe/react-stripe-js';
 
-const Checkout = () => {
+const Checkout = ({orderId}) => {
   const { userInfo } = useLoginForm();
   const { postOrder } = usePostOrder();
   const { applyVoucher, loading } = useApplyVoucher(); // Use hook to get applyVoucher, loading, error, and voucherData
@@ -403,9 +403,9 @@ const Checkout = () => {
             
                   if (data.sessionId) {
                     // Chuyển người dùng đến trang thanh toán của Stripe
+                    localStorage.setItem('order_id', data.order_id);
                     const stripe = Stripe('pk_test_51QSbecJMpBf2NQMLmRWimHDjNlzeFQCDaOZgdrIvgbeKZ2oCGQFReuzuMDb9d7LrAV59kah5Kcb6lkZKop0l4Z6A00xEjpeTkF');
                     const { error } = await stripe.redirectToCheckout({ sessionId: data.sessionId });
-            
                     if (error) {
                       console.error('Stripe Checkout error:', error);
                       // Xử lý lỗi nếu có
@@ -449,8 +449,44 @@ const Checkout = () => {
 }
 
 
+// const navigate = useNavigate();
+const location = useLocation();
 
+useEffect(() => {
+  const handlePopState = () => {
+    const orderId = localStorage.getItem("order_id"); // Lấy order_id từ localStorage
+    if (orderId) {
+      fetch("http://127.0.0.1:8000/api/stripe/order/check", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ order_id: orderId }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.message === "Order expired and deleted.") {
+            alert("Đơn hàng đã bị xóa do không hoàn tất thanh toán.");
+            localStorage.removeItem("order_id"); // Xóa order_id khỏi localStorage
+            navigate("/cart"); // Chuyển hướng về giỏ hàng
+          } else if (data.status === "unpaid") {
+            console.log("Đơn hàng vẫn chưa thanh toán.");
+          } else {
+            console.log("Đơn hàng đã thanh toán.");
+          }
+        })
+        .catch((error) => console.error("Error:", error));
+    }
+  };
 
+  // Lắng nghe sự kiện popstate
+  window.addEventListener("popstate", handlePopState);
+
+  return () => {
+    // Gỡ bỏ sự kiện khi component bị hủy
+    window.removeEventListener("popstate", handlePopState);
+  };
+}, [navigate]);
 
   return (
     <div id="card-element">

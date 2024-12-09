@@ -58,7 +58,7 @@ Route::middleware('api')->group(function () {
     Route::apiResource('categories', CategoryController::class);
     Route::apiResource('products', ProductController::class);
 });
-Route::apiResource('user', UserController::class);
+    Route::apiResource('user', UserController::class);
 Route::get('order-details/{order_id}', [OrderDetailController::class, 'getOrderDetails']);
 Route::apiResource('order-details', OrderDetailController::class);
 Route::middleware('auth:sanctum')->group(function () {
@@ -88,6 +88,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('order', OrderController::class);
     Route::post('/cart/add', [CartController::class, 'addToCart']);
     Route::post('/cart/sync', [CartController::class, 'syncCart']);
+
 });
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/change-password', [ProfileController::class, 'changePassword']);
@@ -101,5 +102,6 @@ Route::post('order/{order_id}/status', [OrderDetailController::class, 'updateOrd
 Route::post('/create-stripe', [StripeController::class, 'createStripe']);
 Route::post('/webhook/stripe', [StripeController::class, 'handle'])->withoutMiddleware([VerifyCsrfToken::class]);
 Route::get('/stripe/verify-session/{sessionId}', [StripeController::class, 'verifySession']);
-
+Route::post('/orders/{orderId}/cancel', [StripeController::class, 'cancelOrder']);
 Route::post('/product-variants/check-quantity', [ProductVariantController::class, 'checkQuantity']);
+

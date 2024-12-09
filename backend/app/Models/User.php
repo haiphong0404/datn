@@ -30,6 +30,15 @@ class User extends Authenticatable
         'remember_token'
 
     ];
+    public function hasRole($roles)
+    {
+        if (is_array($roles)) {
+            return in_array($this->role, $roles);
+        }
+        return $this->role === $roles;
+    }
+
+
     public function orders()
     {
         return $this->hasMany(Order::class);
@@ -64,7 +73,7 @@ class User extends Authenticatable
     {
         return $this->hasMany(Cart::class);
     }
-    
+
     public function comments()
     {
         return $this->hasMany(Comment::class);
