@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Exception;
 
 class UserController extends Controller
@@ -124,20 +125,28 @@ class UserController extends Controller
         DB::beginTransaction();
         
         try {
+            // Ghi log dữ liệu request nhận được
+            Log::info('Received request data:', $request->all());
+            
             // Kiểm tra xem người dùng có tồn tại hay không
             if (!$user) {
+                Log::warning('User not found.', ['user_id' => $user->id ?? null]);
                 return response()->json(['error' => 'User not found.'], 404);
             }
     
             // Nếu có ảnh mới, lưu ảnh và cập nhật
             if ($request->hasFile('avatar_img')) {
+                Log::info('New avatar file detected.', ['file_name' => $request->file('avatar_img')->getClientOriginalName()]);
+                
                 // Xóa ảnh cũ nếu tồn tại
                 if ($user->avatar_img && Storage::disk('public')->exists($user->avatar_img)) {
+                    Log::info('Deleting old avatar.', ['avatar_path' => $user->avatar_img]);
                     Storage::disk('public')->delete($user->avatar_img);
                 }
     
                 // Lưu ảnh mới
                 $file = $request->file('avatar_img')->store('uploads/users', 'public');
+                Log::info('New avatar saved.', ['avatar_path' => $file]);
                 $user->avatar_img = $file;
             }
     
@@ -147,11 +156,15 @@ class UserController extends Controller
             $user->phone = $request->phone;
             $user->address = $request->address;
             $user->save();
+    
+            Log::info('User updated successfully.', ['user_id' => $user->id]);
+    
             DB::commit();
     
             // Trả về ảnh dưới dạng base64 nếu có
             $base64Image = null;
             if ($user->avatar_img && Storage::disk('public')->exists($user->avatar_img)) {
+                Log::info('Converting avatar to base64.', ['avatar_path' => $user->avatar_img]);
                 $base64Image = base64_encode(Storage::disk('public')->get($user->avatar_img));
             }
     
@@ -164,6 +177,13 @@ class UserController extends Controller
             ], 200);
         } catch (Exception $e) {
             DB::rollBack();
+            
+            // Ghi log lỗi
+            Log::error('Error updating user.', [
+                'error_message' => $e->getMessage(),
+                'stack_trace' => $e->getTraceAsString()
+            ]);
+    
             return response()->json([
                 'message' => 'Có lỗi khi cập nhật người dùng.',
                 'error' => $e->getMessage()

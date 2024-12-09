@@ -372,6 +372,7 @@ const Checkout = () => {
                   // Gửi đơn hàng và thanh toán nếu là thanh toán tiền mặt
                   await postOrder(userInfo.id, orderData);
                   toast.success("Đặt hàng thành công!");
+                  navigate('/my_account/orders')
   
                   // Xóa sản phẩm đã chọn khỏi giỏ hàng trong cơ sở dữ liệu
                   for (const item of selectedProducts) {

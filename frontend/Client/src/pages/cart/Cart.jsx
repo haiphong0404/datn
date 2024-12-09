@@ -2,14 +2,15 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-
+import useCart from '../../hooks/useCart';
 const Cart = () => {
   const navigate = useNavigate();
-  const [localCart, setLocalCart] = useState([]);
+
   const [isLoading, setIsLoading] = useState(true);
   const [totalPrice, setTotalPrice] = useState(0);
   const [totalQuantity, setTotalQuantity] = useState(0);
   const [selectedItems, setSelectedItems] = useState(new Set());
+  const { localCart, handleRemoveFromCart ,setLocalCart, addToCart } = useCart();
 
 
 
@@ -91,127 +92,9 @@ const Cart = () => {
   };
 
   // Xử lý xóa sản phẩm khỏi giỏ hàng
-  const handleRemoveFromCart = async (id_productVariant) => {
-    
-    if (!id_productVariant) return;
+ 
 
-    const token = localStorage.getItem('token');
-    if (token) {
-      try {
-        const response = await axios.delete(`/cart/remove/${id_productVariant}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        if (response.status === 200) {
-          setLocalCart(prevCart => {
-            const updatedCart = prevCart.filter(item => item.id_productVariant !== id_productVariant);
-            return updatedCart;
-          });
-          setSelectedItems(prevSelected => new Set([...prevSelected].filter(item => item !== id_productVariant)));
-          toast('Sản phẩm đã được xóa khỏi giỏ hàng.');
-          window.location.reload();
-        }
-      } catch (error) {
-    
-        toast.error('Không thể xóa sản phẩm khỏi giỏ hàng.');
-      }
-    } else {
-      const cartData = localStorage.getItem('cart');
-      if (!cartData) return;
-      const parsedCart = JSON.parse(cartData);
-      const updatedCart = parsedCart.filter(item => item.id_productVariant !== id_productVariant);
-      localStorage.setItem('cart', JSON.stringify(updatedCart));
-      setLocalCart(updatedCart);
-      setSelectedItems(prevSelected => new Set([...prevSelected].filter(item => item !== id_productVariant)));
-      toast('Sản phẩm đã được xóa khỏi giỏ hàng.');
-      window.location.reload();
-    }
-  };
-
-  // Xử lý thanh toán
-  // const handleCheckout = () => {
-  //   const selectedProducts = getSelectedProducts();
-  
-  //   if (selectedProducts.length > 0) {
-  //     // Kiểm tra sản phẩm hết hàng
-  //     const outOfStockProducts = selectedProducts.filter(
-  //       (product) => product.stock === 0
-  //     );
-  
-  //     if (outOfStockProducts.length > 0) {
-  //       const productNames = outOfStockProducts.map((p) => p.name).join(', ');
-  //       toast.error(`Sản phẩm sau đã hết hàng: ${productNames}`);
-  //       return; // Ngăn điều hướng nếu có sản phẩm hết hàng
-  //     }
-  
-  //     // Nếu tất cả sản phẩm đều còn hàng, lưu vào localStorage và chuyển sang trang thanh toán
-  //     console.log('Đang thanh toán cho các sản phẩm:', selectedProducts);
-  //     localStorage.setItem('selectedProducts', JSON.stringify(selectedProducts));
-  //     selectedProducts.forEach((product) => {
-  //       console.log(product.name); // "Giày Nike Air Force 1 ’07"
-  //       console.log(product.color); // "Spinka, Lemke and Corkery"
-  //       console.log(product.id_productVariant); // 104
-  //       console.log(product.quantity); // 2
-  //     });
-  //     navigate('/checkout');
-  //   } else {
-  //     toast.warn('Vui lòng chọn ít nhất một sản phẩm để thanh toán!');
-  //   }
-  // };
-  
-  // const handleQuantityChange = async (variantId, change) => {
-  //   // Tính lại số lượng mới cho sản phẩm
-  //   const updatedCart = localCart.map((item) => {
-  //     if (item.id_productVariant === variantId) {
-  //       const newQuantity = item.quantity + change;
-  //       console.log(`Current quantity: ${item.quantity}, Stock: ${item.stock}, New quantity: ${newQuantity}`);
-        
-  //       // Kiểm tra số lượng
-  //       if (newQuantity > item.stock) {
-  //         toast.warn('Số lượng trong kho không đủ!');
-  //         return item;
-  //       }
-        
-  //       if (newQuantity <= 0) {
-  //         toast.warn('Số lượng không thể nhỏ hơn 1!');
-  //         return item;
-  //       }
-        
-  //       // Cập nhật lại số lượng nếu hợp lệ
-  //       return { ...item, quantity: newQuantity };
-  //     }
-  //     return item;
-  //   });
-    
-  //   const token = localStorage.getItem('token');
-    
-  //   // Nếu người dùng đã đăng nhập, cập nhật dữ liệu trên backend
-  //   if (token) {
-  //     try {
-  //       const response = await axios.put(`http://127.0.0.1:8000/api/cart/update/${variantId}`, { quantity: newQuantity });
-  //       toast.success(response.data.message);
-  //       // Cập nhật lại giỏ hàng sau khi thành công
-  //       setLocalCart(updatedCart);
-  //       localStorage.setItem('cart', JSON.stringify(updatedCart));
-  //     } catch (error) {
-  //       if (error.response) {
-  //         const { message, stock_available, requested_quantity } = error.response.data;
-  //         if (message === "Số lượng sản phẩm trong kho không đủ") {
-  //           toast.error(`Chỉ còn ${stock_available} sản phẩm trong kho, bạn đã yêu cầu ${requested_quantity}`);
-  //         } else {
-  //           toast.error(message);
-  //         }
-  //       } else {
-  //         toast.error("Đã có lỗi xảy ra, vui lòng thử lại sau!");
-  //       }
-  //     }
-  //   } else {
-  //     // Nếu chưa đăng nhập, chỉ cập nhật dữ liệu trong localStorage
-  //     setLocalCart(updatedCart);
-  //     localStorage.setItem('cart', JSON.stringify(updatedCart));
-  //     toast.success('Cập nhật số lượng thành công!');
-  //   }
-  // };
+ 
   
   
   const handleCheckout = async () => {
@@ -280,39 +163,6 @@ const Cart = () => {
     }
   };
   
-  
-  // const handleQuantityChange = async (variantId, change) => {
-  //   const updatedCart = localCart.map(item => {
-  //     if (item.id_productVariant === variantId) {
-  //       const newQuantity = item.quantity + change;
-
-  //       // Debug logs để kiểm tra giá trị
-       
-
-  //       // Kiểm tra xem số lượng có vượt quá số lượng trong kho hay không
-  //       if (newQuantity > item.stock) {
-  //         toast.warn('Số lượng trong kho không đủ!');
-  //         return item;  // Nếu số lượng vượt quá kho, giữ nguyên số lượng hiện tại
-  //       }
-
-  //       // Kiểm tra nếu số lượng mới là hợp lệ (phải lớn hơn 0)
-  //       if (newQuantity <= 0) {
-  //         toast.warn('Số lượng không thể nhỏ hơn 1!');
-  //         return item;  // Nếu số lượng nhỏ hơn hoặc bằng 0, giữ nguyên số lượng hiện tại
-  //       }
-
-  //       // Cập nhật số lượng hợp lệ
-  //       return { ...item, quantity: newQuantity };
-  //     }
-  //     return item;  // Nếu không phải sản phẩm đang sửa đổi, giữ nguyên
-  //   });
-
-  //   setLocalCart(updatedCart);
-  //   localStorage.setItem('cart', JSON.stringify(updatedCart));
-  // };
-
-
-
   return (
     <main >
       <div

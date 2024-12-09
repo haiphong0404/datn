@@ -56,23 +56,26 @@ export const getUserByid = async (id) => {
 
 
 // Sửa thông tin người dùng
-export const editUserById = async (id) => {
+export const editUserById = async (id, updatedData) => {
     const token = localStorage.getItem('token'); // Lấy token từ localStorage
     try {
-        const response = await axios.put(`/user/${id}`, {
-            headers: {
-                'Authorization': `Bearer ${token}`, // Gửi token trong header
-                'Content-Type': 'application/json',
-            },
-        });
-        getUserByid(id)
-        return response.data;
-
+        const response = await axios.put(
+            `/user/${id}`, 
+            updatedData, // Dữ liệu cần cập nhật
+            {
+                headers: {
+                    'Authorization': `Bearer ${token}`, // Gửi token trong header
+                    'Content-Type': 'application/json',
+                },
+            }
+        );
+        
+        return response.data; // Trả về dữ liệu từ API
     } catch (error) {
         throw new Error('Lỗi khi sửa thông tin người dùng: ' + (error.response?.data?.message || error.message));
     }
-
 };
+
 
 // quên mật khẩu 
 export const forgotPassword = async (email) => {
