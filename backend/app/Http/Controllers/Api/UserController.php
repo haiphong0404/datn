@@ -182,7 +182,4 @@ class UserController extends Controller
 
     
 
-    /**
-     * Xóa tài nguyên cụ thể khỏi cơ sở dữ liệu.
-     */
 }
