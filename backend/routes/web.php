@@ -51,6 +51,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'c
 
     // Quản lý danh mục
     Route::resource('categories', CategoryController::class)->middleware('checkRole:admin');
+    Route::post('categories/{id}/restore', [CategoryController::class, 'restore'])->name('categories.restore')->middleware('checkRole:admin');
 
     // Quản lý sản phẩm
     Route::resource('products', ProductController::class);
@@ -59,6 +60,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'c
 
     // Quản lý bình luận
     Route::resource('comments', CommentController::class)->middleware('checkRole:admin');
+    Route::post('comments/{id}/restore', [CommentController::class, 'restore'])->name('comments.restore')->middleware('checkRole:admin');
+
 
     // Quản lý người dùng
     Route::resource('user', UserController::class);
