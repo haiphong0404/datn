@@ -62,14 +62,19 @@ class StatisticsService
     public function gettotalRevenue(): int
     {
         $role = Auth::user()->role;
+        $userID = Auth::user()->id;
         if ($role === "admin") {
-            // Admin: Tổng doanh thu trong tháng hiện tại
-            return Order::whereMonth('created_at', Carbon::now()->month)
+            // Tổng doanh thu trong tháng hiện tại
+            return Order::where('status', 'completed')
+                        ->whereMonth('created_at', Carbon::now()->month)
                         ->whereYear('created_at', Carbon::now()->year)
                         ->sum('total_amount');
         } else {
-            // Khác: Tổng doanh thu trong ngày hiện tại
-            return Order::whereDate('created_at', Carbon::today())
+            // Tổng doanh thu trong tháng hiện tại handler_id của người dùng hiện tại
+            return Order::where('status', 'completed')
+                        ->where('handler_id', $userID)
+                        ->whereMonth('created_at', Carbon::now()->month)
+                        ->whereYear('created_at', Carbon::now()->year)
                         ->sum('total_amount');
         }
     }
@@ -77,16 +82,20 @@ class StatisticsService
     public function getRevenueByProduct(): array
     {
         $role = Auth::user()->role;
+        $userID = Auth::user()->id;
         // Khởi tạo query lấy thông tin sản phẩm, doanh thu và số lượng tồn kho
         $query = Product::query()
             ->select(
                 'products.id',
                 'products.name',
                 'products.total_quantity_in_stock', // Thêm trường quantity_in_stock từ bảng products
+                DB::raw('SUM(order_details.quantity) as total_sold'),
                 DB::raw('SUM(order_details.quantity * order_details.price) as total_revenue')
             )
             ->join('product_variants', 'products.id', '=', 'product_variants.product_id') // Join với bảng product_variants
             ->join('order_details', 'product_variants.id', '=', 'order_details.product_variant_id') // Join với bảng order_details qua product_variant_id
+            ->join('orders', 'order_details.order_id', '=', 'orders.id') // Join thêm với bảng orders
+            ->where('orders.status', 'completed')
             ->groupBy('products.id', 'products.name', 'products.total_quantity_in_stock'); // Thêm trường quantity_in_stock vào group by
 
         // Nếu là admin, lấy doanh thu theo tháng hiện tại
@@ -94,8 +103,10 @@ class StatisticsService
             $query->whereMonth('order_details.created_at', Carbon::now()->month)
                   ->whereYear('order_details.created_at', Carbon::now()->year);
         } else {
-            // Nếu không phải admin, lấy doanh thu theo ngày hiện tại
-            $query->whereDate('order_details.created_at', Carbon::today());
+            // Nếu không phải admin, lấy doanh thu theo tháng hiện tại nhưng phải có handler_id là chính staff đó
+            $query->where('orders.handler_id', $userID)
+              ->whereMonth('order_details.created_at', Carbon::now()->month)
+              ->whereYear('order_details.created_at', Carbon::now()->year);
         }
 
         // Lấy dữ liệu và trả về dưới dạng mảng
@@ -104,6 +115,7 @@ class StatisticsService
 
     public function getRevenueByMonth(): array
     {
+        $user = Auth::user();
         $months = [];
         $revenues = [];
 
@@ -116,9 +128,15 @@ class StatisticsService
             $months[] = $month->format('F Y');
 
             // Tính tổng doanh thu cho mỗi tháng
-            $totalRevenue = Order::whereMonth('created_at', $month->month)
-                ->whereYear('created_at', $month->year)
-                ->sum('total_amount');
+            $query = Order::where('status', 'completed')
+                ->whereMonth('created_at', $month->month)
+                ->whereYear('created_at', $month->year);
+            
+            if ($user->role === 'staff') {
+                $query->where('handler_id', $user->id);
+            }
+                
+            $totalRevenue = $query->sum('total_amount');
 
             // Thêm tổng doanh thu vào mảng revenues
             $revenues[] = $totalRevenue;
@@ -127,7 +145,7 @@ class StatisticsService
         // Đảo lại thứ tự tháng và doanh thu để có tháng gần nhất ở bên phải
         return [
             'months' => array_reverse($months),
-            'revenues' => array_reverse($revenues),
+            'revenues' => array_reverse($revenues)
         ];
     }
 }

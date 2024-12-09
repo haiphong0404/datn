@@ -23,12 +23,8 @@ class StatisticsController extends Controller
             $totalRevenue = $this->statisticsService->gettotalRevenue();
             $revenueByProduct = $this->statisticsService->getRevenueByProduct();
             $revenueByMonth = $this->statisticsService->getRevenueByMonth();
-            if (auth()->user()->role == 'staff') {
-                return view('admin.index', compact('totalProducts', 'totalOrders', 'totalRevenue', 'revenueByProduct'));
-            } else {
 
-                return view('admin.index', compact('totalProducts', 'totalOrders', 'totalRevenue', 'revenueByProduct', 'revenueByMonth'));
-            }
+            return view('admin.index', compact('totalProducts', 'totalOrders', 'totalRevenue', 'revenueByProduct', 'revenueByMonth'));
         }
     }
     // public function indexStaff()
