@@ -26,8 +26,8 @@ class UserRequest extends FormRequest
             'email' => ['required', 'email', 'unique:users,email,' . ($this->user ? $this->user->id : '')],
             'password' => ['required', 'string', 'min:6'],
             'avatar_img' => 'image', // Chỉ cho phép các định dạng ảnh  
-            'phone' => ['nullable', 'string', 'max:15', 'unique:users,phone,' . ($this->user ? $this->user->id : '')],
-            'address' => ['nullable', 'string', 'max:255'],
+            'phone' => ['required', 'string', 'max:15', 'unique:users,phone,' . ($this->user ? $this->user->id : '')],
+            'address' => ['required', 'string', 'max:255'],
             'role' => ['nullable', 'string', 'max:50'],
         ];
     }
@@ -49,7 +49,7 @@ class UserRequest extends FormRequest
             'password.min' => 'Mật khẩu phải có ít nhất 6 ký tự.',
             // 'password.confirmed' => 'Mật khẩu xác nhận không khớp.',
 
-            // 'avatar_img.image' => 'File tải lên phải là ảnh.',
+            'avatar_img.image' => 'File tải lên phải là ảnh.',
             // 'avatar_img.mimes' => 'Chỉ cho phép các định dạng: jpg, jpeg, png, gif.',
             // 'avatar_img.max' => 'Kích thước ảnh không được vượt quá 2MB.',
 
@@ -59,6 +59,7 @@ class UserRequest extends FormRequest
 
 
             'address.max' => 'Địa chỉ không được vượt quá 255 ký tự.',
+            'address.required' => 'Vui lòng nhập địa chỉ.',
 
             'role.max' => 'Vai trò không được vượt quá 50 ký tự.',
         ];
