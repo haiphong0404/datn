@@ -53,7 +53,7 @@ const BlogMain = () => {
                   <p className="blog-desc">
                     {article.excerpt}
                   </p>
-                  <Link className="btn read-more" to={`/blog_details/${article.id}`}>Read More</Link>
+                  <Link className="btn read-more" to={`/blog_details/${article.id}`}>Xem thêm</Link>
                 </div>
               </div>
             </div>

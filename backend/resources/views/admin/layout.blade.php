@@ -18,21 +18,21 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link href="{{ asset('assets') }}/admin/css/bootstrap.min.css" rel="stylesheet">
     <link href="{{ asset('assets') }}/admin/css/bootstrap-reset.css" rel="stylesheet">
     <!--external css-->
-    <link href="{{ asset('assets') }}/admin/assets/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <link href="{{ asset('assets') }}/admin/assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
     <link href="{{ asset('assets') }}/admin/assets/jquery-easy-pie-chart/jquery.easy-pie-chart.css" rel="stylesheet"
-          type="text/css" media="screen"/>
+        type="text/css" media="screen" />
     <link rel="stylesheet" href="{{ asset('assets') }}/admin/css/owl.carousel.css" type="text/css">
 
     <!--right slidebar-->
     <link href="{{ asset('assets') }}/admin/css/slidebars.css" rel="stylesheet">
     <!--dynamic table-->
-    <link href="{{ asset('assets') }}/admin/assets/advanced-datatable/media/css/demo_page.css" rel="stylesheet"/>
-    <link href="{{ asset('assets') }}/admin/assets/advanced-datatable/media/css/demo_table.css" rel="stylesheet"/>
-    <link rel="stylesheet" href="{{ asset('assets') }}/admin/assets/data-tables/DT_bootstrap.css"/>
+    <link href="{{ asset('assets') }}/admin/assets/advanced-datatable/media/css/demo_page.css" rel="stylesheet" />
+    <link href="{{ asset('assets') }}/admin/assets/advanced-datatable/media/css/demo_table.css" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ asset('assets') }}/admin/assets/data-tables/DT_bootstrap.css" />
 
     <!-- Custom styles for this template -->
 
@@ -42,108 +42,115 @@
 
     @yield('css')
 </head>
+
 <body class="light-sidebar-nav">
 
-<section id="container">
-    <!--header start-->
-    <header class="header white-bg">
-        <div class="sidebar-toggle-box">
-            <i class="fa fa-bars"></i>
-        </div>
-        <!--logo start-->
-        <a href="{{ route('admin.index') }}" class="logo">Admin<span>THOR</span></a>
-        <!--logo end-->
-        <div class="nav notify-row" id="top_menu">
-            <!-- notification start -->
-            <li class="dropdown">
-                <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                    <i class="fa fa-tasks"></i>
-                    <span class="badge badge-success">
-                @if(session('success_orders') && is_array(session('success_orders')))
-                            {{ count(session('success_orders')) }}
-                        @else
-                            0
-                        @endif
-            </span>
-                </a>
-                <ul class="dropdown-menu extended tasks-bar" style="max-height: 300px; overflow-y: auto; width: 350px;">
-                    <div class="notify-arrow notify-arrow-green"></div>
-
-                    <!-- Hiển thị thông báo thành công, thông báo mới nhất lên đầu tiên -->
-                    @if(session('success_orders') && is_array(session('success_orders')))
-                        <li class="notification-header">
-                            <p class="green">Có {{ count(session('success_orders')) }} đơn hàng mới.</p>
-                        </li>
-                        <li class="task-list">
-                            @foreach(array_reverse(session('success_orders')) as $successMessage) <!-- Đảo ngược thứ tự của thông báo -->
-                        <li class="task-item" style="border-bottom: 1px solid #eee; padding: 8px 10px;">
-                            <p class="green" style="margin: 0;">{{ $successMessage }}</p>
-                        </li>
-                @endforeach
-            </li>
-            @else
-                <li>
-                    <p class="green" style="margin: 0;">Không có thông báo đơn hàng nào mới.</p>
-                </li>
-                @endif
-                </ul>
-                </li>
-
-                <!-- notification for low stock -->
-                <li id="header_notification_bar" class="dropdown">
-                    <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                        <i class="fa fa-bell-o"></i>
-                        <span class="badge badge-warning">
-                @if(session('low_stock_products') && count(session('low_stock_products')) > 0)
-                                {{ count(session('low_stock_products')) }}
+    <section id="container">
+        <!--header start-->
+        <header class="header white-bg">
+            <div class="sidebar-toggle-box">
+                <i class="fa fa-bars"></i>
+            </div>
+            <!--logo start-->
+            <a href="{{ route('admin.index') }}" class="logo">Admin<span>THOR</span></a>
+            <!--logo end-->
+            <div class="nav notify-row" id="top_menu">
+                <!-- notification start -->
+                <ul class="nav top-menu">
+                    <!-- settings start -->
+                    <li class="dropdown">
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                            <i class="fa fa-tasks"></i>
+                            <span class="badge badge-success">
+                                @if (session('success_orders') && is_array(session('success_orders')))
+                                    {{ count(session('success_orders')) }}
+                                @else
+                                    0
+                                @endif
+                            </span>
+                        </a>
+                        <ul class="dropdown-menu extended tasks-bar"
+                            style="max-height: 200px; overflow-y: auto; width: 350px;">
+                            <div class="notify-arrow notify-arrow-green"></div>
+                            @if (session('success_orders') && is_array(session('success_orders')))
+                                <li class="notification-header">
+                                    <p style="font-size: 16px" class="green">Có {{ count(session('success_orders')) }}
+                                        đơn hàng mới.</p>
+                                </li>
+                                @foreach (array_reverse(session('success_orders')) as $successMessage)
+                                    <li class="task-item">
+                                        <a href="{{ route('admin.orders.index') }}">
+                                            <span style="font-size: 14px;">{{ $successMessage }}</span>
+                                        </a>
+                                    </li>
+                                @endforeach
                             @else
-                                0
+                                <li>
+                                    <p class="green" style="margin: 0;">Không có thông báo đơn hàng nào mới.</p>
+                                </li>
                             @endif
-            </span>
-                    </a>
-                    <ul class="dropdown-menu extended notification" style="max-height: 300px; overflow-y: auto; width: 350px;">
-                        <div class="notify-arrow notify-arrow-yellow"></div>
-
-                        <!-- Hiển thị sản phẩm dưới số lượng tối thiểu -->
-                        @if(session('low_stock_products') && count(session('low_stock_products')) > 0)
-                            <li class="notification-header">
-                                <p class="yellow">Có {{ count(session('low_stock_products')) }} sản phẩm dưới 5 đôi</p>
-                            </li>
-                            <li class="product-list">
-                                @foreach(session('low_stock_products') as $product) <!-- Đảo ngược thứ tự của sản phẩm -->
-                            <li class="product-item" style="border-bottom: 1px solid #eee; padding: 8px 10px;">
-                                <a href="{{ route('admin.products.show', $product->id) }}">
-                                    <div class="d-flex align-items-center">
-                                        <span class="label label-danger mr-2"><i class="fa fa-bolt"></i></span>
-                                        <div>
-                                            <strong>{{ $product->name }}</strong>
-                                            <br>
-                                            <span class="small italic">Số lượng còn: {{ $product->total_quantity_in_stock }} đôi</span>
-                                        </div>
-                                    </div>
-                                </a>
-                            </li>
-                    @endforeach
-                </li>
-                @else
-                    <li>
-                        <p class="yellow" style="margin: 0;">Không có sản phẩm nào dưới 5 đôi trong kho</p>
+                        </ul>
                     </li>
-                    @endif
-                    </ul>
+                    <!-- settings end -->
+
+                    <!-- notification dropdown start-->
+                    <li id="header_notification_bar" class="dropdown">
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                            <i class="fa fa-bell-o"></i>
+                            <span class="badge badge-warning">
+                                @if (session('low_stock_products') && count(session('low_stock_products')) > 0)
+                                    {{ count(session('low_stock_products')) }}
+                                @else
+                                    0
+                                @endif
+                            </span>
+                        </a>
+                        <ul class="dropdown-menu extended notification"
+                            style="max-height: 200px; overflow-y: auto; width: 350px;">
+                            <div class="notify-arrow notify-arrow-yellow"></div>
+                            @if (session('low_stock_products') && count(session('low_stock_products')) > 0)
+                                <li class="notification-header">
+                                    <p style="font-size: 16px" class="yellow">Có
+                                        {{ count(session('low_stock_products')) }} sản phẩm dưới 5 đôi
+                                    </p>
+                                </li>
+                                @foreach (session('low_stock_products') as $product)
+                                    <li class="product-item">
+                                        <a href="{{ route('admin.products.show', $product->id) }}">
+                                            <div class="d-flex align-items-center">
+                                                <span class="mr-2"><img src="{{ Storage::url($product->image) }}"
+                                                        style="width: 60px;" alt=""></span>
+                                                <div>
+                                                    <strong style="font-size: 13px">{{ $product->name }}</strong>
+                                                    <br>
+                                                    <span style="font-size: 11px" class="small italic">Số lượng còn:
+                                                        {{ $product->total_quantity_in_stock }} đôi</span>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </li>
+                                @endforeach
+                            @else
+                                <li>
+                                    <p class="yellow" style="margin: 0;">Không có sản phẩm nào dưới 5 đôi trong kho</p>
+                                </li>
+                            @endif
+                        </ul>
                     </li>
                     <!-- notification dropdown end -->
-        </div>
-        <div class="top-nav ">
+                </ul>
+            </div>
+
+            <div class="top-nav ">
                 <!--search & user info start-->
                 <!--search & user info start-->
                 <ul class="nav pull-right top-menu">
-                    <li>
+                    <li class="mr-2">
                         @yield('search')
                     </li>
                     <!-- user login dropdown start-->
                     @auth
-                        <li class="dropdown">
+                        <li class="dropdown mr-2">
                             <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                                 <img src="{{ optional(Auth::user()->avatar_img) ? Storage::url(Auth::user()->avatar_img) : asset('default-avatar.png') }}"
                                     alt="{{ optional(Auth::user())->username }}" width="30px">
@@ -152,7 +159,7 @@
                             <ul class="dropdown-menu dropdown-menu-right">
                                 <li>
                                     <a href="{{ route('admin.profile') }}" class="dropdown-item">
-                                        <i class="fa fa-suitcase"></i> Hồ sơ
+                                        <i class="bi bi-suitcase-lg mr-2"></i> Hồ sơ
                                     </a>
                                 </li>
                                 <li>
@@ -160,7 +167,7 @@
                                         @csrf
                                         <button type="submit"
                                             class="btn btn-link dropdown-item text-danger d-flex align-items-center">
-                                            <i class="fa fa-sign-out-alt me-2"></i> Đăng xuất
+                                            <i class="fa fa-sign-out-alt mr-2"></i> Đăng xuất
                                         </button>
                                     </form>
                                 </li>
@@ -173,7 +180,7 @@
                     @endauth
                     <a href="http://localhost:3000"
                         style="display: inline-flex; justify-content: center; align-items: center; text-decoration: none; font-size: 15px; padding: 5px;"
-                        target="_blank"><i class="fa fa-sign-in mr-2"></i><span>Website</span></a>
+                        target="_blank"><i class="bi bi-box-arrow-right mr-1"></i><span>Website</span></a>
                     <!-- user login dropdown end -->
                 </ul>
                 <!--search & user info end-->
@@ -188,7 +195,7 @@
                     <!-- Thống kê -->
                     @if (auth()->user()->hasRole(['admin', 'staff']))
                         <li>
-<a href="{{ route('admin.index') }}">
+                            <a href="{{ route('admin.index') }}">
                                 <i class="bi bi-speedometer2"></i>
                                 <span>Thống kê</span>
                             </a>
@@ -258,7 +265,7 @@
                     @if (auth()->user()->hasRole(['admin', 'staff']))
                         <li>
                             <a href="{{ route('admin.orders.index') }}">
-<i class="bi bi-receipt"></i>
+                                <i class="bi bi-receipt"></i>
                                 <span>Đơn hàng</span>
                             </a>
                         </li>
@@ -278,8 +285,8 @@
                     @if (auth()->user()->hasRole(['admin', 'staff']))
                         <li>
                             <a href="{{ route('admin.products.index') }}">
-                                <i class="bi bi-shop"></i>
-                                <span>Shops</span>
+                                <i class="bi bi-box-seam"></i>
+                                <span>Sản phẩm</span>
                             </a>
                         </li>
                     @endif
@@ -289,7 +296,7 @@
                         <li>
                             <a href="{{ route('admin.vouchers.index') }}">
                                 <i class="bi bi-ticket-detailed"></i>
-                                <span>Voucher</span>
+                                <span>Mã giảm giá</span>
                             </a>
                         </li>
                     @endif
@@ -322,7 +329,7 @@
     <script src="{{ asset('assets') }}/admin/js/jquery.sparkline.js" type="text/javascript"></script>
     <script src="{{ asset('assets') }}/admin/assets/js/jquery-easy-pie-chart/jquery.easy-pie-chart.js"></script>
     <script src="{{ asset('assets') }}/admin/js/owl.carousel.js"></script>
-<script src="{{ asset('assets') }}/admin/js/jquery.customSelect.min.js"></script>
+    <script src="{{ asset('assets') }}/admin/js/jquery.customSelect.min.js"></script>
     <script src="{{ asset('assets') }}/admin/js/respond.min.js"></script>
 
     <!--right slidebar-->
@@ -337,6 +344,7 @@
 
     <script>
         //owl carousel
+
         $(document).ready(function() {
             $("#owl-demo").owlCarousel({
                 navigation: true,
@@ -349,7 +357,6 @@
         });
 
         //custom select box
-
         $(function() {
             $('select.styled').customSelect();
         });
@@ -359,5 +366,7 @@
             owl.reinit();
         });
     </script>
+
 </body>
+
 </html>

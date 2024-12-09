@@ -2,7 +2,7 @@
 @section('search')
     <form action="{{ route('admin.comments.index') }}" method="GET">
         <div class="input-group mt-1">
-            <input type="text" name="search" class="form-control" placeholder="Tìm kiếm comment"
+            <input type="text" name="search" class="form-control" placeholder="Tìm kiếm bình luận"
                 value="{{ request()->input('search') }}">
             <button class="btn btn-outline-secondary" type="submit"><i class="bi bi-search"></i></button>
         </div>
@@ -129,7 +129,7 @@
                                                             <button type="submit" class="btn btn-danger"
                                                                 onclick="return confirm('Bạn có chắc muốn xóa comment này?')"><i
                                                                     class="bi bi-trash"></i>
-                                                                </button>
+                                                            </button>
                                                         </form>
                                                     @endif
                                                 </td>
@@ -150,7 +150,7 @@
                                         <ul class="pagination">
                                             <li class="prev">
                                                 <a href="{{ $comments->previousPageUrl() }}" aria-label="Previous">←
-                                                    Previous</a>
+                                                    Trước</a>
                                             </li>
                                             @foreach ($comments->getUrlRange(1, $comments->lastPage()) as $page => $url)
                                                 <li class="{{ $page == $comments->currentPage() ? 'active' : '' }}">
@@ -158,7 +158,7 @@
                                                 </li>
                                             @endforeach
                                             <li class="next">
-                                                <a href="{{ $comments->nextPageUrl() }}" aria-label="Next">Next →</a>
+                                                <a href="{{ $comments->nextPageUrl() }}" aria-label="Next">Sau →</a>
                                             </li>
                                         </ul>
                                     </div>
@@ -174,12 +174,14 @@
     <script src="{{ asset('assets') }}/admin/js/dynamic_table_init.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            toastr.success('{{ session('success') }}', 'Thành công', {
-                closeButton: true,
-                progressBar: true,
-                timeOut: 3000,
-                positionClass: "toast-top-right"
-            });
+            @if (session('success'))
+                toastr.success('{{ session('success') }}', 'Thành công', {
+                    closeButton: true,
+                    progressBar: true,
+                    timeOut: 3000,
+                    positionClass: "toast-top-right"
+                });
+            @endif
         });
     </script>
 @endsection
