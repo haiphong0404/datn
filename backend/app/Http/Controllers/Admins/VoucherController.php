@@ -125,15 +125,13 @@ class VoucherController extends Controller
     {
         // Chỉ cập nhật các trường có trong request
         $data = $request->validated();
-        
-        // Ghi lại ID người dùng chỉnh sửa vào trường user_id
-        $data['user_id'] = Auth::id(); // Lấy ID của người dùng đã đăng nhập
 
-        // Cập nhật voucher
-        $voucher->update($data);
-        
-        // Chuyển hướng về giao diện edit với thông báo thành công
-        return redirect()->route('admin.vouchers.edit', $voucher)->with('success', 'Cập nhật thông tin mã giảm giá thành công!');
+        try {
+            $voucher = $this->voucherService->updateVoucher($voucher->id, $data);
+            return redirect()->back()->with('success', 'Cập nhật thông tin mã giảm giá thành công!');
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['error' => 'Cập nhật voucher thất bại: ' . $e->getMessage()]);
+        }
     }
 
     /**

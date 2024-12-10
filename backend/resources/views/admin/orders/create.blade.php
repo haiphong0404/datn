@@ -45,7 +45,6 @@
                         </div>
                     @endif
 
-
                     <form action="{{ route('admin.orders.store') }}" method="POST" id="order-form">
                         @csrf
                         <div class="row">
@@ -132,8 +131,23 @@
                                     </select>
                                 </div>
                             </div>
+                        </div>
 
-
+                        <div class="row">
+                            <!-- Dòng 4 -->
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="shipping_fee" class="form-label">Phương Thức Vận Chuyển</label>
+                                    <select name="shipping_fee" class="form-select" id="shipping_fee">
+                                        <option value="0" {{ old('shipping_fee') == '0' ? 'selected' : '' }}>
+                                            Lấy hàng tại shop</option>
+                                        <option value="1" {{ old('shipping_fee') == '1' ? 'selected' : '' }}>
+                                            Vận chuyển thường</option>
+                                        <option value="2" {{ old('shipping_fee') == '2' ? 'selected' : '' }}>
+                                            Vận chuyển hỏa tốc</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
 
                         <h3>Chi tiết đơn hàng</h3>
@@ -199,7 +213,7 @@
                                                     class="form-control total" readonly>
                                             </td>
                                             <td>
-                                                <button type="button" class="btn btn-danger remove-row">Xóa</button>
+                                                <button type="button" class="btn btn-danger remove-row"> <i class="bi bi-trash"></i></button>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -356,7 +370,7 @@
                         <input type="number" id="total_${productCount}" name="products[${productCount}][total]" class="form-control total" readonly>
                     </td>
                     <td>
-                        <button type="button" class="btn btn-danger remove-row">Xóa</button>
+                        <button type="button" class="btn btn-danger remove-row"> <i class="bi bi-trash"></i></button>
                     </td>
                 </tr>
             `;
