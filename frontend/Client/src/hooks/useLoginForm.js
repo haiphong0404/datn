@@ -72,11 +72,11 @@ export const useLoginForm = (isDisplay) => {
         // Kiểm tra phản hồi từ server
         console.log("Sync response:", response);
 
-        if (response.status === 200) {
-          toast.success("Giỏ hàng đã được đồng bộ thành công!");
-        } else {
-          toast.error("Đã có lỗi xảy ra khi đồng bộ giỏ hàng!");
-        }
+        // if (response.status === 200) {
+        //   toast.success("Giỏ hàng đã được đồng bộ thành công!");
+        // } else {
+        //   toast.error("Đã có lỗi xảy ra khi đồng bộ giỏ hàng!");
+        // }
       } catch (error) {
         // Xử lý lỗi từ server hoặc kết nối mạng
         console.error("Error syncing cart to server:", error.response ? error.response.data : error);
@@ -88,7 +88,7 @@ export const useLoginForm = (isDisplay) => {
       }
     } else {
       console.error("Error syncing cart to server: Cart data is empty!");
-      toast.error("Dữ liệu giỏ hàng trống!");
+      // toast.error("Dữ liệu giỏ hàng trống!");
     }
   };
 
@@ -133,7 +133,7 @@ export const useLoginForm = (isDisplay) => {
       }
     } catch (err) {
       console.error("Lỗi:", err);
-      toast.error("Đăng nhập thất bại!");
+      toast.error("Tài khoản hoặc mật khẩu không chính xác, vui lòng thử lại!");
     }
   };
 

@@ -38,7 +38,7 @@ const Header = () => {
                 <div className="top-left-navigation"></div>
               </div>
               <div className="col-lg-6 d-flex justify-content-end">
-                
+
                 <ul className="user-info-block">
                   <li>
                     <Link to="/my_account">
@@ -104,14 +104,18 @@ const Header = () => {
                             Tin tức</Link>
                         </li>
                         <li>
+                          <Link to="/brands">
+                            Thương hiệu</Link>
+                        </li>
+                        <li>
                           <Link to="/contact_us">
                             Liên hệ</Link>
                         </li>
-                        <li>
+                        {/* <li>
                           <Link to="/faqs">
                             Hỏi đáp
                           </Link>
-                        </li>
+                        </li> */}
                         <li>
                           <Link to="/about_us">
                             Giới thiệu

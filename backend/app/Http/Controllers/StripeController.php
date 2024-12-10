@@ -245,6 +245,30 @@ public function verifySession($sessionId)
     }
 }
 
+public function cancelOrder($orderId)
+{
+    try {
+        $order = Order::find($orderId);
 
+        if (!$order) {
+            return response()->json(['message' => 'Order not found.'], 404);
+        }
+
+        // Xóa chi tiết đơn hàng
+        $order->orderDetails()->delete();
+
+        // Xóa đơn hàng
+        $order->delete();
+
+        return response()->json(['status' => 'success', 'message' => 'Order has been cancelled and deleted.'], 200);
+    } catch (\Exception $e) {
+        Log::error('Error canceling order: ' . $e->getMessage(), [
+            'order_id' => $orderId,
+            'error' => $e->getTraceAsString(),
+        ]);
+
+        return response()->json(['status' => 'error', 'message' => 'Failed to cancel the order.'], 500);
+    }
+}
 
 }

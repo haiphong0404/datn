@@ -92,32 +92,32 @@
 
                     <div id="discount-details" class="mb-3" style="display:none;">
                         <div class="form-group mb-3" id="discount_value_group" style="display:none;">
-                            <label for="discount_value" class="form-label">Giá trị giảm</label>
-                            <input type="number" class="form-control" id="discount_value" name="discount_value" value="{{ old('discount_value', $voucher->discount_value) }}">
+                            <label for="discount_value" class="form-label">Giá trị giảm(VND)</label>
+                            <input type="number" class="form-control" id="discount_value" name="discount_value" value="{{ old('discount_value', number_format($voucher->discount_value, 0, ',', '.')) }}">
                             @error('discount_value')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
 
                         <div class="form-group mb-3" id="min_order_value_group" style="display:none;">
-                            <label for="min_order_value" class="form-label">Giá trị tối thiểu của đơn hàng</label>
-                            <input type="number" class="form-control" id="min_order_value" name="min_order_value" value="{{ old('min_order_value', $voucher->min_order_value) }}">
+                            <label for="min_order_value" class="form-label">Giá trị tối thiểu của đơn hàng(VND)</label>
+                            <input type="number" class="form-control" id="min_order_value" name="min_order_value" value="{{ old('min_order_value', number_format($voucher->min_order_value, 0, ',', '.')) }}">
                             @error('min_order_value')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
 
                         <div class="form-group mb-3" id="discount_percentage_group" style="display:none;">
-                            <label for="discount_percentage" class="form-label">Phần trăm chiết khấu</label>
-                            <input type="number" class="form-control" id="discount_percentage" name="discount_percentage" value="{{ old('discount_percentage', $voucher->discount_percentage) }}">
+                            <label for="discount_percentage" class="form-label">Phần trăm chiết khấu(%)</label>
+                            <input type="number" class="form-control" id="discount_percentage" name="discount_percentage" value="{{ old('discount_percentage', number_format($voucher->discount_percentage, 0, ',', '.')) }}">
                             @error('discount_percentage')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
 
                         <div class="form-group mb-3" id="max_discount_value_group" style="display:none;">
-                            <label for="max_discount_value" class="form-label">Giá trị chiết khấu tối đa</label>
-                            <input type="number" class="form-control" id="max_discount_value" name="max_discount_value" value="{{ old('max_discount_value', $voucher->max_discount_value) }}">
+                            <label for="max_discount_value" class="form-label">Giá trị chiết khấu tối đa(VND)</label>
+                            <input type="number" class="form-control" id="max_discount_value" name="max_discount_value" value="{{ old('max_discount_value', number_format($voucher->max_discount_value, 0, ',', '.')) }}">
                             @error('max_discount_value')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
@@ -189,6 +189,9 @@
                 discountPercentageGroup.style.display = 'block';
                 maxDiscountValueGroup.style.display = 'block';
                 categoryIdGroup.style.display = 'block';
+            }else if (this.value === 'first_order') {
+                discountValueGroup.style.display = 'block';
+                minOrderValueGroup.style.display = 'block';
             }
         }
 

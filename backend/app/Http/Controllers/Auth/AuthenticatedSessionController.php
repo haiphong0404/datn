@@ -23,39 +23,10 @@ class AuthenticatedSessionController extends Controller
   /**
    * Handle an incoming authentication request.
    */
-    public function store(LoginRequest $request): RedirectResponse
-    {
-        // Xác thực thông tin đăng nhập
-        $request->authenticate();
-
-        // Lấy thông tin người dùng
-        $user = $request->user();
-
-        // Kiểm tra vai trò của người dùng
-        if ($user->role === 'admin') {
-            // Nếu là admin, tái tạo session và chuyển hướng đến admin
-            $request->session()->regenerate();
-            return redirect()->route('admin.index');
-        } elseif ($user->role === 'staff') {
-            // Nếu là staff, tái tạo session và chuyển hướng đến staff
-            $request->session()->regenerate();
-            return redirect()->route('staff.index');
-        }
-
-        // Nếu vai trò không hợp lệ, đăng xuất và thông báo lỗi
-        Auth::logout();
-        return redirect()->route('login')->withErrors([
-            'status' => 'Bạn không có quyền truy cập vào hệ thống.',
-        ]);
-    }
-
-
-
-
-  public function postlogin(Request $req)
+  public function store(Request $request): RedirectResponse
   {
-
-    $validate = $req->validate(
+    // Xác thực dữ liệu đầu vào
+    $request->validate(
       [
         'email' => 'required|email',
         'password' => 'required|min:6',
@@ -65,29 +36,39 @@ class AuthenticatedSessionController extends Controller
         'email.email' => 'Email không đúng định dạng',
         'password.required' => 'Vui lòng nhập mật khẩu',
         'password.min' => 'Mật khẩu phải có ít nhất 6 ký tự',
-    ]);
-      $dataUserLogin=[
-        'email'=> $req->email,
-        'password'=> $req->password,
-      ];
-      $remember = $req->has('remember');
-      if(Auth::attempt($dataUserLogin,$remember)){
-        if(Auth::user()->role=='admin'){
-            return redirect()->route('admin.admin');
-            // return redirect()->route('/');
-        }else  if(Auth::user()->role=='staff'){
-          // return redirect()->route('nhanvien.nhanvien');
-          return redirect()->route('staff.staff');
-      }else{
-          return redirect()->route('/');
-        }
+      ]
+    );
 
-      }else{
-        return redirect()->back()->with([
-           'message'=>'Email hoặc Mật khẩu không đúng vui lòng nhập lại !!'
-        ]);
+    // Xác thực thông tin đăng nhập
+    $credentials = $request->only('email', 'password');
+    $remember = $request->has('remember'); // Ghi nhớ đăng nhập nếu có
+
+    if (Auth::attempt($credentials, $remember)) {
+      // Đăng nhập thành công: Lấy thông tin người dùng
+      $user = Auth::user();
+
+      // Phân quyền và chuyển hướng
+      if ($user->role === 'admin') {
+        $request->session()->regenerate(); // Tái tạo session
+        return redirect()->route('admin.index')->with('success', 'Đăng nhập thành công!');
+      } elseif ($user->role === 'staff') {
+        $request->session()->regenerate(); // Tái tạo session
+        return redirect()->route('admin.index')->with('success', 'Đăng nhập thành công!');
+      } else {
+        // Nếu vai trò không hợp lệ, đăng xuất và thông báo lỗi
+        Auth::logout();
+        return redirect()->route('login')->with(['error' => 'Bạn không có quyền truy cập vào hệ thống.']);
       }
+    }
+
+    // Nếu thông tin đăng nhập không đúng
+    return redirect()->back()->withErrors(['password' => 'Email hoặc mật khẩu không đúng, vui lòng thử lại!']);
   }
+
+
+
+
+
 
 
 

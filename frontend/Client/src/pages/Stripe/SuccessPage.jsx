@@ -22,23 +22,27 @@ const PaymentSuccess = () => {
 
   return (
     <div class="payment-success-container">
-    <h2 class="payment-success-title">Thanh toán thành công!</h2>
-    {order && (
-      <div class="order-info">
-        <h3 class="order-info-title">Thông tin đơn hàng</h3>
-        <p class="order-id">ID đơn hàng: {order.id}</p>
-        <p class="order-status">Trạng thái: {order.status}</p>
-        <p class="payment-method">Phương thức thanh toán: {order.payment_method}</p>
-        <p class="payment-status">Trạng thái thanh toán: {order.payment_status === 'unpaid'
-                                    ? 'Thanh Toán Khi Nhận Hàng'
-                                    : order.payment_status === 'paid'
-                                        ? 'Đã Thanh Toán'
-                                        : 'Không Xác Định'}</p>
+      <h2 class="payment-success-title">Thanh toán thành công!</h2>
+      {order && (
+        <div class="order-info">
+          <h3 class="order-info-title">Thông tin đơn hàng</h3>
+          <p class="order-id">ID đơn hàng: {order.id}</p>
+          <p class="order-status">Trạng thái: {order.status === 'pending' ? (
+            <p>Đơn hàng đang xử lý</p>
+          ) : (
+            <p>Trạng thái đơn hàng: {order.status}</p>
+          )}</p>
+          <p class="payment-method">Phương thức thanh toán: {order.payment_method}</p>
+          <p class="payment-status">Trạng thái thanh toán: {order.payment_status === 'unpaid'
+            ? 'Thanh Toán Khi Nhận Hàng'
+            : order.payment_status === 'paid'
+              ? 'Đã Thanh Toán'
+              : 'Không Xác Định'}</p>
 
-      </div>
-    )}
-  </div>
-  
+        </div>
+      )}
+    </div>
+
   );
 };
 

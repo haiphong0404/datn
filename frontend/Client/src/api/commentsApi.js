@@ -37,19 +37,19 @@ export const deleteComment = async (id) => {
 }
 
 // sửa bình luận
-export const editComment = async (id, formData) => {
+export const editComment = async (id, data) => {
     try {
         const token = localStorage.getItem('token');
-        const response = await axios.put(`/comments/${id}`, formData, {
+        const response = await axios.put(`/comments/${id}`, data, {
             headers: {
                 'Authorization': `Bearer ${token}`,
-                'Content-Type': 'multipart/form-data',
+                'Content-Type': 'application/json',
             }
         });
-       
         return response;
     } catch (error) {
         console.error("Error while editing comment", error);
         throw error;
     }
-}
+};
+

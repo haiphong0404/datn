@@ -2,6 +2,8 @@ import axios from 'axios';
 export const registerUser = async (userData) => {
     try {
         const response = await axios.post("/register", userData);
+        console.log(response);
+
         const { token } = response.data;
         if (token) {
             // Lưu token vào localStorage sau khi đăng ký thành công
@@ -9,7 +11,7 @@ export const registerUser = async (userData) => {
             axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
         }
 
-        return response.data;
+        return response?.data;
     } catch (error) {
         throw error.response?.data || error.message;
     }
@@ -72,6 +74,7 @@ export const editUserById = async (id, updatedData) => {
         
         return response.data; // Trả về dữ liệu từ API
     } catch (error) {
+        console.error('Lỗi khi sửa thông tin người dùng:', error.response?.data || error.message);
         throw new Error('Lỗi khi sửa thông tin người dùng: ' + (error.response?.data?.message || error.message));
     }
 };

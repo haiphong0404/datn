@@ -47,12 +47,14 @@ const EditProfile = () => {
     const handleSaveChanges = async (e) => {
         e.preventDefault();
     
+
         const updatedData = new FormData();
         updatedData.append('username', username);
         updatedData.append('email', email);
         updatedData.append('phone', phone);
         updatedData.append('address', address);
     
+
         // Thêm tệp hình ảnh nếu có
         if (avatarImg) {
             updatedData.append('avatar_img', avatarImg);
@@ -101,6 +103,8 @@ const EditProfile = () => {
     };
        
     
+
+
 
     return (
         <div>

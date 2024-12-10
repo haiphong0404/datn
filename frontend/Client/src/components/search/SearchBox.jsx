@@ -58,7 +58,9 @@ const SearchProducts = () => {
                     fontWeight: 'bold',  // độ đậm chữ
                     textDecoration: 'none',  // bỏ gạch dưới liên kết
                   }} > {product.name}</span></Link></h4>
-                  <p>{product.price} VND</p>
+                  <p>{product.price ? 
+    `${new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(product.price)}`
+    : "Liên hệ"} </p>
                 </div>
               </li>
             ))}

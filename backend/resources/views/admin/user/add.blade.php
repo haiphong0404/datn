@@ -15,13 +15,13 @@
             <div class="card shadow-sm">
                 <header class="card-header">
                     <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center">
-                        <h1 class="flex-grow-1 fs-3 fw-semibold my-2 my-sm-3">Thêm User</h1>
+                        <h1 class="flex-grow-1 fs-3 fw-semibold my-2 my-sm-3">Thêm Người Dùng</h1>
                         <nav class="flex-shrink-0 my-2 my-sm-0 ms-sm-3" aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item">
-                                    <a href="{{ route('admin.user.index') }}" style="color: inherit;">User</a>
+                                    <a href="{{ route('admin.user.index') }}" style="color: inherit;">Người Dùng</a>
                                 </li>
-                                <li class="breadcrumb-item active" aria-current="page">Thêm User</li>
+                                <li class="breadcrumb-item active" aria-current="page">Thêm Người Dùng</li>
                             </ol>
                         </nav>
                     </div>

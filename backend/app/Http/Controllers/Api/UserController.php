@@ -123,7 +123,7 @@ class UserController extends Controller
     public function update(UpdateUserRequest $request, User $user)
     {
         DB::beginTransaction();
-        
+
         try {
             // Ghi log dữ liệu request nhận được
             Log::info('Received request data:', $request->all());
@@ -133,7 +133,7 @@ class UserController extends Controller
                 Log::warning('User not found.', ['user_id' => $user->id ?? null]);
                 return response()->json(['error' => 'User not found.'], 404);
             }
-    
+
             // Nếu có ảnh mới, lưu ảnh và cập nhật
             if ($request->hasFile('avatar_img')) {
                 Log::info('New avatar file detected.', ['file_name' => $request->file('avatar_img')->getClientOriginalName()]);
@@ -143,13 +143,13 @@ class UserController extends Controller
                     Log::info('Deleting old avatar.', ['avatar_path' => $user->avatar_img]);
                     Storage::disk('public')->delete($user->avatar_img);
                 }
-    
+
                 // Lưu ảnh mới
                 $file = $request->file('avatar_img')->store('uploads/users', 'public');
                 Log::info('New avatar saved.', ['avatar_path' => $file]);
                 $user->avatar_img = $file;
             }
-    
+
             // Cập nhật các trường khác
             $user->username = $request->username;
             $user->email = $request->email;
@@ -160,14 +160,14 @@ class UserController extends Controller
             Log::info('User updated successfully.', ['user_id' => $user->id]);
     
             DB::commit();
-    
+
             // Trả về ảnh dưới dạng base64 nếu có
             $base64Image = null;
             if ($user->avatar_img && Storage::disk('public')->exists($user->avatar_img)) {
                 Log::info('Converting avatar to base64.', ['avatar_path' => $user->avatar_img]);
                 $base64Image = base64_encode(Storage::disk('public')->get($user->avatar_img));
             }
-    
+
             return response()->json([
                 'message' => 'Cập nhật người dùng thành công.',
                 'data' => [
@@ -191,18 +191,15 @@ class UserController extends Controller
         }
     }
     public function rules()
-{
-    return [
-        'username' => 'required|string|max:255',
-        'email' => 'required|email|unique:users,email,' . auth()->id(),
-        'phone' => 'required|string|max:15',
-        'address' => 'nullable|string|max:255',
-    ];
-}
+    {
+        return [
+            'username' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . auth()->id(),
+            'phone' => 'required|string|max:15',
+            'address' => 'nullable|string|max:255',
+        ];
+    }
 
-    
 
-    /**
-     * Xóa tài nguyên cụ thể khỏi cơ sở dữ liệu.
-     */
+
 }
