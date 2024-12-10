@@ -40,6 +40,7 @@ class CommentController extends Controller
                     'id' => $comment->id,
                     'avatar_img' => $this->getImageAsBase64($comment->user->avatar_img),
                     'username' => $comment->user->username ?? 'Unknown',
+                    "user_id"  => $comment->user->id ?? 'Unknown',
                     'comment' => $comment->comment,
                     'file' => $this->getImageAsBase64($comment->file),
                     'star_rating' => $comment->star_rating,
@@ -115,56 +116,66 @@ class CommentController extends Controller
     {
         // Tìm comment theo ID hoặc báo lỗi nếu không tìm thấy
         $comment = Comment::findOrFail($id);
-
+    
         // Kiểm tra nếu người dùng không phải là người tạo bình luận thì trả về lỗi
         if ($comment->user_id !== Auth::id()) {
             return response()->json(['message' => 'Bạn không có quyền chỉnh sửa đánh giá này.'], 403);
         }
-
+    
         // Validate các trường trong request
         $validator = Validator::make($request->all(), [
             'comment' => 'nullable|string|max:500',  // Kiểm tra nội dung
             'file' => 'nullable|image|max:10240',    // Kiểm tra file ảnh
             'star_rating' => 'nullable|integer|min:1|max:5',  // Kiểm tra đánh giá sao
         ]);
-
+    
         // Nếu validation không thành công, trả về lỗi
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
+    
         $filePath = null;
         if ($request->hasFile('file')) {
-            // Kiểm tra và lưu file
+            // Xóa ảnh cũ nếu có
+            if ($comment->file && file_exists(public_path('storage/' . $comment->file))) {
+                unlink(public_path('storage/' . $comment->file));
+            }
+    
+            // Lưu file mới vào thư mục 'uploads/comments' trong thư mục public
             $file = $request->file('file');
             if ($file->isValid()) {
-                // Lưu file vào thư mục 'uploads/comments' trong thư mục public
                 $filePath = $file->store('uploads/comments', 'public');
             } else {
                 return response()->json(['message' => 'File không hợp lệ.'], 400);
             }
+        } else {
+            // Nếu không có ảnh mới, giữ nguyên ảnh cũ
+            $filePath = $comment->file;
         }
-
+    
         // Cập nhật comment nếu có thay đổi
         $comment->update([
             'comment' => $request->has('comment') ? $request->comment : $comment->comment,  // Chỉ cập nhật comment nếu có trong request
-            'file' => $filePath ?? $comment->file,  // Kiểm tra xem có file không, nếu không thì giữ nguyên giá trị cũ
+            'file' => $filePath,  // Lưu ảnh mới hoặc giữ nguyên ảnh cũ
             'star_rating' => $request->has('star_rating') ? $request->star_rating : $comment->star_rating,  // Cập nhật sao nếu có
         ]);
-
-
+    
         // Trả về comment đã được cập nhật
         return response()->json($comment);
     }
+    
     // Xóa comment
     public function destroy($id)
     {
         $comment = Comment::findOrFail($id);
-
-        if ($comment->user_id !== Auth::id()) {
+    
+        // Kiểm tra nếu người dùng là admin hoặc là người tạo bình luận
+        if (Auth::user()->role !== 'admin' && $comment->user_id !== Auth::id()) {
             return response()->json(['message' => 'Bạn không có quyền xóa đánh giá này.'], 403);
         }
+    
         $comment->forceDelete();
-
+    
         return response()->json(['message' => 'Đánh giá đã được xóa.']);
     }
 }

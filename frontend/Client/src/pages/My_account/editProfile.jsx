@@ -1,78 +1,104 @@
 import React, { useState, useEffect } from 'react';
-import { useLoginForm } from '../../hooks/useLoginForm.js';
-import { useEditUser } from '../../hooks/useEditUser';
-import axios from 'axios';
+
 import { toast } from 'react-toastify';
-
+import { useLoginForm } from '../../hooks/useLoginForm.js';
+import { editUserById } from '../../api/user.js';
 const EditProfile = () => {
-    const { userInfo, setUserInfo } = useLoginForm();
-    const { editUserById, loading, error } = useEditUser();
-
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
     const [address, setAddress] = useState('');
-    const [avatar_img, setAvatarImg] = useState(null);
+    const [avatarImg, setAvatarImg] = useState(null);
     const [previewImage, setPreviewImage] = useState('');
-
+    const { userInfo } = useLoginForm();
+    const token = localStorage.getItem('token');
     useEffect(() => {
         if (userInfo) {
-            setUsername(userInfo.username || '');
-            setEmail(userInfo.email || '');
-            setPhone(userInfo.phone || '');
-            setAddress(userInfo.address || '');
-            setPreviewImage(userInfo.avatar_img || '');
+            const initialData = {
+                username: userInfo.username || '',
+                email: userInfo.email || '',
+                phone: userInfo.phone || '',
+                address: userInfo.address || '',
+                avatar_img: userInfo.avatar_img || '',
+            };
+
+            // Log dữ liệu userInfo và initialData để kiểm tra
+            console.log('Dữ liệu userInfo:', userInfo);
+            console.log('Dữ liệu initialData:', initialData);
+
+            setUsername(initialData.username);
+            setEmail(initialData.email);
+            setPhone(initialData.phone);
+            setAddress(initialData.address);
+            setPreviewImage(initialData.avatar_img);
         }
     }, [userInfo]);
 
-    const fetchUserInfo = async (id) => {
-        try {
-            const token = localStorage.getItem('token');
-            const response = await axios.get(`/user/${id}`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                },
-            });
-            setUserInfo(response.data);
-        } catch (error) {
-            toast.error('Không thể lấy thông tin người dùng!');
+
+    // Function to handle image file selection and preview update
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setAvatarImg(file);
+            setPreviewImage(URL.createObjectURL(file));
         }
     };
 
     const handleSaveChanges = async (e) => {
         e.preventDefault();
 
-        const updatedInfo = new FormData();
-        updatedInfo.append('username', username);
-        updatedInfo.append('email', email);
-        updatedInfo.append('phone', phone);
-        updatedInfo.append('address', address);
-        if (avatar_img) updatedInfo.append('avatar_img', avatar_img);
+        const updatedData = new FormData();
+        updatedData.append('username', username);
+        updatedData.append('email', email);
+        updatedData.append('phone', phone);
+        updatedData.append('address', address);
+
+        // Thêm tệp hình ảnh nếu có
+        if (avatarImg) {
+            updatedData.append('avatar_img', avatarImg);
+        }
+
+        console.log('Dữ liệu cập nhật:', updatedData);
 
         try {
-            await editUserById(userInfo.id, updatedInfo);
-            toast.success('Cập nhật thông tin thành công!');
-            await fetchUserInfo(userInfo.id);
+            // Lấy userInfo từ localStorage và trích xuất userId
+            const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+            const userId = userInfo ? userInfo.id : null;
+
+            if (!userId) {
+                throw new Error('Không tìm thấy userId.');
+            }
+
+
+            const response = await editUserById(userId, updatedData, token);
+            if (response) {
+                toast.success('Cập nhật thông tin thành công!');
+
+                const updatedUserInfo = {
+                    ...userInfo,
+                    username,
+                    email,
+                    phone,
+                    address,
+                    avatar_img: avatarImg ? avatarImg.name : userInfo.avatar_img,
+                };
+                localStorage.setItem('userInfo', JSON.stringify(updatedUserInfo));
+
+
+                setUsername(username);
+                setEmail(email);
+                setPhone(phone);
+                setAddress(address);
+                setPreviewImage(avatarImg ? URL.createObjectURL(avatarImg) : previewImage);
+
+                fetchUserData();
+            }
         } catch (error) {
-            toast.error('Cập nhật thông tin không thành công: ' + error.message);
+
         }
     };
 
-    const handleImageChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            setAvatarImg(file);
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setPreviewImage(reader.result);
-            };
-            reader.readAsDataURL(file);
-        }
-    };
 
-    if (!userInfo) {
-        return <p>Không có thông tin người dùng.</p>;
-    }
 
     return (
         <div>
@@ -132,7 +158,7 @@ const EditProfile = () => {
                             />
                         </div>
                         <div className="single-input-item">
-                            <label htmlFor="address" className="required">Địa Chỉ </label>
+                            <label htmlFor="address" className="required">Địa Chỉ</label>
                             <input
                                 type="text"
                                 id="address"
@@ -142,8 +168,8 @@ const EditProfile = () => {
                             />
                         </div>
                         <div className="single-input-item">
-                            <button type="submit" className="btn btn-sqr" disabled={loading}>
-                                {loading ? 'Đang lưu...' : 'Lưu Thay Đổi'}
+                            <button type="submit" className="btn btn-sqr">
+                                Lưu Thay Đổi
                             </button>
                         </div>
                     </form>

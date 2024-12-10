@@ -12,10 +12,6 @@
 
 @section('content')
     @if (session('success'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            {{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
     @endif
     <style>
         .text-truncate {
@@ -28,6 +24,7 @@
             text-overflow: ellipsis;
             /* Hiển thị dấu "..." khi văn bản bị cắt */
         }
+
         .custom-select-small {
             font-size: 0.70rem;
             /* Giảm kích thước font */
@@ -79,12 +76,11 @@
                                         </form>
                                     </div>
                                 </div>
-                                <div class="span6">
+                                {{-- <div class="span6">
                                     <div class="dataTables_filter" id="hidden-table-info_filter">
-                                        <a href="{{ route('admin.contacts.create') }}"
-                                            class="btn btn-success">Tạo Mới</a>
+                                        <a href="{{ route('admin.contacts.create') }}" class="btn btn-success">Tạo Mới</a>
                                     </div>
-                                </div>
+                                </div> --}}
                             </div>
 
                             <table class="display table table-bordered" id="hidden-table-info"
@@ -115,13 +111,15 @@
                                                         class="btn btn-warning mx-1">
                                                         <i class="fa fa-edit"></i>
                                                     </a>
-                                                    <form action="{{ route('admin.contacts.destroy', $contact) }}" method="POST" style="display:inline;">
+                                                    {{-- <form action="{{ route('admin.contacts.destroy', $contact) }}"
+                                                        method="POST" style="display:inline;">
                                                         @csrf
                                                         @method('DELETE')
                                                         <button type="submit" class="btn btn-danger"
                                                             onclick="return confirm('Bạn có chắc muốn xóa liên hệ này?')"><i
-                                                                class="fa fa-trash-o"></i></button>
-                                                    </form>
+                                                                class="bi bi-trash"></i>
+                                                        </button>
+                                                    </form> --}}
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -132,14 +130,16 @@
                             <div class="row-fluid">
                                 <div class="span6">
                                     <div class="dataTables_info" id="hidden-table-info_info">
-                                        Hiển thị từ {{ $contacts->firstItem() }} đến {{ $contacts->lastItem() }} của tổng cộng {{ $contacts->total() }} mục
+                                        Hiển thị từ {{ $contacts->firstItem() }} đến {{ $contacts->lastItem() }} của tổng
+                                        cộng {{ $contacts->total() }} mục
                                     </div>
                                 </div>
                                 <div class="span6">
                                     <div class="dataTables_paginate paging_bootstrap pagination">
                                         <ul class="pagination">
                                             <li class="prev">
-                                                <a href="{{ $contacts->previousPageUrl() }}" aria-label="Previous">← Previous</a>
+                                                <a href="{{ $contacts->previousPageUrl() }}" aria-label="Previous">←
+                                                    Trước</a>
                                             </li>
                                             @foreach ($contacts->getUrlRange(1, $contacts->lastPage()) as $page => $url)
                                                 <li class="{{ $page == $contacts->currentPage() ? 'active' : '' }}">
@@ -147,20 +147,32 @@
                                                 </li>
                                             @endforeach
                                             <li class="next">
-                                                <a href="{{ $contacts->nextPageUrl() }}" aria-label="Next">Next →</a>
+                                                <a href="{{ $contacts->nextPageUrl() }}" aria-label="Next">Sau →</a>
                                             </li>
                                         </ul>
                                     </div>
                                 </div>
-                            </div> 
+                            </div>
                         </div>
                     </div>
                 </div>
             </section>
         </div>
     </div>
-@endsection
 
 @section('js')
-<script src="{{ asset('assets') }}/admin/js/dynamic_table_init.js"></script>
+    <script src="{{ asset('assets') }}/admin/js/dynamic_table_init.js"></script>
+@endsection
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        @if (session('success'))
+            toastr.success('{{ session('success') }}', 'Thành công', {
+                closeButton: true,
+                progressBar: true,
+                timeOut: 3000,
+                positionClass: "toast-top-right"
+            });
+        @endif
+    });
+</script>
 @endsection

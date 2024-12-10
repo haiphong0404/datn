@@ -2,6 +2,8 @@ import axios from 'axios';
 export const registerUser = async (userData) => {
     try {
         const response = await axios.post("/register", userData);
+        console.log(response);
+
         const { token } = response.data;
         if (token) {
             // Lưu token vào localStorage sau khi đăng ký thành công
@@ -9,7 +11,7 @@ export const registerUser = async (userData) => {
             axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
         }
 
-        return response.data;
+        return response?.data;
     } catch (error) {
         throw error.response?.data || error.message;
     }
@@ -56,22 +58,23 @@ export const getUserByid = async (id) => {
 
 
 // Sửa thông tin người dùng
-export const editUserById = async (id) => {
-    const token = localStorage.getItem('token'); // Lấy token từ localStorage
+export const editUserById = async (id, updatedData, token) => {
     try {
-        const response = await axios.put(`/user/${id}`, {
-            headers: {
-                'Authorization': `Bearer ${token}`, // Gửi token trong header
-                'Content-Type': 'application/json',
-            },
-        });
-        getUserByid(id)
+        const response = await axios.put(
+            `/user/${id}`,
+            updatedData,
+            {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+            }
+        );
         return response.data;
-
     } catch (error) {
+        console.error('Lỗi khi sửa thông tin người dùng:', error.response?.data || error.message);
         throw new Error('Lỗi khi sửa thông tin người dùng: ' + (error.response?.data?.message || error.message));
     }
-
 };
 
 // quên mật khẩu 

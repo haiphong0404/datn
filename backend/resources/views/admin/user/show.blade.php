@@ -15,13 +15,13 @@
             <div class="card shadow-sm">
                 <header class="card-header">
                     <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center">
-                        <h1 class="flex-grow-1 fs-3 fw-semibold my-2 my-sm-3">Chi Tiết User</h1>
+                        <h1 class="flex-grow-1 fs-3 fw-semibold my-2 my-sm-3">Chi Tiết Người Dùng</h1>
                         <nav class="flex-shrink-0 my-2 my-sm-0 ms-sm-3" aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item">
-                                    <a href="{{ route('admin.user.index') }}" style="color: inherit;">User</a>
+                                    <a href="{{ route('admin.user.index') }}" style="color: inherit;">Người Dùng</a>
                                 </li>
-                                <li class="breadcrumb-item active" aria-current="page">Chi Tiết User</li>
+                                <li class="breadcrumb-item active" aria-current="page">Chi Tiết Người Dùng</li>
                             </ol>
                         </nav>
                     </div>
@@ -31,7 +31,6 @@
 
                     <form action="{{ route('admin.user.show', $user->id) }}" method="POST" enctype="multipart/form-data">
                         @csrf
-                        @if ($user->avatar_img)
                             <div class="mb-3 text-center">
                                 <label class="form-label"><strong>Ảnh đại diện:</strong></label>
                                 <div class="d-flex justify-content-center">
@@ -39,7 +38,6 @@
                                         style="max-width: 150px;">
                                 </div>
                             </div>
-                        @endif
 
                         <div class="mb-3">
                             <label class="form-label"><strong>Tên người dùng:</strong></label>
@@ -73,7 +71,7 @@
                             <a href="{{ route('admin.user.index') }}" class="btn btn-secondary flex-fill me-1">Quay lại</a>
                             
                             {{-- Kiểm tra nếu tài khoản đăng nhập không phải admin hoặc người dùng hiện tại không phải admin --}}
-                            @if (!(auth()->user()->role === 'admin' && $user->role === 'admin'))
+                            @if (!(auth()->user()->role === 'admin' && $user->role === 'admin') && auth()->user()->hasRole(['admin']))
                                 <a href="{{ route('admin.user.edit', $user->id) }}" class="btn btn-warning flex-fill me-1">Chỉnh sửa</a>
                             @endif
                         </div>

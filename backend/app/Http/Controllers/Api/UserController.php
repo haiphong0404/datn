@@ -124,6 +124,11 @@ class UserController extends Controller
         DB::beginTransaction();
 
         try {
+            // Kiểm tra xem người dùng có tồn tại hay không
+            if (!$user) {
+                return response()->json(['error' => 'User not found.'], 404);
+            }
+
             // Nếu có ảnh mới, lưu ảnh và cập nhật
             if ($request->hasFile('avatar_img')) {
                 // Xóa ảnh cũ nếu tồn tại
@@ -141,14 +146,21 @@ class UserController extends Controller
             $user->email = $request->email;
             $user->phone = $request->phone;
             $user->address = $request->address;
-
             $user->save();
-
             DB::commit();
+
+            // Trả về ảnh dưới dạng base64 nếu có
+            $base64Image = null;
+            if ($user->avatar_img && Storage::disk('public')->exists($user->avatar_img)) {
+                $base64Image = base64_encode(Storage::disk('public')->get($user->avatar_img));
+            }
 
             return response()->json([
                 'message' => 'Cập nhật người dùng thành công.',
-                'data' => $user
+                'data' => [
+                    'user' => $user,
+                    'avatar_img_base64' => $base64Image
+                ]
             ], 200);
         } catch (Exception $e) {
             DB::rollBack();
@@ -158,8 +170,16 @@ class UserController extends Controller
             ], 500);
         }
     }
+    public function rules()
+    {
+        return [
+            'username' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . auth()->id(),
+            'phone' => 'required|string|max:15',
+            'address' => 'nullable|string|max:255',
+        ];
+    }
 
-    /**
-     * Xóa tài nguyên cụ thể khỏi cơ sở dữ liệu.
-     */
+
+
 }

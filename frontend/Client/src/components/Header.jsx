@@ -13,13 +13,19 @@ const Header = () => {
   const dispatch = useDispatch()
   const { cart } = useSelector((state) => state.updateCart || {});
 
-  const [localCart, setLocalCart] = useState([]);
+  const [localCart, setLocalCart] = useState(JSON.parse(localStorage.getItem('cart')) || []);
   const [selectedItems, setSelectedItems] = useState(new Set());
+  // const location = useLocation();
+  // const prevLocation = useRef(location.pathname);
 
-  // const handleHoverCart = () => {
-  //   const savedCart = JSON.parse(localStorage.getItem("cart")) || [];
-  //   setLocalCart(savedCart);
-  // };
+  //  useEffect(() => {
+
+  //   if (prevLocation.current !== location.pathname) {
+  //     prevLocation.current = location.pathname;
+  //     window.location.reload();
+  //   }
+  // }, [location]);
+
   useEffect(() => {
     const fetchCart = async () => {
       const token = localStorage.getItem('token');
@@ -31,7 +37,7 @@ const Header = () => {
           const { carts } = response.data; // Lấy danh sách carts từ API
           if (Array.isArray(carts)) {
             setLocalCart(carts);
-            
+
           } else {
             setLocalCart([]);
           }
@@ -49,11 +55,11 @@ const Header = () => {
         }
       }
     };
-  
+
     fetchCart();
   }, []);
 
-  
+
   const handleRemoveFromCart = async (id_productVariant) => {
 
     if (!id_productVariant) {
@@ -114,16 +120,7 @@ const Header = () => {
   };
 
 
-  // useEffect(() => {
-  //   const savedCart = JSON.parse(localStorage.getItem('cart'));
 
-  //   // Ensure savedCart is an array, or fall back to an empty array
-  //   if (Array.isArray(savedCart)) {
-  //     setLocalCart(savedCart);
-  //   } else {
-  //     setLocalCart([]); // If it's not an array, reset to empty array
-  //   }
-  // }, []);
 
   // Function to calculate total price
   const calculateTotal = () => {
@@ -150,7 +147,7 @@ const Header = () => {
                 <div className="top-left-navigation"></div>
               </div>
               <div className="col-lg-6 d-flex justify-content-end">
-                
+
                 <ul className="user-info-block">
                   <li>
                     <Link to="/my_account">
@@ -216,14 +213,18 @@ const Header = () => {
                             Tin tức</Link>
                         </li>
                         <li>
+                          <Link to="/brands">
+                            Thương hiệu</Link>
+                        </li>
+                        <li>
                           <Link to="/contact_us">
                             Liên hệ</Link>
                         </li>
-                        <li>
+                        {/* <li>
                           <Link to="/faqs">
                             Hỏi đáp
                           </Link>
-                        </li>
+                        </li> */}
                         <li>
                           <Link to="/about_us">
                             Giới thiệu
