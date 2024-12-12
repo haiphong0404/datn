@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import useCart from '../../hooks/useCart';
+import {useCart} from '../../contexts/CartContext.js';
 const Cart = () => {
   const navigate = useNavigate();
 
@@ -10,7 +10,7 @@ const Cart = () => {
   const [totalPrice, setTotalPrice] = useState(0);
   const [totalQuantity, setTotalQuantity] = useState(0);
   const [selectedItems, setSelectedItems] = useState(new Set());
-  const { localCart, handleRemoveFromCart ,setLocalCart, addToCart } = useCart();
+  const { localCart, handleRemoveFromCart, setLocalCart, addToCart } = useCart();
 
 
 
@@ -92,37 +92,37 @@ const Cart = () => {
   };
 
   // Xử lý xóa sản phẩm khỏi giỏ hàng
- 
 
- 
-  
-  
+
+
+
+
   const handleCheckout = async () => {
     // Kiểm tra xem người dùng đã đăng nhập hay chưa (ví dụ kiểm tra token trong localStorage)
     const isLoggedIn = localStorage.getItem('token'); // Kiểm tra sự tồn tại của token trong localStorage
-  
+
     if (!isLoggedIn) {
       // Nếu chưa đăng nhập, thông báo và chuyển hướng đến trang đăng nhập
       toast.error('Vui lòng đăng nhập để thanh toán!');
       navigate('/login');  // Chuyển hướng đến trang đăng nhập
       return;
     }
-  
+
     if (selectedItems.size > 0) { // Kiểm tra xem có sản phẩm được chọn hay không
       // Lưu selectedItems vào localStorage
       localStorage.setItem('selectedItems', JSON.stringify([...selectedItems]));
       const selectedProducts = getSelectedProducts();
-  
+
       // Mảng để theo dõi các sản phẩm hết hàng
       const outOfStockItems = [];
       let allInStock = true; // Flag kiểm tra tất cả sản phẩm có đủ số lượng hay không
-  
+
       // Duyệt qua selectedItems để kiểm tra từng sản phẩm trong localCart
       for (const variantId of selectedItems) {  // Đảm bảo dùng variantId trong selectedItems
         try {
           // Tìm variant trong localCart dựa trên variantId
           const variant = localCart.find(v => v.id_productVariant === variantId);
-  
+
           if (variant) {
             const quantityRequested = variant.quantity; // Số lượng cần kiểm tra
             // Gửi API call để kiểm tra số lượng tồn kho
@@ -132,16 +132,16 @@ const Cart = () => {
                 quantity: quantityRequested,
               },
             ]);
-  
+
             const data = response.data;
-  
+
             if (!data.success) {
               // Nếu sản phẩm hết hàng, thêm vào mảng outOfStockItems và đánh dấu flag
               outOfStockItems.push(variant);
               allInStock = false;  // Nếu có sản phẩm hết hàng, đánh dấu là không đủ số lượng
             }
           }
-  
+
         } catch (error) {
           // Nếu có lỗi, cần kiểm tra lỗi và thêm variant vào outOfStockItems
           const variant = localCart.find(v => v.id_productVariant === variantId); // Đảm bảo variant được định nghĩa
@@ -151,7 +151,7 @@ const Cart = () => {
           allInStock = false; // Đánh dấu là không đủ số lượng nếu có lỗi
         }
       }
-  
+
       // Kiểm tra nếu có sản phẩm hết hàng
       if (outOfStockItems.length > 0) {
         const outOfStockMessages = outOfStockItems.map((item) => {
@@ -173,7 +173,7 @@ const Cart = () => {
       toast.error('Vui lòng chọn ít nhất một sản phẩm để thanh toán!');
     }
   };
-  
+
 
 
   const handleQuantityChange = async (variantId, change) => {
@@ -322,11 +322,11 @@ const Cart = () => {
         <div className="total-calculation">
           <h5>Tổng: {totalQuantity} sản phẩm</h5>
           <h5>Tổng tiền: {totalPrice
-    ? `${new Intl.NumberFormat('vi-VN', {
-        style: 'currency',
-        currency: 'VND',
-      }).format(totalPrice)}`
-    : '0 ₫'} </h5>
+            ? `${new Intl.NumberFormat('vi-VN', {
+              style: 'currency',
+              currency: 'VND',
+            }).format(totalPrice)}`
+            : '0 ₫'} </h5>
           <button onClick={handleCheckout}>Thanh toán</button>
         </div>
       </div>

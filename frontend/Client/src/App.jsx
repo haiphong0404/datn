@@ -42,6 +42,7 @@ import Brands from "./pages/Brands";
 import BrandDetail from "./pages/BrandDetail";
 
 import { AuthProvider } from './contexts/AuthContext';
+import { CartProvider } from './contexts/CartContext';
 
 
 
@@ -114,12 +115,14 @@ function App() {
       <QueryClientProvider client={queryClient}>
         <ThemeProvider theme={theme}>
           <CssBaseline />
+          <CartProvider>
           <Header />
           <main>
             <AppRoutes />
             <ToastContainer />
           </main>
           <Footer />
+          </CartProvider>
         </ThemeProvider>
       </QueryClientProvider>
     </AuthProvider>

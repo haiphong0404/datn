@@ -9,28 +9,22 @@ import { addCart, loadCartFromLocalStorage } from '../../actions/action';
 import { toast } from 'react-toastify';
 import LoadingSpinner from "../../loading/LoadingSpinner";
 import axios from 'axios';
-import useCart from '../../hooks/useCart';
+import { useCart } from '../../contexts/CartContext';
 
 
 const Details = () => {
-
-    const cart = useSelector(state => state.updateCart.cartItems);
-    const dispatch = useDispatch();
-    const { refetch, addToCart } = useCart(); // Sử dụng hook
-
-    // State lưu giỏ hàng từ localStorage
-    const [localCart, setLocalCart] = useState(cart);
+    const { handleAddToCart, refetch } = useCart(); // Sử dụng từ CartContext
     const [selectedImage, setSelectedImage] = useState('');
     const [selectedColor, setSelectedColor] = useState('');
     const [selectedSize, setSelectedSize] = useState('');
     const [selectedPrice, setSelectedPrice] = useState(null);
     const [selectedQuantity, setSelectedQuantity] = useState(1);
     const [availabilityMessage, setAvailabilityMessage] = useState('');
-
     const { productId } = useParams();
     const { product, loading: productLoading, error: productError } = useProductById(productId);
     const { variants, isLoading: variantsLoading, error: variantsError } = useProductvariants(productId);
     const { settings } = useProductSlider();
+
     const groupedProducts = variants.reduce((acc, product) => {
         if (!acc[product.color]) {
             acc[product.color] = {
@@ -41,16 +35,28 @@ const Details = () => {
         return acc;
     }, {});
 
+    const handleAddToCartClick = () => {
+        const selectedVariant = variants.find(
+            (variant) => variant.color === selectedColor && variant.size === selectedSize
+        );
+
+        handleAddToCart({
+            selectedVariant,
+            selectedColor,
+            selectedSize,
+            product,
+            selectedQuantity,
+        });
+    };
+
+
     // Chuyển nhóm sản phẩm thành một mảng để dễ sử dụng
     const uniqueColorImages = Object.values(groupedProducts);
 
     console.log(uniqueColorImages);
 
 
-    useEffect(() => {
-        const savedCart = loadCartFromLocalStorage(); // Lấy giỏ hàng từ localStorage
-        setLocalCart(savedCart); // Đồng bộ với state localCart
-    }, [cart]);
+
 
     // Product variant
     useEffect(() => {
@@ -94,66 +100,7 @@ const Details = () => {
     };
 
     // Cập nhật giỏ hàng khi người dùng thêm sản phẩm
-    const handleAddToCart = async () => {
-        const selectedVariant = variants.find(variant =>
-            variant.color === selectedColor && variant.size === selectedSize
-        );
-        const quantity = selectedQuantity;
-    
-        if (!selectedColor || !selectedSize) {
-            toast.error("Vui lòng chọn màu và kích thước sản phẩm!");
-            return;
-        }
-    
-        if (!selectedVariant) {
-            toast.error("Vui lòng chọn biến thể sản phẩm!");
-            return;
-        }
-    
-        // Tạo đối tượng sản phẩm để thêm vào giỏ hàng
-        const cartItem = {
-            id_productVariant: selectedVariant.id,
-            productId: product.id,
-            color: selectedColor,
-            size: selectedSize,
-            price: selectedVariant.price,
-            image: selectedVariant.images,
-            stock: selectedVariant.quantity,
-            productName: product.name,
-            quantity
-        };
-    
-        try {
-            const id_productVariant = selectedVariant.id;
-            if (localStorage.getItem('token')) {
-                const token = localStorage.getItem('token');
-                const response = await axios.post('/cart/add', {
-                    product_variant_id: id_productVariant,
-                    quantity,
-                    color: selectedColor,
-                    size: selectedSize,
-                }, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-    
-                if (response.status === 200) {
-                    toast.success("Sản phẩm đã được thêm vào giỏ hàng!");
-    
-                    
-                    refetch();
-                }
-            } else {
-                
-                toast.success("Sản phẩm đã được thêm vào giỏ hàng!");
-            }
-        } catch (error) {
-            console.error("Error occurred while adding to cart:", error);
-            toast.error("sản phẩm trong kho không đủ");
-        }
-    };
-    
+
 
 
     if (productLoading || variantsLoading) {
@@ -252,13 +199,12 @@ const Details = () => {
                         <div className="quantity d-flex align-items-center"
                             style={{ marginTop: '10px' }} >
 
-                            <div className="pro-qty" style={{ paddingTop: '3px' }}>      
-                                <button onClick={handleDecrease} disabled={selectedQuantity <= 1}   style={{ paddingRight: '15px' }} >-</button>
-                                {selectedQuantity} 
-                                <button 
-                                onClick={handleIncrease} 
-                                disabled={selectedQuantity >= (selectedVariant?.quantity || 0)}   style={{ paddingLeft: '15px' }}>+</button></div>
-
+                            <div className="pro-qty" style={{ paddingTop: '3px' }}>
+                                <button onClick={handleDecrease} disabled={selectedQuantity <= 1} style={{ paddingRight: '15px' }} >-</button>
+                                {selectedQuantity}
+                                <button
+                                    onClick={handleIncrease}
+                                    disabled={selectedQuantity >= (selectedVariant?.quantity || 0)} style={{ paddingLeft: '15px' }}>+</button></div>
                         </div>
 
                         <div className="availability">
@@ -271,7 +217,7 @@ const Details = () => {
                         <div className="action_link">
                             <button
                                 className={`btn btn-cart2 ${!selectedVariant || selectedVariant.quantity <= 0 ? 'disabled' : ''}`}
-                                onClick={handleAddToCart}
+                                onClick={handleAddToCartClick}
                                 disabled={!selectedVariant || selectedVariant.quantity <= 0}
                             >
                                 <i className="fa fa-cart-plus"></i> Thêm vào giỏ

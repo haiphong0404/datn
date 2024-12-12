@@ -4,16 +4,12 @@ import { useLoginForm } from '../hooks/useLoginForm';
 
 import Badge from '@mui/material/Badge'; // Kiểm tra đường dẫn đúng
 import SearchProducts from './search/SearchBox';
-import useCart from '../hooks/useCart';
+import {useCart} from '../contexts/CartContext';
 
 
 const Header = () => {
-  const { localCart, handleRemoveFromCart ,refetch,setLocalCart  } = useCart();
-//   useEffect(() => {
-//     refetch(); // Đảm bảo gọi lại để cập nhật giỏ hàng
-// }, [localCart, refetch]);
- 
-  
+  const { localCart, handleRemoveFromCart, refetch, setLocalCart } = useCart();
+
   const calculateTotal = () => {
     if (Array.isArray(localCart)) {
       return localCart.reduce((total, item) => total + item.price * item.quantity, 0);
