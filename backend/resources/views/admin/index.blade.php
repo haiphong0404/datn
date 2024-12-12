@@ -3,7 +3,27 @@
     <div class="row">
         <div class="col-sm-12">
             <section class="card">
+            <div>
+                <form method="GET" action="{{ route('admin.index') }}">
+                    <label for="timeFrame">Chọn khoảng thời gian:</label>
+                    <select id="timeFrame" name="timeFrame" onchange="this.form.submit()">
+                        <option value="day" {{ request('timeFrame') === 'day' ? 'selected' : '' }}>Theo ngày</option>
+                        <option value="week" {{ request('timeFrame') === 'week' || ($timeFrame == 'week') ? 'selected' : '' }}>Theo tuần</option>
+                        <option value="month" {{ (request('timeFrame') === 'month' || (!request('startDate') && !request('endDate') && !request('timeFrame') && (!$timeFrame || $timeFrame != 'month'))) ? 'selected' : '' }}>Theo tháng</option>
+                        <option value="quarter" {{ request('timeFrame') === 'quarter' ? 'selected' : '' }}>Theo quý</option>
+                        <option value="year" {{ request('timeFrame') === 'year' ? 'selected' : '' }}>Theo năm</option>
+                    </select>
+                </form>
+                <form method="GET" action="{{ route('admin.index') }}" id="dateRangeForm">
+                    <label for="startDate">Từ ngày:</label>
+                    <input type="date" id="startDate" name="startDate" value="{{ request('startDate') }}">
 
+                    <label for="endDate">Đến ngày:</label>
+                    <input type="date" id="endDate" name="endDate" value="{{ request('endDate') }}">
+
+                    <button type="submit">Lọc</button>
+                </form>
+            </div>
                 <header class="card-header">
                     <!--state overview start-->
                     <div class="row state-overview">
@@ -19,6 +39,7 @@
                                     </h1>
                                     <p class="text-truncate" style="max-width: 100%;" data-bs-toggle="tooltip"
                                         title="{{ $totalProducts['product_name']}}">{{ $totalProducts['product_name'] }}</p>
+                                        <p>Sản phẩm bán chạy nhất {{ strtolower($timeFrameText['subTextTimeFrame']) }}</p>
                                 </div>
                             </section>
                         </div>
@@ -32,7 +53,7 @@
                                         title="{{ $totalOrders }}">
                                         {{ $totalOrders }}
                                     </h1>
-                                    <p>Số đơn hàng trong tháng</p>
+                                    <p>Số đơn hàng trong {{ strtolower($timeFrameText['subTextTimeFrame']) }}</p>
                                 </div>
                             </section>
                         </div>
@@ -46,7 +67,7 @@
                                         title="{{ number_format($totalRevenue, 0, ',', '.') }} VND">
                                         {{ number_format($totalRevenue, 0, ',', '.') }} VND
                                     </h1>
-                                    <p>Doanh thu tháng</p>
+                                    <p>Doanh thu {{  $timeFrameText['subTextTimeFrame']  }}</p>
                                 </div>
                             </section>
                         </div>
@@ -55,7 +76,7 @@
                 </header>
                 <div class="card-body">
 
-                    <h2 class="mt-5 mb-3">Thống Kê Doanh Thu Theo Từng Sản Phẩm</h2>
+                    <h2 class="mt-5 mb-3">Thống Kê Doanh Thu Theo Từng Sản Phẩm Trong {{ strtolower($timeFrameText['subTextTimeFrame']) }}</h2>
                     <table class="table table-bordered">
                         <thead>
                             <tr>
@@ -79,7 +100,7 @@
                         </tbody>
                     </table>
                         <!-- Hiển thị doanh thu theo tháng -->
-                        <h3 class="mt-5 mb-3">Biểu Đồ Doanh Thu 12 Tháng Gần Nhất</h3>
+                        <h3 class="mt-5 mb-3">Biểu Đồ Doanh Thu {{ $timeFrameText['textHeaderChar'] }} Gần Nhất</h3>
                         <canvas id="revenueChart"></canvas>
                 </div>
             </section>
@@ -89,8 +110,9 @@
 @section('js')
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        var months = @json($revenueByMonth['months']);
-        var revenues = @json($revenueByMonth['revenues']);
+        var months = @json($revenueChart['labels']);
+        var revenues = @json($revenueChart['revenues']);
+        var textTimeFrame = @json($revenueChart['textTimeFrame']);
 
         var ctx = document.getElementById('revenueChart').getContext('2d');
         var revenueChart = new Chart(ctx, {
@@ -98,7 +120,7 @@
             data: {
                 labels: months,
                 datasets: [{
-                    label: 'Revenue by Month',
+                    label: 'Doanh thu theo ' + textTimeFrame,
                     data: revenues,
                     backgroundColor: 'rgba(54, 162, 235, 0.2)',
                     borderColor: 'rgba(54, 162, 235, 1)',
