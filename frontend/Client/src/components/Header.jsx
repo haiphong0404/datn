@@ -18,7 +18,6 @@ const Header = () => {
       return 0;
     }
   };
-
   const { userInfo, handleLogout } = useLoginForm();
 
 
