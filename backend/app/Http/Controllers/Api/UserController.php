@@ -199,7 +199,50 @@ class UserController extends Controller
             'address' => 'nullable|string|max:255',
         ];
     }
+    public function updateAvatar(Request $request)
+    {
+        $request->validate([
+            'avatar_img' => 'required' // Kiểm tra file ảnh
+        ]);
+    
+        $user = auth()->user(); // Lấy thông tin user đang đăng nhập
+        // Lưu ảnh vào thư mục public
+        if ($request->hasFile('avatar_img')) {
+            $file = $request->file('avatar_img');
+            $path = $file->store('uploads/users/test', 'public');// Lưu ảnh vào thư mục storage/app/public/avatars
+            $user->avatar_img = $path; // Ghi đường dẫn vào cột avatar_img
+            $user->save(); // Lưu thay đổi
+        }
+    
+        return response()->json([
+            'message' => 'cap nhap thanh cong ',
+            'avatar_img' => asset('storage/' . $user->avatar_img), // Trả về link đầy đủ của ảnh
+        ]);
+    }
+    public function addAvatar(Request $request)
+{
+    $request->validate([
+        'user_id' => 'required|exists:users,id', // Kiểm tra ID user có tồn tại
+        'avatar_img' => 'required', // File phải là ảnh
+    ]);
 
+    // Tìm user theo ID
+    $user = User::find($request->user_id);
+
+    // Xử lý lưu file
+    if ($request->hasFile('avatar_img')) {
+        $file = $request->file('avatar_img');
+        $path = $file->store('uploads/users/test', 'public');// Lưu ảnh vào thư mục storage/app/public/avatars
+        $user->avatar_img = $path; // Ghi đường dẫn vào cột avatar_img
+        $user->save(); // Lưu thay đổi
+    }
+
+    return response()->json([
+        'message' => 'them thanh cong',
+        'user' => $user,
+        'avatar_url' => asset('storage/' . $user->avatar_img), // Trả về URL đầy đủ của ảnh
+    ], 200);
+}
 
 
 }
