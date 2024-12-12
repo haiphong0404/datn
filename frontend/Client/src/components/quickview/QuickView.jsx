@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import {useCart} from '../../contexts/CartContext';
+import { useCart } from '../../contexts/CartContext';
 const QuickViewModal = ({ show, onClose, product }) => {
   if (!show) return null; // Nếu modal không được hiển thị thì không làm gì
 
@@ -108,16 +108,16 @@ const QuickViewModal = ({ show, onClose, product }) => {
           <div className="color-selection">
             <h4>Chọn Màu</h4>
             <div className="color-options">
-            {Array.from(new Set(variants.map((variant) => variant.color))).map((color) => (
-      <button
-        key={color}
-        className={`color-option ${color === selectedColor ? 'selected' : ''}`}
-        style={{ backgroundColor: color }}
-        onClick={() => handleColorSelect(color)}
-      >
-        {color}
-      </button>
-    ))}
+              {Array.from(new Set(variants.map((variant) => variant.color))).map((color) => (
+                <button
+                  key={color}
+                  className={`color-option ${color === selectedColor ? 'selected' : ''}`}
+                  style={{ backgroundColor: color }}
+                  onClick={() => handleColorSelect(color)}
+                >
+                  {color}
+                </button>
+              ))}
             </div>
           </div>
 
@@ -150,15 +150,15 @@ const QuickViewModal = ({ show, onClose, product }) => {
           {/* Chọn số lượng */}
           <div className="selectedQuantity-selection">
             <h4>Số lượng</h4>
-            
+
             <div className="selectedQuantity-buttons" style={{ paddingTop: '3px' }}>
-                                <button onClick={handleDecrease} disabled={selectedQuantity <= 1} style={{ paddingRight: '15px' }} >-</button>
-                                {selectedQuantity}
-                                <button
-                                    onClick={handleIncrease}
-                                    disabled={selectedQuantity >= (selectedVariant?.quantity || 0)} style={{ paddingLeft: '15px' }}>+</button></div>
-                        </div>
-        
+              <button onClick={handleDecrease} disabled={selectedQuantity <= 1} style={{ paddingRight: '15px' }} >-</button>
+              {selectedQuantity}
+              <button
+                onClick={handleIncrease}
+                disabled={selectedQuantity >= (selectedVariant?.quantity || 0)} style={{ paddingLeft: '15px' }}>+</button></div>
+          </div>
+
 
           {/* Trạng thái có sẵn */}
           <div className="availability">

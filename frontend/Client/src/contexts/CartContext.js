@@ -129,7 +129,11 @@ export const CartProvider = ({ children }) => {
         console.error('Error removing item from cart:', error);
       }
     } else {
-      toast('Sản phẩm đã được xóa khỏi giỏ hàng.');
+       // Nếu không có token (chưa đăng nhập), xóa sản phẩm khỏi giỏ hàng trong localStorage
+    const updatedCart = localCart.filter(item => item.id_productVariant !== id_productVariant);
+    setLocalCart(updatedCart);
+    localStorage.setItem('cart', JSON.stringify(updatedCart));
+    toast('Sản phẩm đã được xóa khỏi giỏ hàng.');
     }
   };
 

@@ -4,7 +4,7 @@ import { useLoginForm } from '../hooks/useLoginForm';
 
 import Badge from '@mui/material/Badge'; // Kiểm tra đường dẫn đúng
 import SearchProducts from './search/SearchBox';
-import {useCart} from '../contexts/CartContext';
+import { useCart } from '../contexts/CartContext';
 
 
 const Header = () => {
