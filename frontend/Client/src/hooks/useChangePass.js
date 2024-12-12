@@ -2,11 +2,13 @@ import { useState } from 'react';
 import { changePassword } from '../api/user.js';
 import { toast } from 'react-toastify';
 
+
 export const useChangePassword = () => {
     const [loading, setLoading] = useState(false);
     const [oldPasswordError, setOldPasswordError] = useState('');
     const [passwordError, setPasswordError] = useState('');
     const [passwordConfirmationError, setPasswordConfirmationError] = useState('');
+
 
     const validate = (oldpassword, password, password_confirmation) => {
         let isValid = true;
@@ -59,6 +61,8 @@ export const useChangePassword = () => {
         try {
             const res = await changePassword({ oldpassword, password, password_confirmation });
             toast.success(res.message || 'Đổi mật khẩu thành công');
+
+
         } catch (error) {
             const errorMsg = error.response?.data?.message || 'Đổi mật khẩu thất bại';
             toast.error(errorMsg);

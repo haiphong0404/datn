@@ -50,14 +50,11 @@ const ProductReview = ({ initialTab = "tab_one" }) => {
   const [editedComment, setEditedComment] = useState("");
   const [editedRating, setEditedRating] = useState(0);
   const { userInfo } = useLoginForm();
-  console.log(comments);
-
-
-
 
   const handleTabChange = (tabId) => setActiveTab(tabId);
 
   const handleAddComment = async () => {
+
     if (newComment.trim() && newRating > 0) {
       const formData = new FormData();
       formData.append("comment", newComment);
@@ -84,35 +81,24 @@ const ProductReview = ({ initialTab = "tab_one" }) => {
 
 
   const handleEditComment = async () => {
-    console.log("Editing comment...");
-    console.log("Edited comment:", editedComment);
-    console.log("Edited rating:", editedRating);
-    console.log("File selected:", file);
 
     if (editedComment.trim() && editedRating > 0) {
-      console.log("Form data is valid. Preparing request...");
 
       const formData = new FormData();
       formData.append("comment", editedComment);
       formData.append("star_rating", editedRating);
 
       if (file) {
-        console.log("File name to be added:", file);
         formData.append("file", file);
       }
 
       try {
-        console.log("Sending request to edit comment...");
         const response = await editComment(editCommentId, formData);
-        console.log("Response received:", response);
 
         if (response.status === 200) {
-          console.log("Response status is 200, updating comments...");
           const updatedComment = response.data;
-          console.log("Updated comment data:", updatedComment);
 
           updateComments(updatedComment);
-          console.log("Updated comments list:", comments);
 
           setEditedComment("");
           setEditedRating(0);
@@ -122,15 +108,12 @@ const ProductReview = ({ initialTab = "tab_one" }) => {
           refetch();
           toast.success("Cập nhật bình luận thành công.");
         } else {
-          console.error("Response status not 200, error occurred.");
           toast.error("Có lỗi xảy ra khi sửa bình luận.");
         }
       } catch (error) {
-        console.error("Error while editing comment:", error);
         toast.error("Có lỗi xảy ra khi sửa bình luận.");
       }
     } else {
-      console.warn("Invalid input. Please enter valid content and rating.");
       toast.error("Vui lòng nhập nội dung và đánh giá hợp lệ.");
     }
   };
@@ -166,8 +149,6 @@ const ProductReview = ({ initialTab = "tab_one" }) => {
   const sizeNames = Array.isArray(sizes) ? sizes.map(size => size.name).join(', ') : "Không có kích thước nào.";
 
   // Render component đánh giá sản phẩm.
-
-
 
   return (
     <div className="product-review-info">
