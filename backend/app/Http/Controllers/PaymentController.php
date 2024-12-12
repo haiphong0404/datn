@@ -35,6 +35,8 @@ class PaymentController extends Controller
                 'infor' => $request->input('infor'),
                 'payment_method' => $request->input('payment_method'),
                 'payment_status' => $request->input('payment_status', 'unpaid'),
+                'shipping_fee' => $request->input('shipping_fee'), // Thêm phí vận chuyển
+                'voucher_discount' => $request->input('voucher_discount'), // Thêm giảm giá từ voucher
             ];
 
             // Tạo đơn hàng

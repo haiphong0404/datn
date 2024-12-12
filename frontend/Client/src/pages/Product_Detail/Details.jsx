@@ -29,6 +29,20 @@ const Details = () => {
     const { variants, isLoading: variantsLoading, error: variantsError } = useProductvariants(productId);
     const { settings } = useProductSlider();
 
+    const groupedProducts = variants.reduce((acc, product) => {
+        if (!acc[product.color]) {
+            acc[product.color] = {
+                color: product.color,
+                image: product.images[0], // Chỉ lấy hình ảnh đầu tiên của màu sắc này
+            };
+        }
+        return acc;
+    }, {});
+
+    // Chuyển nhóm sản phẩm thành một mảng để dễ sử dụng
+    const uniqueColorImages = Object.values(groupedProducts);
+
+
     useEffect(() => {
         const savedCart = loadCartFromLocalStorage(); // Lấy giỏ hàng từ localStorage
         setLocalCart(savedCart); // Đồng bộ với state localCart
@@ -192,20 +206,20 @@ const Details = () => {
         <div className="product-details-inner">
             <div className="row">
                 <div className="col-lg-5">
-                    <div className="product">
+                <div className="product">
                         <div className="product-large-img">
-                            <img src={selectedImage || variants[0]?.images} alt="product-large" />
+                            <img src={selectedImage} alt="product-large" />
                         </div>
                         <Slider {...settings}>
-                            {variants.map((variant, index) => (
+                            {uniqueColorImages.map((variant, index) => (
                                 <div className='imgslide' key={index} onClick={() => {
-                                    setSelectedImage(variant.images);
-                                    setSelectedColor('');
+                                    setSelectedImage(variant.image);
+                                    setSelectedColor(variant.color);
                                     setSelectedSize('');
                                 }}>
                                     <img
-                                        src={variant.images}                                 
-                                        className={`w-full h-auto cursor-pointer ${selectedImage === variant.images ? 'selected-image' : ''}`}
+                                        src={variant.image}
+                                        className={`w-full h-auto cursor-pointer ${selectedImage === variant.image ? 'selected-image' : ''}`}
                                     />
                                 </div>
                             ))}
@@ -282,7 +296,7 @@ const Details = () => {
 
                         <div className="availability">
                             <i className="fa fa-check-circle"></i>
-                            <span>{selectedVariant?.quantity} in stock</span>
+                            <span>{selectedVariant?.quantity} Sản phẩm tồn kho</span>
                         </div>
 
                         <p className="pro-desc">{product.description}</p>

@@ -241,7 +241,7 @@ const Header = () => {
               <div className="col-auto ms-auto">
                 <div className="header-right">
                   <div className="header-configure-area">
-                    <ul className="nav">
+                    <ul className="nav-cart">
                       <li className="mini-cart-wrap">
                         {/* <a href="#" className="search-trigger">
                           <i className="fa fa-search" />
@@ -326,12 +326,17 @@ const Header = () => {
                   </Link>
                 </div>
                 <div className="mobile-menu-toggler">
+                  <div className="search-box-offcanvas" >
+                    <SearchProducts />
+                  </div>
                   <div className="mini-cart-wrap">
-                    <Link to="/cart">
-                      <i className="fa fa-shopping-cart" />
-                      <div className="notification">0</div>
+                    <Link to="/cart" className="minicart-btn">
+                      <Badge badgeContent={localCart.length} color="success">
+                        <i className="fa fa-shopping-cart" />
+                      </Badge>
                     </Link>
                   </div>
+
                   <button className="mobile-menu-btn">
                     <span />
                     <span />
@@ -354,49 +359,27 @@ const Header = () => {
           </div>
           <div className="off-canvas-inner">
             {/* search box start */}
-            <div className="search-box-offcanvas">
-              <form>
-                <input type="text" placeholder="Search Here..." />
-                <button className="search-btn">
-                  <i className="fa fa-search" />
-                </button>
-              </form>
-            </div>
-            {/* mobile menu end */}
+
+            {/* mobile menu start */}
             <div className="mobile-settings">
               <ul className="nav">
                 <li>
-                  <div className="dropdown mobile-top-dropdown">
-                    <a
-                      href="#"
-                      className="dropdown-toggle"
-                      data-toggle="dropdown"
-                      aria-haspopup="true"
-                      aria-expanded="false"
-                    >
-                      Tài khoản
-                    </a>
-                    <div className="dropdown-menu">
-                      <Link className="dropdown-item" to="/my_account">
-                        Tài khoản của tôi
-                      </Link>
-                      <Link className="dropdown-item" to="/my_account">
-                        Thông tin cá nhân
-                      </Link>
-                      <Link className="dropdown-item" to="/my_account">
-                        Lịch sử đơn hàng
-                      </Link>
-                      <Link className="dropdown-item" to="/checkout">
-                        Thanh toán
-                      </Link>
-                    </div>
-                  </div>
+                  <Link to="/">Trang chủ</Link>
+                </li>
+                <li>
+                  <Link to="/shop">Cửa hàng</Link>
+                </li>
+                <li>
+                  <Link to="/blog">Tin tức</Link>
+                </li>
+                <li>
+                  <Link to="/brands">Thương hiệu</Link>
                 </li>
                 <li>
                   <Link to="/contact_us">Liên hệ</Link>
                 </li>
                 <li>
-                  <Link to="/faqs">Hỏi đáp</Link>
+                  <Link to="/about_us">Giới thiệu</Link>
                 </li>
               </ul>
             </div>
@@ -404,6 +387,7 @@ const Header = () => {
           </div>
         </div>
       </aside>
+
       {/* offcanvas mobile menu end */}
     </header>
   );
