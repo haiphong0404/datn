@@ -37,7 +37,7 @@ const Brand = () => {
                 </div>
                 <div className="brand-section">
                   {Array.isArray(brands) && brands.length > 0 ? (
-                        brands.map((brand) => (
+                        brands.slice(0,4).map((brand) => (
                           <div key={brand.id} className="brand-item">
                             <a href={brand.link}>
                             <img
