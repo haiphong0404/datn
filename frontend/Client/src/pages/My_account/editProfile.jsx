@@ -21,11 +21,11 @@ const EditProfile = () => {
                 address: userInfo.address || '',
                 avatar_img: userInfo.avatar_img || '',
             };
-
+    
             // Log dữ liệu userInfo và initialData để kiểm tra
             console.log('Dữ liệu userInfo:', userInfo);
             console.log('Dữ liệu initialData:', initialData);
-
+    
             setUsername(initialData.username);
             setEmail(initialData.email);
             setPhone(initialData.phone);
@@ -33,7 +33,7 @@ const EditProfile = () => {
             setPreviewImage(initialData.avatar_img);
         }
     }, [userInfo]);
-
+    
 
     // Function to handle image file selection and preview update
     const handleImageChange = (e) => {
@@ -46,57 +46,63 @@ const EditProfile = () => {
 
     const handleSaveChanges = async (e) => {
         e.preventDefault();
+    
 
         const updatedData = new FormData();
         updatedData.append('username', username);
         updatedData.append('email', email);
         updatedData.append('phone', phone);
         updatedData.append('address', address);
+    
 
         // Thêm tệp hình ảnh nếu có
         if (avatarImg) {
             updatedData.append('avatar_img', avatarImg);
         }
-
+    
         console.log('Dữ liệu cập nhật:', updatedData);
-
+    
         try {
             // Lấy userInfo từ localStorage và trích xuất userId
             const userInfo = JSON.parse(localStorage.getItem('userInfo'));
             const userId = userInfo ? userInfo.id : null;
-
+    
             if (!userId) {
                 throw new Error('Không tìm thấy userId.');
             }
-
-
+    
+            // Gửi yêu cầu PUT/PATCH tới API với FormData
             const response = await editUserById(userId, updatedData, token);
             if (response) {
                 toast.success('Cập nhật thông tin thành công!');
-
+    
+                // Cập nhật lại localStorage với dữ liệu mới
                 const updatedUserInfo = {
-                    ...userInfo,
+                    ...userInfo, // Giữ lại các thuộc tính khác chưa thay đổi
                     username,
                     email,
                     phone,
                     address,
-                    avatar_img: avatarImg ? avatarImg.name : userInfo.avatar_img,
+                    avatar_img: avatarImg ? avatarImg.name : userInfo.avatar_img, // Cập nhật ảnh đại diện nếu có
                 };
                 localStorage.setItem('userInfo', JSON.stringify(updatedUserInfo));
-
-
+    
+                // Cập nhật lại state của component để hiển thị dữ liệu mới
                 setUsername(username);
                 setEmail(email);
                 setPhone(phone);
                 setAddress(address);
                 setPreviewImage(avatarImg ? URL.createObjectURL(avatarImg) : previewImage);
-
+    
+                // Gọi lại hàm fetchUserData để làm mới dữ liệu từ API (nếu cần)
                 fetchUserData();
             }
         } catch (error) {
-
+           
         }
     };
+       
+    
 
 
 

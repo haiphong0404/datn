@@ -104,4 +104,5 @@ Route::post('/webhook/stripe', [StripeController::class, 'handle'])->withoutMidd
 Route::get('/stripe/verify-session/{sessionId}', [StripeController::class, 'verifySession']);
 Route::post('/orders/{orderId}/cancel', [StripeController::class, 'cancelOrder']);
 Route::post('/product-variants/check-quantity', [ProductVariantController::class, 'checkQuantity']);
-
+Route::post('/user/add-avatar', [UserController::class, 'addAvatar']);
+Route::middleware('auth:sanctum')->post('/user/avatar', [UserController::class, 'updateAvatar']);

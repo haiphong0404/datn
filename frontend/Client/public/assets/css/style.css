@@ -9684,3 +9684,57 @@ button {
       line-height: 70px;
   }
 }
+.selectedQuantity-selection {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px; /* Khoảng cách giữa tiêu đề và các nút */
+  font-family: Arial, sans-serif;
+}
+
+.selectedQuantity-selection h4 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: bold;
+  color: #333; /* Màu chữ tiêu đề */
+}
+
+.selectedQuantity-buttons {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Khoảng cách giữa các nút */
+}
+
+.selectedQuantity-buttons button {
+  width: 30px;
+  height: 30px;
+  background-color: #87b106;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.selectedQuantity-buttons button:disabled {
+  background-color: #87b106;
+  cursor: not-allowed;
+}
+
+.selectedQuantity-buttons button:not(:disabled):hover {
+  background-color: #ddd;
+}
+
+.selectedQuantity-buttons button:not(:disabled):active {
+  background-color: #ccc;
+}
+
+.selectedQuantity-buttons span {
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+}

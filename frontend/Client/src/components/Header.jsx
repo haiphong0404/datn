@@ -1,128 +1,15 @@
 import { useEffect, useRef, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useLoginForm } from '../hooks/useLoginForm';
-import { useDispatch, useSelector } from 'react-redux';
+
 import Badge from '@mui/material/Badge'; // Kiểm tra đường dẫn đúng
-import { loadCartFromLocalStorage, removeFromCart } from '../actions/action';
-import SearchBox from './search/SearchBox';
 import SearchProducts from './search/SearchBox';
-import axios from 'axios';
-import { toast } from 'react-toastify';
+import {useCart} from '../contexts/CartContext';
+
 
 const Header = () => {
-  const dispatch = useDispatch()
-  const { cart } = useSelector((state) => state.updateCart || {});
+  const { localCart, handleRemoveFromCart, refetch, setLocalCart } = useCart();
 
-  const [localCart, setLocalCart] = useState(JSON.parse(localStorage.getItem('cart')) || []);
-  const [selectedItems, setSelectedItems] = useState(new Set());
-  // const location = useLocation();
-  // const prevLocation = useRef(location.pathname);
-
-  //  useEffect(() => {
-
-  //   if (prevLocation.current !== location.pathname) {
-  //     prevLocation.current = location.pathname;
-  //     window.location.reload();
-  //   }
-  // }, [location]);
-
-  useEffect(() => {
-    const fetchCart = async () => {
-      const token = localStorage.getItem('token');
-      if (token) {
-        try {
-          const response = await axios.get('/cart', {
-            headers: { Authorization: `Bearer ${token}` },
-          });
-          const { carts } = response.data; // Lấy danh sách carts từ API
-          if (Array.isArray(carts)) {
-            setLocalCart(carts);
-
-          } else {
-            setLocalCart([]);
-          }
-        } catch (error) {
-          console.error("Lỗi khi lấy dữ liệu giỏ hàng:", error);
-          setLocalCart([]);
-        }
-      } else {
-        // Lấy từ localStorage nếu không có token
-        const cartData = localStorage.getItem('cart');
-        if (cartData) {
-          setLocalCart(JSON.parse(cartData));
-        } else {
-          setLocalCart([]);
-        }
-      }
-    };
-
-    fetchCart();
-  }, []);
-
-
-  const handleRemoveFromCart = async (id_productVariant) => {
-
-    if (!id_productVariant) {
-      console.error('Product variant ID is undefined!');
-      return; // Dừng nếu ID không hợp lệ
-    }
-
-    const token = localStorage.getItem('token'); // Kiểm tra token
-
-    if (token) {
-      // Nếu có token, gửi yêu cầu với token để xóa sản phẩm trên server
-      try {
-        const response = await axios.delete(`/cart/remove/${id_productVariant}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (response.status === 200) {
-          // Cập nhật lại giỏ hàng sau khi xóa sản phẩm từ cơ sở dữ liệu
-          setLocalCart(prevCart => {
-            const updatedCart = prevCart.filter(item => item.id_productVariant !== id_productVariant);
-            // localStorage.setItem('cart', JSON.stringify(updatedCart)); // Đồng bộ hóa lại localStorage
-            return updatedCart;
-          });
-          setSelectedItems(prevSelected => new Set([...prevSelected].filter(item => item !== id_productVariant)));
-          toast('Sản phẩm đã được xóa khỏi giỏ hàng.');
-          window.location.reload(); // Reload lại trang sau khi xóa thành công
-        } else {
-          toast('Không thể xóa sản phẩm. Vui lòng thử lại.');
-        }
-      } catch (error) {
-        console.error('Error removing item from cart:', error);
-        alert('Không thể xóa sản phẩm khỏi giỏ hàng. Vui lòng thử lại.');
-      }
-    } else {
-      // Nếu không có token (chưa đăng nhập), chỉ xóa sản phẩm từ localStorage
-      const cartData = localStorage.getItem('cart');
-      if (!cartData) {
-
-        return;
-      }
-
-      const parsedCart = JSON.parse(cartData);
-
-      // Lọc bỏ sản phẩm cần xóa
-      const updatedCart = parsedCart.filter(item => item.id_productVariant !== id_productVariant);
-
-      // Cập nhật lại giỏ hàng trong localStorage
-      localStorage.setItem('cart', JSON.stringify(updatedCart));
-
-      // Cập nhật lại trạng thái giỏ hàng trong React
-      setLocalCart(updatedCart);
-      setSelectedItems(prevSelected => new Set([...prevSelected].filter(item => item !== id_productVariant)));
-
-      toast('Sản phẩm đã được xóa khỏi giỏ hàng.');
-    }
-  };
-
-
-
-
-  // Function to calculate total price
   const calculateTotal = () => {
     if (Array.isArray(localCart)) {
       return localCart.reduce((total, item) => total + item.price * item.quantity, 0);
@@ -131,7 +18,6 @@ const Header = () => {
       return 0;
     }
   };
-
   const { userInfo, handleLogout } = useLoginForm();
 
 
@@ -241,7 +127,7 @@ const Header = () => {
               <div className="col-auto ms-auto">
                 <div className="header-right">
                   <div className="header-configure-area">
-                    <ul className="nav-cart">
+                    <ul className="nav">
                       <li className="mini-cart-wrap">
                         {/* <a href="#" className="search-trigger">
                           <i className="fa fa-search" />
@@ -322,7 +208,7 @@ const Header = () => {
               <div className="mobile-main-header">
                 <div className="mobile-logo">
                   <Link to="/">
-                    <img src="assets/img/logo/logo.png" alt="Brand Logo" />
+                    <img src="/assets/img/logo/logo.png" alt="Brand Logo" />
                   </Link>
                 </div>
                 <div className="mobile-menu-toggler">

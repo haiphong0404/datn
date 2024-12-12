@@ -49,7 +49,7 @@ const CheckoutDetail = () => {
       const response = await axios.post(`/payment/cancel/${orderId}`);
       if (response.status === 200) {
         toast('Thanh toán đã bị hủy!');
-        navigate('/checkout')
+        navigate('/')
       }
     } catch (error) {
       console.error('Có lỗi xảy ra khi cập nhật hủy thanh toán:', error);

@@ -178,5 +178,4 @@ class CommentController extends Controller
     
         return response()->json(['message' => 'Đánh giá đã được xóa.']);
     }
-    
 }
