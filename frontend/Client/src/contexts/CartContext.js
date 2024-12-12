@@ -7,7 +7,7 @@ const CartContext = createContext();
 export const CartProvider = ({ children }) => {
   const [localCart, setLocalCart] = useState([]);
   const [isLoading, setLoading] = useState(true);
-
+  const [selectedItems, setSelectedItems] = useState(new Set());
   // Hàm refetch để gọi lại API và cập nhật giỏ hàng
   const refetch = useCallback(async () => {
     const token = localStorage.getItem('token');
@@ -38,7 +38,7 @@ export const CartProvider = ({ children }) => {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, []); 
 
   const handleAddToCart = async ({
     selectedVariant,
@@ -58,18 +58,45 @@ export const CartProvider = ({ children }) => {
     }
 
     const quantity = selectedQuantity;
+    const cart = Array.isArray(localCart) ? localCart : [];
 
-    const localCartItem = {
-        id_productVariant: selectedVariant.id,
-        productId: product.id,
-        color: selectedColor,
-        size: selectedSize,
-        price: selectedVariant.price,
-        image: selectedVariant.images,
-        stock: selectedVariant.quantity,
-        productName: product.name,
-        quantity,
-    };
+    // Tìm sản phẩm đã tồn tại trong giỏ hàng
+    const existingItemIndex = cart.findIndex(
+        (item) => item.id_productVariant === selectedVariant.id
+    );
+
+    if (existingItemIndex !== -1) {
+        // Kiểm tra tổng số lượng dự kiến sau khi cập nhật
+        const existingItem = cart[existingItemIndex];
+        const totalQuantity = existingItem.quantity + quantity;
+
+        if (totalQuantity > selectedVariant.quantity) {
+            toast.error("Không thêm được quá số lượng trong kho");
+            return;
+        }
+
+        // Cập nhật số lượng cho sản phẩm đã tồn tại
+        cart[existingItemIndex].quantity = totalQuantity;
+    } else {
+        // Thêm sản phẩm mới vào giỏ hàng
+        if (quantity > selectedVariant.quantity) {
+            toast.error("Không thêm được quá số lượng trong kho");
+            return;
+        }
+
+        const localCartItem = {
+            id_productVariant: selectedVariant.id,
+            productId: product.id,
+            color: selectedColor,
+            size: selectedSize,
+            price: selectedVariant.price,
+            image: selectedVariant.images,
+            stock: selectedVariant.quantity,
+            productName: product.name,
+            quantity,
+        };
+        cart.push(localCartItem);
+    }
 
     try {
         const id_productVariant = selectedVariant.id;
@@ -93,10 +120,9 @@ export const CartProvider = ({ children }) => {
                 toast.success("Sản phẩm đã được thêm vào giỏ hàng!");
             }
         } else {
-            // Nếu không có token, thêm vào local storage
-            const updatedCart = [...localCart, localCartItem];
-            setLocalCart(updatedCart);
-            localStorage.setItem('cart', JSON.stringify(updatedCart));
+            // Nếu không có token, cập nhật local storage
+            setLocalCart(cart);
+            localStorage.setItem('cart', JSON.stringify(cart));
             toast.success("Sản phẩm đã được thêm vào giỏ hàng!");
         }
     } catch (error) {
@@ -104,6 +130,7 @@ export const CartProvider = ({ children }) => {
         toast.error("Sản phẩm trong kho không đủ.");
     }
 };
+
   // Hàm xóa sản phẩm khỏi giỏ hàng
   const handleRemoveFromCart = async (id_productVariant) => {
     if (!id_productVariant) {
@@ -129,7 +156,15 @@ export const CartProvider = ({ children }) => {
         console.error('Error removing item from cart:', error);
       }
     } else {
+      const cartData = localStorage.getItem('cart');
+      if (!cartData) return;
+      const parsedCart = JSON.parse(cartData);
+      const updatedCart = parsedCart.filter(item => item.id_productVariant !== id_productVariant);
+      localStorage.setItem('cart', JSON.stringify(updatedCart));
+      setLocalCart(updatedCart);
+      setSelectedItems(prevSelected => new Set([...prevSelected].filter(item => item !== id_productVariant)));
       toast('Sản phẩm đã được xóa khỏi giỏ hàng.');
+      // window.location.reload();
     }
   };
 
