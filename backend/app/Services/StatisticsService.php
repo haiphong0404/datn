@@ -35,12 +35,13 @@ class StatisticsService
             return [
             'product_id' => $topSelling->product_id,
             'product_name' => $product ? $product->name : 'Không tìm thấy sản phẩm',
-            'total_sold' => $topSelling['total_sold']
+            'total_sold' => $topSelling->total_sold ?? 0, // Truy cập thuộc tính thay vì key mảng
             ];
         }
         
         return [
-            'message' => 'Không có sản phẩm bán chạy',
+            'product_name' => $product?->name ?? 'Không có sản phẩm bán chạy',
+            'total_sold' => $topSelling->total_sold ?? 0, // Truy cập thuộc tính thay vì key mảng
         ];
     }
 
