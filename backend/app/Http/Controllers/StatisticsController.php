@@ -26,15 +26,14 @@ class StatisticsController extends Controller
             $timeFrameText = $this->statisticsService->getTimeFrameText($timeFrame);
             $totalProducts = $this->statisticsService->getTopSellingProduct($timeFrame, $startDate, $endDate);
             $totalOrders = $this->statisticsService->gettotalOrders($timeFrame, $startDate, $endDate);
-            $totalRevenue = $this->statisticsService->gettotalRevenue();
-            $revenueByProduct = $this->statisticsService->getRevenueByProduct();
+            $totalRevenue = $this->statisticsService->gettotalRevenue($timeFrame, $startDate, $endDate);
+            $revenueByProduct = $this->statisticsService->getRevenueByProduct($timeFrame, $startDate, $endDate);
             $revenueChart = $this->statisticsService->getRevenueByTimeFrameForChart($timeFrame);
+            $tableData = $this->statisticsService->getOrderStatusTableData($timeFrame, $startDate, $endDate);
+            $pieChartData = $this->statisticsService->getOrderStatusData($timeFrame, $startDate, $endDate);
 
-            return view('admin.index', compact('totalProducts', 'totalOrders', 'totalRevenue', 'revenueByProduct', 'revenueChart', 'timeFrame', 'timeFrameText'));
+            return view('admin.index', compact('totalProducts', 'totalOrders', 'totalRevenue', 'revenueByProduct', 'revenueChart', 'timeFrame', 'timeFrameText', 'tableData', 'pieChartData'));
         }
     }
-    // public function indexStaff()
-    // {
-    //     return view('admin.index');
-    // }
+
 }

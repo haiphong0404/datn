@@ -25,9 +25,9 @@ class StatisticsService
                 return 'quarter';
             } else if ($differenceInDays >= 30) {
                 return 'month';
-            } else if ($differenceInDays >= 7) {
+            } else if ($differenceInDays >= 6) {
                 return 'week';
-            } else if ($differenceInDays < 7) {
+            } else if ($differenceInDays < 6) {
                 return 'day';
             }
         }
@@ -71,7 +71,7 @@ class StatisticsService
                     ->whereYear($dateField, Carbon::now()->year);
                 break;
             case 'quarter':
-                $query->where(DB::raw('QUARTER(' . $dateField . ')'), Carbon::now()->quarter)
+                $query->whereRaw('QUARTER(' . $dateField . ') = ?', [Carbon::now()->quarter])
                     ->whereYear($dateField, Carbon::now()->year);
                 break;
             case 'year':
@@ -133,31 +133,32 @@ class StatisticsService
             return $query->count();
         }
     }
-//yes
-    public function gettotalRevenue(): int
+
+    public function getTotalRevenue(string $timeFrame = 'month', ?string $startDate = null, ?string $endDate = null): int
     {
         $role = Auth::user()->role;
         $userID = Auth::user()->id;
-        if ($role === "admin") {
-            // Tổng doanh thu trong tháng hiện tại
-            return Order::where('status', 'completed')
-                        ->whereMonth('created_at', Carbon::now()->month)
-                        ->whereYear('created_at', Carbon::now()->year)
-                        ->sum('total_amount');
-        } else {
-            // Tổng doanh thu trong tháng hiện tại handler_id của người dùng hiện tại
-            return Order::where('status', 'completed')
-                        ->where('handler_id', $userID)
-                        ->whereMonth('created_at', Carbon::now()->month)
-                        ->whereYear('created_at', Carbon::now()->year)
-                        ->sum('total_amount');
+
+        // Khởi tạo truy vấn
+        $query = Order::where('status', 'completed');
+
+        // Nếu role không phải admin, thêm điều kiện handler_id
+        if ($role !== "admin") {
+            $query->where('handler_id', $userID);
         }
+
+        // Áp dụng bộ lọc thời gian
+        $this->applyTimeFilter($query, $timeFrame, $startDate, $endDate);
+
+        // Tính tổng doanh thu
+        return $query->sum('total_amount');
     }
-//yes
-    public function getRevenueByProduct(): array
+
+    public function getRevenueByProduct(?string $timeFrame = null, ?string $startDate = null, ?string $endDate = null): array
     {
         $role = Auth::user()->role;
         $userID = Auth::user()->id;
+
         // Khởi tạo query lấy thông tin sản phẩm, doanh thu và số lượng tồn kho
         $query = Product::query()
             ->select(
@@ -173,15 +174,12 @@ class StatisticsService
             ->where('orders.status', 'completed')
             ->groupBy('products.id', 'products.name', 'products.total_quantity_in_stock'); // Thêm trường quantity_in_stock vào group by
 
-        // Nếu là admin, lấy doanh thu theo tháng hiện tại
-        if ($role === "admin") {
-            $query->whereMonth('order_details.created_at', Carbon::now()->month)
-                  ->whereYear('order_details.created_at', Carbon::now()->year);
-        } else {
-            // Nếu không phải admin, lấy doanh thu theo tháng hiện tại nhưng phải có handler_id là chính staff đó
-            $query->where('orders.handler_id', $userID)
-              ->whereMonth('order_details.created_at', Carbon::now()->month)
-              ->whereYear('order_details.created_at', Carbon::now()->year);
+        // Áp dụng bộ lọc thời gian
+        $this->applyTimeFilter($query, $timeFrame, $startDate, $endDate, 'order_details.created_at');
+
+        // Lọc theo role
+        if ($role !== "admin") {
+            $query->where('orders.handler_id', $userID);
         }
 
         // Lấy dữ liệu và trả về dưới dạng mảng
@@ -189,40 +187,40 @@ class StatisticsService
     }
 
     public function getTimeFrameText($timeFrame)
-{
-    switch ($timeFrame) {
-        case 'day':
-            return [
-                'subTextTimeFrame' => 'Ngày',
-                'textHeaderChar' => '30 Ngày'
-            ];
-        case 'week':
-            return [
-                'subTextTimeFrame' => 'Tuần',
-                'textHeaderChar' => '12 Tuần'
-            ];
-        case 'month':
-            return [
-                'subTextTimeFrame' => 'Tháng',
-                'textHeaderChar' => '12 Tháng'
-            ];
-        case 'quarter':
-            return [
-                'subTextTimeFrame' => 'Quý',
-                'textHeaderChar' => '12 Quý'
-            ];
-        case 'year':
-            return [
-                'subTextTimeFrame' => 'Năm',
-                'textHeaderChar' => '5 Năm'
-            ];
-        default:
-            return [
-                'subTextTimeFrame' => 'Tháng',
-                'textHeaderChar' => '12 Tháng'
-            ];
+    {
+        switch ($timeFrame) {
+            case 'day':
+                return [
+                    'subTextTimeFrame' => 'Ngày',
+                    'textHeaderChar' => '30 Ngày'
+                ];
+            case 'week':
+                return [
+                    'subTextTimeFrame' => 'Tuần',
+                    'textHeaderChar' => '12 Tuần'
+                ];
+            case 'month':
+                return [
+                    'subTextTimeFrame' => 'Tháng',
+                    'textHeaderChar' => '12 Tháng'
+                ];
+            case 'quarter':
+                return [
+                    'subTextTimeFrame' => 'Quý',
+                    'textHeaderChar' => '12 Quý'
+                ];
+            case 'year':
+                return [
+                    'subTextTimeFrame' => 'Năm',
+                    'textHeaderChar' => '5 Năm'
+                ];
+            default:
+                return [
+                    'subTextTimeFrame' => 'Tháng',
+                    'textHeaderChar' => '12 Tháng'
+                ];
+        }
     }
-}
 
     public function getRevenueByTimeFrameForChart(string $timeFrame): array
     {
@@ -297,11 +295,12 @@ class StatisticsService
                 $textTimeFrame = "quý";
                 for ($i = 0; $i < 12; $i++) { // 4 quý gần nhất
                     $quarter = Carbon::now()->subQuarters($i);
+                    $startOfQuarter = $quarter->startOfQuarter()->toDateTimeString();
+                    $endOfQuarter = $quarter->endOfQuarter()->toDateTimeString();
                     $labels[] = 'Quý ' . ceil(($quarter->month) / 3) . ' - ' . $quarter->format('Y'); // Format quý theo 'Q - YYYY'
 
                     $query = Order::where('status', 'completed')
-                        ->whereQuarter('created_at', ceil(($quarter->month) / 3))
-                        ->whereYear('created_at', $quarter->year);
+                        ->whereBetween('created_at', [$startOfQuarter, $endOfQuarter]);
 
                     if ($user->role === 'staff') {
                         $query->where('handler_id', $user->id);
@@ -346,4 +345,61 @@ class StatisticsService
         ];
     }
 
+    public function getOrderStatusTableData($timeFrame, $startDate, $endDate)
+    {
+        $query = Order::query();
+
+        // Áp dụng lọc thời gian nếu có
+        $this->applyTimeFilter($query, $timeFrame, $startDate, $endDate);
+
+        // Lấy số lượng đơn hàng theo trạng thái
+        $orderStatusData = $query->select(DB::raw('status, COUNT(*) as count'))
+                                ->groupBy('status')
+                                ->get();
+
+        // Tạo mảng dữ liệu cho bảng
+        $tableData = [];
+        foreach ($orderStatusData as $statusData) {
+            $tableData[] = [
+                'status' => ucfirst($statusData->status),
+                'count' => $statusData->count
+            ];
+        }
+
+        return $tableData;
+    }
+
+    public function getOrderStatusData($timeFrame, $startDate, $endDate): array
+    {
+        // Khởi tạo query
+        $query = Order::select(DB::raw('status, COUNT(*) as count'));
+
+        // Áp dụng bộ lọc thời gian
+        $this->applyTimeFilter($query, $timeFrame, $startDate, $endDate);
+
+        // Lấy dữ liệu theo trạng thái và thời gian đã lọc
+        $orderStatusData = $query->groupBy('status')->get();
+
+        // Tạo mảng dữ liệu cho biểu đồ tròn
+        $labels = [];
+        $values = [];
+        foreach ($orderStatusData as $statusData) {
+            if ($statusData->status == "pending") {
+                $labelsTranslate = "Chờ xác nhận";
+            }else if($statusData->status == "processing"){
+                $labelsTranslate = "Đang xử lý";
+            }else if($statusData->status == "cancelled"){
+                $labelsTranslate = "Đã hủy";
+            }else if($statusData->status == "completed"){
+                $labelsTranslate = "Hoàn thành";
+            }
+                $labels[] = $labelsTranslate;
+                $values[] = $statusData->count;
+        }
+
+        return [
+            'labels' => $labels,
+            'values' => $values
+        ];
+    }
 }
