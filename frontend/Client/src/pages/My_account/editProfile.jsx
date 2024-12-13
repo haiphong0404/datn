@@ -3,6 +3,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useLoginForm } from '../../hooks/useLoginForm.js';
 import { editUserById ,uploadAvatar} from '../../api/user.js';
+import { getUserByid } from '../../api/user.js';
 const EditProfile = () => {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
@@ -10,29 +11,57 @@ const EditProfile = () => {
     const [address, setAddress] = useState('');
     const [avatarImg, setAvatarImg] = useState(null);
     const [previewImage, setPreviewImage] = useState('');
+
     const { userInfo } = useLoginForm();
     const token = localStorage.getItem('token');
     useEffect(() => {
-        if (userInfo) {
-            const initialData = {
-                username: userInfo.username || '',
-                email: userInfo.email || '',
-                phone: userInfo.phone || '',
-                address: userInfo.address || '',
-                avatar_img: userInfo.avatar_img || '',
-            };
+        const fetchUserInfo = async () => {
+            const userInfo = JSON.parse(localStorage.getItem('userInfo')); // Lấy userInfo từ localStorage
+            console.log('userInfo from localStorage:', userInfo);  // In ra userInfo
     
-            // Log dữ liệu userInfo và initialData để kiểm tra
-            console.log('Dữ liệu userInfo:', userInfo);
-            console.log('Dữ liệu initialData:', initialData);
+            if (userInfo && userInfo.id) {  // Kiểm tra nếu có userInfo và userId
+                try {
+                    const userData = await getUserByid(userInfo.id); // Gọi API lấy thông tin người dùng
+                    console.log('User data fetched:', userData);  // In ra dữ liệu người dùng nhận được từ API
+                    
+                   
+                if (userData && userData.data) {
+                    setUsername(userData.data.username || '');
+                    setEmail(userData.data.email || '');
+                    setPhone(userData.data.phone || '');
+                    setAddress(userData.data.address || '');
+                    setPreviewImage(userData.data.avatar_img || '');
+                } else {
+                    toast.error('Dữ liệu người dùng không hợp lệ.');
+                }
+                } catch (error) {
+                    console.error('Error fetching user info:', error);
+                    toast.error('Không thể tải thông tin người dùng!');
+                }
+            } else {
+                console.log('No userId found in localStorage');
+            }
+        };
     
-            setUsername(initialData.username);
-            setEmail(initialData.email);
-            setPhone(initialData.phone);
-            setAddress(initialData.address);
-            setPreviewImage(initialData.avatar_img);
-        }
-    }, [userInfo]);
+        fetchUserInfo();
+    }, []);
+    
+    useEffect(() => {
+        const handleUserInfoUpdate = () => {
+            const updatedUserInfo = JSON.parse(localStorage.getItem('userInfo'));
+            if (updatedUserInfo) {
+                // Tại đây, bạn không cần setUserInfo nữa
+                // Nếu cần update trong state hoặc context, hãy thực hiện tại đây
+            }
+        };
+
+        window.addEventListener('userInfoUpdated', handleUserInfoUpdate);
+
+        return () => {
+            window.removeEventListener('userInfoUpdated', handleUserInfoUpdate);
+        };
+    }, []);
+    
     
 
     // Function to handle image file selection and preview update
@@ -76,6 +105,9 @@ const handleSaveChanges = async (e) => {
             };
             localStorage.setItem('userInfo', JSON.stringify(updatedUserInfo));
 
+            // Gửi sự kiện để đồng bộ hóa
+            window.dispatchEvent(new Event('userInfoUpdated'));
+
             // Cập nhật lại state của component để hiển thị dữ liệu mới
             setUsername(username);
             setEmail(email);
@@ -84,23 +116,14 @@ const handleSaveChanges = async (e) => {
         }
     } catch (error) {
         console.error('Error updating user:', error);
+        toast.error('Cập nhật thông tin không thành công!');
     }
 
     // Nếu có ảnh, gửi ảnh bằng FormData
     if (avatarImg) {
         const formData = new FormData();
-
-        // Log dữ liệu trước khi thêm vào FormData
-        console.log("avatarImg trước khi append:", avatarImg);
-
-        // Thêm tệp ảnh vào formData
-        formData.append("avatar", avatarImg); // Đảm bảo đây là tên trường mà API yêu cầu
-        formData.append("userId", userInfo.id); // Thêm userId vào formData
-
-        // Log FormData sau khi thêm dữ liệu
-        for (let pair of formData.entries()) {
-            console.log(pair[0] + ': ' + pair[1]);
-        }
+        formData.append("avatar", avatarImg);
+        formData.append("userId", userInfo.id);
 
         try {
             const response = await axios.post('/user/upload-avatar', formData, {
@@ -109,17 +132,31 @@ const handleSaveChanges = async (e) => {
                     'Content-Type': 'multipart/form-data',
                 },
             });
-            console.log("Response from server:", response.data);
             if (response.data.success) {
-                const avatarBase64 = response.data.data.avatar_base64; // Chuỗi base64
-                setPreviewImage(avatarBase64); // Hiển thị ảnh dưới dạng base64
+                const avatarBase64 = response.data.data.avatar_base64;
+
+                // Cập nhật lại localStorage với ảnh mới
+                const updatedUserInfoWithAvatar = {
+                    ...JSON.parse(localStorage.getItem('userInfo')),
+                    avatar_img: avatarBase64,
+                };
+                localStorage.setItem('userInfo', JSON.stringify(updatedUserInfoWithAvatar));
+
+                // Gửi sự kiện để đồng bộ hóa
+                window.dispatchEvent(new Event('userInfoUpdated'));
+
+                setPreviewImage(avatarBase64);
+                toast.success('Cập nhật ảnh thành công!');
             }
         } catch (error) {
             console.error('Error uploading avatar:', error);
             toast.error('Cập nhật ảnh không thành công!');
         }
     }
+    window.location.reload();
 };
+
+
 
     
 
