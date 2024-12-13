@@ -127,9 +127,9 @@ const ProductReview = ({ initialTab = "tab_one" }) => {
                       console.log("File upload response:", uploadResponse);
               
                       if (uploadResponse.status === 200) {
-                          toast.success("Cập nhật file thành công!");
+                       
                       } else {
-                          toast.error("Cập nhật file không thành công!");
+                        
                       }
                   } catch (error) {
                       console.error('Error uploading file:', error);
@@ -145,7 +145,7 @@ const ProductReview = ({ initialTab = "tab_one" }) => {
 
                 // Làm mới dữ liệu nếu cần
                 refetch();
-                toast.success("Cập nhật bình luận thành công.");
+                toast.success("Sửa bình luận thành công.");
             } else {
                 console.error("Response status not 200, error occurred.");
                 toast.error("Có lỗi xảy ra khi sửa bình luận.");
