@@ -17,7 +17,7 @@ class CategoryController extends Controller
     {
         $search = $request->input('search');
         $perPage = $request->input('per_page', 10); // Số bản ghi mỗi trang (mặc định 10)
-    
+
         // Truy vấn danh sách thể loại với tìm kiếm và phân trang
         $categories = Category::withTrashed()
             ->when($search, function ($query, $search) {
@@ -25,11 +25,11 @@ class CategoryController extends Controller
             })
             ->orderBy('created_at', 'desc') // Sắp xếp giảm dần theo ngày tạo
             ->paginate($perPage);
-    
+
         // Trả về view với dữ liệu đã xử lý
         return view('admin.categories.category', compact('categories', 'search'));
     }
-    
+
 
 
     /**
@@ -98,8 +98,16 @@ class CategoryController extends Controller
     public function destroy($id)
     {
         try {
-            // Tìm và thực hiện soft delete thể loại
+            // Tìm danh mục cần xóa
             $category = Category::findOrFail($id);
+
+            // Kiểm tra xem danh mục có sản phẩm nào không
+            if ($category->products()->exists()) {
+                return redirect()->route('admin.categories.index')
+                    ->with('error', 'Không thể xóa vì danh mục này còn chứa sản phẩm!');
+            }
+
+            // Thực hiện xóa danh mục
             $category->delete();
 
             return redirect()->route('admin.categories.index')->with('success', 'Xóa thể loại thành công!');
@@ -107,6 +115,7 @@ class CategoryController extends Controller
             return redirect()->route('admin.categories.index')->with('error', 'Có lỗi xảy ra, vui lòng thử lại!');
         }
     }
+
     public function restore($id)
     {
         try {
