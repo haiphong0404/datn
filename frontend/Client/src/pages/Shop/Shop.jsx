@@ -6,7 +6,7 @@ import { Pagination } from '@mui/material';
 import { fetchBrands } from '../../api/brand';
 import ProductItem from './productItem';
 import ProductList from './productList';
-import LoadingSpinner from "../../loading/LoadingSpinner"; 
+import LoadingSpinner from "../../loading/LoadingSpinner";
 
 const Shop = () => {
   const [viewMode, setViewMode] = useState('grid-view');
@@ -57,7 +57,7 @@ const Shop = () => {
 
 
   // Lọc sản phẩm theo thương hiệu
-  let  filteredProducts = products.filter((product) => {
+  let filteredProducts = products.filter((product) => {
     const brandMatch = selectedBrandId ? Number(product.brand_id) === Number(selectedBrandId) : true;
     const categoryMatch = selectedCategoryId ? Number(product.category_id) === Number(selectedCategoryId) : true;
     return brandMatch && categoryMatch;
@@ -73,7 +73,7 @@ const Shop = () => {
     filteredProducts = filteredProducts.sort((a, b) => b.price - a.price);
   }
 
- 
+
   const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
 
   return (
@@ -250,33 +250,42 @@ const Shop = () => {
                     </div>
                   </div>
 
-                  <div className={`shop-product-wrap ${viewMode}`}>
-                    <div className="row">
-                      {filteredProducts
-                        .slice((page - 1) * itemsPerPage, page * itemsPerPage)
-                        .map((product) => (
-                          <div className={viewMode === 'grid-view' ? 'col-md-4 col-sm-6' : 'col-md-12'} key={product.id}>
-                            {viewMode === 'grid-view' ? (
-                              <ProductItem product={product} />
-                            ) : (
-                              <ProductList product={product} />
-                            )}
-                          </div>
-                        ))}
-                    </div>
+                  <div className={`shop-product-wrap ${viewMode} custom-wrap`}>
+  <div className="row">
+    {filteredProducts
+      .slice((page - 1) * itemsPerPage, page * itemsPerPage)
+      .map((product) => (
+        <div
+          className={
+            viewMode === 'grid-view'
+              ? 'col-lg-3 col-md-4 col-sm-6 col-6'
+              : 'col-12'
+          }
+          key={product.id}
+        >
+          {viewMode === 'grid-view' ? (
+            <ProductItem product={product} />
+          ) : (
+            <ProductList product={product} />
+          )}
+        </div>
+      ))}
+  </div>
 
-                    <Pagination
-                      count={totalPages}
-                      page={page}
-                      onChange={handleChange}
-                      className="pagination"
-                      sx={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        mt: 4,
-                      }}
-                    />
-                  </div>
+  <Pagination
+    count={totalPages}
+    page={page}
+    onChange={handleChange}
+    className="pagination"
+    sx={{
+      display: 'flex',
+      justifyContent: 'center',
+      mt: 4,
+    }}
+  />
+</div>
+
+
                 </div>
               </div>
             </div>

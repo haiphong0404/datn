@@ -129,9 +129,6 @@ const Header = () => {
                   <div className="header-configure-area">
                     <ul className="nav">
                       <li className="mini-cart-wrap">
-                        {/* <a href="#" className="search-trigger">
-                          <i className="fa fa-search" />
-                        </a> */}
                         <SearchProducts />
                       </li>
                       {/* minicart của header */}
@@ -198,100 +195,145 @@ const Header = () => {
         </div>
         {/* header middle area end */}
       </div>
-      {/* main header start */}
-      {/* mobile header start */}
-      <div className="mobile-header d-lg-none d-md-block sticky black-soft">
-        {/*mobile header top start */}
-        <div className="container-fluid">
-          <div className="row align-items-center">
-            <div className="col-12">
-              <div className="mobile-main-header">
-                <div className="mobile-logo">
+      <>
+        {/* mobile header start */}
+        {/* mobile header start */}
+        <div className="mobile-header d-lg-none d-md-block sticky black-soft">
+          {/*mobile header top start */}
+          <div className="container-fluid">
+            <div className="row align-items-center">
+              <div className="col-12">
+                <div className="mobile-main-header">
+                  <div className="mobile-logo">
                   <Link to="/">
                     <img src="/assets/img/logo/logo.png" alt="Brand Logo" />
                   </Link>
-                </div>
-                <div className="mobile-menu-toggler">
-                  <div className="mini-cart-wrap">
-                    <Link to="/cart">
-                      <i className="fa fa-shopping-cart" />
-                      <div className="notification">0</div>
-                    </Link>
                   </div>
-                  <button className="mobile-menu-btn">
-                    <span />
-                    <span />
-                    <span />
-                  </button>
+                  <div className="mobile-menu-toggler">
+                  <li className="mini-cart-wrap" style={{marginBottom: '5px'}}>
+                        <SearchProducts />
+                      </li>
+                    <li className="mini-cart-wrap">
+                        <Link to="/cart" className="minicart-btn">
+                          <Badge badgeContent={localCart.length} color="success">
+                            <i className="fa fa-shopping-cart" />
+                          </Badge>
+                        </Link>
+                      </li>
+                    <button className="mobile-menu-btn">
+                      <span />
+                      <span />
+                      <span />
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
+          {/* mobile header top start */}
         </div>
-        {/* mobile header top start */}
-      </div>
-      {/* mobile header end */}
-      {/* offcanvas mobile menu start */}
-      <aside className="off-canvas-wrapper">
-        <div className="off-canvas-overlay" />
-        <div className="off-canvas-inner-content">
-          <div className="btn-close-off-canvas">
-            <i className="fa fa-close" />
-          </div>
-          <div className="off-canvas-inner">
-            {/* search box start */}
-            <div className="search-box-offcanvas">
-              <form>
-                <input type="text" placeholder="Search Here..." />
-                <button className="search-btn">
-                  <i className="fa fa-search" />
-                </button>
-              </form>
+        {/* mobile header end */}
+        {/* mobile header end */}
+        {/* offcanvas mobile menu start */}
+        {/* off-canvas menu start */}
+        <aside className="off-canvas-wrapper">
+          <div className="off-canvas-overlay" />
+          <div className="off-canvas-inner-content">
+            <div className="btn-close-off-canvas">
+              <i className="fa fa-close" />
             </div>
-            {/* mobile menu end */}
-            <div className="mobile-settings">
-              <ul className="nav">
-                <li>
-                  <div className="dropdown mobile-top-dropdown">
-                    <a
-                      href="#"
-                      className="dropdown-toggle"
-                      data-toggle="dropdown"
-                      aria-haspopup="true"
-                      aria-expanded="false"
-                    >
-                      Tài khoản
-                    </a>
-                    <div className="dropdown-menu">
-                      <Link className="dropdown-item" to="/my_account">
-                        Tài khoản của tôi
-                      </Link>
-                      <Link className="dropdown-item" to="/my_account">
-                        Thông tin cá nhân
-                      </Link>
-                      <Link className="dropdown-item" to="/my_account">
-                        Lịch sử đơn hàng
-                      </Link>
-                      <Link className="dropdown-item" to="/checkout">
-                        Thanh toán
-                      </Link>
+            <div className="off-canvas-inner">
+              {/* search box start */}
+              
+              {/* search box end */}
+              {/* mobile menu start */}
+              <div className="mobile-navigation">
+                {/* mobile menu navigation start */}
+                <nav>
+                  <ul className="mobile-menu">
+                    <li className="menu-item-has-children">
+                      <Link to="/">TRANG CHỦ</Link>
+                    </li>
+                    <li className="menu-item-has-children">
+                      <Link to="/shop">CỬA HÀNG</Link>
+                    </li>
+                    <li className="menu-item-has-children">
+                      <Link to="/blog">TIN TỨC</Link>
+                    </li>
+                    <li className="menu-item-has-children">
+                      <Link to="/brands">THƯƠNG HIỆU</Link>
+                    </li>
+                    <li>
+                      <Link to="/contact_us">LIÊN HỆ</Link>
+                    </li>
+                    <li>
+                      <Link to="/about_us">GIỚI THIỆU</Link>
+                    </li>
+                  </ul>
+                </nav>
+                {/* mobile menu navigation end */}
+              </div>
+              {/* mobile menu end */}
+              <div className="mobile-settings">
+
+
+                <ul className="nav">
+                  <li>
+                    <div className="dropdown mobile-top-dropdown">
+                      <a
+                        href="#"
+                        className="dropdown-toggle"
+                        id="myaccount"
+                        data-bs-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                      >
+                        Tài Khoản
+                        <i className="fa fa-angle-down" />
+                      </a>
+                      <div className="dropdown-menu" aria-labelledby="myaccount">
+                        <Link className="dropdown-item" to="/my_account">
+                          Tài Khoản
+                        </Link>
+                        <Link className="dropdown-item" to="/login">
+                          Đăng Nhập
+                        </Link>
+                        <Link className="dropdown-item" to="/register">
+                          Đăng Ký
+                        </Link>
+                      </div>
                     </div>
-                  </div>
-                </li>
-                <li>
-                  <Link to="/contact_us">Liên hệ</Link>
-                </li>
-                <li>
-                  <Link to="/faqs">Hỏi đáp</Link>
-                </li>
-              </ul>
+                  </li>
+                </ul>
+
+              </div>
+              {/* offcanvas widget area start */}
+              <div className="offcanvas-widget-area">
+                <div className="off-canvas-contact-widget">
+                  <ul>
+                    <li>
+                      <i className="fa fa-mobile" />
+                      <a href="#">0868696508</a>
+                    </li>
+                    <li>
+                      <i className="fa fa-envelope-o" />
+                      <a href="#">info@yourdomain.com</a>
+                    </li>
+                  </ul>
+                </div>
+
+              </div>
+              {/* offcanvas widget area end */}
             </div>
-            {/* end of mobile settings */}
           </div>
-        </div>
-      </aside>
-      {/* offcanvas mobile menu end */}
+        </aside>
+        {/* off-canvas menu end */}
+        {/* offcanvas mobile menu end */}
+      </>
+
+
     </header>
+
   );
 };
 
