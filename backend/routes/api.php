@@ -63,6 +63,7 @@ Route::get('order-details/{order_id}', [OrderDetailController::class, 'getOrderD
 Route::apiResource('order-details', OrderDetailController::class);
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('comments/{product_id}', [CommentController::class, 'store']);
+    Route::post('/comments/{comment_id}/add-image', [CommentController::class, 'addCommentImage']);
     Route::put('comments/{id}', [CommentController::class, 'update']);
     Route::delete('comments/{id}', [CommentController::class, 'destroy']);
     Route::get('/cart', [CartController::class, 'index']);
