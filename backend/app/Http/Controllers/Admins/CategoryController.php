@@ -100,14 +100,10 @@ class CategoryController extends Controller
         try {
             // Tìm danh mục cần xóa
             $category = Category::findOrFail($id);
-
-            // Kiểm tra xem danh mục có sản phẩm nào không
             if ($category->products()->exists()) {
                 return redirect()->route('admin.categories.index')
                     ->with('error', 'Không thể xóa vì danh mục này còn chứa sản phẩm!');
             }
-
-            // Thực hiện xóa danh mục
             $category->delete();
 
             return redirect()->route('admin.categories.index')->with('success', 'Xóa thể loại thành công!');

@@ -372,7 +372,7 @@ const Checkout = ({orderId}) => {
                   // Gửi đơn hàng và thanh toán nếu là thanh toán tiền mặt
                   await postOrder(userInfo.id, orderData);
                   toast.success("Đặt hàng thành công!");
-  
+                  
                   // Xóa sản phẩm đã chọn khỏi giỏ hàng trong cơ sở dữ liệu
                   for (const item of selectedProducts) {
                       await deleteProductFromCart(item.id_productVariant);
@@ -387,6 +387,8 @@ const Checkout = ({orderId}) => {
                   // Đặt lại trạng thái vận chuyển và voucher
                   setIsShippingSelected(false);
                   setIsVoucherApplied(false);
+                  navigate('/my_account/orders')
+                  window.location.reload()
               }else if (paymentMethod === "stripe") {
                 try {
                   // Gửi yêu cầu tạo Stripe session
@@ -768,7 +770,7 @@ useEffect(() => {
                             onChange={handlePaymentMethodChange}
                           />
                           <label className="custom-control-label" htmlFor="directbank">
-                            Thanh toán online
+                            Thanh toán online bằng QR
                           </label>
                         </div>
                       </div>
