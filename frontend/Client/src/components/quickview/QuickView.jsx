@@ -155,11 +155,11 @@ const QuickViewModal = ({ show, onClose, product }) => {
             <h4>Số lượng</h4>
 
             <div className="selectedQuantity-buttons" style={{ paddingTop: '3px' }}>
-              <button onClick={handleDecrease} disabled={selectedQuantity <= 1}  >-</button>
+              <button onClick={handleDecrease} disabled={selectedQuantity <= 1} style={{ paddingRight: '15px' }} >-</button>
               {selectedQuantity}
               <button
                 onClick={handleIncrease}
-                disabled={selectedQuantity >= (selectedVariant?.quantity || 0)}>+</button></div>
+                disabled={selectedQuantity >= (selectedVariant?.quantity || 0)} style={{ paddingLeft: '15px' }}>+</button></div>
           </div>
 
 

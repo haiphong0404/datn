@@ -156,15 +156,11 @@ export const CartProvider = ({ children }) => {
         console.error('Error removing item from cart:', error);
       }
     } else {
-      const cartData = localStorage.getItem('cart');
-      if (!cartData) return;
-      const parsedCart = JSON.parse(cartData);
-      const updatedCart = parsedCart.filter(item => item.id_productVariant !== id_productVariant);
-      localStorage.setItem('cart', JSON.stringify(updatedCart));
-      setLocalCart(updatedCart);
-      setSelectedItems(prevSelected => new Set([...prevSelected].filter(item => item !== id_productVariant)));
-      toast('Sản phẩm đã được xóa khỏi giỏ hàng.');
-      // window.location.reload();
+       // Nếu không có token (chưa đăng nhập), xóa sản phẩm khỏi giỏ hàng trong localStorage
+    const updatedCart = localCart.filter(item => item.id_productVariant !== id_productVariant);
+    setLocalCart(updatedCart);
+    localStorage.setItem('cart', JSON.stringify(updatedCart));
+    toast('Sản phẩm đã được xóa khỏi giỏ hàng.');
     }
   };
 
