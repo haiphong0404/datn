@@ -111,48 +111,50 @@
                                             <!-- Cập nhật colspan -->
                                         </tr>
                                     @else
-                                        @php $stt = 1;  $loggedInUser = Auth::user();  @endphp
+                                        @php
+                                            $stt = 1;
+                                            $loggedInUser = Auth::user();
+                                        @endphp
                                         @foreach ($users as $item)
-                                        @if($loggedInUser->role !== 'staff' || $item->role !== 'admin')
-                                            <tr>
-                                                <td>{{ $stt++ }}</td>
-                                                <td style="width: 100px;">
-                                                    <img src="{{ Storage::url($item->avatar_img) }}" width="100"
-                                                        height="100" alt="{{ $item->username }}">
-                                                </td>
-                                                <td class="text-truncate">{{ $item->username }}</td>
-                                                <td class="text-end">{{ $item->phone }}</td>
-                                                <td class="text-truncate">{{ $item->email }}</td>
-                                                <td class="text-truncate">{{ $item->address }}</td>
-                                                <td class="text-td">{{ $item->role }}</td>
-                                                <td>
-                                                    @if ($item->status === 'active')
-                                                        <span class="badge bg-success">Hoạt động</span>
-                                                    @else
-                                                        <span class="badge bg-danger">Không hoạt động</span>
-                                                    @endif
-                                                </td>
-                                                <td class="text-center">
-                                                    @if (
-                                                        $item->role !== 'admin' &&
-                                                            auth()->user()->hasRole(['admin']))
-                                                        <form action="{{ route('admin.user.toggleStatus', $item->id) }}"
-                                                            method="POST" class="d-inline-block">
-                                                            @csrf
-                                                            @method('PATCH')
-                                                            <button type="submit"
-                                                                class="btn {{ $item->status === 'active' ? 'btn-warning' : 'btn-success' }}">
-                                                                <i
-                                                                    class="bi {{ $item->status === 'active' ? 'bi-toggle-on' : 'bi-toggle-off' }}"></i>
-                                                            </button>
-                                                        </form>
-                                                    @endif
-                                                    <a href="{{ route('admin.user.show', $item->id) }}"
-                                                        class="btn btn-primary">
-                                                        <i class="fa fa-eye"></i>
-                                                    </a>
-                                                </td>
-                                            </tr>
+                                            @if ($loggedInUser->role !== 'staff' || $item->role !== 'admin')
+                                                <tr>
+                                                    <td>{{ $stt++ }}</td>
+                                                    <td style="width: 100px;">
+                                                        <img src="{{ Storage::url($item->avatar_img) }}" width="100"
+                                                            height="100" alt="{{ $item->username }}">
+                                                    </td>
+                                                    <td class="text-truncate">{{ $item->username }}</td>
+                                                    <td class="text-end">{{ $item->phone }}</td>
+                                                    <td class="text-truncate">{{ $item->email }}</td>
+                                                    <td class="text-truncate">{{ $item->address }}</td>
+                                                    <td class="text-td">{{ $item->role }}</td>
+                                                    <td>
+                                                        <span id="userStatus-{{ $item->id }}"
+                                                            class="badge {{ $item->status === 'active' ? 'bg-success' : 'bg-danger' }}">
+                                                            {{ $item->status === 'active' ? 'Hoạt động' : 'Không hoạt động' }}
+                                                        </span>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        @if (
+                                                            $item->role !== 'admin' &&
+                                                                auth()->user()->hasRole(['admin']))
+                                                            <form id="toggleStatusForm-{{ $item->id }}"
+                                                                data-id="{{ $item->id }}" class="d-inline-block">
+                                                                @csrf
+                                                                <button type="button"
+                                                                    class="btn {{ $item->status === 'active' ? 'btn-warning' : 'btn-success' }}"
+                                                                    onclick="toggleStatus({{ $item->id }})">
+                                                                    <i
+                                                                        class="bi {{ $item->status === 'active' ? 'bi-toggle-on' : 'bi-toggle-off' }}"></i>
+                                                                </button>
+                                                            </form>
+                                                        @endif
+                                                        <a href="{{ route('admin.user.show', $item->id) }}"
+                                                            class="btn btn-primary">
+                                                            <i class="fa fa-eye"></i>
+                                                        </a>
+                                                    </td>
+                                                </tr>
                                             @endif
                                         @endforeach
                                     @endif
@@ -193,15 +195,70 @@
     <!--dynamic table initialization -->
     <script src="{{ asset('assets') }}/admin/js/dynamic_table_init.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            @if (session('success'))
-                toastr.success('{{ session('success') }}', 'Thành công', {
-                    closeButton: true,
-                    progressBar: true,
-                    timeOut: 3000,
-                    positionClass: "toast-top-right"
+        function toggleStatus(userId) {
+            const form = document.querySelector(`#toggleStatusForm-${userId}`);
+            const url = `{{ route('admin.user.toggleStatus', ':id') }}`.replace(':id', userId);
+            const token = form.querySelector('input[name="_token"]').value;
+
+            fetch(url, {
+                    method: 'PATCH',
+                    headers: {
+                        'X-CSRF-TOKEN': token,
+                        'Content-Type': 'application/json',
+                    },
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status) {
+                        const button = form.querySelector('button');
+                        const icon = button.querySelector('i');
+                        const badge = document.querySelector(`#userStatus-${userId}`);
+
+                        // Update button style
+                        if (data.status === 'active') {
+                            button.classList.remove('btn-success');
+                            button.classList.add('btn-warning');
+                            icon.classList.remove('bi-toggle-off');
+                            icon.classList.add('bi-toggle-on');
+                        } else {
+                            button.classList.remove('btn-warning');
+                            button.classList.add('btn-success');
+                            icon.classList.remove('bi-toggle-on');
+                            icon.classList.add('bi-toggle-off');
+                        }
+
+                        // Update badge
+                        if (badge) {
+                            badge.textContent = data.status === 'active' ? 'Hoạt động' : 'Không hoạt động';
+                            badge.classList.remove('bg-success', 'bg-danger');
+                            badge.classList.add(data.status === 'active' ? 'bg-success' : 'bg-danger');
+                        }
+
+                        // Show success notification
+                        toastr.success(data.message || 'Cập nhật trạng thái thành công!', 'Thành công', {
+                            closeButton: true,
+                            progressBar: true,
+                            timeOut: 3000,
+                            positionClass: "toast-top-right"
+                        });
+                    } else {
+                        toastr.error(data.message || 'Không thể cập nhật trạng thái.', 'Lỗi', {
+                            closeButton: true,
+                            progressBar: true,
+                            timeOut: 3000,
+                            positionClass: "toast-top-right"
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    toastr.error('Đã xảy ra lỗi, vui lòng thử lại.', 'Lỗi', {
+                        closeButton: true,
+                        progressBar: true,
+                        timeOut: 3000,
+                        positionClass: "toast-top-right"
+                    });
                 });
-            @endif
-        });
+        }
     </script>
 @endsection

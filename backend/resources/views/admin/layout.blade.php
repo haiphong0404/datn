@@ -46,6 +46,8 @@
 <body class="light-sidebar-nav">
 
     <section id="container">
+        @if (session('success'))
+    @endif
         <!--header start-->
         <header class="header white-bg">
             <div class="sidebar-toggle-box">
@@ -151,10 +153,10 @@
                     <!-- user login dropdown start-->
                     @auth
                     <li class="dropdown mr-2">
-                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                            <img src="{{ optional(Auth::user()->avatar_img) ? Storage::url(Auth::user()->avatar_img) : asset('default-avatar.png') }}"
-                                alt="{{ optional(Auth::user())->username }}" width="30px">
-                            <b class="caret"></b>
+                        <a data-toggle="dropdown" class="dropdown-toggle d-flex" href="#">
+                            <img class="mr-2" src="{{ optional(Auth::user()->avatar_img) ? Storage::url(Auth::user()->avatar_img) : asset('default-avatar.png') }}"
+                                alt="" width="30px" height="30px"> {{ optional(Auth::user())->username }}
+                           
                         </a>
                         <ul class="dropdown-menu dropdown-menu-right">
                             <li>
@@ -344,7 +346,16 @@
 
     <script>
         //owl carousel
-
+        document.addEventListener('DOMContentLoaded', function() {
+            @if (session('success'))
+                toastr.success('{{ session('success') }}', 'Thành công', {
+                    closeButton: true,
+                    progressBar: true,
+                    timeOut: 3000,
+                    positionClass: "toast-top-right"
+                });
+            @endif
+        });
         $(document).ready(function() {
             $("#owl-demo").owlCarousel({
                 navigation: true,

@@ -200,7 +200,7 @@ const Main = () => {
                       </h6>
                       <div className="price-box">
                         <span className="price-regular">
-                          {product.price ? `${new Intl.NumberFormat('vi-VN', { minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(product.price)} Vnd` : "Liên hệ"}
+                          {product.price ? `${new Intl.NumberFormat('vi-VN', { minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(product.price)} VND` : "Liên hệ"}
                         </span>
 
                       </div>
@@ -222,7 +222,7 @@ const Main = () => {
         {/* banner statistics area start */}
         <div className="banner-statistics-area">
           <div className="container">
-            <div className="row mtn-30">
+            <div className="row mtn-30" style={{marginBottom: '30px'}}>
               <div className="col-md-6">
                 <div className="banner-statistics mt-30">
                   <a href="/shop">
@@ -282,6 +282,7 @@ const Main = () => {
                 </div>
               </div>
             </div>
+            
             <div className="product-list">
               {products.slice(0, 8).map((product) => (
                 <div key={product.id} className="product-item">
@@ -294,21 +295,25 @@ const Main = () => {
                           display: 'block',
                           margin: '0 auto',
                           // width: '300px', // Đặt chiều rộng mong muốn
-                          // height: '200px', // Đặt chiều cao mong muốn
+                          height: '200px', // Đặt chiều cao mong muốn
                           objectFit: 'cover', // Cắt ảnh để phù hợp với kích thước mà không bị méo
                         }}
                       />
                     </Link>
                     
                   </div>
-                  <div className="product-content">
+                  <div className="product-content" style={{
+                          
+                          height: '140px', // Đặt chiều cao mong muốn
+                         
+                        }}>
                     <div className="product-caption">
                       <h6 className="product-name">
                         <Link to={`/product_details/${product.id}`}>{product.name}</Link> {/* Đổ tên sản phẩm */}
                       </h6>
                       <div className="price-box">
                         <span className="price-regular">
-                          {product.price ? `${new Intl.NumberFormat('vi-VN', { minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(product.price)} Vnd` : "Liên hệ"}
+                          {product.price ? `${new Intl.NumberFormat('vi-VN', { minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(product.price)} VND` : "Liên hệ"}
                         </span>
                       </div>
                       <Link className="add-to-cart" onClick={() => handleQuickView(product)} >

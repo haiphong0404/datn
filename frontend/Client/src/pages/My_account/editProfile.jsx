@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-
+import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useLoginForm } from '../../hooks/useLoginForm.js';
-import { editUserById } from '../../api/user.js';
+import { editUserById ,uploadAvatar} from '../../api/user.js';
+import { getUserByid } from '../../api/user.js';
 const EditProfile = () => {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
@@ -10,101 +11,154 @@ const EditProfile = () => {
     const [address, setAddress] = useState('');
     const [avatarImg, setAvatarImg] = useState(null);
     const [previewImage, setPreviewImage] = useState('');
+
     const { userInfo } = useLoginForm();
     const token = localStorage.getItem('token');
     useEffect(() => {
-        if (userInfo) {
-            const initialData = {
-                username: userInfo.username || '',
-                email: userInfo.email || '',
-                phone: userInfo.phone || '',
-                address: userInfo.address || '',
-                avatar_img: userInfo.avatar_img || '',
-            };
+        const fetchUserInfo = async () => {
+            const userInfo = JSON.parse(localStorage.getItem('userInfo')); // Lấy userInfo từ localStorage
+            console.log('userInfo from localStorage:', userInfo);  // In ra userInfo
     
-            // Log dữ liệu userInfo và initialData để kiểm tra
-            console.log('Dữ liệu userInfo:', userInfo);
-            console.log('Dữ liệu initialData:', initialData);
+            if (userInfo && userInfo.id) {  // Kiểm tra nếu có userInfo và userId
+                try {
+                    const userData = await getUserByid(userInfo.id); // Gọi API lấy thông tin người dùng
+                    console.log('User data fetched:', userData);  // In ra dữ liệu người dùng nhận được từ API
+                    
+                   
+                if (userData && userData.data) {
+                    setUsername(userData.data.username || '');
+                    setEmail(userData.data.email || '');
+                    setPhone(userData.data.phone || '');
+                    setAddress(userData.data.address || '');
+                    setPreviewImage(userData.data.avatar_img || '');
+                } else {
+                    toast.error('Dữ liệu người dùng không hợp lệ.');
+                }
+                } catch (error) {
+                    console.error('Error fetching user info:', error);
+                    toast.error('Không thể tải thông tin người dùng!');
+                }
+            } else {
+                console.log('No userId found in localStorage');
+            }
+        };
     
-            setUsername(initialData.username);
-            setEmail(initialData.email);
-            setPhone(initialData.phone);
-            setAddress(initialData.address);
-            setPreviewImage(initialData.avatar_img);
-        }
-    }, [userInfo]);
+        fetchUserInfo();
+    }, []);
+    
+    useEffect(() => {
+        const handleUserInfoUpdate = () => {
+            const updatedUserInfo = JSON.parse(localStorage.getItem('userInfo'));
+            if (updatedUserInfo) {
+                // Tại đây, bạn không cần setUserInfo nữa
+                // Nếu cần update trong state hoặc context, hãy thực hiện tại đây
+            }
+        };
+
+        window.addEventListener('userInfoUpdated', handleUserInfoUpdate);
+
+        return () => {
+            window.removeEventListener('userInfoUpdated', handleUserInfoUpdate);
+        };
+    }, []);
+    
     
 
     // Function to handle image file selection and preview update
-    const handleImageChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            setAvatarImg(file);
-            setPreviewImage(URL.createObjectURL(file));
-        }
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+        setAvatarImg(file);
+        setPreviewImage(URL.createObjectURL(file));
+    }
+};
+
+const handleSaveChanges = async (e) => {
+    e.preventDefault();
+
+    const updatedData = {
+        username,
+        email,
+        phone,
+        address,
     };
 
-    const handleSaveChanges = async (e) => {
-        e.preventDefault();
-    
+    try {
+        const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+        const userId = userInfo ? userInfo.id : null;
 
-        const updatedData = new FormData();
-        updatedData.append('username', username);
-        updatedData.append('email', email);
-        updatedData.append('phone', phone);
-        updatedData.append('address', address);
-    
-
-        // Thêm tệp hình ảnh nếu có
-        if (avatarImg) {
-            updatedData.append('avatar_img', avatarImg);
+        if (!userId) {
+            throw new Error('Không tìm thấy userId.');
         }
-    
-        console.log('Dữ liệu cập nhật:', updatedData);
-    
+
+        const response = await editUserById(userId, updatedData, token);
+        if (response) {
+            toast.success('Cập nhật thông tin thành công!');
+
+            // Cập nhật lại localStorage với dữ liệu mới
+            const updatedUserInfo = {
+                ...userInfo,
+                username,
+                email,
+                phone,
+                address,
+            };
+            localStorage.setItem('userInfo', JSON.stringify(updatedUserInfo));
+
+            // Gửi sự kiện để đồng bộ hóa
+            window.dispatchEvent(new Event('userInfoUpdated'));
+
+            // Cập nhật lại state của component để hiển thị dữ liệu mới
+            setUsername(username);
+            setEmail(email);
+            setPhone(phone);
+            setAddress(address);
+        }
+    } catch (error) {
+        console.error('Error updating user:', error);
+        toast.error('Cập nhật thông tin không thành công!');
+    }
+
+    // Nếu có ảnh, gửi ảnh bằng FormData
+    if (avatarImg) {
+        const formData = new FormData();
+        formData.append("avatar", avatarImg);
+        formData.append("userId", userInfo.id);
+
         try {
-            // Lấy userInfo từ localStorage và trích xuất userId
-            const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-            const userId = userInfo ? userInfo.id : null;
-    
-            if (!userId) {
-                throw new Error('Không tìm thấy userId.');
-            }
-    
-            // Gửi yêu cầu PUT/PATCH tới API với FormData
-            const response = await editUserById(userId, updatedData, token);
-            if (response) {
-                toast.success('Cập nhật thông tin thành công!');
-    
-                // Cập nhật lại localStorage với dữ liệu mới
-                const updatedUserInfo = {
-                    ...userInfo, // Giữ lại các thuộc tính khác chưa thay đổi
-                    username,
-                    email,
-                    phone,
-                    address,
-                    avatar_img: avatarImg ? avatarImg.name : userInfo.avatar_img, // Cập nhật ảnh đại diện nếu có
+            const response = await axios.post('/user/upload-avatar', formData, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+            if (response.data.success) {
+                const avatarBase64 = response.data.data.avatar_base64;
+
+                // Cập nhật lại localStorage với ảnh mới
+                const updatedUserInfoWithAvatar = {
+                    ...JSON.parse(localStorage.getItem('userInfo')),
+                    avatar_img: avatarBase64,
                 };
-                localStorage.setItem('userInfo', JSON.stringify(updatedUserInfo));
-    
-                // Cập nhật lại state của component để hiển thị dữ liệu mới
-                setUsername(username);
-                setEmail(email);
-                setPhone(phone);
-                setAddress(address);
-                setPreviewImage(avatarImg ? URL.createObjectURL(avatarImg) : previewImage);
-    
-                // Gọi lại hàm fetchUserData để làm mới dữ liệu từ API (nếu cần)
-                fetchUserData();
+                localStorage.setItem('userInfo', JSON.stringify(updatedUserInfoWithAvatar));
+
+                // Gửi sự kiện để đồng bộ hóa
+                window.dispatchEvent(new Event('userInfoUpdated'));
+
+                setPreviewImage(avatarBase64);
+                toast.success('Cập nhật ảnh thành công!');
             }
         } catch (error) {
-           
+            console.error('Error uploading avatar:', error);
+            toast.error('Cập nhật ảnh không thành công!');
         }
-    };
-       
+    }
+    window.location.reload();
+};
+
+
+
     
-
-
 
     return (
         <div>
@@ -112,7 +166,7 @@ const EditProfile = () => {
                 <h5>Chỉnh sửa thông tin</h5>
                 <div className="account-details-form">
                     <form onSubmit={handleSaveChanges}>
-                        {/* <div className="single-input-item">
+                        <div className="single-input-item">
                             <label htmlFor="profile-image">Ảnh đại diện</label>
                             {previewImage && (
                                 <img
@@ -132,7 +186,7 @@ const EditProfile = () => {
                                 accept="image/*"
                                 onChange={handleImageChange}
                             />
-                        </div> */}
+                        </div>
                         <div className="single-input-item">
                             <label htmlFor="display-name" className="required">Tên Hiển Thị</label>
                             <input
