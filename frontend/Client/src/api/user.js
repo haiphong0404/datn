@@ -53,7 +53,6 @@ export const getUserByid = async (id) => {
     } catch (error) {
         throw new Error('Lỗi khi lấy thông tin người dùng: ' + (error.response?.data?.message || error.message));
     }
-
 };
 
 
@@ -64,10 +63,10 @@ export const editUserById = async (id, updatedData) => {
         const response = await axios.put(
             `/user/${id}`, 
             updatedData, // Dữ liệu cần cập nhật
+           
             {
                 headers: {
                     'Authorization': `Bearer ${token}`, // Gửi token trong header
-                    'Content-Type': 'application/json',
                 },
             }
         );
@@ -76,6 +75,27 @@ export const editUserById = async (id, updatedData) => {
     } catch (error) {
         console.error('Lỗi khi sửa thông tin người dùng:', error.response?.data || error.message);
         throw new Error('Lỗi khi sửa thông tin người dùng: ' + (error.response?.data?.message || error.message));
+    }
+};
+
+export const uploadAvatar = async (formData) => {
+    const token = localStorage.getItem('token'); // Lấy token từ localStorage
+    try {
+        const response = await axios.post(
+            '/user/upload-avatar', // API endpoint
+            formData, // Dữ liệu form chứa ảnh
+            {
+                headers: {
+                    'Authorization': `Bearer ${token}`, // Gửi token trong header
+                    'Content-Type': 'multipart/form-data', // Đảm bảo Content-Type là multipart/form-data khi gửi file
+                },
+            }
+        );
+        
+        return response.data; // Trả về dữ liệu từ API (bao gồm avatar đã được cập nhật)
+    } catch (error) {
+        console.error('Lỗi khi tải ảnh avatar:', error.response?.data || error.message);
+        throw new Error('Lỗi khi tải ảnh avatar: ' + (error.response?.data?.message || error.message));
     }
 };
 

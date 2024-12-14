@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import {useCart} from '../../contexts/CartContext.js';
+import { useCart } from '../../contexts/CartContext.js';
 const Cart = () => {
   const navigate = useNavigate();
 

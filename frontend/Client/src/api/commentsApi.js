@@ -1,5 +1,5 @@
 import axios from "axios";
-import FormData from 'form-data';
+
 // Lấy danh sách bình luận của sản phẩm
 export const fetchComments = async (productId) => {
     try {
