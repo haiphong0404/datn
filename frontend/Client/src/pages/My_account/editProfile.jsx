@@ -166,7 +166,7 @@ const handleSaveChanges = async (e) => {
                 <h5>Chỉnh sửa thông tin</h5>
                 <div className="account-details-form">
                     <form onSubmit={handleSaveChanges}>
-                        {/* <div className="single-input-item">
+                        <div className="single-input-item">
                             <label htmlFor="profile-image">Ảnh đại diện</label>
                             {previewImage && (
                                 <img
@@ -186,7 +186,7 @@ const handleSaveChanges = async (e) => {
                                 accept="image/*"
                                 onChange={handleImageChange}
                             />
-                        </div> */}
+                        </div>
                         <div className="single-input-item">
                             <label htmlFor="display-name" className="required">Tên Hiển Thị</label>
                             <input

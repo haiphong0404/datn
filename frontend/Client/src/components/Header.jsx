@@ -205,21 +205,21 @@ const Header = () => {
               <div className="col-12">
                 <div className="mobile-main-header">
                   <div className="mobile-logo">
-                  <Link to="/">
-                    <img src="/assets/img/logo/logo.png" alt="Brand Logo" />
-                  </Link>
+                    <Link to="/">
+                      <img src="/assets/img/logo/logo.png" alt="Brand Logo" />
+                    </Link>
                   </div>
                   <div className="mobile-menu-toggler">
-                  <li className="mini-cart-wrap" style={{marginBottom: '5px'}}>
-                        <SearchProducts />
-                      </li>
+                    <li className="mini-cart-wrap" style={{ marginBottom: '5px' }}>
+                      <SearchProducts />
+                    </li>
                     <li className="mini-cart-wrap">
-                        <Link to="/cart" className="minicart-btn">
-                          <Badge badgeContent={localCart.length} color="success">
-                            <i className="fa fa-shopping-cart" />
-                          </Badge>
-                        </Link>
-                      </li>
+                      <Link to="/cart" className="minicart-btn">
+                        <Badge badgeContent={localCart.length} color="success">
+                          <i className="fa fa-shopping-cart" />
+                        </Badge>
+                      </Link>
+                    </li>
                     <button className="mobile-menu-btn">
                       <span />
                       <span />
@@ -244,7 +244,7 @@ const Header = () => {
             </div>
             <div className="off-canvas-inner">
               {/* search box start */}
-              
+
               {/* search box end */}
               {/* mobile menu start */}
               <div className="mobile-navigation">
@@ -288,21 +288,44 @@ const Header = () => {
                         aria-haspopup="true"
                         aria-expanded="false"
                       >
-                        Tài Khoản
+                        {JSON.parse(localStorage.getItem("userInfo"))?.username || "Tài Khoản"}
                         <i className="fa fa-angle-down" />
                       </a>
                       <div className="dropdown-menu" aria-labelledby="myaccount">
-                        <Link className="dropdown-item" to="/my_account">
-                          Tài Khoản
-                        </Link>
-                        <Link className="dropdown-item" to="/login">
-                          Đăng Nhập
-                        </Link>
-                        <Link className="dropdown-item" to="/register">
-                          Đăng Ký
-                        </Link>
+                        {JSON.parse(localStorage.getItem("userInfo")) ? (
+                          <>
+                            {/* User Account Link */}
+                            <Link className="dropdown-item" to="/my_account">
+                              Tài Khoản
+                            </Link>
+                            {/* Logout Option */}
+                            <a
+                              href="#"
+                              className="dropdown-item"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                localStorage.removeItem("userInfo"); // Clear user info
+                                window.location.reload(); // Reload to reflect logout state
+                              }}
+                            >
+                              Đăng Xuất
+                            </a>
+                          </>
+                        ) : (
+                          <>
+                            {/* Login Link */}
+                            <Link className="dropdown-item" to="/login">
+                              Đăng Nhập
+                            </Link>
+                            {/* Register Link */}
+                            <Link className="dropdown-item" to="/register">
+                              Đăng Ký
+                            </Link>
+                          </>
+                        )}
                       </div>
                     </div>
+
                   </li>
                 </ul>
 
