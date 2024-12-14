@@ -50,22 +50,8 @@ const Contact_us = () => {
           </div>
         </div>
         {/* breadcrumb area end */}
-        <div className="row">
-              <div className="col-12">
-                <div className="map-area">
-                  <iframe
-                    title="Google Map"
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3723.8671759619!2d105.74328887512955!3d21.037999980613673!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x313454962c0b6523%3A0x5c76c67564d9d1b9!2zUC4gVHLhu4tuaCBWxINuIELDtCwgSMOgIE7hu5lpLCBWaeG7h3QgTmFt!5e0!3m2!1svi!2s!4v1734011736416!5m2!1svi!2s" 
-                    
-                    width="100%"
-                    height="450"
-                    style={{ border: 0 }}
-                    allowFullScreen=""
-                    loading="lazy"
-                  ></iframe>
-                </div>
-              </div>
-            </div>
+
+
         {/* contact area start */}
         <div className="contact-area section-padding pt-0">
           <div className="container">
@@ -139,6 +125,25 @@ const Contact_us = () => {
           </div>
         </div>
         {/* contact area end */}
+        <div className="col-12">
+  <div className="map-area" style={{ position: "relative", width: "100%", paddingBottom: "500px" }}>
+
+    <iframe
+      title="Google Map"
+     src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3723.6583486793397!2d105.71640227503195!3d21.046352080607413!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31345443c9ff3663%3A0x405422ba263f7975!2zMTI0IMSQLiBEaSBUcuG6oWNoLCBEaSBUcuG6oWNoLCBOYW0gVOG7qyBMacOqbSwgSMOgIE7hu5lpLCBWaeG7h3QgTmFt!5e0!3m2!1svi!2s!4v1734017206096!5m2!1svi!2s"
+      style={{
+        position: "absolute",
+        top: 0,
+        left: 0,
+        width: "100%",
+        height: "100%",
+        border: 0,
+      }}
+      allowFullScreen=""
+      loading="lazy"
+    ></iframe>
+  </div>
+</div>
       </main>
     </div>
   );

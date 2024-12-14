@@ -57,7 +57,7 @@ const HeroSlider = () => {
   return (
     <section className="hero-slider">
       <Slider {...settings} className="hero-slider-active slick-arrow-style slick-arrow-style_hero slick-dot-style">
-        {banners.sort((a, b) => b.id - a.id).slice(0,3).map((banner, index) => (
+        {banners.sort((a, b) => b.id - a.id).slice(0,4).map((banner, index) => (
           <div key={index} className="hero-single-slide hero-overlay">
             <div className="hero-slider-item hero-1 bg-img">
               <img src={banner.image_url} alt={banner.title} /> {/* Sử dụng banner.image_url */}

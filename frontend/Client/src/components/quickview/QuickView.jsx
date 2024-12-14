@@ -123,6 +123,7 @@ const QuickViewModal = ({ show, onClose, product }) => {
 
           {/* Chọn kích thước */}
           {/* Chọn kích thước */}
+          {/* Chọn kích thước */}
           <div className="size-selection">
             <h4>Chọn Kích Thước</h4>
             <div className="size-options">
@@ -133,13 +134,15 @@ const QuickViewModal = ({ show, onClose, product }) => {
                     key={variant.id}
                     className={`size-option ${variant.size === selectedSize ? 'selected' : ''}`}
                     onClick={() => handleSizeSelect(variant.size)}
-                    disabled={variant.selectedQuantity <= 0} // Vô hiệu hóa nếu số lượng không còn
+                    disabled={variant.quantity <= 0} // Vô hiệu hóa nếu số lượng không còn
+                    style={variant.quantity <= 0 ? { cursor: "not-allowed", opacity: 0.5 } : {}}
                   >
-                    {variant.size} {variant.selectedQuantity <= 0 && "(Hết hàng)"}
+                    {variant.size} {variant.quantity <= 0 && "(Hết hàng)"}
                   </button>
                 ))}
             </div>
           </div>
+
 
 
           {/* Hiển thị giá */}
@@ -162,8 +165,11 @@ const QuickViewModal = ({ show, onClose, product }) => {
 
           {/* Trạng thái có sẵn */}
           <div className="availability">
+
             <i className="fa fa-check-circle"></i>
-            <span>{selectedVariant?.selectedQuantity} Số lượng tồn kho</span>
+            <span>{selectedVariant?.quantity} sản phẩm còn trong kho</span>
+
+
           </div>
 
           {/* Thêm vào giỏ hàng */}

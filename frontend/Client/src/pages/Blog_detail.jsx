@@ -41,7 +41,7 @@ const BlogDetail = () => {
               <div className="col-12">
                 <div className="breadcrumb-wrap">
                   <nav aria-label="breadcrumb">
-                    <h3 className="breadcrumb-title">BLOG DETAILS</h3>
+                    <h3 className="breadcrumb-title">Chi tiết bài viết</h3>
                     <ul className="breadcrumb justify-content-center">
                       <li className="breadcrumb-item">
                         <a href="index.html">
@@ -53,11 +53,11 @@ const BlogDetail = () => {
                       <li className="breadcrumb-item active" aria-current="page">
                       
                           <Link to="/blog">
-                            Blog</Link>
+                            Bài viết</Link>
                         
                       </li>
                       <li className="breadcrumb-item active" aria-current="page">
-                        Blog Details
+                        Chi tiết
                       </li>
                     </ul>
                   </nav>
