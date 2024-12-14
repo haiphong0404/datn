@@ -23,8 +23,10 @@ export const getOrderByUserId = async (user_id) => {
 };
 export const getOrderDetail = async (order_id) => {
     try {
+        const token = localStorage.getItem('token');
         const response = await axios.get(`/order-details/${order_id}`, {
             headers: {
+                'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',
             },
         });

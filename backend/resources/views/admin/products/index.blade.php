@@ -157,10 +157,10 @@
                                                             method="POST" style="display:inline;">
                                                             @csrf
                                                             @method('DELETE')
-                                                            <button type="submit" class="btn btn-danger "
+                                                            <!-- <button type="submit" class="btn btn-danger "
                                                                 onclick="return confirm('Bạn có chắc chắn muốn xóa không?');">
                                                                 <i class="bi bi-trash"></i>
-                                                            </button>
+                                                            </button> -->
                                                         </form>
                                                     @endif
                                                 @endif

@@ -52,7 +52,7 @@ const AboutUs = () => {
                 >
                   <img
                     className="w-100"
-                    src="assets/img/about/about.jpg"
+                    src="assets/img/about/gioithieu.webp"
                     alt="about thumb"
                   />
                 </div>
@@ -104,10 +104,10 @@ const AboutUs = () => {
               <div className="col-lg-4 col-md-4">
                 <div className="single-choose-item text-center mb-30">
                   <i className="fa fa-globe" />
-                  <h4>Miễn phí vận chuyển
+                  <h4>thanh toán quốc tế 
                   </h4>
                   <p>
-                  Tất cả đơn hàng trên 500.000 VNĐ sẽ được miễn phí giao hàng, giúp bạn tiết kiệm chi phí khi mua sắm.
+                  Các bạn có thể thanh toán quốc tế bằng Stripe
                   </p>
                 </div>
               </div>
