@@ -139,10 +139,13 @@ class UserController extends Controller
         $user->save(); // Lưu thay đổi vào cơ sở dữ liệu
     
         // Quay lại trang danh sách với thông báo thành công
-        return redirect()->route('admin.user.index')->with(
-            'success',
-            'Trạng thái người dùng đã được cập nhật thành ' . ($user->status === 'active' ? 'Hoạt động' : 'Không hoạt động') . '!'
-        );
+        return response()->json([
+            'id' => $user->id,
+            'status' => $user->status,
+            'message' => 'Trạng thái người dùng đã được cập nhật thành ' . ($user->status === 'active' ? 'Hoạt động' : 'Không hoạt động') . '!',
+            'success' => true
+        ]);
+        
     }
     
 }

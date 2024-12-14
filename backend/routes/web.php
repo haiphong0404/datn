@@ -29,7 +29,7 @@ Route::get('/', function () {
 
 
 // Route profile
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth','check.status'])->group(function () {
     Route::get('/staff', [StatisticsController::class, 'index'])->name('admin.index');
     Route::get('/admin', [StatisticsController::class, 'index'])->name('admin.index');
     Route::get('profile', [ProfileControllers::class, 'index'])->name('admin.profile');
@@ -44,7 +44,7 @@ Route::middleware('auth')->group(function () {
 require __DIR__ . '/auth.php';
 
 // Group chung cho Admin và Staff
-Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'checkRole:admin,staff']], function () {
+Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'checkRole:admin,staff','check.status']], function () {
     // Quản lý thương hiệu
     Route::resource('brands', BrandController::class)->middleware('checkRole:admin');
     Route::post('brands/{id}/restore', [BrandController::class, 'restore'])->name('brands.restore')->middleware('checkRole:admin');
