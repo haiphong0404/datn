@@ -11,9 +11,6 @@
 @endsection
 
 @section('content')
-    @if (session('success'))
-    @endif
-
     <style>
         .text-truncate {
             max-width: 150px;
@@ -49,6 +46,17 @@
 
                 <div class="card-body">
                     <div class="adv-table">
+                    @if (session('success'))
+                        <div class="alert alert-success">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+
+                    @if (session('error'))
+                        <div class="alert alert-danger">
+                            {{ session('error') }}
+                        </div>
+                    @endif
                         <div id="hidden-table-info_wrapper" class="dataTables_wrapper form-inline" role="grid">
                             <div class="row-fluid">
                                 <div class="span6">
@@ -105,7 +113,8 @@
                                             <td class="text-end">{{ $order->phone }}</td>
                                             <td>{{ $order->payment_method }}</td>
                                             <td class="text-truncate">{{ $order->address }}</td>
-                                            <td class="text-end" style="width: 150px;">{{ number_format($order->total_amount, 0, ',', '.') }} VND
+                                            <td class="text-end" style="width: 150px;">
+                                                {{ number_format($order->total_amount, 0, ',', '.') }} VND
                                             </td>
                                             <td style="width: 100px;">{{ $order->order_date }}</td>
                                             <td style="width: 100px;">{{ $order->updated_at }}</td>
@@ -136,24 +145,24 @@
                                             </td>
                                             <td>
 
-                                                    @if ($order->status === 'cancelled' || $order->status === 'completed')
-                                                        <p class="text-success">{{ ucfirst($order->status) }}</p>
-                                                    @else
-                                                        <form action="{{ route('admin.orders.updateStatus', $order->id) }}"
-                                                            method="POST">
-                                                            @csrf
-                                                            @method('PUT')
-                                                            <select name="status" class="form-select"
-                                                                onchange="this.form.submit()">
-                                                                @foreach ($allowedTransitions[$order->status] as $status)
-                                                                    <option value="{{ $status }}"
-                                                                        {{ $order->status == $status ? 'selected' : '' }}>
-                                                                        {{ ucfirst($status) }}
-                                                                    </option>
-                                                                @endforeach
-                                                            </select>
-                                                        </form>
-                                                    @endif
+                                                @if ($order->status === 'cancelled' || $order->status === 'completed')
+                                                    <p class="text-success">{{ ucfirst($order->status) }}</p>
+                                                @else
+                                                    <form action="{{ route('admin.orders.updateStatus', $order->id) }}"
+                                                        method="POST">
+                                                        @csrf
+                                                        @method('PUT')
+                                                        <select name="status" class="form-select"
+                                                            onchange="this.form.submit()">
+                                                            @foreach ($allowedTransitions[$order->status] as $status)
+                                                                <option value="{{ $status }}"
+                                                                    {{ $order->status == $status ? 'selected' : '' }}>
+                                                                    {{ ucfirst($status) }}
+                                                                </option>
+                                                            @endforeach
+                                                        </select>
+                                                    </form>
+                                                @endif
                                             </td>
                                             <td>
                                                 <a href="{{ route('admin.orders.show', $order->id) }}"
@@ -176,7 +185,7 @@
                                         <ul class="pagination">
                                             <li class="prev">
                                                 <a href="{{ $orders->previousPageUrl() }}" aria-label="Previous">←
-                                                    Previous</a>
+                                                    Trước</a>
                                             </li>
                                             @foreach ($orders->getUrlRange(1, $orders->lastPage()) as $page => $url)
                                                 <li class="{{ $page == $orders->currentPage() ? 'active' : '' }}">
@@ -184,7 +193,7 @@
                                                 </li>
                                             @endforeach
                                             <li class="next">
-                                                <a href="{{ $orders->nextPageUrl() }}" aria-label="Next">Next →</a>
+                                                <a href="{{ $orders->nextPageUrl() }}" aria-label="Next">Sau →</a>
                                             </li>
                                         </ul>
                                     </div>
@@ -200,12 +209,14 @@
     <script src="{{ asset('assets') }}/admin/js/dynamic_table_init.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            toastr.success('{{ session('success') }}', 'Thành công', {
-                closeButton: true,
-                progressBar: true,
-                timeOut: 3000,
-                positionClass: "toast-top-right"
-            });
+            @if (session('success'))
+                toastr.success('{{ session('success') }}', 'Thành công', {
+                    closeButton: true,
+                    progressBar: true,
+                    timeOut: 3000,
+                    positionClass: "toast-top-right"
+                });
+            @endif
         });
     </script>
 @endsection

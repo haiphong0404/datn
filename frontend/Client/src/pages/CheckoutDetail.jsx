@@ -8,12 +8,13 @@ const CheckoutDetail = () => {
   const [contactInfo, setContactInfo] = useState(null);
   const { orderId } = useParams();
   const { orderDetail, loading, error } = useOrderDetail(orderId);
+
   const navigate = useNavigate();
   // Log the data to check
   useEffect(() => {
-    console.log('Loading:', loading);
-    console.log('Error:', error);
-    console.log('Order Detail:', orderDetail);
+    // console.log('Loading:', loading);
+    // console.log('Error:', error);
+    // console.log('Order Detail:', orderDetail);
   }, [loading, error, orderDetail]);
 
   // Assuming orderDetail is an array of items
@@ -48,7 +49,7 @@ const CheckoutDetail = () => {
       const response = await axios.post(`/payment/cancel/${orderId}`);
       if (response.status === 200) {
         toast('Thanh toán đã bị hủy!');
-        navigate('/checkout')
+        navigate('/')
       }
     } catch (error) {
       console.error('Có lỗi xảy ra khi cập nhật hủy thanh toán:', error);
@@ -118,29 +119,49 @@ const CheckoutDetail = () => {
                         <tbody>
                           {orderItems.map((item, index) => (
                             <tr key={index}>
-                              <td className="checkout-pro-title">
-                                {item.product?.name || 'Tên sản phẩm không có'}
+                              <td className="pro-title">
+                                {item.product?.name.substring(0, 18) || 'Tên sản phẩm không có'}
                               </td>
-                              <td className="checkout-pro-title">
-                                <img src={item.product?.image || 'Ảnh sản phẩm không có'} style={{ width: '50px', height: '50px' }} />
+                              <td className="pro-title">
+                                <img
+                                  src={item.variant_images?.[0]?.base64_image || 'Ảnh sản phẩm không có'}
+                                  alt="Product Image"
+                                  style={{ width: '50px', height: '50px' }}
+                                />
                               </td>
-                              <td className="checkout-pro-title">
+                              <td className="pro-title">
                                 {item.color?.name || 'Màu sắc không có'}
                               </td>
-                              <td className="checkout-pro-title">
+                              <td className="pro-title">
                                 {item.size?.name || 'Kích thước không có'}
                               </td>
-                              <td className="checkout-pro-price">
+                              <td className="pro-price">
                                 <span>{parseFloat(item.price).toLocaleString()} VND</span>
                               </td>
-                              <td className="checkout-pro-quantity">
+                              <td className="pro-quantity">
                                 <span>{item.quantity}</span>
                               </td>
-                              <td className="checkout-pro-subtotal">
+                              <td className="pro-subtotal">
                                 <span>{(parseFloat(item.price) * item.quantity).toLocaleString()} VND</span>
                               </td>
+
                             </tr>
+
                           ))}
+                          <tr className="pro-title">
+                            <td colSpan="6" style={{ textAlign: 'center' }}>Phí Vận Chuyển</td>
+                            <td >
+                              {parseFloat(orderDetail.shipping_fee).toLocaleString()} VND
+                            </td>
+                          </tr>
+                          {orderDetail.voucher_discount != 0 && (
+                            <tr className="pro-title">
+                              <td colSpan="6" style={{ textAlign: 'center' }}>Mã Giảm Giá :</td>
+                              <td>
+                                -{parseFloat(orderDetail.voucher_discount).toLocaleString()} VND
+                              </td>
+                            </tr>
+                          )}
 
                           <tr className="checkout-total-amount-row">
                             <th colSpan="6" style={{ textAlign: 'center' }}>Tổng Tiền:</th>
@@ -203,8 +224,11 @@ const CheckoutDetail = () => {
                       <li><i className="fa fa-fax" /> Tên: {info.name}</li>
                       <li><i className="fa fa-envelope-o" /> E-mail: {info.email}</li>
                       <li><i className="fa fa-phone" /> {info.phone}</li>
+                      <li><i className="fa fa-credit-card" /> Nội dung chuyển khoản: {`${orderDetail.name} thanh toán đơn hàng ${orderId}`}</li>
                     </ul>
-
+                    <div className="alert alert-warning mt-3">
+        <strong>Cảnh báo:</strong> Vui lòng nhập đúng nội dung chuyển khoản như trên, nếu không chúng tôi sẽ không thể xác nhận đơn hàng của bạn.
+      </div>
                   </div>
                 </div>
               ))}

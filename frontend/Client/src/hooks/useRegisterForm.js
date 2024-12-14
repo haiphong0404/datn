@@ -9,7 +9,7 @@ import { registerUser } from "../api/user.js";
 const schema = yup.object().shape({
     username: yup.string().required("Vui lòng nhập tên tài khoản"),
     email: yup.string().email("Email không hợp lệ").required("Vui lòng nhập email"),
-    password: yup.string().min(6, "Mật khẩu phải đủ 6 ký tự").required("Vui lòng nhập mật khẩu"),
+    password: yup.string().min(8, "Mật khẩu phải đủ 8 ký tự").required("Vui lòng nhập mật khẩu"),
     password_confirmation: yup
         .string()
         .oneOf([yup.ref("password"), null], "Mật khẩu không khớp")
@@ -28,11 +28,12 @@ export const useRegisterForm = () => {
 
     const handleRegister = async (data) => {
         try {
-            await registerUser(data); // Gọi hàm đăng ký
-            toast.success("Đăng ký thành công!"); // Hiển thị thông báo thành công
-            navigate("/login"); // Điều hướng về trang đăng nhập
+            await registerUser(data);
+            toast.success("Đăng ký thành công!");
+            navigate("/login");
+
         } catch (err) {
-            toast.error("Đăng ký thất bại. Vui lòng thử lại."); // Hiển thị thông báo lỗi
+            toast.error(err?.message);
         }
     };
 

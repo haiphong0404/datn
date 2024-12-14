@@ -89,10 +89,10 @@
                                                     method="POST" style="display: inline-block;">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger " title="Xóa"
+                                                    <!-- <button type="submit" class="btn btn-danger " title="Xóa"
                                                         onclick="return confirm('Bạn có chắc chắn muốn xóa không?');">
-                                                        <i class="bi bi-trash"></i> 
-                                                    </button>
+                                                        <i class="bi bi-trash"></i>
+                                                    </button> -->
                                                 </form>
                                             </div>
                                         </td>
@@ -114,4 +114,16 @@
             </div>
         </div>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            @if (session('success'))
+                toastr.success('{{ session('success') }}', 'Thành công', {
+                    closeButton: true,
+                    progressBar: true,
+                    timeOut: 3000,
+                    positionClass: "toast-top-right"
+                });
+            @endif
+        });
+    </script>
 @endsection

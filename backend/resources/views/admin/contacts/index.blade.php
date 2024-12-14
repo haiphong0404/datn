@@ -76,11 +76,11 @@
                                         </form>
                                     </div>
                                 </div>
-                                <div class="span6">
+                                {{-- <div class="span6">
                                     <div class="dataTables_filter" id="hidden-table-info_filter">
                                         <a href="{{ route('admin.contacts.create') }}" class="btn btn-success">Tạo Mới</a>
                                     </div>
-                                </div>
+                                </div> --}}
                             </div>
 
                             <table class="display table table-bordered" id="hidden-table-info"
@@ -111,7 +111,7 @@
                                                         class="btn btn-warning mx-1">
                                                         <i class="fa fa-edit"></i>
                                                     </a>
-                                                    <form action="{{ route('admin.contacts.destroy', $contact) }}"
+                                                    {{-- <form action="{{ route('admin.contacts.destroy', $contact) }}"
                                                         method="POST" style="display:inline;">
                                                         @csrf
                                                         @method('DELETE')
@@ -119,7 +119,7 @@
                                                             onclick="return confirm('Bạn có chắc muốn xóa liên hệ này?')"><i
                                                                 class="bi bi-trash"></i>
                                                         </button>
-                                                    </form>
+                                                    </form> --}}
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -139,7 +139,7 @@
                                         <ul class="pagination">
                                             <li class="prev">
                                                 <a href="{{ $contacts->previousPageUrl() }}" aria-label="Previous">←
-                                                    Previous</a>
+                                                    Trước</a>
                                             </li>
                                             @foreach ($contacts->getUrlRange(1, $contacts->lastPage()) as $page => $url)
                                                 <li class="{{ $page == $contacts->currentPage() ? 'active' : '' }}">
@@ -147,7 +147,7 @@
                                                 </li>
                                             @endforeach
                                             <li class="next">
-                                                <a href="{{ $contacts->nextPageUrl() }}" aria-label="Next">Next →</a>
+                                                <a href="{{ $contacts->nextPageUrl() }}" aria-label="Next">Sau →</a>
                                             </li>
                                         </ul>
                                     </div>
@@ -165,12 +165,14 @@
 @endsection
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        toastr.success('{{ session('success') }}', 'Thành công', {
-            closeButton: true,
-            progressBar: true,
-            timeOut: 3000,
-            positionClass: "toast-top-right"
-        });
+        @if (session('success'))
+            toastr.success('{{ session('success') }}', 'Thành công', {
+                closeButton: true,
+                progressBar: true,
+                timeOut: 3000,
+                positionClass: "toast-top-right"
+            });
+        @endif
     });
 </script>
 @endsection

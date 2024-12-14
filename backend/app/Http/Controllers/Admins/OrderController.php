@@ -9,6 +9,7 @@ use App\Models\Order;
 use App\Models\ProductVariant;
 use App\Services\OrderService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 class OrderController extends Controller
@@ -77,7 +78,7 @@ class OrderController extends Controller
 
             // Tạo thông báo thành công với thông tin của đơn hàng
             $message = 'Đơn hàng ' . $order->id . ' - ' . $order->name . ' đã được tạo thành công  ' . $order->order_date;
-
+            session()->flash('success', $message);
             // Lấy thông báo hiện tại từ session (nếu có) hoặc khởi tạo mảng trống
             $successOrders = session()->get('success_orders', []);
 
@@ -91,7 +92,7 @@ class OrderController extends Controller
 
             // Lưu lại thông báo vào session
             session()->put('success_orders', $successOrders);
-
+            
             // Redirect thành công với thông báo
             return redirect()->route('admin.orders.index');
 
@@ -144,6 +145,7 @@ class OrderController extends Controller
         }
 
         $order->payment_status = $validatedData['payment_status'];
+        $order->handler_id = Auth::id();
 
         if ($order->save()) {
             // Trả về kết quả thành công nếu trạng thái thanh toán được cập nhật

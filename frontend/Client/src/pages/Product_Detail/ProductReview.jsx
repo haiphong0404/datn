@@ -17,7 +17,6 @@ const ProductReview = ({ initialTab = "tab_one" }) => {
     JSON.parse(localStorage.getItem("userInfo"))?.username ? true : false
   );
 
-  // Hàm cập nhật trạng thái đăng nhập khi localStorage thay đổi
   useEffect(() => {
     const checkAuthentication = () => {
       const userInfo = JSON.parse(localStorage.getItem("userInfo"));
@@ -28,13 +27,10 @@ const ProductReview = ({ initialTab = "tab_one" }) => {
       }
     };
 
-    // Thêm event listener khi có sự thay đổi trong localStorage
     window.addEventListener("storage", checkAuthentication);
 
-    // Gọi hàm kiểm tra ngay khi component mount
     checkAuthentication();
 
-    // Cleanup event listener khi component unmount
     return () => {
       window.removeEventListener("storage", checkAuthentication);
     };
@@ -71,9 +67,8 @@ const ProductReview = ({ initialTab = "tab_one" }) => {
       try {
         const response = await addComment(productId, formData);
         if (response.status === 201) {
-          // Đảm bảo phản hồi từ API bao gồm thông tin ảnh
           const newCommentWithImage = response.data;
-          updateComments(newCommentWithImage); // Cập nhật danh sách bình luận
+          updateComments(newCommentWithImage);
           setNewComment("");
           setNewRating(0);
           setFile(null);
@@ -88,57 +83,58 @@ const ProductReview = ({ initialTab = "tab_one" }) => {
   };
 
 
- const handleEditComment = async () => {
-  console.log("Editing comment...");
-  console.log("Edited comment:", editedComment);
-  console.log("Edited rating:", editedRating);
-  console.log("File selected:", file);
+  const handleEditComment = async () => {
+    console.log("Editing comment...");
+    console.log("Edited comment:", editedComment);
+    console.log("Edited rating:", editedRating);
+    console.log("File selected:", file);
 
-  if (editedComment.trim() && editedRating > 0) {
-    console.log("Form data is valid. Preparing request...");
+    if (editedComment.trim() && editedRating > 0) {
+      console.log("Form data is valid. Preparing request...");
 
-    const formData = new FormData();
-    formData.append("comment", editedComment);
-    formData.append("star_rating", editedRating);
-    
-    // Chỉ thêm tên của file vào formData nếu có file
-    if (file) {
-      console.log("File name to be added:", file);
-      formData.append("file", file); // Chỉ gửi tên file
-    }
+      const formData = new FormData();
+      formData.append("comment", editedComment);
+      formData.append("star_rating", editedRating);
 
-    try {
-      console.log("Sending request to edit comment...");
-      const response = await editComment(editCommentId, formData);
-      console.log("Response received:", response);
+      if (file) {
+        console.log("File name to be added:", file);
+        formData.append("file", file);
+      }
 
-      if (response.status === 200) {
-        console.log("Response status is 200, updating comments...");
-        const updatedComment = response.data;
-        console.log("Updated comment data:", updatedComment);
+      try {
+        console.log("Sending request to edit comment...");
+        const response = await editComment(editCommentId, formData);
+        console.log("Response received:", response);
 
-        // Kiểm tra trước khi cập nhật
-        updateComments(updatedComment);
-        console.log("Updated comments list:", comments);
+        if (response.status === 200) {
+          console.log("Response status is 200, updating comments...");
+          const updatedComment = response.data;
+          console.log("Updated comment data:", updatedComment);
 
-        setEditedComment("");
-        setEditedRating(0);
-        setFile(null);
-        refetch();
-        toast.success("Cập nhật bình luận thành công.");
-      } else {
-        console.error("Response status not 200, error occurred.");
+          updateComments(updatedComment);
+          console.log("Updated comments list:", comments);
+
+          setEditedComment("");
+          setEditedRating(0);
+          setFile(null);
+          setEditCommentId(null);
+
+          refetch();
+          toast.success("Cập nhật bình luận thành công.");
+        } else {
+          console.error("Response status not 200, error occurred.");
+          toast.error("Có lỗi xảy ra khi sửa bình luận.");
+        }
+      } catch (error) {
+        console.error("Error while editing comment:", error);
         toast.error("Có lỗi xảy ra khi sửa bình luận.");
       }
-    } catch (error) {
-      console.error("Error while editing comment:", error);
-      toast.error("Có lỗi xảy ra khi sửa bình luận.");
+    } else {
+      console.warn("Invalid input. Please enter valid content and rating.");
+      toast.error("Vui lòng nhập nội dung và đánh giá hợp lệ.");
     }
-  } else {
-    console.warn("Invalid input. Please enter valid content and rating.");
-    toast.error("Vui lòng nhập nội dung và đánh giá hợp lệ.");
-  }
-};
+  };
+
 
   const handleDeleteComment = async (id) => {
     try {
@@ -297,19 +293,19 @@ const ProductReview = ({ initialTab = "tab_one" }) => {
                           />
                         ))}
                       </div>
-                      {comment.file && !file && (
+                      {/* {comment.file && !file && (
                         <div className="preview-image">
                           <img src={comment.file} alt="Current review image" width="100" />
                           <p>Ảnh hiện tại</p>
                         </div>
-                      )}
-                      <input
+                      )} */}
+                      {/* <input
                         type="file"
                         accept="image/*"
                         onChange={(e) => {
                           setFile(e.target.files[0]);
                         }}
-                      />
+                      /> */}
                       {file && (
                         <div className="preview-image">
                           <img src={URL.createObjectURL(file)} alt="Review" width="130" />

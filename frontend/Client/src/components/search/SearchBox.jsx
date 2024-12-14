@@ -54,11 +54,20 @@ const SearchProducts = () => {
                 <div className="search-list">
                   <h4 className='search-name'><Link to={`/product_details/${product.id}`}><span style={{
                     color: 'black',  // màu chữ
-                    fontSize: '16px',  // kích thước chữ
+                    fontSize: '20px',  // kích thước chữ
                     fontWeight: 'bold',  // độ đậm chữ
-                    textDecoration: 'none',  // bỏ gạch dưới liên kết
+                    textDecoration: 'none',  // bỏ gạch dưới liên kế
                   }} > {product.name}</span></Link></h4>
-                  <p>{product.price} VND</p>
+                  <label style={{
+                    fontSize: '16px',                // Kích thước chữ
+                    color: '#e63946',                   // Màu chữ (màu tối cho dễ đọc)
+                    marginTop: '10px',                // Khoảng cách giữa tên sản phẩm và giá
+                    display: 'block',                // Đảm bảo label sẽ hiển thị trên dòng mới
+                    fontWeight: 'bold',              // Độ đậm của chữ
+                    textAlign: 'left',               // Canh lề trái
+                  }}>{product.price ?
+                    `${new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(product.price)}`
+                    : "Liên hệ"} </label>
                 </div>
               </li>
             ))}

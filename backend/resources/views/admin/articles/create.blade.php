@@ -3,7 +3,7 @@
 @section('search')
     <form action="{{ route('admin.articles.index') }}" method="GET">
         <div class="input-group mt-1">
-            <input type="text" name="search" class="form-control" placeholder="Tìm kiếm"
+            <input type="text" name="search" class="form-control" placeholder="Tìm kiếm bài viết"
                 value="{{ request()->input('search') }}">
             <button class="btn btn-outline-secondary" type="submit">
                 <i class="bi bi-search"></i>
@@ -81,7 +81,7 @@
                         <div class="mb-3 d-flex">
                             <a href="{{ route('admin.articles.index') }}" class="btn btn-secondary btn-lg flex-fill me-1">Quay lại</a>
                             <button type="reset" class="btn btn-warning btn-lg flex-fill me-1">Reset</button>
-                            <button type="submit" class="btn btn-primary btn-lg flex-fill">Tạo Bài Viết</button>
+                            <button type="submit" class="btn btn-primary btn-lg flex-fill">Thêm Mới</button>
                         </div>
                     </form>
                 </div>

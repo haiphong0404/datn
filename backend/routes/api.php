@@ -88,6 +88,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('order', OrderController::class);
     Route::post('/cart/add', [CartController::class, 'addToCart']);
     Route::post('/cart/sync', [CartController::class, 'syncCart']);
+
 });
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/change-password', [ProfileController::class, 'changePassword']);
@@ -101,5 +102,7 @@ Route::post('order/{order_id}/status', [OrderDetailController::class, 'updateOrd
 Route::post('/create-stripe', [StripeController::class, 'createStripe']);
 Route::post('/webhook/stripe', [StripeController::class, 'handle'])->withoutMiddleware([VerifyCsrfToken::class]);
 Route::get('/stripe/verify-session/{sessionId}', [StripeController::class, 'verifySession']);
-
+Route::post('/orders/{orderId}/cancel', [StripeController::class, 'cancelOrder']);
 Route::post('/product-variants/check-quantity', [ProductVariantController::class, 'checkQuantity']);
+Route::post('/user/add-avatar', [UserController::class, 'addAvatar']);
+Route::middleware('auth:sanctum')->post('/user/avatar', [UserController::class, 'updateAvatar']);

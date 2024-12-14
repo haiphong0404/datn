@@ -28,13 +28,15 @@ class StripeController extends Controller
                 'user_id' => $request->input('user_id'),
                 'order_date' => Carbon::parse($request->input('order_date'))->format('Y-m-d H:i:s'),
                 'status' => $request->input('status', 'pending'),
-                'total_amount' => $request->input('total_amount'), // Dùng total_amount của request
+                'total_amount' => $request->input('total_amount'),
                 'name' => $request->input('name'),
                 'phone' => $request->input('phone'),
                 'address' => $request->input('address'),
                 'infor' => $request->input('infor'),
-                'payment_method' => $request->input('payment_method', 'stripe'),
+                'payment_method' => $request->input('payment_method'),
                 'payment_status' => $request->input('payment_status', 'unpaid'),
+                'shipping_fee' => $request->input('shipping_fee'), // Thêm phí vận chuyển
+                'voucher_discount' => $request->input('voucher_discount'), // Thêm giảm giá từ voucher
             ];
 
             // Tạo đơn hàng
@@ -245,6 +247,30 @@ public function verifySession($sessionId)
     }
 }
 
+public function cancelOrder($orderId)
+{
+    try {
+        $order = Order::find($orderId);
 
+        if (!$order) {
+            return response()->json(['message' => 'Order not found.'], 404);
+        }
+
+        // Xóa chi tiết đơn hàng
+        $order->orderDetails()->delete();
+
+        // Xóa đơn hàng
+        $order->delete();
+
+        return response()->json(['status' => 'success', 'message' => 'Order has been cancelled and deleted.'], 200);
+    } catch (\Exception $e) {
+        Log::error('Error canceling order: ' . $e->getMessage(), [
+            'order_id' => $orderId,
+            'error' => $e->getTraceAsString(),
+        ]);
+
+        return response()->json(['status' => 'error', 'message' => 'Failed to cancel the order.'], 500);
+    }
+}
 
 }
