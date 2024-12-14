@@ -82,6 +82,7 @@ class OrderController extends Controller
                 'infor' => $request->input('infor'),
                 'voucher_discount' => $request->input('voucher_discount'),
                 'shipping_fee' => $request->input('shipping_fee'),
+                'code_order' => $request->input('code_order'),
                 'payment_method' => $request->input('payment_method'),
                 'payment_status' => $paymentStatus, // Added the payment status separately
             ];
