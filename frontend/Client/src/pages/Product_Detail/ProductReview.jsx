@@ -274,19 +274,19 @@ const ProductReview = ({ initialTab = "tab_one" }) => {
                           />
                         ))}
                       </div>
-                      {comment.file && !file && (
+                      {/* {comment.file && !file && (
                         <div className="preview-image">
                           <img src={comment.file} alt="Current review image" width="100" />
                           <p>Ảnh hiện tại</p>
                         </div>
-                      )}
-                      <input
+                      )} */}
+                      {/* <input
                         type="file"
                         accept="image/*"
                         onChange={(e) => {
                           setFile(e.target.files[0]);
                         }}
-                      />
+                      /> */}
                       {file && (
                         <div className="preview-image">
                           <img src={URL.createObjectURL(file)} alt="Review" width="130" />

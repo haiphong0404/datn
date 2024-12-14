@@ -62,7 +62,7 @@ const Order_detail = () => {
                                         : orderStatus === 'cancelled'
                                             ? 'Đã Hủy'
                                             : orderStatus === 'processing'
-                                                ? 'Không Xác Định'
+                                                ? 'Đã xác nhận'
                                                 : 'Không Xác Định'}
 
 
@@ -85,11 +85,15 @@ const Order_detail = () => {
                     </div>
                 )}
                 <h5 className="checkout-title"></h5>
-                {(orderDetail.status !== 'completed' && orderDetail.status !== 'cancelled' && orderDetail.payment_status !== 'paid') || orderDetail.status === 'processing' ? (
-                    <div className="checkout-btn" style={{ marginTop: '30px' }}>
-                        <CancelOrderButton orderId={orderId} refetch={refetch} />
-                    </div>
-                ) : null}
+                {(orderDetail.status !== 'completed'
+                    && orderDetail.status !== 'cancelled'
+                    && orderDetail.payment_status !== 'paid'
+                    && orderDetail.status !== 'processing')
+                    ? (
+                        <div className="checkout-btn" style={{ marginTop: '30px' }}>
+                            <CancelOrderButton orderId={orderId} refetch={refetch} />
+                        </div>
+                    ) : null}
 
 
                 {/* Hiển thị sản phẩm trong đơn hàng */}

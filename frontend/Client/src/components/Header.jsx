@@ -1,128 +1,15 @@
 import { useEffect, useRef, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useLoginForm } from '../hooks/useLoginForm';
-import { useDispatch, useSelector } from 'react-redux';
+
 import Badge from '@mui/material/Badge'; // Kiểm tra đường dẫn đúng
-import { loadCartFromLocalStorage, removeFromCart } from '../actions/action';
-import SearchBox from './search/SearchBox';
 import SearchProducts from './search/SearchBox';
-import axios from 'axios';
-import { toast } from 'react-toastify';
+import {useCart} from '../contexts/CartContext';
+
 
 const Header = () => {
-  const dispatch = useDispatch()
-  const { cart } = useSelector((state) => state.updateCart || {});
+  const { localCart, handleRemoveFromCart, refetch, setLocalCart } = useCart();
 
-  const [localCart, setLocalCart] = useState(JSON.parse(localStorage.getItem('cart')) || []);
-  const [selectedItems, setSelectedItems] = useState(new Set());
-  // const location = useLocation();
-  // const prevLocation = useRef(location.pathname);
-
-  //  useEffect(() => {
-
-  //   if (prevLocation.current !== location.pathname) {
-  //     prevLocation.current = location.pathname;
-  //     window.location.reload();
-  //   }
-  // }, [location]);
-
-  useEffect(() => {
-    const fetchCart = async () => {
-      const token = localStorage.getItem('token');
-      if (token) {
-        try {
-          const response = await axios.get('/cart', {
-            headers: { Authorization: `Bearer ${token}` },
-          });
-          const { carts } = response.data; // Lấy danh sách carts từ API
-          if (Array.isArray(carts)) {
-            setLocalCart(carts);
-
-          } else {
-            setLocalCart([]);
-          }
-        } catch (error) {
-          console.error("Lỗi khi lấy dữ liệu giỏ hàng:", error);
-          setLocalCart([]);
-        }
-      } else {
-        // Lấy từ localStorage nếu không có token
-        const cartData = localStorage.getItem('cart');
-        if (cartData) {
-          setLocalCart(JSON.parse(cartData));
-        } else {
-          setLocalCart([]);
-        }
-      }
-    };
-
-    fetchCart();
-  }, []);
-
-
-  const handleRemoveFromCart = async (id_productVariant) => {
-
-    if (!id_productVariant) {
-      console.error('Product variant ID is undefined!');
-      return; // Dừng nếu ID không hợp lệ
-    }
-
-    const token = localStorage.getItem('token'); // Kiểm tra token
-
-    if (token) {
-      // Nếu có token, gửi yêu cầu với token để xóa sản phẩm trên server
-      try {
-        const response = await axios.delete(`/cart/remove/${id_productVariant}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (response.status === 200) {
-          // Cập nhật lại giỏ hàng sau khi xóa sản phẩm từ cơ sở dữ liệu
-          setLocalCart(prevCart => {
-            const updatedCart = prevCart.filter(item => item.id_productVariant !== id_productVariant);
-            // localStorage.setItem('cart', JSON.stringify(updatedCart)); // Đồng bộ hóa lại localStorage
-            return updatedCart;
-          });
-          setSelectedItems(prevSelected => new Set([...prevSelected].filter(item => item !== id_productVariant)));
-          toast('Sản phẩm đã được xóa khỏi giỏ hàng.');
-          window.location.reload(); // Reload lại trang sau khi xóa thành công
-        } else {
-          toast('Không thể xóa sản phẩm. Vui lòng thử lại.');
-        }
-      } catch (error) {
-        console.error('Error removing item from cart:', error);
-        alert('Không thể xóa sản phẩm khỏi giỏ hàng. Vui lòng thử lại.');
-      }
-    } else {
-      // Nếu không có token (chưa đăng nhập), chỉ xóa sản phẩm từ localStorage
-      const cartData = localStorage.getItem('cart');
-      if (!cartData) {
-
-        return;
-      }
-
-      const parsedCart = JSON.parse(cartData);
-
-      // Lọc bỏ sản phẩm cần xóa
-      const updatedCart = parsedCart.filter(item => item.id_productVariant !== id_productVariant);
-
-      // Cập nhật lại giỏ hàng trong localStorage
-      localStorage.setItem('cart', JSON.stringify(updatedCart));
-
-      // Cập nhật lại trạng thái giỏ hàng trong React
-      setLocalCart(updatedCart);
-      setSelectedItems(prevSelected => new Set([...prevSelected].filter(item => item !== id_productVariant)));
-
-      toast('Sản phẩm đã được xóa khỏi giỏ hàng.');
-    }
-  };
-
-
-
-
-  // Function to calculate total price
   const calculateTotal = () => {
     if (Array.isArray(localCart)) {
       return localCart.reduce((total, item) => total + item.price * item.quantity, 0);
@@ -131,7 +18,6 @@ const Header = () => {
       return 0;
     }
   };
-
   const { userInfo, handleLogout } = useLoginForm();
 
 
@@ -322,16 +208,21 @@ const Header = () => {
               <div className="mobile-main-header">
                 <div className="mobile-logo">
                   <Link to="/">
-                    <img src="assets/img/logo/logo.png" alt="Brand Logo" />
+                    <img src="/assets/img/logo/logo.png" alt="Brand Logo" />
                   </Link>
                 </div>
                 <div className="mobile-menu-toggler">
+                  <div className="search-box-offcanvas" >
+                    <SearchProducts />
+                  </div>
                   <div className="mini-cart-wrap">
-                    <Link to="/cart">
-                      <i className="fa fa-shopping-cart" />
-                      <div className="notification">0</div>
+                    <Link to="/cart" className="minicart-btn">
+                      <Badge badgeContent={localCart.length} color="success">
+                        <i className="fa fa-shopping-cart" />
+                      </Badge>
                     </Link>
                   </div>
+
                   <button className="mobile-menu-btn">
                     <span />
                     <span />
@@ -354,49 +245,27 @@ const Header = () => {
           </div>
           <div className="off-canvas-inner">
             {/* search box start */}
-            <div className="search-box-offcanvas">
-              <form>
-                <input type="text" placeholder="Search Here..." />
-                <button className="search-btn">
-                  <i className="fa fa-search" />
-                </button>
-              </form>
-            </div>
-            {/* mobile menu end */}
+
+            {/* mobile menu start */}
             <div className="mobile-settings">
               <ul className="nav">
                 <li>
-                  <div className="dropdown mobile-top-dropdown">
-                    <a
-                      href="#"
-                      className="dropdown-toggle"
-                      data-toggle="dropdown"
-                      aria-haspopup="true"
-                      aria-expanded="false"
-                    >
-                      Tài khoản
-                    </a>
-                    <div className="dropdown-menu">
-                      <Link className="dropdown-item" to="/my_account">
-                        Tài khoản của tôi
-                      </Link>
-                      <Link className="dropdown-item" to="/my_account">
-                        Thông tin cá nhân
-                      </Link>
-                      <Link className="dropdown-item" to="/my_account">
-                        Lịch sử đơn hàng
-                      </Link>
-                      <Link className="dropdown-item" to="/checkout">
-                        Thanh toán
-                      </Link>
-                    </div>
-                  </div>
+                  <Link to="/">Trang chủ</Link>
+                </li>
+                <li>
+                  <Link to="/shop">Cửa hàng</Link>
+                </li>
+                <li>
+                  <Link to="/blog">Tin tức</Link>
+                </li>
+                <li>
+                  <Link to="/brands">Thương hiệu</Link>
                 </li>
                 <li>
                   <Link to="/contact_us">Liên hệ</Link>
                 </li>
                 <li>
-                  <Link to="/faqs">Hỏi đáp</Link>
+                  <Link to="/about_us">Giới thiệu</Link>
                 </li>
               </ul>
             </div>
@@ -404,6 +273,7 @@ const Header = () => {
           </div>
         </div>
       </aside>
+
       {/* offcanvas mobile menu end */}
     </header>
   );

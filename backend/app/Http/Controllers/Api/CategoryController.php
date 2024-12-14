@@ -14,12 +14,14 @@ class CategoryController extends Controller
      */
     public function index(Request $request)
     {
-        $categories = Category::withTrashed()->get();
-        if ($categories->isEmpty()) {
-            return response()->json([
-                'message' => 'Không có thể loại nào được tìm thấy!'
-            ], 404);
-        }
+        $categories = Category::whereNull('deleted_at')->get();
+
+    // Kiểm tra nếu không có danh mục nào
+    if ($categories->isEmpty()) {
+        return response()->json([
+            'message' => 'Không có thể loại nào được tìm thấy!'
+        ], 404);
+    }
         return response()->json($categories->map(function ($categories) {
             return [
                 'id' => $categories->id,
@@ -31,5 +33,5 @@ class CategoryController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    
+
 }

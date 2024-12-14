@@ -46,12 +46,12 @@ const Footer = () => {
                 <div className="footer-widget-item mt-30">
                   <h6 className="widget-title">LIÊN KẾT TÙY CHỈNH</h6>
                   <ul className="usefull-links">
-                    <li><a href="#">Chính sách bảo mật</a></li>
-                    <li><a href="#">Trạng thái đơn hàng</a></li>
-                    <li><a href="#">Trả lại &amp; Trao đổi</a></li>
-                    <li><a href="#">Hướng dẫn kích thước</a></li>
-                    <li><a href="#">giỏ hàng</a></li>
-                    <li><a href="#">Câu hỏi thường gặp</a></li>
+                    <li><a href="/my_account">Chính sách bảo mật</a></li>
+                    <li><a href="/my_account/orders">Trạng thái đơn hàng</a></li>
+                    <li><a href="/contact_us">Trả lại &amp; Trao đổi</a></li>
+                    <li><a href="/shop">Hướng dẫn kích thước</a></li>
+                    <li><a href="/cart">giỏ hàng</a></li>
+                    <li><a href="/faqs">Câu hỏi thường gặp</a></li>
                   </ul>
                 </div>
               </div>
@@ -59,12 +59,12 @@ const Footer = () => {
                 <div className="footer-widget-item mt-30">
                   <h6 className="widget-title">CÁC SẢN PHẨM</h6>
                   <ul className="usefull-links">
-                    <li><a href="#">Giá giảm</a></li>
-                    <li><a href="#">Sản phẩm mới</a></li>
-                    <li><a href="#">Bán chạy nhất</a></li>
-                    <li><a href="#">Liên hệ với chúng tôi</a></li>
-                    <li><a href="#">Sơ đồ trang web</a></li>
-                    <li><a href="#">Cửa hàng</a></li>
+                    {/* <li><a href="/shop">Giá giảm</a></li> */}
+                    <li><a href="/shop">Sản phẩm mới</a></li>
+                    {/* <li><a href="/shop">Bán chạy nhất</a></li> */}
+                    <li><a href="/contact_us">Liên hệ với chúng tôi</a></li>
+                    {/* <li><a href="/shop">Sơ đồ trang web</a></li> */}
+                    <li><a href="/shop">Cửa hàng</a></li>
                   </ul>
                 </div>
               </div>
@@ -72,12 +72,12 @@ const Footer = () => {
                 <div className="footer-widget-item mt-30">
                   <h6 className="widget-title">CÔNG TY CỦA CHÚNG TÔI</h6>
                   <ul className="usefull-links">
-                    <li><a href="#">Vận chuyển</a></li>
-                    <li><a href="#">Thông báo pháp lí</a></li>
-                    <li><a href="#">Về chúng tôi</a></li>
-                    <li><a href="#">Thanh toán an toàn</a></li>
-                    <li><a href="#">Liên hệ với chúng tôi</a></li>
-                    <li><a href="#">Sơ đồ trang web</a></li>
+                    {/* <li><a href="/blog">Vận chuyển</a></li> */}
+                    {/* <li><a href="/blog">Thông báo pháp lí</a></li> */}
+                    <li><a href="/blog">Về chúng tôi</a></li>
+                    <li><a href="/blog">Thanh toán an toàn</a></li>
+                    <li><a href="/contact_us">Liên hệ với chúng tôi</a></li>
+                    {/* <li><a href="/blog">Sơ đồ trang web</a></li> */}
                   </ul>
                 </div>
               </div>
@@ -85,12 +85,12 @@ const Footer = () => {
                 <div className="footer-widget-item mt-30">
                   <h6 className="widget-title">TÀI KHOẢN CỦA BẠN</h6>
                   <ul className="usefull-links">
-                    <li><a href="#">Thông tin cá nhân</a></li>
-                    <li><a href="#">Đơn hàng</a></li>
-                    <li><a href="#">PHiếu tín dụng</a></li>
-                    <li><a href="#">Địa chỉ</a></li>
-                    <li><a href="#">Cửa hàng</a></li>
-                    <li><a href="#">Câu hỏi thường gặp</a></li>
+                    <li><a href="/my_account/account_info">Thông tin cá nhân</a></li>
+                    <li><a href="/my_account/orders">Đơn hàng</a></li>
+                    {/* <li><a href="/my_account">PHiếu tín dụng</a></li> */}
+                    <li><a href="/my_account/account_info">Địa chỉ</a></li>
+                    <li><a href="/shop">Cửa hàng</a></li>
+                    {/* <li><a href="/my_account">Câu hỏi thường gặp</a></li> */}
                   </ul>
                 </div>
               </div>
