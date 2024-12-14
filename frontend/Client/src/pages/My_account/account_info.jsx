@@ -21,8 +21,7 @@ const Account_info = () => {
             <div className="myaccount-content">
                 <h5>Chi Tiết Tài Khoản</h5>
                 <div className="account-details-form">
-                    {/* Hiển thị ảnh đại diện */}
-                    {/* <div className="profile-image-section">
+                     <div className="profile-image-section">
                         <h6>Ảnh đại diện</h6>
                         {avatarImg ? (
                             <img
@@ -39,7 +38,7 @@ const Account_info = () => {
                         ) : (
                             <p>Không có ảnh đại diện.</p>
                         )}
-                    </div> */}
+                    </div>
 
 
                     <form>

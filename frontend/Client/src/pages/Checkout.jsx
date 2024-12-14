@@ -305,6 +305,9 @@ const Checkout = ({orderId}) => {
   
       // Tiếp tục xử lý đơn hàng khi không có lỗi
       const orderDate = new Date().toISOString();
+      const generateRandomCode = () => {
+        return 'THOR-' + Math.random().toString(36).substr(2, 9).toUpperCase(); // Tạo mã ngẫu nhiên
+    };
       const orderData = {
           status: "pending",
           total_amount: totalAmount,
@@ -317,6 +320,7 @@ const Checkout = ({orderId}) => {
           infor: userDetails.info,
           payment_method: paymentMethod,
           user_id: userInfo?.id,
+          code_Order: generateRandomCode(),
           products: selectedProducts.map((item) => ({
               product_variant_id: item.id_productVariant,
               product_id: item.productId,
@@ -325,6 +329,7 @@ const Checkout = ({orderId}) => {
               size: item.size,
               quantity: item.quantity,
               price: item.price,
+
           })),
           ...(appliedVoucherId && { id: appliedVoucherId }), // Chỉ thêm voucher_id nếu có
       };
