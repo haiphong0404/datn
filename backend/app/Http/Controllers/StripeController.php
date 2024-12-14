@@ -28,13 +28,15 @@ class StripeController extends Controller
                 'user_id' => $request->input('user_id'),
                 'order_date' => Carbon::parse($request->input('order_date'))->format('Y-m-d H:i:s'),
                 'status' => $request->input('status', 'pending'),
-                'total_amount' => $request->input('total_amount'), // Dùng total_amount của request
+                'total_amount' => $request->input('total_amount'),
                 'name' => $request->input('name'),
                 'phone' => $request->input('phone'),
                 'address' => $request->input('address'),
                 'infor' => $request->input('infor'),
-                'payment_method' => $request->input('payment_method', 'stripe'),
+                'payment_method' => $request->input('payment_method'),
                 'payment_status' => $request->input('payment_status', 'unpaid'),
+                'shipping_fee' => $request->input('shipping_fee'), // Thêm phí vận chuyển
+                'voucher_discount' => $request->input('voucher_discount'), // Thêm giảm giá từ voucher
             ];
 
             // Tạo đơn hàng

@@ -1,0 +1,178 @@
+import React, { createContext, useContext, useState, useCallback } from 'react';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+
+const CartContext = createContext();
+
+export const CartProvider = ({ children }) => {
+  const [localCart, setLocalCart] = useState([]);
+  const [isLoading, setLoading] = useState(true);
+  const [selectedItems, setSelectedItems] = useState(new Set());
+  // Hàm refetch để gọi lại API và cập nhật giỏ hàng
+  const refetch = useCallback(async () => {
+    const token = localStorage.getItem('token');
+    setLoading(true);
+    try {
+      if (token) {
+        const response = await axios.get('/cart', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const { carts } = response.data;
+        if (Array.isArray(carts)) {
+          setLocalCart(carts);
+        } else {
+          setLocalCart([]);
+          localStorage.removeItem('cart');
+        }
+      } else {
+        const cartData = localStorage.getItem('cart');
+        if (cartData) {
+          setLocalCart(JSON.parse(cartData));
+        } else {
+          setLocalCart([]);
+        }
+      }
+    } catch (error) {
+      console.error("Lỗi khi lấy dữ liệu giỏ hàng:", error);
+      setLocalCart([]);
+    } finally {
+      setLoading(false);
+    }
+  }, []); 
+
+  const handleAddToCart = async ({
+    selectedVariant,
+    selectedColor,
+    selectedSize,
+    product,
+    selectedQuantity,
+}) => {
+    if (!selectedColor || !selectedSize) {
+        toast.error("Vui lòng chọn màu và kích thước sản phẩm!");
+        return;
+    }
+
+    if (!selectedVariant) {
+        toast.error("Vui lòng chọn biến thể sản phẩm!");
+        return;
+    }
+
+    const quantity = selectedQuantity;
+    const cart = Array.isArray(localCart) ? localCart : [];
+
+    // Tìm sản phẩm đã tồn tại trong giỏ hàng
+    const existingItemIndex = cart.findIndex(
+        (item) => item.id_productVariant === selectedVariant.id
+    );
+
+    if (existingItemIndex !== -1) {
+        // Kiểm tra tổng số lượng dự kiến sau khi cập nhật
+        const existingItem = cart[existingItemIndex];
+        const totalQuantity = existingItem.quantity + quantity;
+
+        if (totalQuantity > selectedVariant.quantity) {
+            toast.error("Không thêm được quá số lượng trong kho");
+            return;
+        }
+
+        // Cập nhật số lượng cho sản phẩm đã tồn tại
+        cart[existingItemIndex].quantity = totalQuantity;
+    } else {
+        // Thêm sản phẩm mới vào giỏ hàng
+        if (quantity > selectedVariant.quantity) {
+            toast.error("Không thêm được quá số lượng trong kho");
+            return;
+        }
+
+        const localCartItem = {
+            id_productVariant: selectedVariant.id,
+            productId: product.id,
+            color: selectedColor,
+            size: selectedSize,
+            price: selectedVariant.price,
+            image: selectedVariant.images,
+            stock: selectedVariant.quantity,
+            productName: product.name,
+            quantity,
+        };
+        cart.push(localCartItem);
+    }
+
+    try {
+        const id_productVariant = selectedVariant.id;
+        if (localStorage.getItem('token')) {
+            const token = localStorage.getItem('token');
+            const response = await axios.post(
+                '/cart/add',
+                {
+                    product_variant_id: id_productVariant,
+                    quantity,
+                    color: selectedColor,
+                    size: selectedSize,
+                },
+                {
+                    headers: { Authorization: `Bearer ${token}` },
+                }
+            );
+
+            if (response.status === 200) {
+                refetch(); // Cập nhật giỏ hàng từ server
+                toast.success("Sản phẩm đã được thêm vào giỏ hàng!");
+            }
+        } else {
+            // Nếu không có token, cập nhật local storage
+            setLocalCart(cart);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            toast.success("Sản phẩm đã được thêm vào giỏ hàng!");
+        }
+    } catch (error) {
+        console.error("Error occurred while adding to cart:", error);
+        toast.error("Sản phẩm trong kho không đủ.");
+    }
+};
+
+  // Hàm xóa sản phẩm khỏi giỏ hàng
+  const handleRemoveFromCart = async (id_productVariant) => {
+    if (!id_productVariant) {
+      console.error('Product variant ID is undefined!');
+      return;
+    }
+
+    const token = localStorage.getItem('token');
+
+    if (token) {
+      try {
+        const response = await axios.delete(`/cart/remove/${id_productVariant}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (response.status === 200) {
+          refetch(); // Gọi lại để cập nhật giỏ hàng từ server
+          toast('Sản phẩm đã được xóa khỏi giỏ hàng.');
+        } else {
+          toast('Không thể xóa sản phẩm. Vui lòng thử lại.');
+        }
+      } catch (error) {
+        console.error('Error removing item from cart:', error);
+      }
+    } else {
+      const cartData = localStorage.getItem('cart');
+      if (!cartData) return;
+      const parsedCart = JSON.parse(cartData);
+      const updatedCart = parsedCart.filter(item => item.id_productVariant !== id_productVariant);
+      localStorage.setItem('cart', JSON.stringify(updatedCart));
+      setLocalCart(updatedCart);
+      setSelectedItems(prevSelected => new Set([...prevSelected].filter(item => item !== id_productVariant)));
+      toast('Sản phẩm đã được xóa khỏi giỏ hàng.');
+      // window.location.reload();
+    }
+  };
+
+  return (
+    <CartContext.Provider value={{ localCart, handleRemoveFromCart,handleAddToCart, refetch, setLocalCart, isLoading }}>
+      {children}
+    </CartContext.Provider>
+  );
+};
+
+export const useCart = () => useContext(CartContext);

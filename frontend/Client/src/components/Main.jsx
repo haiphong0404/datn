@@ -101,7 +101,7 @@ const Main = () => {
         </section>
         {/* service policy end */}
         {/* about us area start */}
-        <section className="about-us bg-gray section-padding">
+        {/* <section className="about-us bg-gray section-padding">
           <div className="container">
             <div className="row">
               <div className="col-lg-6">
@@ -145,7 +145,7 @@ const Main = () => {
               </div>
             </div>
           </div>
-        </section>
+        </section> */}
         {/* about us area end */}
         {/* product gallery area start */}
         <section className="product-gallery section-padding">

@@ -14,7 +14,7 @@ export const useLoginForm = (isDisplay) => {
     email: yup.string().email("Email không hợp lệ").required("Email là bắt buộc"),
     password: isDisplay
       ? yup.string().notRequired()
-      : yup.string().min(6, "Mật khẩu phải ít nhất 6 ký tự").required("Mật khẩu là bắt buộc"),
+      : yup.string().min(8, "Mật khẩu phải ít nhất 8 ký tự").required("Mật khẩu là bắt buộc"),
   });
 
   const {

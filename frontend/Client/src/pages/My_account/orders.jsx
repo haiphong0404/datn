@@ -50,9 +50,10 @@ const Orders = () => {
                                                 {
                                                     {
                                                         pending: 'Đang Xử Lý',
+                                                        processing: 'Đã xác nhận',
                                                         completed: 'Hoàn Thành',
                                                         cancelled: 'Đã Hủy'
-                                                    }[order.status] || 'Trạng Thái Không Xác Định'
+                                                    }[order.status] || 'Không Xác Định'
                                                 }
                                             </td>
                                             <td>{parseFloat(order.total_amount).toLocaleString()} VND</td>
