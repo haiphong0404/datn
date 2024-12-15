@@ -32,37 +32,39 @@ class NewPasswordController extends Controller
         $validate = $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'password_confirmation' => ['required'] // chỉ cần kiểm tra xem nó có giá trị không
+            'password_confirmation' => ['required']
         ], [
             'email.required' => 'Email là bắt buộc.',
             'email.email' => 'Email không hợp lệ.',
             'password.required' => 'Mật khẩu là bắt buộc.',
             'password.confirmed' => 'Xác nhận mật khẩu không khớp.',
-            'password_confirmation.required' => 'Vui lòng nhập lại mật khẩu để xác nhận.', // sửa thông báo cho rõ ràng hơn
+            'password_confirmation.required' => 'Vui lòng nhập lại mật khẩu để xác nhận.',
         ]);
-
-        // Here we will attempt to reset the user's password. If it is successful we
-        // will update the password on an actual user model and persist it to the
-        // database. Otherwise we will parse the error and return the response.
+    
+        $redirectTo = '/login'; // Mặc định chuyển hướng về /login
+    
         $status = Password::reset(
             $request->only('email', 'password', 'password_confirmation', 'token'),
-            function ($user) use ($request) {
+            function ($user) use ($request, &$redirectTo) {
                 $user->forceFill([
                     'password' => Hash::make($request->password),
                     'remember_token' => Str::random(60),
                 ])->save();
-
+    
                 event(new PasswordReset($user));
+    
+                // Kiểm tra role để xác định đường dẫn chuyển hướng
+                if ($user->role === 'user') {
+                    $redirectTo = 'http://localhost:3000/login';
+                }
             }
         );
-
-        // If the password was successfully reset, we will redirect the user back to
-        // the application's home authenticated view. If there is an error we can
-        // redirect them back to where they came from with their error message.
+    
+        // Chuyển hướng dựa trên trạng thái
         return $status == Password::PASSWORD_RESET
-                    ? redirect()->route('login')->with('status', __($status))
-                    : back()->withInput($request->only('email'))
-                            ->withErrors(['email' => __($status)]);
-
+            ? redirect()->to($redirectTo)->with('status', __($status))
+            : back()->withInput($request->only('email'))
+                    ->withErrors(['email' => __($status)]);
     }
+    
 }
