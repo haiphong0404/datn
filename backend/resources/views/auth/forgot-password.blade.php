@@ -13,7 +13,7 @@
         </div>
 
         <!-- Session Status -->
-        <x-auth-session-status class="mb-4" :status="session('status')" />
+        <x-auth-session-status class="mt-2 text-sm text-green-600 bg-green-100 border border-green-500 rounded-md p-2 shadow-md"  :status="session('status')" />
 
         <form method="POST" action="{{ route('password.email') }}">
             @csrf
@@ -23,7 +23,7 @@
                 <x-input-label class="text-white" for="email" :value="__('Email')" />
                 <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')"
                     required autofocus />
-                <x-input-error :messages="$errors->get('email')" class="mt-2" />
+                <x-input-error :messages="$errors->get('email')" class="mt-2 text-sm text-red-600 bg-red-100 border border-red-500 rounded-md p-2 shadow-md" />
             </div>
 
             <div class="flex items-center justify-between mt-4 space-x-4">

@@ -174,4 +174,55 @@ class CommentController extends Controller
 
         return response()->json(['message' => 'Đánh giá đã được xóa.']);
     }
+    public function addCommentImage(Request $request, $comment_id)
+{
+    try {
+        // Tìm bình luận dựa trên ID
+        $comment = Comment::find($comment_id);
+
+        // Kiểm tra xem bình luận có tồn tại không
+        if (!$comment) {
+            return response()->json(['message' => 'Bình luận không tồn tại.'], 404);
+        }
+
+        // Kiểm tra quyền (nếu cần, đảm bảo người dùng chỉ được chỉnh sửa bình luận của chính họ)
+        $user = Auth::user();
+        if ($comment->user_id !== $user->id) {
+            return response()->json(['message' => 'Bạn không có quyền thêm ảnh vào bình luận này.'], 403);
+        }
+
+        // Xác thực file
+        $validator = Validator::make($request->all(), [
+            'file' => 'required|image|max:10240', // Kiểm tra file ảnh, giới hạn kích thước 10MB
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        // Xử lý file upload
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+
+            // Kiểm tra tính hợp lệ của file
+            if ($file->isValid()) {
+                // Lưu file vào thư mục 'comments'
+                $filePath = $file->store('uploads/comments', 'public');
+
+                // Cập nhật đường dẫn file vào bình luận
+                $comment->file = $filePath;
+                $comment->save();
+
+                return response()->json(['message' => 'Thêm ảnh thành công.', 'file_path' => $filePath], 200);
+            } else {
+                return response()->json(['message' => 'File không hợp lệ.'], 400);
+            }
+        }
+
+        return response()->json(['message' => 'Không tìm thấy file để tải lên.'], 400);
+    } catch (\Exception $e) {
+        // Bắt lỗi và trả về phản hồi
+        return response()->json(['message' => 'Có lỗi xảy ra: ' . $e->getMessage()], 500);
+    }
+}
 }

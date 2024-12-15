@@ -11,6 +11,7 @@ import LoadingSpinner from "../../loading/LoadingSpinner";
 import { useAuth } from '../../contexts/AuthContext';
 import { useLoginForm } from '../../hooks/useLoginForm';
 import FormData from 'form-data';
+import axios from "axios";
 
 const ProductReview = ({ initialTab = "tab_one" }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(
@@ -50,11 +51,14 @@ const ProductReview = ({ initialTab = "tab_one" }) => {
   const [editedComment, setEditedComment] = useState("");
   const [editedRating, setEditedRating] = useState(0);
   const { userInfo } = useLoginForm();
+  console.log(comments);
+
+
+
 
   const handleTabChange = (tabId) => setActiveTab(tabId);
 
   const handleAddComment = async () => {
-
     if (newComment.trim() && newRating > 0) {
       const formData = new FormData();
       formData.append("comment", newComment);
@@ -81,42 +85,81 @@ const ProductReview = ({ initialTab = "tab_one" }) => {
 
 
   const handleEditComment = async () => {
-
     if (editedComment.trim() && editedRating > 0) {
-
-      const formData = new FormData();
-      formData.append("comment", editedComment);
-      formData.append("star_rating", editedRating);
-
-      if (file) {
-        formData.append("file", file);
-      }
+      console.log("Form data is valid. Preparing request...");
 
       try {
-        const response = await editComment(editCommentId, formData);
+        // Gửi dữ liệu khác bằng PUT
+        console.log("Sending request to edit comment...");
+        const response = await editComment(editCommentId, {
+          comment: editedComment,
+          star_rating: editedRating,
+        });
+        console.log("Response received:", response);
 
         if (response.status === 200) {
+          console.log("Response status is 200, updating comments...");
           const updatedComment = response.data;
+          console.log("Updated comment data:", updatedComment);
 
-          updateComments(updatedComment);
+          // Cập nhật lại danh sách bình luận trong state
+          updateComments(prevComments =>
+            prevComments.map(comment =>
+              comment.id === updatedComment.id ? updatedComment : comment
+            )
+          );
 
+          // Nếu có file, gửi file bằng POST
+          if (file) {
+            const formData = new FormData();
+            formData.append("file", file);
+            formData.append("commentId", editCommentId); // Gửi ID bình luận cùng file
+
+            console.log("Sending request to upload file...");
+
+            try {
+              const uploadResponse = await axios.post(`/comments/${editCommentId}/add-image`, formData, {
+                headers: {
+                  'Content-Type': 'multipart/form-data',
+                },
+              });
+
+              console.log("File upload response:", uploadResponse);
+
+              if (uploadResponse.status === 200) {
+
+              } else {
+
+              }
+            } catch (error) {
+              console.error('Error uploading file:', error);
+              toast.error("Đã xảy ra lỗi khi tải lên.");
+            }
+          }
+
+          // Đặt lại trạng thái của form
           setEditedComment("");
           setEditedRating(0);
           setFile(null);
           setEditCommentId(null);
 
+          // Làm mới dữ liệu nếu cần
           refetch();
-          toast.success("Cập nhật bình luận thành công.");
+          toast.success("Sửa bình luận thành công.");
         } else {
+          console.error("Response status not 200, error occurred.");
           toast.error("Có lỗi xảy ra khi sửa bình luận.");
         }
       } catch (error) {
+        console.error("Error while editing comment:", error);
         toast.error("Có lỗi xảy ra khi sửa bình luận.");
       }
     } else {
+      console.warn("Invalid input. Please enter valid content and rating.");
       toast.error("Vui lòng nhập nội dung và đánh giá hợp lệ.");
     }
   };
+
 
 
   const handleDeleteComment = async (id) => {
@@ -149,6 +192,8 @@ const ProductReview = ({ initialTab = "tab_one" }) => {
   const sizeNames = Array.isArray(sizes) ? sizes.map(size => size.name).join(', ') : "Không có kích thước nào.";
 
   // Render component đánh giá sản phẩm.
+
+
 
   return (
     <div className="product-review-info">
