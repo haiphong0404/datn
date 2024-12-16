@@ -16,8 +16,9 @@ const schema = yup.object().shape({
         .required("Vui lòng nhập lại mật khẩu"),
     phone: yup
         .string()
+        .required("Vui lòng nhập số điện thoại")
         .matches(/^[0-9]{10}$/, "Số điện thoại không hợp lệ")
-        .required("Vui lòng nhập số điện thoại"),
+
 });
 
 export const useRegisterForm = () => {
