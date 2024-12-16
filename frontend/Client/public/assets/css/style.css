@@ -2557,7 +2557,7 @@ only screen and (max-width: 767.98px) {
   line-height: 18px;
   position: relative;
   display: inline-block;
-  padding: 10px 0;
+  padding: 8px 0;
 }
 
 .mobile-menu li>a:hover {
@@ -9575,6 +9575,7 @@ button {
   .mobile-settings ul li {
     margin-bottom: 15px; /* Khoảng cách giữa các mục menu */
   }
+  
 }
 
 
@@ -9856,4 +9857,9 @@ button {
   font-size: 16px;
   font-weight: bold;
   color: #333;
+}
+.comment-actions {
+  display: flex;
+  gap: 10px; /* Khoảng cách giữa các nút */
+  align-items: center; /* Căn giữa theo chiều dọc */
 }

@@ -49,8 +49,7 @@ const Footer = () => {
                     <li><a href="/my_account">Chính sách bảo mật</a></li>
                     <li><a href="/my_account/orders">Trạng thái đơn hàng</a></li>
                     <li><a href="/contact_us">Trả lại &amp; Trao đổi</a></li>
-                    <li><a href="/shop">Hướng dẫn kích thước</a></li>
-                    <li><a href="/cart">giỏ hàng</a></li>
+                    {/* <li><a href="/shop">Hướng dẫn kích thước</a></li> */}
                     <li><a href="/faqs">Câu hỏi thường gặp</a></li>
                   </ul>
                 </div>
@@ -64,6 +63,7 @@ const Footer = () => {
                     {/* <li><a href="/shop">Bán chạy nhất</a></li> */}
                     <li><a href="/contact_us">Liên hệ với chúng tôi</a></li>
                     {/* <li><a href="/shop">Sơ đồ trang web</a></li> */}
+                    <li><a href="/cart">Giỏ hàng</a></li>
                     <li><a href="/shop">Cửa hàng</a></li>
                   </ul>
                 </div>
@@ -89,7 +89,6 @@ const Footer = () => {
                     <li><a href="/my_account/orders">Đơn hàng</a></li>
                     {/* <li><a href="/my_account">PHiếu tín dụng</a></li> */}
                     <li><a href="/my_account/account_info">Địa chỉ</a></li>
-                    <li><a href="/shop">Cửa hàng</a></li>
                     {/* <li><a href="/my_account">Câu hỏi thường gặp</a></li> */}
                   </ul>
                 </div>
@@ -128,7 +127,7 @@ const Footer = () => {
                 <address className="address-info email mt-30">
                   <i className="fa fa-phone" />
                   <p>
-                    <span>PHONE : </span>
+                    <span>Số điện thoại : </span>
                     <a href="tel:0123456789">0969798999</a>
                   </p>
                 </address>

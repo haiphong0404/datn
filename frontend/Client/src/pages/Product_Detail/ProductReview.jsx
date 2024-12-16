@@ -268,13 +268,13 @@ const ProductReview = ({ initialTab = "tab_one" }) => {
                   <p><strong>Thời gian:</strong> {moment(comment.created_at, "YYYY-MM-DD HH:mm:ss").format('DD-MM-YYYY HH:mm:ss')}</p>
 
                   {isAuthenticated && (
-                    <div>
+                    <div className="comment-actions">
                       {(userInfo?.role === "admin" || comment.user_id === userInfo?.id) && (
                         <>
                           {userInfo?.role !== "admin" && (
                             <button
-                              className="btn me-2"
-                              style={{ color: "black" }}
+                              className="btn btn-sqr edit-button"
+                              style={{ color: "white" }}
                               onMouseEnter={(e) => (e.target.style.color = "#ffc107")}
                               onMouseLeave={(e) => (e.target.style.color = "black")}
                               onClick={() => {
@@ -289,8 +289,8 @@ const ProductReview = ({ initialTab = "tab_one" }) => {
                           )}
 
                           <button
-                            className="btn"
-                            style={{ color: "black" }}
+                            className=" remove-button"
+                            style={{ color: "white" }}
                             onMouseEnter={(e) => (e.target.style.color = "#dc3545")}
                             onMouseLeave={(e) => (e.target.style.color = "black")}
                             onClick={() => handleDeleteComment(comment.id)}
