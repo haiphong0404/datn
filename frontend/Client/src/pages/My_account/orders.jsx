@@ -12,7 +12,7 @@ const Orders = () => {
 
     // Hàm tạo mã ngẫu nhiên
     const generateRandomCode = () => {
-        return 'THOR-' + Math.random().toString(36).substr(2, 9).toUpperCase(); // Tạo mã ngẫu nhiên
+        return 'THOR-' + Math.random().toString(36).substr(2, 9).toUpperCase();
     };
 
     return (
@@ -35,32 +35,28 @@ const Orders = () => {
                                 {orders.length > 0 ? (
                                     orders.map(order => (
                                         <tr key={order.id}>
-                                            <td>{generateRandomCode()}</td> {/* Mã ngẫu nhiên */}
+                                            <td>{generateRandomCode()}</td>
                                             <td>
                                                 {new Date(order.order_date).toLocaleString('vi-VN', {
-                                                    timeZone: 'Asia/Ho_Chi_Minh', // Đảm bảo múi giờ Việt Nam
-                                                    weekday: 'long', // Ngày trong tuần (ví dụ: thứ Hai)
-                                                    year: 'numeric', // Năm
-                                                    month: 'long', // Tháng
-                                                    day: 'numeric', // Ngày
-                                                    hour12: true, // Hiển thị AM/PM
+                                                    timeZone: 'Asia/Ho_Chi_Minh',
+                                                    weekday: 'long',
+                                                    year: 'numeric',
+                                                    month: 'long',
+                                                    day: 'numeric',
+                                                    hour12: true,
                                                 })}
                                             </td>
                                             <td>
-                                                {
-                                                    {
-                                                        pending: 'Đang Xử Lý',
-                                                        processing: 'Đã xác nhận',
-                                                        completed: 'Hoàn Thành',
-                                                        cancelled: 'Đã Hủy'
-                                                    }[order.status] || 'Không Xác Định'
-                                                }
+                                                {{
+                                                    pending: 'Đang Xử Lý',
+                                                    processing: 'Đã xác nhận',
+                                                    completed: 'Hoàn Thành',
+                                                    cancelled: 'Đã Hủy',
+                                                }[order.status] || 'Không Xác Định'}
                                             </td>
                                             <td>{parseFloat(order.total_amount).toLocaleString()} VND</td>
                                             <td>
-                                                <Link to={`/my_account/Order_detail/${order.id}`} className="btn btn-sqr3">
-                                                    Xem
-                                                </Link>
+                                                <Link to={`/my_account/Order_detail/${order.id}`} className="btn btn-sqr3">Xem</Link>
                                             </td>
                                         </tr>
                                     ))

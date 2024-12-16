@@ -27,6 +27,7 @@ class NewPasswordController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
+
   public function store(Request $request): RedirectResponse
 {
     $validate = $request->validate([
@@ -68,3 +69,4 @@ class NewPasswordController extends Controller
 }
 
 }
+
