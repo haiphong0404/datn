@@ -1,92 +1,82 @@
 import React, { useState, useEffect } from 'react';
 import { useLoginForm } from '../../hooks/useLoginForm.js';
+import { getUserByid } from '../../api/user.js';
+import { toast } from 'react-toastify';
 
-const Account_info = () => {
-
-    const { userInfo } = useLoginForm();
+const Account_Info = () => {
+    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
+    const [phone, setPhone] = useState('');
+    const [address, setAddress] = useState('');
     const [avatarImg, setAvatarImg] = useState('');
 
-    useEffect(() => {
-        if (userInfo) {
-            setAvatarImg(userInfo.avatar_img || '');
-        }
-    }, [userInfo]);
+    const { userInfo } = useLoginForm();
 
-    if (!userInfo) {
-        return <p>Không có thông tin người dùng.</p>;
-    }
+    useEffect(() => {
+        const fetchUserInfo = async () => {
+            const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+            if (userInfo && userInfo.id) {
+                try {
+                    const userData = await getUserByid(userInfo.id);
+
+                    if (userData && userData.data) {
+                        setUsername(userData.data.username || '');
+                        setEmail(userData.data.email || '');
+                        setPhone(userData.data.phone || '');
+                        setAddress(userData.data.address || '');
+                        setAvatarImg(userData.data.avatar_img || '');
+                    } else {
+                        toast.error('Dữ liệu người dùng không hợp lệ.');
+                    }
+                } catch (error) {
+                    console.error('Error fetching user info:', error);
+                    toast.error('Không thể tải thông tin người dùng!');
+                }
+            } else {
+                console.log('No userId found in localStorage');
+            }
+        };
+
+        fetchUserInfo();
+    }, []);
 
     return (
-        <div>
-            <div className="myaccount-content">
-                <h5>Chi Tiết Tài Khoản</h5>
-                <div className="account-details-form">
-                     <div className="profile-image-section">
-                        <h6>Ảnh đại diện</h6>
-                        {avatarImg ? (
+        <div className="container  mb-5">
+            <div className="card shadow-sm">
+                <div className="card-header text-center  text-white">
+                    <h5>Thông tin người dùng</h5>
+                </div>
+                <div className="card-body">
+                    <div className="text-center mb-4">
+                        {avatarImg && (
                             <img
                                 src={avatarImg}
-                                alt="Avatar"
-                                style={{
-                                    width: '150px',
-                                    height: '150px',
-                                    borderRadius: '50%',
-                                    objectFit: 'cover',
-                                    marginBottom: '10px',
-                                }}
+                                alt="User Avatar"
+                                className="rounded-circle border"
+                                style={{ width: '120px', height: '120px', padding: '5px' }}
                             />
-                        ) : (
-                            <p>Không có ảnh đại diện.</p>
                         )}
                     </div>
-
-
-                    <form>
-                        <div className="single-input-item">
-                            <label htmlFor="display-name" className="required">Tên Hiển Thị</label>
-                            <input
-                                type="text"
-                                id="display-name"
-                                placeholder="Tên Hiển Thị"
-                                value={userInfo?.username || ''}
-                                readOnly
-                            />
-                        </div>
-                        <div className="single-input-item">
-                            <label htmlFor="email" className="required">Địa Chỉ Email</label>
-                            <input
-                                type="email"
-                                id="email"
-                                placeholder="Địa Chỉ Email"
-                                value={userInfo?.email || ''}
-                                readOnly
-                            />
-                        </div>
-                        <div className="single-input-item">
-                            <label htmlFor="phone" className="required">Số điện thoại</label>
-                            <input
-                                type="text"
-                                id="phone"
-                                placeholder="Số điện thoại"
-                                value={userInfo?.phone || ''}
-                                readOnly
-                            />
-                        </div>
-                        <div className="single-input-item">
-                            <label htmlFor="address" className="required">Địa Chỉ </label>
-                            <input
-                                type="text"
-                                id="address"
-                                placeholder="Địa Chỉ"
-                                value={userInfo?.address || ''}
-                                readOnly
-                            />
-                        </div>
-                    </form>
+                    <div className="mb-3">
+                        <label className="form-label fw-bold">Tên Hiển Thị</label>
+                        <p className="form-control bg-light">{username}</p>
+                    </div>
+                    <div className="mb-3">
+                        <label className="form-label fw-bold">Địa Chỉ Email</label>
+                        <p className="form-control bg-light">{email}</p>
+                    </div>
+                    <div className="mb-3">
+                        <label className="form-label fw-bold">Số điện thoại</label>
+                        <p className="form-control bg-light">{phone}</p>
+                    </div>
+                    <div className="mb-3">
+                        <label className="form-label fw-bold">Địa Chỉ</label>
+                        <p className="form-control bg-light">{address}</p>
+                    </div>
                 </div>
             </div>
         </div>
     );
 };
 
-export default Account_info;
+export default Account_Info;
