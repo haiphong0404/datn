@@ -29,7 +29,7 @@ function ChangePassword() {
         <>
             <form
                 onSubmit={handleSubmit}
-                className="container p-5 border rounded shadow-sm my-5"
+                className="container p-5 border rounded shadow-sm "
                 style={{ maxWidth: '800px', margin: 'auto' }}
             >
                 <h2 className="text-center mb-4">Đổi mật khẩu</h2>

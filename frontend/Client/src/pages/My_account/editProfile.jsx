@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
-
+import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useLoginForm } from '../../hooks/useLoginForm.js';
 import { editUserById } from '../../api/user.js';
+import { getUserByid } from '../../api/user.js';
+
+
 const EditProfile = () => {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
@@ -10,32 +13,38 @@ const EditProfile = () => {
     const [address, setAddress] = useState('');
     const [avatarImg, setAvatarImg] = useState(null);
     const [previewImage, setPreviewImage] = useState('');
+
     const { userInfo } = useLoginForm();
     const token = localStorage.getItem('token');
-    useEffect(() => {
-        if (userInfo) {
-            const initialData = {
-                username: userInfo.username || '',
-                email: userInfo.email || '',
-                phone: userInfo.phone || '',
-                address: userInfo.address || '',
-                avatar_img: userInfo.avatar_img || '',
-            };
-    
-            // Log dữ liệu userInfo và initialData để kiểm tra
-            console.log('Dữ liệu userInfo:', userInfo);
-            console.log('Dữ liệu initialData:', initialData);
-    
-            setUsername(initialData.username);
-            setEmail(initialData.email);
-            setPhone(initialData.phone);
-            setAddress(initialData.address);
-            setPreviewImage(initialData.avatar_img);
-        }
-    }, [userInfo]);
-    
 
-    // Function to handle image file selection and preview update
+    useEffect(() => {
+        const fetchUserInfo = async () => {
+            const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+            if (userInfo && userInfo.id) {
+                try {
+                    const userData = await getUserByid(userInfo.id);
+
+                    if (userData && userData.data) {
+                        setUsername(userData.data.username || '');
+                        setEmail(userData.data.email || '');
+                        setPhone(userData.data.phone || '');
+                        setAddress(userData.data.address || '');
+                        setPreviewImage(userData.data.avatar_img || '');
+                    } else {
+                        toast.error('Dữ liệu người dùng không hợp lệ.');
+                    }
+                } catch (error) {
+                    console.error('Error fetching user info:', error);
+                    toast.error('Không thể tải thông tin người dùng!');
+                }
+            } else {
+                console.log('No userId found in localStorage');
+            }
+        };
+
+        fetchUserInfo();
+    }, []);
+
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -46,135 +55,149 @@ const EditProfile = () => {
 
     const handleSaveChanges = async (e) => {
         e.preventDefault();
-    
 
-        const updatedData = new FormData();
-        updatedData.append('username', username);
-        updatedData.append('email', email);
-        updatedData.append('phone', phone);
-        updatedData.append('address', address);
-    
+        const updatedData = {
+            username,
+            email,
+            phone,
+            address,
+        };
 
-        // Thêm tệp hình ảnh nếu có
-        if (avatarImg) {
-            updatedData.append('avatar_img', avatarImg);
-        }
-    
-        console.log('Dữ liệu cập nhật:', updatedData);
-    
         try {
-            // Lấy userInfo từ localStorage và trích xuất userId
             const userInfo = JSON.parse(localStorage.getItem('userInfo'));
             const userId = userInfo ? userInfo.id : null;
-    
+
             if (!userId) {
                 throw new Error('Không tìm thấy userId.');
             }
-    
-            // Gửi yêu cầu PUT/PATCH tới API với FormData
+
             const response = await editUserById(userId, updatedData, token);
             if (response) {
                 toast.success('Cập nhật thông tin thành công!');
-    
-                // Cập nhật lại localStorage với dữ liệu mới
                 const updatedUserInfo = {
-                    ...userInfo, // Giữ lại các thuộc tính khác chưa thay đổi
+                    ...userInfo,
                     username,
                     email,
                     phone,
                     address,
-                    avatar_img: avatarImg ? avatarImg.name : userInfo.avatar_img, // Cập nhật ảnh đại diện nếu có
                 };
                 localStorage.setItem('userInfo', JSON.stringify(updatedUserInfo));
-    
-                // Cập nhật lại state của component để hiển thị dữ liệu mới
+
+                window.dispatchEvent(new Event('userInfoUpdated'));
+
                 setUsername(username);
                 setEmail(email);
                 setPhone(phone);
                 setAddress(address);
-                setPreviewImage(avatarImg ? URL.createObjectURL(avatarImg) : previewImage);
-    
-                // Gọi lại hàm fetchUserData để làm mới dữ liệu từ API (nếu cần)
-                fetchUserData();
             }
         } catch (error) {
-           
+            console.error('Error updating user:', error);
+            toast.error('Cập nhật thông tin không thành công!');
         }
+
+        if (avatarImg) {
+            const formData = new FormData();
+            formData.append("avatar", avatarImg);
+            formData.append("userId", userInfo.id);
+
+            try {
+                const response = await axios.post('/user/upload-avatar', formData, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'multipart/form-data',
+                    },
+                });
+                if (response.data.success) {
+                    const avatarBase64 = response.data.data.avatar_base64;
+                    const updatedUserInfoWithAvatar = {
+                        ...JSON.parse(localStorage.getItem('userInfo')),
+                        avatar_img: avatarBase64,
+                    };
+                    localStorage.setItem('userInfo', JSON.stringify(updatedUserInfoWithAvatar));
+
+                    window.dispatchEvent(new Event('userInfoUpdated'));
+
+                    setPreviewImage(avatarBase64);
+                    toast.success('Cập nhật ảnh thành công!');
+                }
+            } catch (error) {
+                console.error('Error uploading avatar:', error);
+                toast.error('Cập nhật ảnh không thành công!');
+            }
+        }
+        window.location.reload();
     };
-       
-    
-
-
 
     return (
-        <div>
-            <div className="myaccount-content">
-                <h5>Chỉnh sửa thông tin</h5>
-                <div className="account-details-form">
+        <div className="container mb-5">
+            <div className="card shadow-sm">
+                <div className="card-header text-center  text-white">
+                    <h5>Chỉnh sửa thông tin</h5>
+                </div>
+                <div className="card-body">
                     <form onSubmit={handleSaveChanges}>
-                        {/* <div className="single-input-item">
-                            <label htmlFor="profile-image">Ảnh đại diện</label>
+                        <div className="text-center mb-4">
                             {previewImage && (
                                 <img
                                     src={previewImage}
                                     alt="Preview"
-                                    style={{
-                                        width: '100px',
-                                        height: '100px',
-                                        borderRadius: '50%',
-                                        marginBottom: '10px',
-                                    }}
+                                    className="rounded-circle border"
+                                    style={{ width: '120px', height: '120px', padding: '5px' }}
                                 />
                             )}
                             <input
                                 type="file"
-                                id="profile-image"
+                                className="form-control mt-3"
                                 accept="image/*"
                                 onChange={handleImageChange}
                             />
-                        </div> */}
-                        <div className="single-input-item">
-                            <label htmlFor="display-name" className="required">Tên Hiển Thị</label>
+                        </div>
+                        <div className="mb-3">
+                            <label htmlFor="display-name" className="form-label fw-bold">Tên Hiển Thị</label>
                             <input
                                 type="text"
                                 id="display-name"
+                                className="form-control"
                                 placeholder="Tên Hiển Thị"
                                 value={username}
                                 onChange={(e) => setUsername(e.target.value)}
                             />
                         </div>
-                        <div className="single-input-item">
-                            <label htmlFor="email" className="required">Địa Chỉ Email</label>
+                        <div className="mb-3">
+                            <label htmlFor="email" className="form-label fw-bold">Địa Chỉ Email</label>
                             <input
                                 type="email"
                                 id="email"
+                                className="form-control"
                                 placeholder="Địa Chỉ Email"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                             />
                         </div>
-                        <div className="single-input-item">
-                            <label htmlFor="phone" className="required">Số điện thoại</label>
+                        <div className="mb-3">
+                            <label htmlFor="phone" className="form-label fw-bold">Số điện thoại</label>
                             <input
                                 type="text"
                                 id="phone"
+                                className="form-control"
                                 placeholder="Số điện thoại"
                                 value={phone}
                                 onChange={(e) => setPhone(e.target.value)}
                             />
                         </div>
-                        <div className="single-input-item">
-                            <label htmlFor="address" className="required">Địa Chỉ</label>
+                        <div className="mb-3">
+                            <label htmlFor="address" className="form-label fw-bold">Địa Chỉ</label>
                             <input
                                 type="text"
                                 id="address"
+                                className="form-control"
                                 placeholder="Địa Chỉ"
                                 value={address}
                                 onChange={(e) => setAddress(e.target.value)}
                             />
                         </div>
-                        <div className="single-input-item">
-                            <button type="submit" className="btn btn-sqr">
+                        <div className="text-center">
+                            <button type="submit" className="btn btn-sqr w-100">
                                 Lưu Thay Đổi
                             </button>
                         </div>

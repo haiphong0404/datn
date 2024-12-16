@@ -121,18 +121,25 @@ const Details = () => {
                         </div>
                         <Slider {...settings}>
                             {uniqueColorImages.map((variant, index) => (
-                                <div className='imgslide' key={index} onClick={() => {
-                                    setSelectedImage(variant.image);
-                                    setSelectedColor(variant.color);
-                                    setSelectedSize('');
-                                }}>
+                                <div
+                                    className="imgslide m-4 sm:m-2 md:m-3 lg:m-4"
+                                    key={index}
+                                    onClick={() => {
+                                        setSelectedImage(variant.image);
+                                        setSelectedColor(variant.color);
+                                        setSelectedSize('');
+                                    }}
+                                >
                                     <img
                                         src={variant.image}
-                                        className={`w-full h-auto cursor-pointer ${selectedImage === variant.image ? 'selected-image' : ''}`}
+                                        alt={`Variant ${index}`}
+                                        className={`w-full h-auto cursor-pointer ${selectedImage === variant.image ? 'selected-image' : ''
+                                            }`}
                                     />
                                 </div>
                             ))}
                         </Slider>
+
                     </div>
                 </div>
 

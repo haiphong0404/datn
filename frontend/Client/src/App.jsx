@@ -37,10 +37,9 @@ import EditProfile from "./pages/My_account/editProfile";
 
 import PaymentSuccess from "./pages/Stripe/SuccessPage";
 import PaymentCancel from "./pages/Stripe/PaymentCancel";
-import LoadingSpinner from "./loading/LoadingSpinner"; 
+import LoadingSpinner from "./loading/LoadingSpinner";
 import Brands from "./pages/Brands";
 import BrandDetail from "./pages/BrandDetail";
-
 import { AuthProvider } from './contexts/AuthContext';
 import { CartProvider } from './contexts/CartContext';
 
@@ -83,7 +82,7 @@ const routeConfig = [
   },
   {
     path: "/my_account",
-    element: 
+    element:
       <MyAccount />
     ,
     children: [
@@ -116,12 +115,12 @@ function App() {
         <ThemeProvider theme={theme}>
           <CssBaseline />
           <CartProvider>
-          <Header />
-          <main>
-            <AppRoutes />
-            <ToastContainer />
-          </main>
-          <Footer />
+            <Header />
+            <main>
+              <AppRoutes />
+              <ToastContainer />
+            </main>
+            <Footer />
           </CartProvider>
         </ThemeProvider>
       </QueryClientProvider>
