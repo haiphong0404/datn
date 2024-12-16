@@ -120,15 +120,14 @@ class StatisticsService
 
     public function gettotalOrders(string $timeFrame, ?string $startDate = null, ?string $endDate = null): int
     {
-        $role = Auth::user()->role;
         $query = Order::query();
-        $userID = Auth::user()->id;
+        $user = Auth::user();
 
-        if ($role === "admin") {
+        if ($user->role === "admin") {
             $this->applyTimeFilter($query, $timeFrame, $startDate, $endDate);
             return $query->count();
         } else {
-            Order::where('handler_id', $userID);
+            $query->where('handler_id', $user->id);
             $this->applyTimeFilter($query, $timeFrame, $startDate, $endDate);
             return $query->count();
         }
