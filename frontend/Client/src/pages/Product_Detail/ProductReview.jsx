@@ -11,6 +11,7 @@ import LoadingSpinner from "../../loading/LoadingSpinner";
 import { useAuth } from '../../contexts/AuthContext';
 import { useLoginForm } from '../../hooks/useLoginForm';
 import FormData from 'form-data';
+import axios from "axios";
 
 const ProductReview = ({ initialTab = "tab_one" }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(
@@ -84,56 +85,81 @@ const ProductReview = ({ initialTab = "tab_one" }) => {
 
 
   const handleEditComment = async () => {
-    console.log("Editing comment...");
-    console.log("Edited comment:", editedComment);
-    console.log("Edited rating:", editedRating);
-    console.log("File selected:", file);
-
     if (editedComment.trim() && editedRating > 0) {
-      console.log("Form data is valid. Preparing request...");
+        console.log("Form data is valid. Preparing request...");
 
-      const formData = new FormData();
-      formData.append("comment", editedComment);
-      formData.append("star_rating", editedRating);
+        try {
+            // Gửi dữ liệu khác bằng PUT
+            console.log("Sending request to edit comment...");
+            const response = await editComment(editCommentId, {
+                comment: editedComment,
+                star_rating: editedRating,
+            });
+            console.log("Response received:", response);
 
-      if (file) {
-        console.log("File name to be added:", file);
-        formData.append("file", file);
-      }
+            if (response.status === 200) {
+                console.log("Response status is 200, updating comments...");
+                const updatedComment = response.data;
+                console.log("Updated comment data:", updatedComment);
 
-      try {
-        console.log("Sending request to edit comment...");
-        const response = await editComment(editCommentId, formData);
-        console.log("Response received:", response);
+                // Cập nhật lại danh sách bình luận trong state
+                updateComments(prevComments =>
+                    prevComments.map(comment =>
+                        comment.id === updatedComment.id ? updatedComment : comment
+                    )
+                );
 
-        if (response.status === 200) {
-          console.log("Response status is 200, updating comments...");
-          const updatedComment = response.data;
-          console.log("Updated comment data:", updatedComment);
+                // Nếu có file, gửi file bằng POST
+                if (file) {
+                  const formData = new FormData();
+                  formData.append("file", file);
+                  formData.append("commentId", editCommentId); // Gửi ID bình luận cùng file
+              
+                  console.log("Sending request to upload file...");
+              
+                  try {
+                      const uploadResponse = await axios.post(`/comments/${editCommentId}/add-image`, formData, {
+                          headers: {
+                              'Content-Type': 'multipart/form-data',
+                          },
+                      });
+              
+                      console.log("File upload response:", uploadResponse);
+              
+                      if (uploadResponse.status === 200) {
+                       
+                      } else {
+                        
+                      }
+                  } catch (error) {
+                      console.error('Error uploading file:', error);
+                      toast.error("Đã xảy ra lỗi khi tải lên.");
+                  }
+              }
 
-          updateComments(updatedComment);
-          console.log("Updated comments list:", comments);
+                // Đặt lại trạng thái của form
+                setEditedComment("");
+                setEditedRating(0);
+                setFile(null);
+                setEditCommentId(null);
 
-          setEditedComment("");
-          setEditedRating(0);
-          setFile(null);
-          setEditCommentId(null);
-
-          refetch();
-          toast.success("Cập nhật bình luận thành công.");
-        } else {
-          console.error("Response status not 200, error occurred.");
-          toast.error("Có lỗi xảy ra khi sửa bình luận.");
+                // Làm mới dữ liệu nếu cần
+                refetch();
+                toast.success("Sửa bình luận thành công.");
+            } else {
+                console.error("Response status not 200, error occurred.");
+                toast.error("Có lỗi xảy ra khi sửa bình luận.");
+            }
+        } catch (error) {
+            console.error("Error while editing comment:", error);
+            toast.error("Có lỗi xảy ra khi sửa bình luận.");
         }
-      } catch (error) {
-        console.error("Error while editing comment:", error);
-        toast.error("Có lỗi xảy ra khi sửa bình luận.");
-      }
     } else {
-      console.warn("Invalid input. Please enter valid content and rating.");
-      toast.error("Vui lòng nhập nội dung và đánh giá hợp lệ.");
+        console.warn("Invalid input. Please enter valid content and rating.");
+        toast.error("Vui lòng nhập nội dung và đánh giá hợp lệ.");
     }
-  };
+};
+
 
 
   const handleDeleteComment = async (id) => {
@@ -242,13 +268,13 @@ const ProductReview = ({ initialTab = "tab_one" }) => {
                   <p><strong>Thời gian:</strong> {moment(comment.created_at, "YYYY-MM-DD HH:mm:ss").format('DD-MM-YYYY HH:mm:ss')}</p>
 
                   {isAuthenticated && (
-                    <div>
+                    <div className="comment-actions">
                       {(userInfo?.role === "admin" || comment.user_id === userInfo?.id) && (
                         <>
                           {userInfo?.role !== "admin" && (
                             <button
-                              className="btn me-2"
-                              style={{ color: "black" }}
+                              className="btn btn-sqr edit-button"
+                              style={{ color: "white" }}
                               onMouseEnter={(e) => (e.target.style.color = "#ffc107")}
                               onMouseLeave={(e) => (e.target.style.color = "black")}
                               onClick={() => {
@@ -263,8 +289,8 @@ const ProductReview = ({ initialTab = "tab_one" }) => {
                           )}
 
                           <button
-                            className="btn"
-                            style={{ color: "black" }}
+                            className=" remove-button"
+                            style={{ color: "white" }}
                             onMouseEnter={(e) => (e.target.style.color = "#dc3545")}
                             onMouseLeave={(e) => (e.target.style.color = "black")}
                             onClick={() => handleDeleteComment(comment.id)}

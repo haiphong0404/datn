@@ -26,6 +26,7 @@ const Register = () => {
                                 type="text"
                                 className="form-control"
                                 placeholder="Họ Tên"
+                                maxlength="70"
                                 {...register("username")}
                             />
                             {errors.username && (
@@ -37,6 +38,7 @@ const Register = () => {
                                 type="email"
                                 className="form-control"
                                 placeholder="Nhập địa chỉ email"
+                                maxlength="50"
                                 {...register("email")}
                             />
                             {errors.email && (
@@ -50,6 +52,7 @@ const Register = () => {
                                         type={isPasswordVisible ? "text" : "password"}
                                         className="form-control"
                                         placeholder="Nhập mật khẩu"
+                                        maxlength="70"
                                         {...register("password")}
                                     />
                                     <span
@@ -70,6 +73,7 @@ const Register = () => {
                                         type={isConfirmPasswordVisible ? "text" : "password"}
                                         className="form-control"
                                         placeholder="Nhập lại mật khẩu"
+                                        maxlength="70"
                                         {...register("password_confirmation")}
                                     />
                                     <span
@@ -91,15 +95,17 @@ const Register = () => {
 
                         <div className="single-input-item">
                             <input
-                                type="number"
+                                type="tel"
                                 className="form-control"
                                 placeholder="Nhập số điện thoại"
+                                maxLength="10"
                                 {...register("phone")}
                             />
                             {errors.phone && (
                                 <span className="text-danger">{errors.phone.message}</span>
                             )}
                         </div>
+
                         <div className="single-input-item btn btn-sqr">
                             <button type="submit" className="btn btn-sqr">Đăng ký</button>
                         </div>

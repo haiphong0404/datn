@@ -31,9 +31,9 @@ const ProductItem = ({ product }) => { // Nhận product qua props
                         <span>-10% Off</span>
                     </div> */}
                 </div>
-                <div className="product-content">
+                <div className="product-content" style={{height:'150px'}}>
                     <div className="product-caption">
-                        <h6 className="product-name">
+                        <h6 className="product-name" style={{height:'40px'}}>
                             <Link to={`/product_details/${product.id}`}>
                                 {product.name.substring(0, 20)}
 

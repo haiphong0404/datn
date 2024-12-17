@@ -25,19 +25,36 @@ class ProductVariantController extends Controller
             ], 404);
         }
 
-        return response()->json($product->variants->map(function ($variant) {
+        // Nhóm các biến thể theo màu và ảnh
+        $groupedVariants = $product->variants->groupBy(function($variant) {
+            // Gộp nhóm theo màu và ảnh, sẽ chỉ có một ảnh duy nhất cho mỗi nhóm
+            return $variant->color->name . '-' . ($variant->images->isNotEmpty() ? $variant->images->first()->image : 'default');
+        });
+
+        return response()->json($groupedVariants->map(function ($variantGroup) use ($product) {
+            // Chỉ lấy một ảnh duy nhất trong nhóm (vì ảnh đã được gộp)
+            $firstVariant = $variantGroup->first();
+
+            // Kiểm tra nếu biến thể không có ảnh, lấy ảnh mặc định của sản phẩm
+            $image = $firstVariant->images->isNotEmpty()
+                ? $this->getImageAsBase64($firstVariant->images->first()->image) // Lấy ảnh của biến thể
+                : $this->getImageAsBase64($product->image ?? 'default_image.jpg'); // Lấy ảnh mặc định của sản phẩm
+
             return [
-                'id' => $variant->id,
-                'size' => $variant->size ? $variant->size->name : null,
-                'color' => $variant->color ? $variant->color->name : null,
-                'price' => round($variant->price, 2),
-                'quantity' => $variant->quantity,
-                'images' => $variant->images->map(function ($image) {
-                    return $this->getImageAsBase64($image->image); // Chuyển đổi hình ảnh sang Base64
+                'color' => $firstVariant->color ? $firstVariant->color->name : null,
+                'sizes' => $variantGroup->map(function ($variant) {
+                    return [
+                        'size' => $variant->size ? $variant->size->name : null,
+                        'quantity' => $variant->quantity, // Trả về số lượng của từng biến thể
+                    ];
                 }),
+                'price' => round($firstVariant->price, 2),
+                'images' => [$image], // Chỉ lấy 1 ảnh
             ];
         }), 200);
     }
+
+
     /**
      * Display the specified variant.
      */

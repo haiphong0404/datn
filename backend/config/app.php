@@ -30,6 +30,11 @@ return [
     */
 
     'env' => env('APP_ENV', 'production'),
+    'stripe' => [
+    'secret' => env('STRIPE_SECRET_KEY'),
+    'public' => env('STRIPE_PUBLIC_KEY'),
+    'webhook_secret' => env('STRIPE_WEBHOOK_SECRET'),
+    ],
 
     /*
     |--------------------------------------------------------------------------
@@ -70,7 +75,7 @@ return [
     |
     */
 
-    'timezone' => 'Asia/Ho_Chi_Minh', // Múi giờ Việt Nam (UTC+7)
+    'timezone' => 'Asia/Ho_Chi_Minh',
 
     /*
     |--------------------------------------------------------------------------

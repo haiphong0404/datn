@@ -1,17 +1,32 @@
 
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query'
 import Details from './Details';
 import ProductReview from './ProductReview';
 import { fetchProducts } from '../../api/product';
 import { Link } from "react-router-dom";
+import Slider from 'react-slick';
+import useProductSlider from '../../hooks/useProductSlider';
+import QuickViewModal from "../../components/quickview/QuickView";
 const Product_details = () => {
   // Sử dụng hook để lấy dữ liệu sản phẩm variants
   const { data: products = [], error: productsError } = useQuery({
     queryKey: ['Products'],
     queryFn: fetchProducts,
   });
+  const { settings,settingsResponsive } = useProductSlider();
+  const [showQuickView, setShowQuickView] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const handleQuickView = (product) => {
+    console.log('QuickView triggered for:', product); // Kiểm tra xem sản phẩm đã được truyền đúng chưa
+    setSelectedProduct(product);
+    setShowQuickView(true);
+  };
+
+  const handleCloseQuickView = () => {
+    setShowQuickView(false);
+  };
 
   return (
     <div>
@@ -28,18 +43,18 @@ const Product_details = () => {
               <div className="col-12">
                 <div className="breadcrumb-wrap">
                   <nav aria-label="breadcrumb">
-                    <h3 className="breadcrumb-title">SHOP</h3>
+                    <h3 className="breadcrumb-title">Cửa hàng</h3>
                     <ul className="breadcrumb justify-content-center">
                       <li className="breadcrumb-item">
-                        <a href="index.html">
+                        <a href="/">
                           <i className="fa fa-home" />
                         </a>
                       </li>
                       <li className="breadcrumb-item">
-                        <a href="shop.html">Shop</a>
+                        <a href="/shopshop">Cửa hàng</a>
                       </li>
                       <li className="breadcrumb-item active" aria-current="page">
-                        Product Details
+                        Chi tiết sản phẩm
                       </li>
                     </ul>
                   </nav>
@@ -79,49 +94,69 @@ const Product_details = () => {
             <div className="row">
               <div className="col-12">
                 <div className="section-title text-center">
-                  <h3 className="title"  style={{
-                               
-                                marginBottom: '80px',
-                              
-                              }}>SẢN PHẨM LIÊN QUAN</h3>
-                  
-                  <div className="product-list">
-                    {products.slice(0, 4).map((product) => (
-                      <div key={product.id} className="product-item">
-                        <div className="product-thumb">
-                          <Link to={`/product_details/${product.id}`}>
+                  <h3 className="title" style={{
+
+                    marginBottom: '80px',
+
+                  }}>SẢN PHẨM LIÊN QUAN</h3>
+
+                  <div className="slider-container custom-wrap" >
+                    <Slider
+                      {...settingsResponsive}
+                      className="responsive-slider"
+                    >
+                     
+                      {products.map((product) => (
+                        <div className="prorelate">
+                        <div key={product.id} className="product-item" style={{marginLeft: '5px', marginRight: '5px', }} >
+                          <div className="product-thumb">
                             <img
-                              src={product.image || '/path/to/placeholder.jpg'} // Đổ hình ảnh từ API
+                              src={product.image || '/path/to/placeholder.jpg'}
                               alt={product.name}
                               style={{
                                 display: 'block',
                                 margin: '0 auto',
-                                width: '300px', // Đặt chiều rộng mong muốn
-                                height: '200px', // Đặt chiều cao mong muốn
-                                objectFit: 'cover', // Cắt ảnh để phù hợp với kích thước mà không bị méo
+                                width: '90%', // Đặt chiều rộng động để hình ảnh co giãn
+                                height: '180px',
+                                objectFit: 'cover',
                               }}
                             />
-                          </Link>
-
-                        </div>
-                        <div className="product-content">
-                          <div className="product-caption">
-                            <h6 className="product-name">
-                              <Link to={`/product_details/${product.id}`}>{product.name}</Link> {/* Đổ tên sản phẩm */}
-                            </h6>
-                            <div className="price-box">
-                              <span className="price-regular">
-                                {product.price ? `${new Intl.NumberFormat('vi-VN', { minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(product.price)} Vnd` : "Liên hệ"}
-                              </span>
+                          </div>
+                          <div className="product-content" style={{ height:'150px' }}>
+                            <div className="product-caption">
+                              <h6 className="product-name">
+                                <Link to={`/product_details/${product.id}`}>{product.name}</Link>
+                              </h6>
+                              <div className="price-box">
+                                <span className="price-regular">
+                                  {product.price
+                                    ? `${new Intl.NumberFormat('vi-VN', {
+                                      minimumFractionDigits: 0,
+                                      maximumFractionDigits: 0,
+                                    }).format(product.price)} VND`
+                                    : 'Liên hệ'}
+                                </span>
+                              </div>
+                              <Link
+                                className="add-to-cart"
+                                onClick={(event) => {
+                                  event.preventDefault();
+                                  handleQuickView(product);
+                                }}
+                              >
+                                <i className="fa fa-shopping-cart" />
+                              </Link>
                             </div>
-                            <Link className="add-to-cart" onClick={() => handleQuickView(product)} >
-                              <i className="fa fa-shopping-cart" />
-                            </Link>                    </div>
-
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                        </div>
+                      ))}
+                    
+                    </Slider>
+
+
                   </div>
+
                 </div>
               </div>
             </div>
@@ -134,7 +169,13 @@ const Product_details = () => {
         </section>
         {/* Related product area end */}
       </main>
-
+      {selectedProduct && (
+        <QuickViewModal
+          show={showQuickView}
+          onClose={handleCloseQuickView}
+          product={selectedProduct}
+        />
+      )}
     </div>
 
   );

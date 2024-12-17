@@ -468,11 +468,13 @@ table tbody {
 
 .slick-row-3 .slick-list {
   margin: 0 -3px;
+  
 }
 
 .slick-row-3 .slick-list .slick-slide {
   margin: 0 3px;
 }
+
 
 @media only screen and (max-width: 767.98px) {
   .slick-sm-row-3 .slick-list {
@@ -1231,9 +1233,9 @@ table tbody {
   color: #87b106;
 }
 
-.header-configure-area ul li:first-child {
-  margin-left: 0;
-}
+/* .header-configure-area ul li:first-child {
+
+} */
 
 /*----------- header minicart area end -----------*/
 /*------ user info block area start ------*/
@@ -2555,7 +2557,7 @@ only screen and (max-width: 767.98px) {
   line-height: 18px;
   position: relative;
   display: inline-block;
-  padding: 10px 0;
+  padding: 8px 0;
 }
 
 .mobile-menu li>a:hover {
@@ -3696,7 +3698,7 @@ only screen and (max-width: 767.98px) {
 
 .brand-item {
   background-color: #fff;
-  padding: 20px 0;
+
 }
 
 .brand-item img {
@@ -4275,6 +4277,7 @@ only screen and (max-width: 767.98px) {
   -webkit-transition: 0.4s;
   transition: 0.4s;
 }
+
 
 .product-item:hover {
   -webkit-box-shadow: 0 5px 20px 0 rgba(195, 195, 195, 0.6);
@@ -7774,7 +7777,7 @@ only screen and (max-width: 767.98px) {
 
 .product-item {
   background: #f9f9f9;
-  padding: 10px;
+  padding: 5px;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   text-align: center;
@@ -7874,10 +7877,12 @@ only screen and (max-width: 767.98px) {
 
 .product-item {
   background: #f9f9f9;
-  padding: 10px;
+  padding: 5px;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   text-align: center;
+  
+  
 }
 
 .product-large-img img {
@@ -7945,11 +7950,16 @@ only screen and (max-width: 767.98px) {
 }
 
 .brand-item {
-  flex-basis: calc(20% - 10px);
-  /* Chiếm 20% trừ đi khoảng cách margin giữa các items */
-  margin: 5px;
+  width: 240px !important;
+  
   text-align: center;
 }
+/* Đặt lại các thuộc tính inline cho .brand-item */
+.brand-item.no-inline {
+
+  display: block !important;
+}
+
 
 .brand-item img {
   max-width: 100%;
@@ -8194,7 +8204,7 @@ only screen and (max-width: 767.98px) {
 .search-container {
   display: flex;
   align-items: center;
-  gap: 8px;
+  
   justify-content: center;
 }
 
@@ -8211,13 +8221,12 @@ only screen and (max-width: 767.98px) {
 }
 
 .search-container input[type="text"]:focus {
-  border-color: #007bff;
+  border-color: #87b106;
   /* Màu xanh khi được chọn */
 }
 
 /* Nút tìm kiếm với icon */
 .search-container button {
-  background-color: #007bff;
   color: white;
   border: none;
   padding: 8px 12px;
@@ -8227,16 +8236,24 @@ only screen and (max-width: 767.98px) {
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
+  top: -4px; /* Di chuyển nút lên 3px */
 }
 
 .search-container button:hover {
-  background-color: #0056b3;
+  background-color: #87b106;
 }
 
 /* Thêm màu cho icon tìm kiếm */
 .search-container .bi-search {
   color: white;
   font-size: 18px;
+}
+.search-container img {
+  width: 50px; /* Giữ chiều rộng cố định */
+  height: 50px; /* Giữ chiều cao cố định */
+  border-radius: 8px;
+  object-fit: cover; /* Đảm bảo ảnh không bị méo */
 }
 /* Container cho số lượng */
 .g {
@@ -9076,6 +9093,115 @@ button {
   color: #333; /* Màu chữ chính */
   font-size: 16px;
 }
+@keyframes slideDown {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+.slider-container {
+  position: relative;
+  gap: 10px; /* Tạo khoảng cách 10px giữa các phần tử trong slider */
+}
+
+.slider-container:hover .slider-arrow {
+  opacity: 1 !important;  /* Hiển thị các nút khi hover vào slider */
+}
+
+.slider-arrow {
+  opacity: 0;              /* Mặc định ẩn các nút */
+  transition: opacity 0.3s; /* Thêm hiệu ứng chuyển tiếp */
+}
+
+@media (max-width: 768px) {
+  .product-list {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .product-item {
+    width: calc(50% - 10px); /* Hoặc chỉnh lại cho phù hợp */
+    box-sizing: border-box;
+  }
+}
+.custom-wrap .product-item {
+  width: auto !important; /* Vô hiệu hóa thuộc tính width */
+}
+
+
+@media (max-width: 430px) {
+  .product-item {
+    width: 100%; /* Khi màn hình rất nhỏ, hiển thị 1 sản phẩm mỗi hàng */
+  }
+}
+/* Áp dụng margin giữa các slide chỉ cho slider này */
+.brand-slider .slick-slide {
+  margin: 0 5px; /* Khoảng cách giữa các slide */
+}
+@media (max-width: 768px) {
+  .brand-item img {
+    width: 70px; /* Kích thước ảnh khi trên thiết bị nhỏ */
+  }
+}
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 4 sản phẩm mặc định */
+  gap: 16px; /* Khoảng cách giữa các sản phẩm */
+}
+
+@media (max-width: 1200px) {
+  .product-grid {
+    grid-template-columns: repeat(3, 1fr); /* 3 sản phẩm trên màn hình vừa */
+  }
+}
+
+@media (max-width: 768px) {
+  .product-grid {
+    grid-template-columns: repeat(2, 1fr); /* 2 sản phẩm trên thiết bị nhỏ */
+  }
+}
+
+@media (max-width: 576px) {
+  .product-grid {
+    grid-template-columns: 1fr; /* 1 sản phẩm trên mỗi hàng */
+  }
+}
+@media (max-width: 768px) {
+  .product-list-item {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .product-content-list {
+    align-items: center;
+  }
+
+  .product-name {
+    font-size: 1rem;
+  }
+
+  .price-box {
+    font-size: 1rem;
+  }
+}
+
+/* Responsive cho thiết bị rất nhỏ */
+@media (max-width: 480px) {
+  .product-list-item {
+    padding: 10px;
+  }
+
+  .product-thumb img {
+    max-height: 200px;
+  }
+
+  .btn {
+    font-size: 0.9rem;
+    padding: 8px 15px;
+  }
+}
 
 @media (max-width: 768px) {
 
@@ -9116,9 +9242,7 @@ button {
       padding: 0 10px;
       text-align: left;
   }
-  #sidebar > ul > li > a i{
-      /*display: none !important;*/
-  }
+
 
   .mail-info, .mail-info:hover {
       display: none !important;
@@ -9138,9 +9262,6 @@ button {
   }
   #sidebar > ul > li > ul.sub > li > a {
       background: transparent !important ;
-  }
-  #sidebar > ul > li > ul.sub > li > a:hover {
-      /*background: #4A8BC2 !important ;*/
   }
 
 
@@ -9340,9 +9461,7 @@ button {
   }
 
   /*menu icon plus minus*/
-  .dcjq-icon {
-      /*top: 10px;*/
-  }
+  
   ul.sidebar-menu li ul.sub li a {
       padding: 0;
   }
@@ -9455,6 +9574,7 @@ button {
   .mobile-settings ul li {
     margin-bottom: 15px; /* Khoảng cách giữa các mục menu */
   }
+  
 }
 
 
@@ -9736,4 +9856,9 @@ button {
   font-size: 16px;
   font-weight: bold;
   color: #333;
+}
+.comment-actions {
+  display: flex;
+  gap: 10px; /* Khoảng cách giữa các nút */
+  align-items: center; /* Căn giữa theo chiều dọc */
 }

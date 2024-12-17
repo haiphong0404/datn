@@ -63,12 +63,14 @@ Route::get('order-details/{order_id}', [OrderDetailController::class, 'getOrderD
 Route::apiResource('order-details', OrderDetailController::class);
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('comments/{product_id}', [CommentController::class, 'store']);
+    Route::post('/comments/{comment_id}/add-image', [CommentController::class, 'addCommentImage']);
     Route::put('comments/{id}', [CommentController::class, 'update']);
     Route::delete('comments/{id}', [CommentController::class, 'destroy']);
     Route::get('/cart', [CartController::class, 'index']);
     Route::post('/cart/add', [CartController::class, 'addToCart']);
     Route::put('/cart/update', [CartController::class, 'updateCart']);
     Route::delete('/cart/remove', [CartController::class, 'removeFromCart']);
+    Route::post('user/upload-avatar', [UserController::class, 'uploadAvatar']); // Tải ảnh avatar lên
     Route::delete('/cart/remove/{product_variant_id}', [CartController::class, 'removeFromCart']);
     Route::apiResource('order', OrderController::class);
 });
@@ -104,5 +106,3 @@ Route::post('/webhook/stripe', [StripeController::class, 'handle'])->withoutMidd
 Route::get('/stripe/verify-session/{sessionId}', [StripeController::class, 'verifySession']);
 Route::post('/orders/{orderId}/cancel', [StripeController::class, 'cancelOrder']);
 Route::post('/product-variants/check-quantity', [ProductVariantController::class, 'checkQuantity']);
-Route::post('/user/add-avatar', [UserController::class, 'addAvatar']);
-Route::middleware('auth:sanctum')->post('/user/avatar', [UserController::class, 'updateAvatar']);

@@ -31,6 +31,7 @@ const Login = () => {
                                 type="email"
                                 className="form-control"
                                 placeholder="Nhập địa chỉ email"
+                                maxlength="50"
                                 {...register('email', { required: 'Vui lòng nhập địa chỉ email' })}
                             />
                             {errors.email && <span className="text-danger">{errors.email.message}</span>}
@@ -42,6 +43,7 @@ const Login = () => {
                                         type={isPasswordVisible ? "text" : "password"}
                                         className="form-control"
                                         placeholder="Nhập mật khẩu"
+                                        maxlength="30"
                                         {...register('password', { required: 'Vui lòng nhập mật khẩu' })}
                                     />
                                     <span
