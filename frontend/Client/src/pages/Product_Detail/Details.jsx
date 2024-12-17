@@ -216,7 +216,7 @@ const Details = () => {
 
                         <div className="availability">
                             <i className="fa fa-check-circle"></i>
-                            <span>{selectedVariant?.quantity} in stock</span>
+                            <span>{selectedVariant?.quantity} Số lượng tồn kho</span>
                         </div>
 
                         <p className="pro-desc">{product.description}</p>

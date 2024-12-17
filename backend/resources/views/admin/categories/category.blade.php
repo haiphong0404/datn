@@ -11,14 +11,12 @@
 @endsection
 
 @section('content')
-    @if (session('success'))
-    @endif
-    @if (session('error'))
+    {{-- @if (session('error'))
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
             {{ session('error') }}
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
-    @endif
+    @endif --}}
 
     <style>
         .text-truncate {
@@ -86,7 +84,7 @@
                                         <th>Tên thể loại</th>
                                         <th>Mô tả</th>
                                         <th>Ngày tạo</th>
-                                        <th>Trạng thái</th>
+{{--                                        <th>Trạng thái</th>--}}
                                         <th>Thao tác</th>
                                     </tr>
                                 </thead>
@@ -97,13 +95,13 @@
                                             <td class="text-truncate">{{ $category->name }}</td>
                                             <td class="text-truncate">{{ $category->description }}</td>
                                             <td>{{ $category->created_at }}</td>
-                                            <td>
-                                                @if ($category->trashed())
-                                                    <span class="badge bg-danger">Đã xóa</span>
-                                                @else
-                                                    <span class="badge bg-success">Còn</span>
-                                                @endif
-                                            </td>
+{{--                                            <td>--}}
+{{--                                                @if ($category->trashed())--}}
+{{--                                                    <span class="badge bg-danger">Đã xóa</span>--}}
+{{--                                                @else--}}
+{{--                                                    <span class="badge bg-success">Còn</span>--}}
+{{--                                                @endif--}}
+{{--                                            </td>--}}
                                             <td class="text-center">
                                                 <a href="{{ route('admin.categories.edit', $category->id) }}"
                                                     class="btn btn-warning ">
@@ -168,16 +166,5 @@
             </section>
         </div>
     </div>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            @if (session('success'))
-                toastr.success('{{ session('success') }}', 'Thành công', {
-                    closeButton: true,
-                    progressBar: true,
-                    timeOut: 3000,
-                    positionClass: "toast-top-right"
-                });
-            @endif
-        });
-    </script>
+
 @endsection

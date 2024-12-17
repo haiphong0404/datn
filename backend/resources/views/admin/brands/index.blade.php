@@ -13,8 +13,6 @@
 @endsection
 
 @section('content')
-    @if (session('success'))
-    @endif
 
     <style>
         .text-truncate {
@@ -179,16 +177,7 @@
 @section('js')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            @if (session('success'))
-                toastr.success('{{ session('success') }}', 'Thành công', {
-                    closeButton: true,
-                    progressBar: true,
-                    timeOut: 3000,
-                    positionClass: "toast-top-right"
-                });
-            @endif
-        });
+       
 
 
 

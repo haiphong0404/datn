@@ -85,12 +85,15 @@ class BrandController extends Controller
     /**
      * Xóa một store cụ thể khỏi cơ sở dữ liệu.
      */
-    public function destroy(Brand $brand)
+    public function destroy($id)
     {
-        // Gọi phương thức deleteBrand từ BrandService để xóa mềm thương hiệu và các sản phẩm liên quan.
-        $this->brandService->deleteBrand($brand);
+        $brand = Brand::findOrFail($id);
 
-        return back()->with('success', 'Xóa thương hiệu thành công');
+        if (!app(BrandService::class)->deleteBrand($brand)) {
+            return redirect()->route('admin.brands.index')->with('error', 'Không thể xóa thương hiệu khi còn sản phẩm liên kết.');
+        }
+
+        return redirect()->route('admin.brands.index')->with('success', 'Xóa thương hiệu thành công.');
     }
     public function restore($id)
     {

@@ -88,7 +88,7 @@ const Shop = () => {
               <div className="col-12">
                 <div className="breadcrumb-wrap">
                   <nav aria-label="breadcrumb">
-                    <h3 className="breadcrumb-title">CỬA HÀNG</h3>
+                    <h3 className="breadcrumb-title">Cửa hàng</h3>
                     <ul className="breadcrumb justify-content-center">
                       <li className="breadcrumb-item">
                         <a href="index.html">
@@ -258,11 +258,11 @@ const Shop = () => {
         <div
           className={
             viewMode === 'grid-view'
-              ? 'col-lg-3 col-md-4 col-sm-6 col-6'
+              ? 'col-lg-4 col-md-4 col-sm-6 col-6'
               : 'col-12'
           }
           key={product.id}
-          style={{paddingLeft:'0px', paddingRight:'0px'}}
+          style={{paddingLeft:'5px', paddingRight:'5px'}}
         >
           {viewMode === 'grid-view' ? (
             <ProductItem product={product} />
