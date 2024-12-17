@@ -6,8 +6,10 @@ import useApplyVoucher from '../hooks/useApplyVoucher';
 import axios from 'axios';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { Elements } from '@stripe/react-stripe-js';
+import Swal from 'sweetalert2';
 
-const Checkout = ({orderId}) => {
+
+const Checkout = () => {
   const { userInfo } = useLoginForm();
   const { postOrder } = usePostOrder();
   const { applyVoucher, loading } = useApplyVoucher(); // Use hook to get applyVoucher, loading, error, and voucherData
@@ -200,10 +202,6 @@ const Checkout = ({orderId}) => {
     isShippingSelected,
     isVoucherApplied
   ]);
-
-
-
-
   const handleInputChange = (e) => {
     const { id, value } = e.target;
     setUserDetails((prevDetails) => ({
@@ -258,51 +256,7 @@ const Checkout = ({orderId}) => {
       );
       const data = response.data;
 
-      //     // Remove cart from localStorage
-      //     localStorage.removeItem('selectedProducts');
-      //     localStorage.removeItem('cart');
-      //     setSelectedProducts([]);
-      //     setTotalAmount(0);
-
-      //     // Reset shipping status after order
-      //     setIsShippingSelected(false);  // This resets the shipping status to false
-      //     setIsVoucherApplied(false);
-      //   }else if (paymentMethod === "stripe") {
-      //     try {
-      //       // Gửi yêu cầu tạo Stripe session
-      //       const response = await fetch('http://127.0.0.1:8000/api/create-stripe', {
-      //         method: 'POST',
-      //         headers: {
-      //           'Content-Type': 'application/json',
-      //           'Authorization': `Bearer ${token}`, // Thêm token nếu cần
-      //         },
-      //         body: JSON.stringify(orderData),
-      //       });
-      
-      //       const data = await response.json();
-      
-      //       if (data.sessionId) {
-      //         // Chuyển người dùng đến trang thanh toán của Stripe
-      //         const stripe = Stripe('pk_test_51QSbecJMpBf2NQMLmRWimHDjNlzeFQCDaOZgdrIvgbeKZ2oCGQFReuzuMDb9d7LrAV59kah5Kcb6lkZKop0l4Z6A00xEjpeTkF');
-      //         const { error } = await stripe.redirectToCheckout({ sessionId: data.sessionId });
-      
-      //         if (error) {
-      //           console.error('Stripe Checkout error:', error);
-      //           // Xử lý lỗi nếu có
-      //         }
-      //       } else {
-      //         console.error('Không nhận được sessionId từ server');
-      //       }
-          
-      //     } catch (error) {
-      //       toast.error(`Đặt hàng thất bại: ${error.message}`);
-      //     }
-      //   }
-        
-      // } catch (error) {
-      //   toast.error(`Đặt hàng thất bại: sản phẩm trong kho hiện không đủ`);
-     
-  
+   
       // Tiếp tục xử lý đơn hàng khi không có lỗi
       const orderDate = new Date().toISOString();
       const generateRandomCode = () => {
@@ -376,24 +330,33 @@ const Checkout = ({orderId}) => {
   
                   // Gửi đơn hàng và thanh toán nếu là thanh toán tiền mặt
                   await postOrder(userInfo.id, orderData);
-                  toast.success("Đặt hàng thành công!");
-                  
-                  // Xóa sản phẩm đã chọn khỏi giỏ hàng trong cơ sở dữ liệu
                   for (const item of selectedProducts) {
-                      await deleteProductFromCart(item.id_productVariant);
+                    await deleteProductFromCart(item.id_productVariant);
                   }
-  
+                  
                   // Xóa giỏ hàng khỏi localStorage
                   localStorage.removeItem('selectedProducts');
                   localStorage.removeItem('cart');
                   setSelectedProducts([]);
                   setTotalAmount(0);
-  
+                  
                   // Đặt lại trạng thái vận chuyển và voucher
                   setIsShippingSelected(false);
                   setIsVoucherApplied(false);
-                  navigate('/my_account/orders')
-                  window.location.reload()
+                
+                  // Hiển thị thông báo SweetAlert
+                  Swal.fire({
+                    title: 'Đặt hàng thành công!',
+                    text: 'Đơn hàng của bạn đã được đặt, xem ngay nào!',
+                    icon: 'success',
+                    confirmButtonText: 'Xem ngay',
+                  }).then((result) => {
+                    if (result.isConfirmed) {
+                      // Điều hướng đến trang đặt hàng nếu người dùng nhấn "Xem ngay"
+                      navigate('/my_account/orders');
+                    }
+                  });
+                  
               }else if (paymentMethod === "stripe") {
                 try {
                   // Gửi yêu cầu tạo Stripe session

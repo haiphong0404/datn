@@ -231,9 +231,9 @@ const Shop = () => {
                           </div>
                         </div>
                       </div>
-                      <div class="col-lg-5 col-md-6 order-1 order-md-2">
-                        <div class="top-bar-right">
-                          <div class="product-short">
+                      <div className="col-lg-5 col-md-6 order-1 order-md-2">
+                        <div className="top-bar-right">
+                          <div className="product-short">
                             <div className="product-amount">
                               <p>Tìm kiếm theo :</p>
                             </div>
