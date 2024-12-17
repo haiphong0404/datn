@@ -44,9 +44,11 @@ class BrandService
      */
     public function deleteBrand(Brand $brand)
     {
-        // Xóa sản phẩm liên quan khi xóa thương hiệu
-        $brand->products()->delete(); // Xóa mềm tất cả sản phẩm thuộc thương hiệu
-
-        return $brand->delete(); // Xóa mềm thương hiệu
+        
+        if ($brand->products()->count() > 0) {
+            return false; // Không xóa nếu còn sản phẩm
+        }
+    
+        return $brand->delete();
     }
 }
