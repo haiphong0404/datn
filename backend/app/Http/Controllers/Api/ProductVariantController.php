@@ -13,43 +13,30 @@ class ProductVariantController extends Controller
     /**
      * Display a listing of the variants for a given product.
      */
-    public function index($productId)
+    public function index(Request $request)
     {
-        // Lấy sản phẩm cùng với biến thể
-        $product = Product::with(['variants.size', 'variants.color', 'variants.images'])->findOrFail($productId);
+        // Lấy danh sách sản phẩm chưa bị xóa mềm
+        $products = Product::with(['category', 'brand'])
+            ->whereNull('deleted_at') // Đảm bảo chỉ lấy sản phẩm chưa bị xóa mềm
+            ->get();
 
-        // Kiểm tra nếu sản phẩm có biến thể
-        if ($product->variants->isEmpty()) {
+        if ($products->isEmpty()) {
             return response()->json([
-                'message' => 'Không có biến thể nào cho sản phẩm này!'
+                'message' => 'Không có sản phẩm nào được tìm thấy!'
             ], 404);
         }
 
-        // Nhóm các biến thể theo màu và ảnh
-        $groupedVariants = $product->variants->groupBy(function($variant) {
-            // Gộp nhóm theo màu và ảnh, sẽ chỉ có một ảnh duy nhất cho mỗi nhóm
-            return $variant->color->name . '-' . ($variant->images->isNotEmpty() ? $variant->images->first()->image : 'default');
-        });
-
-        return response()->json($groupedVariants->map(function ($variantGroup) use ($product) {
-            // Chỉ lấy một ảnh duy nhất trong nhóm (vì ảnh đã được gộp)
-            $firstVariant = $variantGroup->first();
-
-            // Kiểm tra nếu biến thể không có ảnh, lấy ảnh mặc định của sản phẩm
-            $image = $firstVariant->images->isNotEmpty()
-                ? $this->getImageAsBase64($firstVariant->images->first()->image) // Lấy ảnh của biến thể
-                : $this->getImageAsBase64($product->image ?? 'default_image.jpg'); // Lấy ảnh mặc định của sản phẩm
-
+        return response()->json($products->map(function ($product) {
             return [
-                'color' => $firstVariant->color ? $firstVariant->color->name : null,
-                'sizes' => $variantGroup->map(function ($variant) {
-                    return [
-                        'size' => $variant->size ? $variant->size->name : null,
-                        'quantity' => $variant->quantity, // Trả về số lượng của từng biến thể
-                    ];
-                }),
-                'price' => round($firstVariant->price, 2),
-                'images' => [$image], // Chỉ lấy 1 ảnh
+                'id' => $product->id,
+                'name' => $product->name,
+                'price' => $product->price,
+                'description' => $product->description,
+                'category' => $product->category ? $product->category->name : null,
+                'brand' => $product->brand ? $product->brand->name : null,
+                'image' => $this->getImageAsBase64($product->image), // Chuyển đổi hình ảnh sang Base64
+                'category_id' => $product->category_id,
+                'brand_id' => $product->brand_id,
             ];
         }), 200);
     }
