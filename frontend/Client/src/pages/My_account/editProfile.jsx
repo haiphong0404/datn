@@ -1,10 +1,10 @@
+// JSX
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useLoginForm } from '../../hooks/useLoginForm.js';
 import { editUserById } from '../../api/user.js';
 import { getUserByid } from '../../api/user.js';
-
 
 const EditProfile = () => {
     const [username, setUsername] = useState('');
@@ -83,8 +83,6 @@ const EditProfile = () => {
                 };
                 localStorage.setItem('userInfo', JSON.stringify(updatedUserInfo));
 
-                window.dispatchEvent(new Event('userInfoUpdated'));
-
                 setUsername(username);
                 setEmail(email);
                 setPhone(phone);
@@ -115,8 +113,6 @@ const EditProfile = () => {
                     };
                     localStorage.setItem('userInfo', JSON.stringify(updatedUserInfoWithAvatar));
 
-                    window.dispatchEvent(new Event('userInfoUpdated'));
-
                     setPreviewImage(avatarBase64);
                     toast.success('Cập nhật ảnh thành công!');
                 }
@@ -125,7 +121,6 @@ const EditProfile = () => {
                 toast.error('Cập nhật ảnh không thành công!');
             }
         }
-        window.location.reload();
     };
 
     return (

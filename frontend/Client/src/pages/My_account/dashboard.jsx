@@ -15,11 +15,11 @@ const Dashboard = () => {
                     <>
                         <div className="welcome">
                             <p>
-                                Xin chào, <strong>{userInfo?.username || ''}</strong>!
+                                Xin chào, <strong className="fs-3">{userInfo?.username || ''}</strong>!
                             </p>
                         </div>
                         <p className="mb-0">
-                            Cảm ơn bạn đã đăng ký! Chúng tôi rất vui được đồng hành cùng bạn. Khám phá ngay những sản phẩm tuyệt vời và tận hưởng trải nghiệm mua sắm đầy cảm hứng tại Thor!
+                            Chúng tôi rất vui được đồng hành cùng bạn. Khám phá ngay những sản phẩm tuyệt vời và tận hưởng trải nghiệm mua sắm đầy cảm hứng tại Thor!
                         </p>
 
                     </>

@@ -1,17 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { useQuery } from '@tanstack/react-query';
 import { useParams } from "react-router-dom";
 import useProductById from "../../hooks/useProductById";
 import { useComments } from "../../hooks/useComments";
-import { addComment, editComment, deleteComment } from "../../api/commentsApi";
-import moment from "moment"; // Import moment
+import { addComment, deleteComment } from "../../api/commentsApi";
+import moment from "moment";
 import { toast } from "react-toastify";
 import useProductAttributes from '../../hooks/useProductAtrib';
 import LoadingSpinner from "../../loading/LoadingSpinner";
-import { useAuth } from '../../contexts/AuthContext';
 import { useLoginForm } from '../../hooks/useLoginForm';
 import FormData from 'form-data';
-import axios from "axios";
+
 
 const ProductReview = ({ initialTab = "tab_one" }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(
@@ -47,14 +45,7 @@ const ProductReview = ({ initialTab = "tab_one" }) => {
 
   const [newComment, setNewComment] = useState("");
   const [newRating, setNewRating] = useState(0);
-  const [editCommentId, setEditCommentId] = useState(null);
-  const [editedComment, setEditedComment] = useState("");
-  const [editedRating, setEditedRating] = useState(0);
   const { userInfo } = useLoginForm();
-  console.log(comments);
-
-
-
 
   const handleTabChange = (tabId) => setActiveTab(tabId);
 
@@ -83,92 +74,11 @@ const ProductReview = ({ initialTab = "tab_one" }) => {
     }
   };
 
-
-  const handleEditComment = async () => {
-    if (editedComment.trim() && editedRating > 0) {
-        console.log("Form data is valid. Preparing request...");
-
-        try {
-            // Gửi dữ liệu khác bằng PUT
-            console.log("Sending request to edit comment...");
-            const response = await editComment(editCommentId, {
-                comment: editedComment,
-                star_rating: editedRating,
-            });
-            console.log("Response received:", response);
-
-            if (response.status === 200) {
-                console.log("Response status is 200, updating comments...");
-                const updatedComment = response.data;
-                console.log("Updated comment data:", updatedComment);
-
-                // Cập nhật lại danh sách bình luận trong state
-                updateComments(prevComments =>
-                    prevComments.map(comment =>
-                        comment.id === updatedComment.id ? updatedComment : comment
-                    )
-                );
-
-                // Nếu có file, gửi file bằng POST
-                if (file) {
-                  const formData = new FormData();
-                  formData.append("file", file);
-                  formData.append("commentId", editCommentId); // Gửi ID bình luận cùng file
-              
-                  console.log("Sending request to upload file...");
-              
-                  try {
-                      const uploadResponse = await axios.post(`/comments/${editCommentId}/add-image`, formData, {
-                          headers: {
-                              'Content-Type': 'multipart/form-data',
-                          },
-                      });
-              
-                      console.log("File upload response:", uploadResponse);
-              
-                      if (uploadResponse.status === 200) {
-                       
-                      } else {
-                        
-                      }
-                  } catch (error) {
-                      console.error('Error uploading file:', error);
-                      toast.error("Đã xảy ra lỗi khi tải lên.");
-                  }
-              }
-
-                // Đặt lại trạng thái của form
-                setEditedComment("");
-                setEditedRating(0);
-                setFile(null);
-                setEditCommentId(null);
-
-                // Làm mới dữ liệu nếu cần
-                refetch();
-                toast.success("Sửa bình luận thành công.");
-            } else {
-                console.error("Response status not 200, error occurred.");
-                toast.error("Có lỗi xảy ra khi sửa bình luận.");
-            }
-        } catch (error) {
-            console.error("Error while editing comment:", error);
-            toast.error("Có lỗi xảy ra khi sửa bình luận.");
-        }
-    } else {
-        console.warn("Invalid input. Please enter valid content and rating.");
-        toast.error("Vui lòng nhập nội dung và đánh giá hợp lệ.");
-    }
-};
-
-
-
   const handleDeleteComment = async (id) => {
     try {
-      // Kiểm tra nếu người dùng là admin
       if (userInfo?.role === "admin" || comments.find(comment => comment.id === id)?.user_id === userInfo?.id) {
-        const userComment = comments.find(comment => comment.id === id);
         await deleteComment(id);
-        refetch();
+        updateComments(null, id);
         toast.success("Bình luận đã được xóa thành công!");
       } else {
         toast.error("Bạn không có quyền xóa bình luận này.");
@@ -190,10 +100,6 @@ const ProductReview = ({ initialTab = "tab_one" }) => {
 
   const colorNames = Array.isArray(colors) ? colors.map(color => color.name).join(', ') : "Không có màu nào.";
   const sizeNames = Array.isArray(sizes) ? sizes.map(size => size.name).join(', ') : "Không có kích thước nào.";
-
-  // Render component đánh giá sản phẩm.
-
-
 
   return (
     <div className="product-review-info">
@@ -244,166 +150,159 @@ const ProductReview = ({ initialTab = "tab_one" }) => {
           </table>
         </div>
 
-        <div className={`tab-pane fade ${activeTab === "tab_three" ? "show active" : ""}`} id="tab_three">
+        <div
+          className={`tab-pane fade ${activeTab === "tab_three" ? "show active" : ""}`}
+          id="tab_three"
+        >
           <div className="reviews">
             {comments.length > 0 ? (
               comments.map((comment) => (
-                <div key={comment.id} className="review-box mb-4">
-                  <div className="ratings mb-2">
+                <div
+                  key={comment.id}
+                  className="card mb-4 border-0 shadow-sm"
+                  style={{ borderRadius: "12px" }}
+                >
+                  <div className="card-body">
+                    <div className="d-flex align-items-center justify-content-between mb-3">
+                      <div className="d-flex align-items-center">
+                        <div className="me-3">
+                          <img
+                            src={
+                              comment.avatar_img ||
+                              "https://via.placeholder.com/50/007bff/ffffff?text=?"
+                            }
+                            alt="avatar"
+                            className="rounded-circle"
+                            style={{ width: "50px", height: "50px", objectFit: "cover" }}
+                          />
+                        </div>
+                        <h6 className="fw-bold mb-0">{comment.username}</h6>
+                      </div>
+                      <small className="text-muted">
+                        {moment(comment.created_at, "DD-MM-YYYY").format("DD-MM-YYYY")}
+                      </small>
+                    </div>
+
+                    <div
+                      className="p-3 mb-3"
+                      style={{
+                        border: "1px solid #ddd",
+                        borderRadius: "8px",
+                        backgroundColor: "#f9f9f9",
+                      }}
+                    >
+                      <p className="mb-3">{comment.comment}</p>
+
+                      {comment.file && (
+                        <div className="text-center mb-3">
+                          <img
+                            src={comment.file}
+                            alt="Review"
+                            className="rounded"
+                            style={{ maxWidth: "150px", objectFit: "cover" }}
+                          />
+                        </div>
+                      )}
+
+                      <div className="text-center">
+                        <strong>Đánh giá: </strong>
+                        {[...Array(5)].map((_, idx) => (
+                          <i
+                            key={idx}
+                            className={`fa fa-star ${idx < comment.star_rating ? "text-warning" : "text-muted"
+                              }`}></i>
+                        ))}
+                      </div>
+                    </div>
+
+                    {isAuthenticated &&
+                      (userInfo?.role === "admin" || comment.user_id === userInfo?.id) && (
+                        <div className="d-flex gap-2">
+                          <button
+                            className="remove-button btn btn-outline-danger rounded-pill shadow-sm"
+                            style={{ color: "white", padding: "5px 15px 5px 5px", border: "2px solid #dc3545" }}
+                            onMouseEnter={(e) => (e.target.style.color = "black")}
+                            onMouseLeave={(e) => (e.target.style.color = "white")}
+                            onClick={() => handleDeleteComment(comment.id)}
+                          >
+                            <i className="fas fa-trash-alt me-2"></i> Xóa
+                          </button>
+                        </div>
+
+
+
+
+                      )}
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p className="text-muted text-center">Chưa có đánh giá nào.</p>
+            )}
+
+            {isAuthenticated && (
+              <div className="card mt-4 border-0 shadow-sm" style={{ borderRadius: "12px" }}>
+                <div className="card-body">
+                  <h6 className="fw-bold mb-3">Thêm bình luận của bạn</h6>
+                  <div className="d-flex gap-3 align-items-center mb-3">
+                    <img
+                      src={
+                        userInfo?.avatar_img ||
+                        "https://via.placeholder.com/50/007bff/ffffff?text=?"
+                      }
+                      alt="avatar"
+                      className="rounded-circle"
+                      style={{ width: "50px", height: "50px", objectFit: "cover" }}
+                    />
+                    <textarea
+                      className="form-control"
+                      rows="3"
+                      value={newComment}
+                      onChange={(e) => setNewComment(e.target.value)}
+                      placeholder="Viết bình luận..."
+                    ></textarea>
+                  </div>
+
+                  <div className="mb-3">
                     <strong>Mức độ hài lòng: </strong>
                     {[...Array(5)].map((_, idx) => (
                       <i
                         key={idx}
-                        className={`fa fa-star ${idx < comment.star_rating ? 'text-warning' : 'text-muted'}`}
-                      />
+                        className={`fa fa-star ${idx < newRating ? "text-warning" : "text-muted"
+                          }`}
+                        onClick={() => setNewRating(idx + 1)}
+                        style={{ cursor: "pointer" }}
+                      ></i>
                     ))}
                   </div>
-                  <p><strong>Người đánh giá:</strong> {comment.username}</p>
-                  <p><strong>Bình luận:</strong> {comment.comment}</p>
-                  {comment.file && (
-                    <div className="review-image">
-                      <img src={comment.file} alt="Review" width="130" />
-                    </div>
-                  )}
-                  <p><strong>Thời gian:</strong> {moment(comment.created_at, "YYYY-MM-DD HH:mm:ss").format('DD-MM-YYYY HH:mm:ss')}</p>
 
-                  {isAuthenticated && (
-                    <div className="comment-actions">
-                      {(userInfo?.role === "admin" || comment.user_id === userInfo?.id) && (
-                        <>
-                          {userInfo?.role !== "admin" && (
-                            <button
-                              className="btn btn-sqr edit-button"
-                              style={{ color: "white" }}
-                              onMouseEnter={(e) => (e.target.style.color = "#ffc107")}
-                              onMouseLeave={(e) => (e.target.style.color = "black")}
-                              onClick={() => {
-                                setEditCommentId(comment.id);
-                                setEditedComment(comment.comment);
-                                setEditedRating(comment.star_rating);
-                                setFile(null); // Clear any file selected for editing
-                              }}
-                            >
-                              Sửa
-                            </button>
-                          )}
-
-                          <button
-                            className=" remove-button"
-                            style={{ color: "white" }}
-                            onMouseEnter={(e) => (e.target.style.color = "#dc3545")}
-                            onMouseLeave={(e) => (e.target.style.color = "black")}
-                            onClick={() => handleDeleteComment(comment.id)}
-                          >
-                            Xóa
-                          </button>
-                        </>
-                      )}
-                    </div>
-                  )}
-
-                  {editCommentId === comment.id && (
-                    <div className="mt-2">
-                      <textarea
-                        value={editedComment}
-                        onChange={(e) => setEditedComment(e.target.value)}
-                        className="form-control"
-                      />
-                      <div className="rating-stars">
-                        <span>Mức độ hài lòng: </span>
-                        {[...Array(5)].map((_, idx) => (
-                          <span
-                            key={idx}
-                            className={`fa fa-star ${idx < editedRating ? "text-warning" : "text-muted"}`}
-                            onClick={() => setEditedRating(idx + 1)}
-                          />
-                        ))}
-                      </div>
-                      {/* {comment.file && !file && (
-                        <div className="preview-image">
-                          <img src={comment.file} alt="Current review image" width="100" />
-                          <p>Ảnh hiện tại</p>
-                        </div>
-                      )} */}
-                      {/* <input
-                        type="file"
-                        accept="image/*"
-                        onChange={(e) => {
-                          setFile(e.target.files[0]);
-                        }}
-                      /> */}
-                      {file && (
-                        <div className="preview-image">
-                          <img src={URL.createObjectURL(file)} alt="Review" width="130" />
-                        </div>
-                      )}
-                      <div className="d-flex gap-2 mt-2">
-                        <button
-                          className="btn btn-success btn-sm p-3 rounded custom-btn"
-                          onClick={handleEditComment}
-                        >
-                          Lưu thay đổi
-                        </button>
-                        <button
-                          className="btn btn-danger btn-sm p-3 rounded custom-btn"
-                          onClick={() => {
-                            setEditCommentId(null);
-                            setEditedComment("");
-                            setEditedRating(0);
-                            setFile(null);
-                          }}
-                        >
-                          Hủy thay đổi
-                        </button>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ))
-            ) : (
-              <p>Chưa có đánh giá nào.</p>
-            )}
-
-            {isAuthenticated && (
-              <div className="add-review-form">
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => setFile(e.target.files[0])}
-                />
-                {file && (
-                  <div className="preview-image">
-                    <img src={URL.createObjectURL(file)} alt="Preview" width="100" />
-                  </div>
-                )}
-                <textarea
-                  className="form-control"
-                  value={newComment}
-                  onChange={(e) => setNewComment(e.target.value)}
-                  placeholder="Thêm bình luận của bạn..."
-                />
-                <div className="rating-stars">
-                  <strong>Mức độ hài lòng: </strong>
-                  {[...Array(5)].map((_, idx) => (
-                    <span
-                      key={idx}
-                      className={`fa fa-star ${idx < newRating ? "text-warning" : "text-muted"}`}
-                      onClick={() => setNewRating(idx + 1)}
+                  <div className="mb-3">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="form-control"
+                      onChange={(e) => setFile(e.target.files[0])}
                     />
-                  ))}
+                    {file && (
+                      <div className="text-center mt-2">
+                        <img
+                          src={URL.createObjectURL(file)}
+                          alt="Preview"
+                          className="rounded"
+                          style={{ maxWidth: "150px", objectFit: "cover" }}
+                        />
+                      </div>
+                    )}
+                  </div>
+
+                  <button className="btn btn-sqr" onClick={handleAddComment}>
+                    Thêm bình luận
+                  </button>
                 </div>
-                <button
-                  className="btn btn-sqr mt-2"
-                  onClick={handleAddComment}
-                >
-                  Thêm bình luận
-                </button>
               </div>
             )}
           </div>
         </div>
-
-
       </div>
     </div>
   );

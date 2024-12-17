@@ -1,4 +1,4 @@
-// hooks/useComments.js
+
 import { useEffect, useState, useCallback } from "react";
 import { fetchComments } from "../api/commentsApi.js";
 
@@ -7,7 +7,6 @@ export const useComments = (productId) => {
     const [isLoading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    // Hàm refetch để gọi lại API và cập nhật danh sách bình luận
     const refetch = useCallback(async () => {
         if (!productId) return;
         setLoading(true);
@@ -21,27 +20,28 @@ export const useComments = (productId) => {
         }
     }, [productId]);
 
-    // Hàm updateComments trực tiếp thay đổi state `comments` khi thêm, sửa hoặc xóa bình luận
-    const updateComments = useCallback((updatedComment) => {
+    const updateComments = useCallback((updatedComment, deleteCommentId) => {
         setComments((prevComments) => {
-            // Tìm chỉ mục của bình luận cần sửa (nếu có)
-            const index = prevComments.findIndex((comment) => comment.id === updatedComment.id);
-            if (index !== -1) {
-                // Cập nhật bình luận nếu đã tồn tại
-                const newComments = [...prevComments];
-                newComments[index] = updatedComment;
-                return newComments;
+            if (deleteCommentId) {
+                return prevComments.filter((comment) => comment.id !== deleteCommentId);
+            } else {
+                const index = prevComments.findIndex((comment) => comment.id === updatedComment.id);
+                if (index !== -1) {
+                    const newComments = [...prevComments];
+                    newComments[index] = updatedComment;
+                    return newComments;
+                }
+                return [updatedComment, ...prevComments];
             }
-            // Nếu không tìm thấy, thêm bình luận mới vào đầu danh sách
-            return [updatedComment, ...prevComments];
         });
     }, []);
 
 
 
 
+
     useEffect(() => {
-        refetch(); // Gọi refetch khi productId thay đổi
+        refetch();
     }, [productId, refetch]);
 
     return { comments, isLoading, error, refetch, updateComments, setComments };
