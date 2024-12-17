@@ -13,34 +13,31 @@ class ProductVariantController extends Controller
     /**
      * Display a listing of the variants for a given product.
      */
-    public function index(Request $request)
+    public function index($productId)
     {
-        // Lấy danh sách sản phẩm chưa bị xóa mềm
-        $products = Product::with(['category', 'brand'])
-            ->whereNull('deleted_at') // Đảm bảo chỉ lấy sản phẩm chưa bị xóa mềm
-            ->get();
+        // Lấy sản phẩm cùng với biến thể
+        $product = Product::with(['variants.size', 'variants.color', 'variants.images'])->findOrFail($productId);
 
-        if ($products->isEmpty()) {
+        // Kiểm tra nếu sản phẩm có biến thể
+        if ($product->variants->isEmpty()) {
             return response()->json([
-                'message' => 'Không có sản phẩm nào được tìm thấy!'
+                'message' => 'Không có biến thể nào cho sản phẩm này!'
             ], 404);
         }
 
-        return response()->json($products->map(function ($product) {
+        return response()->json($product->variants->map(function ($variant) {
             return [
-                'id' => $product->id,
-                'name' => $product->name,
-                'price' => $product->price,
-                'description' => $product->description,
-                'category' => $product->category ? $product->category->name : null,
-                'brand' => $product->brand ? $product->brand->name : null,
-                'image' => $this->getImageAsBase64($product->image), // Chuyển đổi hình ảnh sang Base64
-                'category_id' => $product->category_id,
-                'brand_id' => $product->brand_id,
+                'id' => $variant->id,
+                'size' => $variant->size ? $variant->size->name : null,
+                'color' => $variant->color ? $variant->color->name : null,
+                'price' => round($variant->price, 2),
+                'quantity' => $variant->quantity,
+                'images' => $variant->images->map(function ($image) {
+                    return $this->getImageAsBase64($image->image); // Chuyển đổi hình ảnh sang Base64
+                }),
             ];
         }), 200);
     }
-
 
     /**
      * Display the specified variant.
