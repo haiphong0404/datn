@@ -84,7 +84,7 @@
                                         <th>Tên thể loại</th>
                                         <th>Mô tả</th>
                                         <th>Ngày tạo</th>
-                                        <th>Trạng thái</th>
+{{--                                        <th>Trạng thái</th>--}}
                                         <th>Thao tác</th>
                                     </tr>
                                 </thead>
@@ -95,13 +95,13 @@
                                             <td class="text-truncate">{{ $category->name }}</td>
                                             <td class="text-truncate">{{ $category->description }}</td>
                                             <td>{{ $category->created_at }}</td>
-                                            <td>
-                                                @if ($category->trashed())
-                                                    <span class="badge bg-danger">Đã xóa</span>
-                                                @else
-                                                    <span class="badge bg-success">Còn</span>
-                                                @endif
-                                            </td>
+{{--                                            <td>--}}
+{{--                                                @if ($category->trashed())--}}
+{{--                                                    <span class="badge bg-danger">Đã xóa</span>--}}
+{{--                                                @else--}}
+{{--                                                    <span class="badge bg-success">Còn</span>--}}
+{{--                                                @endif--}}
+{{--                                            </td>--}}
                                             <td class="text-center">
                                                 <a href="{{ route('admin.categories.edit', $category->id) }}"
                                                     class="btn btn-warning ">

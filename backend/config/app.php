@@ -75,7 +75,7 @@ return [
     |
     */
 
-    'timezone' => 'Asia/Ho_Chi_Minh', // Múi giờ Việt Nam (UTC+7)
+    'timezone' => 'Asia/Ho_Chi_Minh',
 
     /*
     |--------------------------------------------------------------------------

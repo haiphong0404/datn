@@ -98,7 +98,7 @@ class CategoryController extends Controller
     public function destroy($id)
     {
         try {
-            // Tìm và thực hiện soft delete thể loại
+            // Tìm danh mục cần xóa
             $category = Category::findOrFail($id);
             if ($category->products()->exists()) {
                 return redirect()->route('admin.categories.index')
@@ -111,6 +111,7 @@ class CategoryController extends Controller
             return redirect()->route('admin.categories.index')->with('error', 'Có lỗi xảy ra, vui lòng thử lại!');
         }
     }
+
     public function restore($id)
     {
         try {

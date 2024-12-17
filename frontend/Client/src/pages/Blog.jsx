@@ -96,12 +96,12 @@ const Blog = () => {
               <div className="col-lg-3 order-2 order-lg-1">
                 <aside className="blog-sidebar-wrapper">
                   <div className="blog-sidebar">
-                    <h5 className="title">Search</h5>
+                    <h5 className="title">Tìm kiếm</h5>
                     <div className="sidebar-serch-form">
                       <input
                         type="text"
                         className="search-field"
-                        placeholder="Search here"
+                        placeholder="Tìm kiếm tại đây"
                         value={searchTerm}
                         onChange={handleSearch} // Cập nhật tìm kiếm mỗi khi gõ
                       />
@@ -113,7 +113,7 @@ const Blog = () => {
                   </div>
 
                   <div className="blog-sidebar">
-                    <h5 className="title">recent post</h5>
+                    <h5 className="title">Bài viết gần đây</h5>
                     <div className="recent-post">
                       {articles.slice(0, 3).map((article) => {
                         const limitedTitle = article.title?.length > 30
@@ -189,7 +189,7 @@ const Blog = () => {
                                 to={`/blog_details/${article.id}`}
                               >
                                 
-                                Read More
+                                Xem thêm
                               </Link>
                               
                             </div>

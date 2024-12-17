@@ -239,7 +239,7 @@ const Cart = () => {
                       </a>
                     </li>
                     <li className="breadcrumb-item active" aria-current="page">
-                      Cart
+                      Giỏ hàng
                     </li>
                   </ul>
                 </nav>

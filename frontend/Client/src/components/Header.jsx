@@ -340,7 +340,7 @@ const Header = () => {
                     </li>
                     <li>
                       <i className="fa fa-envelope-o" />
-                      <a href="#">info@yourdomain.com</a>
+                      <a href="#">shoesthor@gmail.com</a>
                     </li>
                   </ul>
                 </div>

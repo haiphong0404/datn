@@ -52,7 +52,7 @@ class ProductController extends Controller
             ->orderBy('id', 'desc') // Sắp xếp theo ID mới nhất
             ->paginate(10); // Phân trang với 6 sản phẩm mỗi trang
         $lowStockProducts = $products->filter(function ($product) {
-            return $product->total_quantity_in_stock < 5;
+            return $product->total_quantity_in_stock < 10;
         });
 
         // Lưu thông tin các sản phẩm có số lượng dưới 5 vào session
@@ -235,12 +235,11 @@ class ProductController extends Controller
                 }
             }
         }
-
-        // Cập nhật lại tổng số lượng trong kho và số lượng nhập vào cho sản phẩm cha
         $product->update([
             'total_quantity_in_stock' => $product->variants->sum('quantity'),
-            'incoming_quantity' => $product->variants->where('quantity', '>', 0)->sum('quantity'),
+            'incoming_quantity' => $product->incoming_quantity + $totalAddedQuantity, // Cộng dồn số lượng nhập mới
         ]);
+
 
         return redirect()->route('admin.products.show', $product->id)
             ->with('success', 'Số lượng các biến thể và thông tin sản phẩm đã được cập nhật thành công.');

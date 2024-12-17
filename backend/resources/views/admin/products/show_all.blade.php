@@ -55,8 +55,9 @@
                                             </td>
                                             <td class="text-center">
                                                 <img src="{{ $variant->images->isNotEmpty() ? asset('storage/' . $variant->images->random()->image) : asset('default-image-path/default.jpg') }}"
-                                                    style="width: 80px; height: auto; object-fit: cover;"
-                                                    alt="Biến thể {{ $variant->id }}">
+                                                     style="width: 80px; height: auto; object-fit: cover;"
+                                                     alt="Biến thể {{ $variant->id }}">
+
                                             </td>
                                             <td>{{ $variant->size->name ?? 'Không có' }}</td>
                                             <td>{{ $variant->color->name ?? 'Không có' }}</td>
