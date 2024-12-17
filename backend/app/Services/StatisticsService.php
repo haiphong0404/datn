@@ -346,11 +346,14 @@ class StatisticsService
 
     public function getOrderStatusTableData($timeFrame, $startDate, $endDate)
     {
+        $user = Auth::user();
         $query = Order::query();
 
         // Áp dụng lọc thời gian nếu có
         $this->applyTimeFilter($query, $timeFrame, $startDate, $endDate);
-
+        if ($user->role === 'staff') {
+            $query->where('handler_id', $user->id);
+        }
         // Lấy số lượng đơn hàng theo trạng thái
         $orderStatusData = $query->select(DB::raw('status, COUNT(*) as count'))
                                 ->groupBy('status')
@@ -370,12 +373,15 @@ class StatisticsService
 
     public function getOrderStatusData($timeFrame, $startDate, $endDate): array
     {
+        $user = Auth::user();
         // Khởi tạo query
         $query = Order::select(DB::raw('status, COUNT(*) as count'));
 
         // Áp dụng bộ lọc thời gian
         $this->applyTimeFilter($query, $timeFrame, $startDate, $endDate);
-
+        if ($user->role === 'staff') {
+            $query->where('handler_id', $user->id);
+        }
         // Lấy dữ liệu theo trạng thái và thời gian đã lọc
         $orderStatusData = $query->groupBy('status')->get();
 
