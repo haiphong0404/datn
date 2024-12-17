@@ -24,7 +24,7 @@ const Category = () => {
           <div className="col-lg-4 col-md-6 mb-4">
             <div className="single-category-item">
               <div className="category-title">
-                <a href="/shop">NAM</a>
+                <a href="/shop">Cao cổ</a>
               </div>
               <div className="category-thumb">
                 <a href="/shop">
@@ -43,7 +43,7 @@ const Category = () => {
           <div className="col-lg-4 col-md-6 mb-4">
             <div className="single-category-item">
               <div className="category-title">
-                <a href="/shop">NỮ</a>
+                <a href="/shop">Đế cao</a>
               </div>
               <div className="category-thumb">
                 <a href="/shop">
@@ -62,7 +62,7 @@ const Category = () => {
           <div className="col-lg-4 col-md-6 mb-4">
             <div className="single-category-item">
               <div className="category-title">
-                <a href="/shop">NHANH CHÓNG</a>
+                <a href="/shop">Boot</a>
               </div>
               <div className="category-thumb">
                 <a href="/shop">

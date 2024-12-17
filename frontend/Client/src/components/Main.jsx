@@ -36,7 +36,7 @@ const Main = () => {
         <HeroSlider />
         {/* slider area end */}
         {/* service policy start */}
-        <section className="service-policy bg-gray mtn-100">
+        <section className="service-policy bg-gray mtn-100" >
           <div className="container">
             <div className="row row-10">
               <div className="col-lg-3 col-sm-6">

@@ -43,18 +43,18 @@ const Product_details = () => {
               <div className="col-12">
                 <div className="breadcrumb-wrap">
                   <nav aria-label="breadcrumb">
-                    <h3 className="breadcrumb-title">SHOP</h3>
+                    <h3 className="breadcrumb-title">Cửa hàng</h3>
                     <ul className="breadcrumb justify-content-center">
                       <li className="breadcrumb-item">
-                        <a href="index.html">
+                        <a href="/">
                           <i className="fa fa-home" />
                         </a>
                       </li>
                       <li className="breadcrumb-item">
-                        <a href="shop.html">Shop</a>
+                        <a href="/shopshop">Cửa hàng</a>
                       </li>
                       <li className="breadcrumb-item active" aria-current="page">
-                        Product Details
+                        Chi tiết sản phẩm
                       </li>
                     </ul>
                   </nav>

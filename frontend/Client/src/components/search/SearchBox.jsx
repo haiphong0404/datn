@@ -66,7 +66,7 @@ const SearchProducts = () => {
             height: '100%',
             backgroundColor: 'rgba(0, 0, 0, 0.6)', // Dark overlay with 60% opacity
             animation: 'slideDown 0.5s ease-out', // Thêm hiệu ứng slide xuống
-            zIndex: 9999,
+            zIndex: 999,
           }}
         >
           <div
@@ -105,7 +105,7 @@ const SearchProducts = () => {
                   type="text"
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Search entire storage here..."
+                  placeholder="Tìm kiếm..."
                   style={{
                     width: '100%',
                     padding: '12px 20px',

@@ -50,11 +50,11 @@ const Brands = () => {
             </div>
           </div>
         </div>
-            <header className="py-3 " style={{ backgroundColor: '#87b106', color: '#ffffff' }}>
+            {/* <header className="py-3 " style={{ backgroundColor: '#87b106', color: '#ffffff' }}>
                 <div className="container text-center">
                     <h1 className="fw-bold" style={{ color: '#ffffff'}}>Khám Phá Các Thương Hiệu Nổi Tiếng</h1>
                 </div>
-            </header>
+            </header> */}
 
             <div className="container py-5">
                 <div className="row">
