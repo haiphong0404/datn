@@ -258,11 +258,11 @@ const Shop = () => {
         <div
           className={
             viewMode === 'grid-view'
-              ? 'col-lg-3 col-md-4 col-sm-6 col-6'
+              ? 'col-lg-4 col-md-4 col-sm-6 col-6'
               : 'col-12'
           }
           key={product.id}
-          style={{paddingLeft:'0px', paddingRight:'0px'}}
+          style={{paddingLeft:'8px', paddingRight:'8px'}}
         >
           {viewMode === 'grid-view' ? (
             <ProductItem product={product} />
