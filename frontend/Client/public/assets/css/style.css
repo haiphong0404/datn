@@ -9857,3 +9857,31 @@ button {
   font-weight: bold;
   color: #333;
 }
+        @media (max-width: 768px) {
+          .single-input-item {
+            margin-bottom: 15px;
+          }
+      
+          select {
+            font-size: 14px;
+            padding: 8px;
+          }
+      
+          /* Điều chỉnh container cho các màn hình nhỏ */
+          .single-input-item {
+            max-width: 100%;
+            margin: 0 auto;
+          }
+        }
+      
+        @media (max-width: 480px) {
+          .single-input-item {
+            margin-bottom: 10px;
+          }
+      
+          select {
+            font-size: 12px;
+            padding: 6px;
+          }
+        }
+     
