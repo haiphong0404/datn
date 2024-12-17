@@ -11,8 +11,7 @@
 @endsection
 
 @section('content')
-    @if (session('success'))
-    @endif
+
 
 
     <style>
@@ -160,16 +159,4 @@
         </div>
     </div>
     <script src="{{ asset('assets') }}/admin/js/dynamic_table_init.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            @if (session('success'))
-                toastr.success('{{ session('success') }}', 'Thành công', {
-                    closeButton: true,
-                    progressBar: true,
-                    timeOut: 3000,
-                    positionClass: "toast-top-right"
-                });
-            @endif
-        });
-    </script>
 @endsection

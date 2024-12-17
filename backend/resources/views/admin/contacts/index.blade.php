@@ -11,8 +11,7 @@
 @endsection
 
 @section('content')
-    @if (session('success'))
-    @endif
+
     <style>
         .text-truncate {
             max-width: 200px;
@@ -160,19 +159,7 @@
         </div>
     </div>
 
+@endsection
 @section('js')
     <script src="{{ asset('assets') }}/admin/js/dynamic_table_init.js"></script>
-@endsection
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        @if (session('success'))
-            toastr.success('{{ session('success') }}', 'Thành công', {
-                closeButton: true,
-                progressBar: true,
-                timeOut: 3000,
-                positionClass: "toast-top-right"
-            });
-        @endif
-    });
-</script>
 @endsection

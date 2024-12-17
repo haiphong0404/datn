@@ -11,14 +11,12 @@
 @endsection
 
 @section('content')
-    @if (session('success'))
-    @endif
-    @if (session('error'))
+    {{-- @if (session('error'))
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
             {{ session('error') }}
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
-    @endif
+    @endif --}}
 
     <style>
         .text-truncate {
@@ -168,16 +166,5 @@
             </section>
         </div>
     </div>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            @if (session('success'))
-                toastr.success('{{ session('success') }}', 'Thành công', {
-                    closeButton: true,
-                    progressBar: true,
-                    timeOut: 3000,
-                    positionClass: "toast-top-right"
-                });
-            @endif
-        });
-    </script>
+
 @endsection
