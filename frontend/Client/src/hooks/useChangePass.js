@@ -52,20 +52,23 @@ export const useChangePassword = () => {
     };
 
     const handleChangePassword = async (oldpassword, password, password_confirmation) => {
-        if (!validate(oldpassword, password, password_confirmation)) return;
+        if (!validate(oldpassword, password, password_confirmation)) return false;
 
         setLoading(true);
 
         try {
             const res = await changePassword({ oldpassword, password, password_confirmation });
             toast.success(res.message || 'Đổi mật khẩu thành công');
+            return true;
         } catch (error) {
             const errorMsg = error.response?.data?.message || 'Đổi mật khẩu thất bại';
             toast.error(errorMsg);
+            return false;
         } finally {
             setLoading(false);
         }
     };
+
 
     return {
         loading,
