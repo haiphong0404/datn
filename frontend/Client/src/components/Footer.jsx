@@ -61,7 +61,7 @@ const Footer = () => {
                     {/* <li><a href="/shop">Giá giảm</a></li> */}
                     <li><a href="/shop">Sản phẩm mới</a></li>
                     {/* <li><a href="/shop">Bán chạy nhất</a></li> */}
-                    <li><a href="/contact_us">Liên hệ với chúng tôi</a></li>
+                    {/* <li><a href="/contact_us">Liên hệ với chúng tôi</a></li> */}
                     {/* <li><a href="/shop">Sơ đồ trang web</a></li> */}
                     <li><a href="/cart">Giỏ hàng</a></li>
                     <li><a href="/shop">Cửa hàng</a></li>
@@ -74,7 +74,7 @@ const Footer = () => {
                   <ul className="usefull-links">
                     {/* <li><a href="/blog">Vận chuyển</a></li> */}
                     {/* <li><a href="/blog">Thông báo pháp lí</a></li> */}
-                    <li><a href="/blog">Về chúng tôi</a></li>
+                    <li><a href="/about_us">Về chúng tôi</a></li>
                     <li><a href="/blog">Thanh toán an toàn</a></li>
                     <li><a href="/contact_us">Liên hệ với chúng tôi</a></li>
                     {/* <li><a href="/blog">Sơ đồ trang web</a></li> */}

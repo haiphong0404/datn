@@ -42,7 +42,7 @@
 
             <!-- Password -->
             <div class="mb-6">
-                <x-input-label class="text-white" for="password" :value="__('Password')" />
+                <x-input-label class="text-white" for="password" :value="__('Mật khẩu')" />
                 <x-text-input id="password"
                     class="block w-full px-4 py-3 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     type="password" name="password" autocomplete="current-password" />
@@ -52,15 +52,15 @@
 
             <!-- Remember Me -->
             <div class="flex items-center justify-between mb-4">
-                <label for="remember_me" class="inline-flex items-center text-sm text-white">
+                <!-- <label for="remember_me" class="inline-flex items-center text-sm text-white">
                     <input id="remember_me" type="checkbox"
                         class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="remember">
                     <span class="ms-2">{{ __('Remember me') }}</span>
-                </label>
+                </label> -->
 
                 @if (Route::has('password.request'))
                     <a class="text-sm text-white hover:text-indigo-300" href="{{ route('password.request') }}">
-                        {{ __('Forgot your password?') }}
+                        {{ __('Quên mật khẩu?') }}
                     </a>
                 @endif
             </div>
@@ -69,7 +69,7 @@
             <div class="mt-6">
                 <x-primary-button
                     class="w-full py-3 px-4 bg-indigo-700 text-white rounded-md font-semibold text-lg flex justify-center items-center hover:bg-indigo-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                    {{ __('Log in') }}
+                    {{ __('Đăng nhập') }}
                 </x-primary-button>
             </div>
 
@@ -78,7 +78,7 @@
             <!-- Back to Client Link -->
             <div class="mt-4 text-center">
                 <a href="http://localhost:3000" class="text-white hover:text-indigo-300 text-sm">
-                    {{ __('Back to Client') }}
+                    {{ __('Quay về website') }}
                 </a>
             </div>
         </form>

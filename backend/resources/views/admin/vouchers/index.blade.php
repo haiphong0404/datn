@@ -37,7 +37,7 @@
                                 @foreach ($groupedVouchers as $type => $items)
                                     <div class="block block-rounded ">
                                         <div class="block-header block-header-default">
-                                            <h4 class="block-title">Voucher Type: {{ ucfirst($type) }}</h4>
+                                            <h4 class="block-title">Loại mã khuyến mại: {{ ucfirst($type) }}</h4>
                                             <div class="row-fluid">
                                                 <div class="span6">
                                                     <div id="voucher-table-length" class="dataTables_length">
@@ -125,7 +125,7 @@
                                                                 <td class="text-end">{{ $item->min_order_value }}
                                                                 </td>
                                                             @elseif ($type == 'category_discount')
-                                                                <td class="text-end">{{ $item->category_id }}</td>
+                                                                <td class="text-end">{{ $item->category->name }}</td>
                                                                 <td class="text-end">
                                                                     {{ $item->discount_percentage }}</td>
                                                             @elseif ($type == 'first_order')

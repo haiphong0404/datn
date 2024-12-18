@@ -106,7 +106,7 @@ const Product_details = () => {
                       className="responsive-slider"
                     >
                      
-                      {products.map((product) => (
+                      {products.slice(0,6).map((product) => (
                         <div className="prorelate">
                         <div key={product.id} className="product-item" style={{marginLeft: '5px', marginRight: '5px', }} >
                           <div className="product-thumb">

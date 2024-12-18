@@ -42,8 +42,8 @@ const NotFoundPage = () => {
                     <h1 style={{ fontSize: "72px", fontWeight: "bold", margin: "20px 0" }}>404</h1>
                     <h2 style={{ fontSize: "36px", margin: "10px 0" }}>Page Not Found</h2>
                     <p className="page-404" style={{ fontSize: "18px", margin: "20px 0" }}>
-                        Something went wrong or that page doesn’t exist yet.{" "}
-                        <Link to="/" style={{ color: "#007bff", textDecoration: "underline" }}>Return Home</Link>
+                    Có Gì Đó Không Ổn Hoặc Trang Này Chưa Tồn Tại{" "}
+                        <Link to="/" style={{ color: "#007bff", textDecoration: "underline" }}>Trang chủ</Link>
                     </p>
                 </section>
             </div>

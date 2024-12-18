@@ -175,23 +175,25 @@ const Details = () => {
 
                                 <p className="text-gray-600 text-sm">Kích thước</p>
                                 <div className="flex gap-3 my-2">
-                                    {allSizes.map(size => {
-                                        const isSizeAvailable = variants.some(variant =>
-                                            variant.color === selectedColor && variant.size === size && variant.quantity > 0
-                                        );
-                                        return (
-                                            <button
-                                                key={size}
-                                                className={`font-semibold text-lg px-3 py-2 rounded-2xl border 
-                                                ${selectedSize === size ? 'bg-black text-white' : ''} 
-                                                ${isSizeAvailable ? 'text-black border-black' : 'text-gray-400 border-gray-400'}`}
-                                                onClick={() => setSelectedSize(size)}
-                                                disabled={!isSizeAvailable}
-                                            >
-                                                {size}
-                                            </button>
-                                        );
-                                    })}
+                                    {allSizes
+                                        .sort((a, b) => a - b) // Sắp xếp theo thứ tự từ bé đến lớn
+                                        .map(size => {
+                                            const isSizeAvailable = variants.some(variant =>
+                                                variant.color === selectedColor && variant.size === size && variant.quantity > 0
+                                            );
+                                            return (
+                                                <button
+                                                    key={size}
+                                                    className={`font-semibold text-lg px-3 py-2 rounded-2xl border 
+                    ${selectedSize === size ? 'bg-black text-white' : ''} 
+                    ${isSizeAvailable ? 'text-black border-black' : 'text-gray-400 border-gray-400'}`}
+                                                    onClick={() => setSelectedSize(size)}
+                                                    disabled={!isSizeAvailable}
+                                                >
+                                                    {size}
+                                                </button>
+                                            );
+                                        })}
                                 </div>
                             </>
                         )}
