@@ -22,7 +22,14 @@ function ChangePassword() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        await handleChangePassword(oldpassword, password, password_confirmation);
+        const isSuccess = await handleChangePassword(oldpassword, password, password_confirmation);
+
+        // Reset form nếu đổi mật khẩu thành công
+        if (isSuccess) {
+            setOldPassword('');
+            setPassword('');
+            setPassConfirmation('');
+        }
     };
 
     return (
@@ -56,7 +63,6 @@ function ChangePassword() {
                     </div>
                 </div>
 
-                {/* Mật khẩu mới */}
                 <div className="row align-items-center mb-3">
                     <label className="col-sm-3 col-form-label">Mật khẩu mới:</label>
                     <div className="col-sm-9">

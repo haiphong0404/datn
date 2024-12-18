@@ -210,16 +210,7 @@
     <script src="{{ asset('assets') }}/admin/js/dynamic_table_init.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            @if (session('success'))
-                toastr.success('{{ session('success') }}', 'Thành công', {
-                    closeButton: true,
-                    progressBar: true,
-                    timeOut: 3000,
-                    positionClass: "toast-top-right"
-                });
-            @endif
-        });
+
 
         document.addEventListener('DOMContentLoaded', function() {
             const deleteBtns = document.querySelectorAll('.form-delete');

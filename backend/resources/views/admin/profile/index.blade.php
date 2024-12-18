@@ -1,7 +1,5 @@
 @extends('admin.layout')
 @section('content')
-    @if (session('success'))
-    @endif
     <div class="row">
         <aside class="profile-nav col-lg-3">
             <section class="card">
@@ -59,16 +57,5 @@
 
         </aside>
     </div>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            @if (session('success'))
-                toastr.success('{{ session('success') }}', 'Thành công', {
-                    closeButton: true,
-                    progressBar: true,
-                    timeOut: 3000,
-                    positionClass: "toast-top-right"
-                });
-            @endif
-        });
-    </script>
+   
 @endsection

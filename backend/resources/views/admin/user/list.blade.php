@@ -2,15 +2,14 @@
 @section('search')
     <form action="{{ route('admin.user.index') }}" method="GET">
         <div class="input-group mt-1">
-            <input type="text" name="search" class="form-control" placeholder="Tìm kiếm người dùng"
+            <input type="text" name="search" class="form-control" placeholder="Tìm kiếm tài khoản"
                 value="{{ request()->input('search') }}">
             <button class="btn btn-outline-secondary" type="submit"><i class="bi bi-search"></i></button>
         </div>
     </form>
 @endsection
 @section('content')
-    @if (session('success'))
-    @endif
+    
     <style>
         .text-truncate {
             max-width: 150px;
@@ -40,13 +39,13 @@
             <section class="card">
                 <header class="card-header">
                     <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center">
-                        <h1 class="flex-grow-1 fs-3 fw-semibold my-2 my-sm-3">Danh Sách Người Dùng</h1>
+                        <h1 class="flex-grow-1 fs-3 fw-semibold my-2 my-sm-3">Danh Sách tài khoản</h1>
                         <nav class="flex-shrink-0 my-2 my-sm-0 ms-sm-3" aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item">
-                                    <a href="{{ route('admin.user.index') }}" style="color: inherit;">Người Dùng</a>
+                                    <a href="{{ route('admin.user.index') }}" style="color: inherit;">tài khoản</a>
                                 </li>
-                                <li class="breadcrumb-item active" aria-current="page">Danh Sách Người Dùng</li>
+                                <li class="breadcrumb-item active" aria-current="page">Danh Sách tài khoản</li>
                             </ol>
                         </nav>
                     </div>
@@ -107,7 +106,7 @@
                                 <tbody role="alert" aria-live="polite" aria-relevant="all">
                                     @if ($noResults)
                                         <tr>
-                                            <td colspan="8" class="text-center">Không có người dùng phù hợp</td>
+                                            <td colspan="8" class="text-center">Không có tài khoản phù hợp</td>
                                             <!-- Cập nhật colspan -->
                                         </tr>
                                     @else

@@ -2,7 +2,7 @@
 @section('search')
     <form action="{{ route('admin.user.index') }}" method="GET">
         <div class="input-group mt-1">
-            <input type="text" name="search" class="form-control" placeholder="Tìm kiếm người dùng"
+            <input type="text" name="search" class="form-control" placeholder="Tìm kiếm tài khoản"
                 value="{{ request()->input('search') }}">
             <button class="btn btn-outline-secondary" type="submit"><i class="bi bi-search"></i></button>
         </div>
@@ -15,13 +15,13 @@
             <div class="card shadow-sm">
                 <header class="card-header">
                     <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center">
-                        <h1 class="flex-grow-1 fs-3 fw-semibold my-2 my-sm-3">Chi Tiết Người Dùng</h1>
+                        <h1 class="flex-grow-1 fs-3 fw-semibold my-2 my-sm-3">Chi Tiết Tài Khoản</h1>
                         <nav class="flex-shrink-0 my-2 my-sm-0 ms-sm-3" aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item">
-                                    <a href="{{ route('admin.user.index') }}" style="color: inherit;">Người Dùng</a>
+                                    <a href="{{ route('admin.user.index') }}" style="color: inherit;">Tài Khoản</a>
                                 </li>
-                                <li class="breadcrumb-item active" aria-current="page">Chi Tiết Người Dùng</li>
+                                <li class="breadcrumb-item active" aria-current="page">Chi Tiết Tài Khoản</li>
                             </ol>
                         </nav>
                     </div>

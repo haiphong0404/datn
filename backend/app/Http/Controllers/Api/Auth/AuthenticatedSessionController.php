@@ -19,9 +19,9 @@ class AuthenticatedSessionController extends Controller
             $user = Auth::user();
             if ($user->status !== 'active') { // Giả sử trạng thái lưu trong cột 'status'
                 Auth::logout(); // Đăng xuất nếu trạng thái không hợp lệ
-
                 return response()->json([
-                    'message' => 'Tài khoản của bạn hiện đang không hoạt động. Vui lòng liên hệ quản trị viên.'
+                    'message' => 'Tài khoản của bạn hiện đang không hoạt động. Vui lòng liên hệ quản trị viên.',
+                    'status' => 'inactive' // Trả về thêm thông tin trạng thái
                 ], 403); // Forbidden
             }
             // Optionally generate a token if you're using token-based authentication
@@ -35,7 +35,7 @@ class AuthenticatedSessionController extends Controller
         }
 
         return response()->json([
-            'message' => 'Invalid credentials. Please try again.'
+            'message' => 'Tài khoản hoặc mật khẩu không chính xác, vui lòng thử lại!'
         ], 401); // Unauthorized
     }
 
@@ -46,6 +46,6 @@ class AuthenticatedSessionController extends Controller
     {
         Auth::logout(); // For token-based, you may not need this
 
-        return response()->json(['message' => 'Logged out successfully.']);
+        return response()->json(['message' => 'Đăng xuất thành công.']);
     }
 }

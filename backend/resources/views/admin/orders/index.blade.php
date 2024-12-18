@@ -46,12 +46,6 @@
 
                 <div class="card-body">
                     <div class="adv-table">
-                    @if (session('success'))
-                        <div class="alert alert-success">
-                            {{ session('success') }}
-                        </div>
-                    @endif
-
                     @if (session('error'))
                         <div class="alert alert-danger">
                             {{ session('error') }}
@@ -207,16 +201,4 @@
     </div>
 
     <script src="{{ asset('assets') }}/admin/js/dynamic_table_init.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            @if (session('success'))
-                toastr.success('{{ session('success') }}', 'Thành công', {
-                    closeButton: true,
-                    progressBar: true,
-                    timeOut: 3000,
-                    positionClass: "toast-top-right"
-                });
-            @endif
-        });
-    </script>
 @endsection
