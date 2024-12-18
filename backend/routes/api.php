@@ -30,6 +30,7 @@ use App\Http\Controllers\Api\Auth\ProfileController;
 use App\Http\Controllers\Api\Auth\ResetPasswordController;
 use App\Http\Controllers\Api\BannerController;
 
+Route::get('/users/{id}', [UserController::class, 'getUserById']);
 Route::post('password/email', [ForgotPasswordController::class, 'sendResetLinkEmail']);
 Route::post('password/reset', [ResetPasswordController::class, 'reset']);
 Route::post('/password/reset/store', [NewPasswordController::class, 'store'])->name('password.update');
