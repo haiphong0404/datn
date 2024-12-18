@@ -49,30 +49,47 @@ const ProductReview = ({ initialTab = "tab_one" }) => {
 
   const handleTabChange = (tabId) => setActiveTab(tabId);
 
-  const handleAddComment = async () => {
-    if (newComment.trim() && newRating > 0) {
-      const formData = new FormData();
-      formData.append("comment", newComment);
-      formData.append("star_rating", newRating);
-      if (file) formData.append("file", file);
+  const MAX_COMMENT_LENGTH = 300;
 
-      try {
-        const response = await addComment(productId, formData);
-        if (response.status === 201) {
-          const newCommentWithImage = response.data;
-          updateComments(newCommentWithImage);
-          setNewComment("");
-          setNewRating(0);
-          setFile(null);
-          refetch();
-        } else {
-          toast.error("Bạn phải mua sản phẩm trước khi đánh giá.");
-        }
-      } catch (error) {
+  const handleAddComment = async () => {
+    if (newComment.trim() === "") {
+      toast.error("Bình luận không được để trống.");
+      return;
+    }
+
+    if (newComment.length > MAX_COMMENT_LENGTH) {
+      toast.error(`Bình luận không được vượt quá ${MAX_COMMENT_LENGTH} ký tự.`);
+      return;
+    }
+
+    if (newRating <= 0) {
+      toast.error("Vui lòng chọn mức độ hài lòng.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("comment", newComment);
+    formData.append("star_rating", newRating);
+    if (file) formData.append("file", file);
+
+    try {
+      const response = await addComment(productId, formData);
+      if (response.status === 201) {
+        const newCommentWithImage = response.data;
+        updateComments(newCommentWithImage);
+        setNewComment("");
+        setNewRating(0);
+        setFile(null);
+        refetch();
+        toast.success("Thêm bình luận thành công!");
+      } else {
         toast.error("Bạn phải mua sản phẩm trước khi đánh giá.");
       }
+    } catch (error) {
+      toast.error("Có lỗi xảy ra khi thêm bình luận.");
     }
   };
+
 
   const handleDeleteComment = async (id) => {
     try {
@@ -173,7 +190,7 @@ const ProductReview = ({ initialTab = "tab_one" }) => {
                             }
                             alt="avatar"
                             className="rounded-circle"
-                            style={{ width: "50px", height: "50px", objectFit: "cover" }}
+                            style={{ width: "30px", height: "30px", objectFit: "cover" }}
                           />
                         </div>
                         <h6 className="fw-bold mb-0">{comment.username}</h6>
@@ -194,7 +211,7 @@ const ProductReview = ({ initialTab = "tab_one" }) => {
                       <p className="mb-3">{comment.comment}</p>
 
                       {comment.file && (
-                        <div className="text-center mb-3">
+                        <div className=" mb-3">
                           <img
                             src={comment.file}
                             alt="Review"
@@ -204,7 +221,7 @@ const ProductReview = ({ initialTab = "tab_one" }) => {
                         </div>
                       )}
 
-                      <div className="text-center">
+                      <div >
                         <strong>Đánh giá: </strong>
                         {[...Array(5)].map((_, idx) => (
                           <i
