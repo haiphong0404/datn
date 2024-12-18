@@ -100,42 +100,48 @@ export const useLoginForm = (isDisplay) => {
     try {
       const res = await login(data);
       const currentUser = res.user;
-
+  
       if (!currentUser || !currentUser.id || !currentUser.role) {
         throw new Error("Không tìm thấy thông tin người dùng.");
       }
-
+  
       const userId = currentUser.id;
       const userData = await getUserByid(userId);
-
+  
+      // Kiểm tra trạng thái tài khoản
+      if (userData?.data?.status === "inactive") {
+        toast.error("Tài khoản của bạn hiện đang không hoạt động. Vui lòng liên hệ quản trị viên.");
+        return; // Dừng thực thi nếu tài khoản không hoạt động
+      }
+  
       if (userData?.data?.role) {
         const role = userData.data.role;
-
+  
         setUserInfo(userData.data);
         localStorage.setItem("userInfo", JSON.stringify(userData.data));
-        // send cart data to server
-        const cartData = localStorage.getItem('cart')
+  
+        // Đồng bộ giỏ hàng nếu có
+        const cartData = localStorage.getItem('cart');
         if (cartData) {
           const parsedCart = JSON.parse(cartData);
-
-          // Gửi giỏ hàng lên server
-          await syncCartToServer(userId, parsedCart); // Gọi API đồng bộ giỏ hàng
+          await syncCartToServer(userId, parsedCart);
         }
-
+  
         if (role === "admin") {
           window.location.href = "http://127.0.0.1:8000/admin";
         } else {
           navigate("/");
         }
-        toast.success("Đăng nhập thành công!");
+        toast.success("Đăng nhập thành công!"); // Thông báo thành công bằng alert
       } else {
         throw new Error("Không tìm thấy thông tin vai trò người dùng.");
       }
     } catch (err) {
       console.error("Lỗi:", err);
-      toast.error("Tài khoản hoặc mật khẩu không chính xác, vui lòng thử lại!");
+      toast.error(err.message || "Tài khoản hoặc mật khẩu không chính xác, vui lòng thử lại!"); // Thông báo lỗi bằng alert
     }
   };
+  
 
   const handleForgotPasswordSubmit = (data) => {
     if (data.email) {
