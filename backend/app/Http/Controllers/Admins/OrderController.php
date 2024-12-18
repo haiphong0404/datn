@@ -92,7 +92,7 @@ class OrderController extends Controller
 
             // Lưu lại thông báo vào session
             session()->put('success_orders', $successOrders);
-            
+
             // Redirect thành công với thông báo
             return redirect()->route('admin.orders.index');
 
@@ -106,8 +106,6 @@ class OrderController extends Controller
                 ]);
         }
     }
-
-
 
     public function updateStatus(Request $request, Order $order)
     {
@@ -135,13 +133,17 @@ class OrderController extends Controller
     public function updatePaymentStatus(Request $request, Order $order)
     {
         $validatedData = $request->validate([
-            'payment_status' => 'required|in:unpaid,paid',
+            'payment_status' => 'required|in:unpaid,paid,refund',
         ]);
 
         // Kiểm tra kết quả
-        if ($validatedData === $order->payment_status) {
+        if ($validatedData['payment_status'] === $order->payment_status) {
             return redirect()->route('admin.orders.index')
                 ->with('info', 'Trạng thái đơn hàng đã là '.$validatedData.'. Không có thay đổi nào được thực hiện.');
+        }
+        // Kiểm tra kết quả
+        if ($validatedData['payment_status'] == "refund") {
+            $this->orderService->updateStatusforRefund($order);
         }
 
         $order->payment_status = $validatedData['payment_status'];

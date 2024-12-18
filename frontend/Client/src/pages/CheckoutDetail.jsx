@@ -221,10 +221,10 @@ const CheckoutDetail = () => {
                     <h4 className="contact-title">Thanh Toán Online qua QR code</h4>
                     <ul>
                       <img src="\assets\img\bill\code1.jpg" alt="" width={300} />
-                      <li><i className="fa fa-fax" /> Tên: {info.name}</li>
+                      <li><i className="fa fa-fax" /> Tên tài khoản: {info.name}</li>
                       <li><i className="fa fa-envelope-o" /> E-mail: {info.email}</li>
                       <li><i className="fa fa-phone" /> {info.phone}</li>
-                      <li><i className="fa fa-credit-card" /> Nội dung chuyển khoản: {`${orderDetail.name} thanh toán đơn hàng ${orderId}`}</li>
+                      <li><i className="fa fa-credit-card" /> <strong>Nội dung chuyển khoản: </strong>  {`${orderDetail.name} thanh toán đơn hàng ${orderId}`}</li>
                     </ul>
                     <div className="alert alert-warning mt-3">
         <strong>Cảnh báo:</strong> Vui lòng nhập đúng nội dung chuyển khoản như trên, nếu không chúng tôi sẽ không thể xác nhận đơn hàng của bạn.

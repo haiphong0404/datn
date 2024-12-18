@@ -129,6 +129,7 @@ const QuickViewModal = ({ show, onClose, product }) => {
             <div className="size-options">
               {variants
                 .filter((variant) => variant.color === selectedColor)
+                .sort((a, b) => a.size - b.size) // Sắp xếp size từ bé đến lớn
                 .map((variant) => (
                   <button
                     key={variant.id}
@@ -142,6 +143,7 @@ const QuickViewModal = ({ show, onClose, product }) => {
                 ))}
             </div>
           </div>
+
 
 
 

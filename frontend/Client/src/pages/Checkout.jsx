@@ -71,7 +71,7 @@ const Checkout = () => {
   
         if (subtotal < min_order_value) {
           toast.error(
-            `Đơn hàng của bạn chưa đủ giá trị tối thiểu (${min_order_value.toLocaleString()} VND) để áp dụng mã giảm giá.`
+            `Đơn hàng của bạn chưa đủ giá trị tối thiểu ${parseFloat(min_order_value.replace(/[^\d.-]/g, '')).toLocaleString()} VND để áp dụng mã giảm giá.`
           );
           return;
         }
@@ -106,7 +106,7 @@ const Checkout = () => {
           if (categoryDiscountAmount > 0) {
             setVoucherDiscount(categoryDiscountAmount);
             setVoucherType("category");
-            toast.success("Giảm giá theo danh mục đã được áp dụng!");
+            // toast.success("Giảm giá theo danh mục đã được áp dụng!");
           } else {
             toast.error("Không có sản phẩm nào thuộc danh mục áp dụng mã giảm giá này.");
             return;
@@ -115,31 +115,40 @@ const Checkout = () => {
 
       
    
-        } else if (type === "first_order") {
-          // Xử lý mã giảm giá cho đơn hàng đầu tiên
+        } else if (type === 'first_order') {
+          // Kiểm tra nếu orders của người dùng có trống không
           if (orders.length === 0) {
-            discountAmount = calculateFirstOrderDiscount(
-              subtotal,
-              discount_value,
-              discount_percentage,
-              max_discount_value
-            );
-            setVoucherDiscount(discountAmount);
-            setVoucherType("first_order");
-            toast.success("Mã giảm giá cho đơn hàng đầu tiên đã được áp dụng thành công.");
+            // Nếu orders trống, áp dụng mã giảm giá cho đơn hàng đầu tiên
+            if (discount_percentage !== null) {
+              let firstOrderDiscount = (subtotal * discount_percentage) / 100;
+              if (max_discount_value !== null && firstOrderDiscount > max_discount_value) {
+                firstOrderDiscount = max_discount_value;
+              }
+              setVoucherDiscount(firstOrderDiscount);
+              setVoucherType("first_order_percentage");
+              toast.success("Mã giảm giá cho đơn hàng đầu tiên đã được áp dụng thành công.");
+            } else if (discount_value !== null) {
+              setVoucherDiscount(parseFloat(discount_value));
+              setVoucherType("first_order_fixed");
+              // toast.success("Mã giảm giá cho đơn hàng đầu tiên đã được áp dụng thành công.");
+            }
           } else {
             toast.error("Mã giảm giá này chỉ áp dụng cho đơn hàng đầu tiên.");
             return;
           }
         } else if (type === "percentage") {
-          // Tính giảm giá theo phần trăm
-          discountAmount = calculatePercentageDiscount(
-            subtotal,
-            discount_percentage,
-            max_discount_value
-          );
-          setVoucherDiscount(discountAmount);
+          let discountAmount = (subtotal * discount_percentage) / 100;
+
+          // Kiểm tra nếu discountAmount vượt quá max_discount_value
+          if (max_discount_value !== null && discountAmount > max_discount_value) {
+            discountAmount = max_discount_value; // Nếu vượt quá max_discount_value thì gán lại giá trị tối đa
+          }
+
+          setVoucherDiscount(discountAmount); // Cập nhật giá trị discount
           setVoucherType("percentage");
+        
+       
+  
         } else if (type === "fixed") {
           // Giảm giá cố định
           discountAmount = parseFloat(discount_value);
@@ -148,7 +157,7 @@ const Checkout = () => {
         }
   
         setIsVoucherApplied(true);
-        // toast.success("Mã giảm giá đã được áp dụng!");
+        toast.success("Mã giảm giá đã được áp dụng!");
       } else {
         toast.error("Mã giảm giá không hợp lệ.");
       }

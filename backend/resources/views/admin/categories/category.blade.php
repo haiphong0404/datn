@@ -103,10 +103,7 @@
 {{--                                                @endif--}}
 {{--                                            </td>--}}
                                             <td class="text-center">
-                                                <a href="{{ route('admin.categories.edit', $category->id) }}"
-                                                    class="btn btn-warning ">
-                                                    <i class="fa fa-edit"></i>
-                                                </a>
+
                                                 @if ($category->trashed())
                                                     <form action="{{ route('admin.categories.restore', $category->id) }}"
                                                         method="POST" class="d-inline-block">
@@ -115,6 +112,10 @@
                                                                 class="bi bi-arrow-repeat"></i></button>
                                                     </form>
                                                 @else
+                                                <a href="{{ route('admin.categories.edit', $category->id) }}"
+                                                    class="btn btn-warning ">
+                                                    <i class="fa fa-edit"></i>
+                                                </a>
                                                     <form action="{{ route('admin.categories.destroy', $category->id) }}"
                                                         method="POST" class="d-inline-block">
                                                         @csrf

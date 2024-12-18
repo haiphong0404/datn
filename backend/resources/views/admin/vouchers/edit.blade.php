@@ -187,7 +187,6 @@
                 minOrderValueGroup.style.display = 'block';
             } else if (type === 'category_discount') {
                 discountPercentageGroup.style.display = 'block';
-                maxDiscountValueGroup.style.display = 'block';
                 categoryIdGroup.style.display = 'block';
             }else if (this.value === 'first_order') {
                 discountValueGroup.style.display = 'block';

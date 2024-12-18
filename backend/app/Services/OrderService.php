@@ -228,7 +228,7 @@ class OrderService
         return [
             'pending' => ['pending', 'processing', 'completed', 'cancelled'],
             'processing' => ['processing', 'completed', 'cancelled'],
-            'completed' => ['completed'], // Không thể thay đổi khi đã completed
+            'completed' => ['completed', 'cancelled'], // Không thể thay đổi khi đã completed
             'cancelled' => ['cancelled'], // Không thể thay đổi khi đã cancelled
         ];
     }
@@ -274,5 +274,12 @@ class OrderService
         $order->save();
 
         return true; // Thành công
+    }
+
+    public function updateStatusforRefund(Order $order)
+    {
+        // Lấy trạng thái mới từ request
+        $newStatus = 'cancelled';
+        $this->updateOrderStatus($order, $newStatus);
     }
 }

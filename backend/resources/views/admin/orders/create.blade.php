@@ -54,7 +54,7 @@
                                     <label for="name" class="form-label">Tên Khách Hàng</label>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="bi bi-person"></i></span>
-                                        <input type="text" class="form-control" id="name" name="name" required
+                                        <input type="text" class="form-control" id="name" name="name"
                                             value="{{ old('name') }}">
                                     </div>
                                     @error('name')
@@ -68,7 +68,7 @@
                                     <label for="phone" class="form-label">Số Điện Thoại</label>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="bi bi-telephone"></i></span>
-                                        <input type="tel" class="form-control" id="phone" name="phone" required
+                                        <input type="tel" class="form-control" id="phone" name="phone"
                                             value="{{ old('phone') }}">
                                     </div>
                                     @error('phone')
@@ -83,7 +83,7 @@
                             <div class="col-md-6">
                                 <div class="form-group mb-3">
                                     <label for="address" class="form-label">Địa Chỉ</label>
-                                    <textarea style="height: 40px" class="form-control" id="address" name="address" required>{{ old('address') }}</textarea>
+                                    <textarea style="height: 40px" class="form-control" id="address" name="address" >{{ old('address') }}</textarea>
                                     @error('address')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
@@ -159,7 +159,7 @@
                                     <th>Số lượng</th>
                                     <th>Giá</th>
                                     <th>Tổng cộng</th>
-                                    <th> <button type="button" class="btn btn-success" id="add-row">New</button>
+                                    <th> <button type="button" class="btn btn-success" id="add-row">Thêm </button>
                                     </th>
                                 </tr>
                             </thead>
@@ -170,7 +170,7 @@
                                             <td>
                                                 <select class="form-control product-select"
                                                     id="product_{{ $index + 1 }}"
-                                                    name="products[{{ $index + 1 }}][product_id]" required>
+                                                    name="products[{{ $index + 1 }}][product_id]" >
                                                     <option value="">Chọn sản phẩm</option>
                                                     <!-- Lặp lại qua danh sách sản phẩm -->
                                                     @foreach ($products as $prod)
@@ -183,7 +183,7 @@
                                             <td>
                                                 <select class="form-control variant-select"
                                                     id="variant_{{ $index + 1 }}"
-                                                    name="products[{{ $index + 1 }}][variant_id]" required>
+                                                    name="products[{{ $index + 1 }}][variant_id]" >
                                                     <option value="">Chọn biến thể</option>
                                                     @if (isset($product['variant_id']))
                                                         <!-- Thêm các biến thể cho sản phẩm đã chọn -->
@@ -200,12 +200,12 @@
                                                 <input type="number" id="quantity_{{ $index + 1 }}"
                                                     name="products[{{ $index + 1 }}][quantity]"
                                                     class="form-control quantity" min="1"
-                                                    value="{{ $product['quantity'] ?? 1 }}" required>
+                                                    value="{{ $product['quantity'] ?? 1 }}" >
                                             </td>
                                             <td>
                                                 <input type="number" id="price_{{ $index + 1 }}"
                                                     name="products[{{ $index + 1 }}][price]"
-                                                    class="form-control price" readonly required>
+                                                    class="form-control price" readonly >
                                             </td>
                                             <td>
                                                 <input type="number" id="total_{{ $index + 1 }}"
@@ -221,23 +221,23 @@
                                     <tr class="product-row">
                                         <td>
                                             <select class="form-control product-select" id="product_1"
-                                                name="products[1][product_id]" required>
+                                                name="products[1][product_id]" >
                                                 <option value="">Chọn sản phẩm</option>
                                             </select>
                                         </td>
                                         <td>
                                             <select class="form-control variant-select" id="variant_1"
-                                                name="products[1][variant_id]" required>
+                                                name="products[1][variant_id]" >
                                                 <option value="">Chọn biến thể</option>
                                             </select>
                                         </td>
                                         <td>
                                             <input type="number" id="quantity_1" name="products[1][quantity]"
-                                                class="form-control quantity" min="1" value="1" required>
+                                                class="form-control quantity" min="1" value="1" >
                                         </td>
                                         <td>
                                             <input type="number" id="price_1" name="products[1][price]"
-                                                class="form-control price" readonly required>
+                                                class="form-control price" readonly >
                                         </td>
                                         <td>
                                             <input type="number" id="total_1" name="products[1][total]"
@@ -258,7 +258,7 @@
                                 class="btn btn-secondary btn-lg flex-fill me-1">Quay
                                 lại</a>
                             <button type="reset" class="btn btn-warning btn-lg flex-fill me-1">Reset</button>
-                            <button type="submit" class="btn btn-primary btn-lg flex-fill">Thêm Mới</button>
+                            <button type="submit" class="btn btn-primary btn-lg flex-fill">Lên đơn</button>
                         </div>
                     </form>
                 </div>
@@ -351,20 +351,20 @@
                             let newRow = `
                 <tr class="product-row">
                     <td>
-                        <select class="form-control product-select" id="product_${productCount}" name="products[${productCount}][product_id]" required>
+                        <select class="form-control product-select" id="product_${productCount}" name="products[${productCount}][product_id]" >
                             <option value="">Chọn sản phẩm</option>
                         </select>
                     </td>
                     <td>
-                        <select class="form-control variant-select" id="variant_${productCount}" name="products[${productCount}][variant_id]" required>
+                        <select class="form-control variant-select" id="variant_${productCount}" name="products[${productCount}][variant_id]" >
                             <option value="">Chọn biến thể</option>
                         </select>
                     </td>
                     <td>
-                        <input type="number" id="quantity_${productCount}" name="products[${productCount}][quantity]" class="form-control quantity" min="1" value="1" required>
+                        <input type="number" id="quantity_${productCount}" name="products[${productCount}][quantity]" class="form-control quantity" min="1" value="1" >
                     </td>
                     <td>
-                        <input type="number" id="price_${productCount}" name="products[${productCount}][price]" class="form-control price" readonly required>
+                        <input type="number" id="price_${productCount}" name="products[${productCount}][price]" class="form-control price" readonly >
                     </td>
                     <td>
                         <input type="number" id="total_${productCount}" name="products[${productCount}][total]" class="form-control total" readonly>

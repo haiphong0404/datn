@@ -15,7 +15,7 @@ const Dashboard = () => {
                     <>
                         <div className="welcome">
                             <p>
-                                Xin chào, <strong className="fs-3">{userInfo?.username || ''}</strong>!
+                                Xin chào, <strong className="fs-3">{userInfo?.username || ''}</strong>
                             </p>
                         </div>
                         <p className="mb-0">

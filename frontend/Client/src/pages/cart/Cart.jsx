@@ -20,7 +20,9 @@ const Cart = () => {
     const fetchCart = async () => {
       setIsLoading(true);
       const token = localStorage.getItem('token');
+  
       if (token) {
+        // Khi có token
         try {
           const response = await axios.get('/cart', {
             headers: { Authorization: `Bearer ${token}` },
@@ -28,17 +30,24 @@ const Cart = () => {
           const { carts } = response.data; // Lấy danh sách carts từ API
           if (Array.isArray(carts)) {
             setLocalCart(carts);
+            // Lưu vào localStorage để đồng bộ
+            localStorage.setItem('cart', JSON.stringify(carts));
+          } else {
+            setLocalCart([]);
             localStorage.removeItem('cart');
-
+          }
+        } catch (error) {
+          console.error("Lỗi khi lấy dữ liệu giỏ hàng từ server:", error);
+          // Dùng localStorage làm dự phòng
+          const cartData = localStorage.getItem('cart');
+          if (cartData) {
+            setLocalCart(JSON.parse(cartData));
           } else {
             setLocalCart([]);
           }
-        } catch (error) {
-          console.error("Lỗi khi lấy dữ liệu giỏ hàng:", error);
-          setLocalCart([]);
         }
       } else {
-        // Lấy từ localStorage nếu không có token
+        // Khi không có token
         const cartData = localStorage.getItem('cart');
         if (cartData) {
           setLocalCart(JSON.parse(cartData));
@@ -46,11 +55,13 @@ const Cart = () => {
           setLocalCart([]);
         }
       }
+  
       setIsLoading(false);
     };
-
+  
     fetchCart();
   }, []);
+  
 
 
 
@@ -204,11 +215,11 @@ const Cart = () => {
 
     if (isLoggedIn) {
       // Người dùng đã đăng nhập: Lưu tối ưu
-      const optimizedCart = updatedCart.map(item => ({
-        id_productVariant: item.id_productVariant,
-        quantity: item.quantity,
-      }));
-      localStorage.setItem('cart', JSON.stringify(optimizedCart));
+      // const optimizedCart = updatedCart.map(item => ({
+      //   id_productVariant: item.id_productVariant,
+      //   quantity: item.quantity,
+      // }));
+      localStorage.setItem('cart', JSON.stringify(updatedCart));
     } else {
       // Người dùng chưa đăng nhập: Lưu đầy đủ
       localStorage.setItem('cart', JSON.stringify(updatedCart));

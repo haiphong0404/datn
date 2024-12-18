@@ -125,6 +125,8 @@ const SearchProducts = () => {
                       listStyle: 'none',
                       padding: '0',
                       margin: '0',
+                      maxHeight: '300px',
+                      overflowY: 'scroll',
                     }}
                   >
                     {filteredProducts.map((product) => (

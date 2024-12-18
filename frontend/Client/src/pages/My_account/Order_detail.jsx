@@ -75,6 +75,8 @@ const Order_detail = () => {
                                     ? 'Thanh Toán Khi Nhận Hàng'
                                     : orderDetail.payment_status === 'paid'
                                         ? 'Đã Thanh Toán'
+                                    : orderDetail.payment_status === 'refund'
+                                        ? 'Đã hoàn tiền'
                                         : 'Không Xác Định'}
                             </p>
                         </div>

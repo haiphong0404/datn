@@ -46,6 +46,12 @@
 
                 <div class="card-body">
                     <div class="adv-table">
+                    @if (session('success'))
+                        <div class="alert alert-success">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+
                     @if (session('error'))
                         <div class="alert alert-danger">
                             {{ session('error') }}
@@ -115,7 +121,7 @@
                                             <td style="width: 120px;">
                                                 @if ($order->payment_status === 'unpaid')
                                                     @if ($order->status === 'cancelled')
-                                                        <p class="text-secondary">Đã hủy</p>
+                                                        <p class="text-secondary text-center">Đã hủy</p>
                                                     @else
                                                         <form
                                                             action="{{ route('admin.orders.updatePaymentStatus', $order->id) }}"
@@ -134,13 +140,30 @@
                                                         </form>
                                                     @endif
                                                 @else
-                                                    <p class="text-success">Đã thanh toán</p>
+                                                    @if ($order->payment_status === 'paid')
+                                                        <form
+                                                            action="{{ route('admin.orders.updatePaymentStatus', $order->id) }}"
+                                                            method="POST">
+                                                            @csrf
+                                                            @method('PUT')
+                                                            <select name="payment_status" class="form-select"
+                                                                onchange="this.form.submit()">
+                                                                <option value="paid"
+                                                                    {{ $order->payment_status === 'paid' ? 'selected' : '' }}>
+                                                                    Đã thanh toán</option>
+                                                                <option value="refund"
+                                                                    {{ $order->payment_status === 'refund' ? 'selected' : '' }}>
+                                                                    Đã hoàn tiền</option>
+                                                            </select>
+                                                        </form>
+                                                    @else
+                                                        <p class="text-success text-center">Đã hoàn tiền</p>
+                                                    @endif
                                                 @endif
                                             </td>
                                             <td>
-
                                                 @if ($order->status === 'cancelled' || $order->status === 'completed')
-                                                    <p class="text-success">{{ ucfirst($order->status) }}</p>
+                                                    <p class="text-success text-center">{{ ucfirst($order->status) }}</p>
                                                 @else
                                                     <form action="{{ route('admin.orders.updateStatus', $order->id) }}"
                                                         method="POST">
@@ -201,4 +224,5 @@
     </div>
 
     <script src="{{ asset('assets') }}/admin/js/dynamic_table_init.js"></script>
+
 @endsection

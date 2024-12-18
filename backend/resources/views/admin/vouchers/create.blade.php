@@ -46,7 +46,7 @@
                         <label for="code" class="form-label">Mã giảm giá</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="fas fa-tag"></i></span>
-                            <input type="text" class="form-control" id="code" name="code" value="{{ old('code') }}" required>
+                            <input type="text" class="form-control" id="code" name="code" value="{{ old('code') }}" >
                         </div>
                         @error('code')
                         <span class="text-danger">{{ $message }}</span>
@@ -57,7 +57,7 @@
                         <label for="start_date" class="form-label">Ngày bắt đầu</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
-                            <input type="date" class="form-control" id="start_date" name="start_date" value="{{ old('start_date') }}" required>
+                            <input type="date" class="form-control" id="start_date" name="start_date" value="{{ old('start_date') }}" >
                         </div>
                         @error('start_date')
                         <span class="text-danger">{{ $message }}</span>
@@ -68,7 +68,7 @@
                         <label for="expiration_date" class="form-label">Ngày hết hạn</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="fas fa-calendar-times"></i></span>
-                            <input type="date" class="form-control" id="expiration_date" name="expiration_date" value="{{ old('expiration_date') }}" required>
+                            <input type="date" class="form-control" id="expiration_date" name="expiration_date" value="{{ old('expiration_date') }}" >
                         </div>
                         @error('expiration_date')
                         <span class="text-danger">{{ $message }}</span>
@@ -77,7 +77,7 @@
 
                     <div class="form-group mb-3">
                         <label for="type" class="form-label">Loại mã giảm giá</label>
-                        <select class="form-select" id="type" name="type" required>
+                        <select class="form-select" id="type" name="type" >
                             <option value="">Chọn loại mã giảm giá</option>
                             <option value="percentage" {{ old('type') == 'percentage' ? 'selected' : '' }}>Giảm giá theo phần trăm</option>
                             <option value="fixed" {{ old('type') == 'fixed' ? 'selected' : '' }}>Giảm giá cố định</option>
@@ -137,7 +137,7 @@
 
                     <div class="form-group mb-3">
                         <label for="quantity" class="form-label">Số lượng</label>
-                        <input type="number" class="form-control" id="quantity" name="quantity" value="{{ old('quantity') }}" required>
+                        <input type="number" class="form-control" id="quantity" name="quantity" value="{{ old('quantity') }}" >
                         @error('quantity')
                         <span class="text-danger">{{ $message }}</span>
                         @enderror
