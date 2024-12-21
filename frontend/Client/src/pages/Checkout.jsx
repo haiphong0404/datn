@@ -8,7 +8,8 @@ import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { Elements } from '@stripe/react-stripe-js';
 import Swal from 'sweetalert2';
 import useOrders from '../hooks/useOrder'
-import ShippingForm from './oder/ShippingForm';
+import {fetchProductById}  from '../api/product.js'
+
 const Checkout = () => {
   const { userInfo } = useLoginForm();
   const { postOrder } = usePostOrder();
@@ -34,14 +35,8 @@ const Checkout = () => {
   const [voucherType, setVoucherType] = useState(""); // Loại voucher
   const [isVoucherApplied, setIsVoucherApplied] = useState(false); // Trạng thái áp dụng voucher
   const [appliedVoucherId, setAppliedVoucherId] = useState(null);
-  const [shippingFrom, setShippingFrom] = useState({
-    province: '',
-    district: '',
-    ward: ''
-  });
-  const handleShippingChange = (data) => {
-    setShippingFrom(data);
-  };
+  
+  
   const { orders } = useOrders();
 
 
@@ -51,42 +46,55 @@ const Checkout = () => {
       toast.error("Vui lòng nhập mã giảm giá!");
       return;
     }
-
+  
     try {
       const appliedVoucher = await applyVoucher(voucherCode);
-
+  
       if (appliedVoucher) {
         const {
-          id, // Lấy id của voucher
+          id,
           discount_value,
           discount_percentage,
           min_order_value,
           max_discount_value,
           category_id,
-          type, // Kiểu mã giảm giá (category_discount, first_order, percentage, fixed)
+          type,
         } = appliedVoucher.voucher;
-
-        // Lưu id vào state
+  
         setAppliedVoucherId(id);
-
-        // Kiểm tra xem đơn hàng có đủ điều kiện min_order_value không
+  
+        // Tính tổng giá trị đơn hàng
         const subtotal = selectedProducts.reduce(
           (acc, item) => acc + item.price * item.quantity,
           0
         );
-
+  
         if (subtotal < min_order_value) {
           toast.error(
-            `Đơn hàng của bạn chưa đủ giá trị tối thiểu (${min_order_value.toLocaleString()} VND) để áp dụng mã giảm giá.`
+            `Đơn hàng của bạn chưa đủ giá trị tối thiểu ${parseFloat(min_order_value.replace(/[^\d.-]/g, '')).toLocaleString()} VND để áp dụng mã giảm giá.`
           );
           return;
         }
-
-        // Kiểm tra loại mã giảm giá
+  
+        // Xử lý các loại mã giảm giá
+        let discountAmount = 0;
+  
         if (type === 'category_discount') {
-          // Giảm giá theo danh mục
+          // Tạo một object để lưu thông tin sản phẩm
+          const productDetails = {};
+  
+          // Lấy thông tin sản phẩm trước
+          await Promise.all(
+            selectedProducts.map(async (product) => {
+              const data = await fetchProductById(product.productId);
+              productDetails[product.productId] = data;
+            })
+          );
+  
+          // Tính toán giảm giá
           const categoryDiscountAmount = selectedProducts.reduce((total, product) => {
-            if (product.categoryId === category_id) {
+            const productData = productDetails[product.productId];
+            if (productData && productData.category_id === category_id) {
               const discount = discount_percentage !== null
                 ? (product.price * product.quantity * discount_percentage) / 100
                 : parseFloat(discount_value) * product.quantity;
@@ -94,53 +102,55 @@ const Checkout = () => {
             }
             return total;
           }, 0);
-
+  
           if (categoryDiscountAmount > 0) {
             setVoucherDiscount(categoryDiscountAmount);
             setVoucherType("category");
             toast.success("Giảm giá theo danh mục đã được áp dụng!");
           } else {
             toast.error("Không có sản phẩm nào thuộc danh mục áp dụng mã giảm giá này.");
-            return; // Dừng lại không áp dụng tiếp mã giảm giá
+            return;
           }
-        } else if (type === 'first_order') {
-          // Kiểm tra nếu orders của người dùng có trống không
-          if (orders.length === 0) {
-            // Nếu orders trống, áp dụng mã giảm giá cho đơn hàng đầu tiên
-            if (discount_percentage !== null) {
-              let firstOrderDiscount = (subtotal * discount_percentage) / 100;
-              if (max_discount_value !== null && firstOrderDiscount > max_discount_value) {
-                firstOrderDiscount = max_discount_value;
-              }
-              setVoucherDiscount(firstOrderDiscount);
-              setVoucherType("first_order_percentage");
-              toast.success("Mã giảm giá cho đơn hàng đầu tiên đã được áp dụng thành công.");
-            } else if (discount_value !== null) {
-              setVoucherDiscount(parseFloat(discount_value));
-              setVoucherType("first_order_fixed");
-              toast.success("Mã giảm giá cho đơn hàng đầu tiên đã được áp dụng thành công.");
-            }
+        
+
+      
+   
+        } else if (type === "first_order") {
+          // Xử lý mã giảm giá cho đơn hàng đầu tiên
+          if (orders.length == 0) {
+            discountAmount = calculateFirstOrderDiscount(
+              subtotal,
+              discount_value,
+              discount_percentage,
+              max_discount_value
+            );
+            setVoucherDiscount(discountAmount);
+            setVoucherType("first_order");
+            toast.success("Mã giảm giá cho đơn hàng đầu tiên đã được áp dụng thành công.");
           } else {
             toast.error("Mã giảm giá này chỉ áp dụng cho đơn hàng đầu tiên.");
             return;
           }
-        } else if (discount_percentage !== null) {
-          // Giảm giá theo phần trăm (percentage)
+        } else if (type === "percentage") {
           let discountAmount = (subtotal * discount_percentage) / 100;
 
           // Kiểm tra nếu discountAmount vượt quá max_discount_value
           if (max_discount_value !== null && discountAmount > max_discount_value) {
-            discountAmount = max_discount_value;
+            discountAmount = max_discount_value; // Nếu vượt quá max_discount_value thì gán lại giá trị tối đa
           }
 
           setVoucherDiscount(discountAmount); // Cập nhật giá trị discount
           setVoucherType("percentage");
-        } else if (discount_value !== null) {
-          // Giảm giá cố định (fixed)
-          setVoucherDiscount(parseFloat(discount_value)); // Chuyển discount_value sang số
+        
+       
+  
+        } else if (type === "fixed") {
+          // Giảm giá cố định
+          discountAmount = parseFloat(discount_value);
+          setVoucherDiscount(discountAmount);
           setVoucherType("fixed");
         }
-
+  
         setIsVoucherApplied(true);
         toast.success("Mã giảm giá đã được áp dụng!");
       } else {
@@ -151,7 +161,8 @@ const Checkout = () => {
       toast.error("Lỗi khi áp dụng mã giảm giá.");
     }
   };
-  ;
+  
+  
 
 
 
@@ -316,10 +327,6 @@ const Checkout = () => {
       const generateRandomCode = () => {
         return 'THOR-' + Math.random().toString(36).substr(2, 9).toUpperCase(); // Tạo mã ngẫu nhiên
       };
-      const shippingAddress = {
-        address: userDetails.address,
-        formattedAddress: `${userDetails.address}, ${shippingFrom.ward}, ${shippingFrom.district}, ${shippingFrom.province}`,
-      };
       const orderData = {
         status: "pending",
         total_amount: totalAmount,
@@ -328,7 +335,7 @@ const Checkout = () => {
         name: userDetails.username,
         email: userDetails.email,
         phone: userDetails.phone,
-        address: shippingAddress.formattedAddress,
+        address: userDetails.address,
         infor: userDetails.info,
         payment_method: paymentMethod,
         user_id: userInfo?.id,
@@ -601,7 +608,7 @@ const Checkout = () => {
                           onChange={(e) => setUserDetails({ ...userDetails, address: e.target.value })}
                         />
                       </div>
-                      <ShippingForm onShippingChange={handleShippingChange} />
+                     
 
                       <div className="single-input-item">
                         <label htmlFor="phone" style={{ fontWeight: 'bold', display: 'block', marginBottom: '5px', color: '#333' }}>Số điện thoại</label>

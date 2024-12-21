@@ -5,8 +5,9 @@ export const fetchProducts = async () => {
     try {
         const response = await axios.get('/products', {   
         });
-      
+       
         return response.data; 
+        
     } catch (error) {
         console.error('Lỗi khi gọi API:', error.response ? error.response.data : error.message);
         // Giả sử bạn có một hàm setError để thông báo lỗi

@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import { useLoginForm } from '../../hooks/useLoginForm.js';
 import { editUserById ,uploadAvatar} from '../../api/user.js';
 import { getUserByid } from '../../api/user.js';
-import ShippingForm from '../oder/ShippingForm.jsx';
+
 const EditProfile = () => {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
@@ -15,14 +15,14 @@ const EditProfile = () => {
 
     const { userInfo } = useLoginForm();
     const token = localStorage.getItem('token');
-    const [shippingFrom, setShippingFrom] = useState({
-        province: '',
-        district: '',
-        ward: ''
-      });
-      const handleShippingChange = (data) => {
-        setShippingFrom(data);
-      };
+    // const [shippingFrom, setShippingFrom] = useState({
+    //     province: '',
+    //     district: '',
+    //     ward: ''
+    //   });
+    //   const handleShippingChange = (data) => {
+    //     setShippingFrom(data);
+    //   };
     
     useEffect(() => {
         const fetchUserInfo = async () => {
@@ -90,7 +90,7 @@ const handleSaveChanges = async (e) => {
         username,
         email,
         phone,
-        address:`${address}, ${shippingFrom.ward}, ${shippingFrom.district}, ${shippingFrom.province}`,
+        address,
     };
 
     try {
@@ -111,7 +111,7 @@ const handleSaveChanges = async (e) => {
                 username,
                 email,
                 phone,
-                address: `${address}, ${shippingFrom.ward}, ${shippingFrom.district}, ${shippingFrom.province}`,
+                address,
             };
             localStorage.setItem('userInfo', JSON.stringify(updatedUserInfo));
 
@@ -238,7 +238,7 @@ const handleSaveChanges = async (e) => {
                                 onChange={(e) => setAddress(e.target.value)}
                             />
                         </div>
-                        <ShippingForm onShippingChange={handleShippingChange} />
+                       
                         <div className="single-input-item">
                             <button type="submit" className="btn btn-sqr">
                                 Lưu Thay Đổi

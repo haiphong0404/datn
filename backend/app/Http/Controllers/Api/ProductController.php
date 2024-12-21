@@ -32,6 +32,7 @@ class ProductController extends Controller
                 'price' => $product->price,
                 'description' => $product->description,
                 'category' => $product->category ? $product->category->name : null,
+               
                 'brand' => $product->brand ? $product->brand->name : null,
                 'image' => $this->getImageAsBase64($product->image), // Chuyển đổi hình ảnh sang Base64
                 'category_id' => $product->category_id,
@@ -63,6 +64,7 @@ class ProductController extends Controller
             'description' => $product->description,
             'price' => round($product->price, 2),
             'category' => $product->category ? $product->category->name : null,
+            'category_id' => $product->category ? $product->category->id : null,
             'brand' => $product->brand ? $product->brand->name : null,
             'image' => $this->getImageAsBase64($product->image), // Chuyển đổi hình ảnh sang Base64
         ], 200);
